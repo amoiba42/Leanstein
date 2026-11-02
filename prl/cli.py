@@ -37,7 +37,14 @@ def cmd_env(a) -> int:
     e = lean_env()
     print("toolchain:", e.toolchain_id)
     print("backend:", backend())
-    r = run_lean("import Mathlib\nexample : (2 : Nat) + 2 = 4 := by decide\n#print axioms Nat.add_comm\n", wall_s=600)
+    imports = "\n".join([
+        "import Mathlib.Tactic.Omega",
+        "import Mathlib.Tactic.Linarith",
+        "import Mathlib.Tactic.NormNum",
+        "import Mathlib.Tactic.Aesop",
+        "import Mathlib.Tactic.Grind",
+    ])
+    r = run_lean(f"{imports}\nexample : (2 : Nat) + 2 = 4 := by decide\n#print axioms Nat.add_comm\n", wall_s=600)
     print("lean smoke:", "OK" if not r.errors() else r.errors(), f"({r.elapsed_s:.1f}s)")
     try:
         from prl.models.lmstudio import LMStudio

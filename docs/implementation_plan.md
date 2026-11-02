@@ -97,6 +97,10 @@ B = Tasks & Models, C = Study Lead.
 | R-2 | `prl audit --study main` → fill the CSV → `prl audit --merge` | ☐ |
 | R-3 | Code-shape catalogue with annotated before/after examples | ☐ |
 | R-4 | `docs/results.md` (claims locked to `results/`) and `docs/final_proposal.md` §Results | ☐ |
+| R-5 | Cross-evaluate compiling-but-unproved B implementations through C's full pipeline; write secondary results separately | ☐ |
+| R-6 | Report B overall and B excluding single-call automation proofs using `proof_tactic_used` from attempt logs | ☐ |
+| R-7 | Run pilot-based `p01`/`p10` McNemar power simulation at 80% power, account for 3 seeds and the 70% main split, and store the power note before freeze | ☐ |
+| R-8 | If compute permits, run B-hammer as a separate exploratory arm with C's frozen tactic list and report its compute cost | ☐ |
 
 ---
 

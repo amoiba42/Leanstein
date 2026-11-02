@@ -13,7 +13,7 @@ import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from prl.config import PATHS, ensure_dir, lean_env
+from prl.config import PATHS, ensure_dir, lean_env, study_config
 
 _HDR = re.compile(r"^Main\.lean:(\d+):(\d+): (error|warning|info)(?:\([^)]*\))?: ?", re.M)
 
@@ -242,7 +242,11 @@ def _pool() -> queue.Queue[_ReplWorker]:
     global _POOL
     with _POOL_LOCK:
         if _POOL is None:
-            n = int(os.environ.get("PRL_LEAN_WORKERS", "4"))
+            configured = int(study_config()["lean"].get("workers", 0))
+            n = configured or auto_workers()
+            override = os.environ.get("PRL_LEAN_WORKERS")
+            if override is not None:
+                n = max(1, int(override))
             _POOL = queue.Queue()
             for _ in range(n):
                 _POOL.put(_ReplWorker())

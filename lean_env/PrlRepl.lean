@@ -1,7 +1,7 @@
 /-
 PRL verification server (our own code; uses only Lean core APIs).
 
-Imports `Mathlib` ONCE, then repeatedly reads one request line from stdin: the path of a Lean file.
+Imports the frozen tactic modules ONCE, then repeatedly reads one request line from stdin: the path of a Lean file.
 The file's header (`import ...` lines) is skipped; its commands are elaborated against a *fresh copy*
 of the pre-imported environment (environments are immutable values, so every request starts from the
 same state — determinism is preserved). For each request it prints exactly one JSON line:
@@ -31,7 +31,15 @@ def processFile (env : Environment) (opts : Options) (path : System.FilePath) : 
   return Json.mkObj [("ok", Json.bool true), ("messages", Json.arr arr)]
 
 unsafe def main (args : List String) : IO UInt32 := do
-  let mods := if args.isEmpty then [`Mathlib] else args.map String.toName
+  let mods := if args.isEmpty then
+    [
+      `Mathlib.Tactic.Omega,
+      `Mathlib.Tactic.Linarith,
+      `Mathlib.Tactic.NormNum,
+      `Mathlib.Tactic.Aesop,
+      `Mathlib.Tactic.Grind
+    ]
+    else args.map String.toName
   initSearchPath (← findSysroot)
   enableInitializersExecution
   let env ← importModules (mods.toArray.map ({ module := · })) {} (trustLevel := 1024) (loadExts := true)

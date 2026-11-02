@@ -233,6 +233,9 @@ See IR-1..IR-9 (§7). Must reject before any proof is attempted when a static vi
 - **FR-ANA-4 (MUST)** Code-shape feature extraction on every verified and every unverified-but-test-passing candidate (RQ4).
 - **FR-ANA-5 (MUST)** Statistical tests per SR-STAT; tables + figures written to `results/`.
 - **FR-ANA-6 (MUST)** 10% stratified hand-audit sample exported for manual review with a form (CSV) and the results folded back.
+- **FR-ANA-7 (MUST)** Run the B-to-C cross-evaluation: for every B attempt that compiles but fails its model proof, extract only the implementation region, remove all proof text, and replay that implementation through C's complete pipeline (portfolio tactics, hidden tests, and `#print axioms`). Record it as a secondary analysis and never merge it into the primary B or C estimate. Report three buckets: C proves and tests pass; C proves but tests fail (behaviourally wrong under the weak contract); and C cannot prove.
+- **FR-ANA-8 (MUST)** Report condition B twice: overall, and excluding attempts whose proof is a single-call automation proof (`grind`, `aesop`, or an equivalent registered automation invocation). The exclusion is analysis-only; automation remains legal and all attempts remain in the raw logs.
+- **FR-ANA-9 (SHOULD)** If compute permits, add B-hammer as a separate exploratory arm: give B the same frozen tactic list available to C, report its additional compute cost, and never replace or pool it with the primary B arm. B-hammer tests whether C's benefit is code shaping rather than merely awareness of automation.
 
 ---
 
@@ -257,10 +260,11 @@ See IR-1..IR-9 (§7). Must reject before any proof is attempted when a static vi
 - **SR-STAT-1 (MUST)** Unit of analysis: task family. A family is "solved" by a (condition, model, seed) if any of its instances is solved; the family-level score for a (condition, model) is the mean over seeds (∈ {0, 1/3, 2/3, 1}).
 - **SR-STAT-2 (MUST)** Primary test (RQ1): one-sided paired sign-flip permutation test on family scores, C vs B and C vs B+P, per primary model, Holm-corrected over the 4 tests (2 comparisons × 2 primary models). α = 0.05.
 - **SR-STAT-3 (MUST)** Supporting: exact McNemar on the "solved in majority of seeds" binary; family-cluster bootstrap 95% CI (10,000 resamples, fixed seed) of the rate difference; Cohen's h effect size; number of discordant families.
-- **SR-STAT-4 (MUST)** Pre-computed power note: with D discordant families, report the minimum detectable split.
-- **SR-STAT-5 (MUST)** No post-hoc subsets in confirmatory claims; any exploratory subset is labelled as such.
-- **SR-STAT-6 (SHOULD)** Stratify by tier (basic/advanced), bug operator class, bug source (mutant/natural), `ref_auto`, and input type (scalar / list / array / string).
-- **SR-STAT-7 (MUST)** Secondary model-scale and family results are descriptive with CIs.
+- **SR-STAT-4 (MUST)** Before freezing the confirmatory split, estimate paired power from pilot results. Compute `p01 = P(B solved, C failed)` and `p10 = P(C solved, B failed)` at the family level, along with `p_both` and `p_neither`. Because 20 pilot families produce noisy estimates, simulate a pessimistic and optimistic range of plausible `(p01, p10, p_both, p_neither)` values rather than reporting one point estimate. Use `statsmodels.stats.contingency_tables.mcnemar` for the supporting McNemar analysis and simulate the same task-clustered unit and primary sign-flip test used for confirmatory claims. Use the three seeds per family when forming the majority-solved outcome. Power applies to the 70% main split only; convert the required main-set family count to total eligible families by dividing by 0.70 and round up.
+- **SR-STAT-5 (MUST)** With observed `D = b + c` discordant families, report the minimum detectable split and the observed `b`/`c` counts.
+- **SR-STAT-6 (MUST)** No post-hoc subsets in confirmatory claims; any exploratory subset is labelled as such.
+- **SR-STAT-7 (SHOULD)** Stratify by tier (basic/advanced), bug operator class, bug source (mutant/natural), `ref_auto`, and input type (scalar / list / array / string).
+- **SR-STAT-8 (MUST)** Secondary model-scale and family results are descriptive with CIs.
 
 ---
 

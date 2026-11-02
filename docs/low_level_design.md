@@ -156,12 +156,21 @@ Eligible families sorted by id, shuffled with `random.Random(seed)`. Pilot: firs
 run_lean(source, *, wall_s) -> LeanRun(returncode, messages: list[Msg], stdout, elapsed_s, timeout, infra_error, extra)
 ```
 - **Backend `repl` (default):** a pool of `_ReplWorker`s, each a `prlrepl` process (`lean_env/PrlRepl.lean`)
-  that imports Mathlib once and answers one JSON line per request (`{"ok", "messages": [{line, col, severity,
+  that imports the frozen specific tactic modules once and answers one JSON line per request (`{"ok", "messages": [{line, col, severity,
   text}]}`) for the file path it receives. Each worker is placed in a **Windows Job Object** with a
   per-process memory cap (`lean.mem_limit_gb`, default 4 GB). Pool size = `lean.workers` or, if 0,
   `auto_workers()` = ⌊(free RAM − 4 GB) / 3 GB⌋ capped at 6.
-- A request that exceeds `wall_s` kills the worker (it restarts lazily); a worker that dies returns
+- `lean.wall_guard_s` is the normal per-request wall-clock guard (`120` seconds in the
+  frozen study config), and must be at least 50 seconds to clear startup and tactic work.
+  A request that exceeds it kills the worker (which restarts lazily); a worker that dies returns
   `infra_error="repl process died"`, `extra.died=True`. CPU seconds of killed workers are accumulated for energy.
+- `lean.batch_wall_s` is the shorter dataset-building guard (`20` seconds in the
+  frozen study config). A timed-out batch is bisected and retried per candidate; it is
+  not the normal verification guard. Portfolio entries use `max(30, wall_guard_s / 4)`
+  seconds in `Judge._portfolio`.
+- Wall-clock guards are backstops, not tactic budgets: `maxHeartbeats` is the deterministic
+  tactic limit and does not count or bypass imports. `maxHeartbeats 0` is reserved for
+  the explicitly unbounded test guards and is forbidden in calibrated portfolio entries.
 - **Backend `cli`:** `lean Main.lean` per request with `LEAN_PATH` (fallback; parity tested).
 - Messages from the server carry exact positions; `stdout` is synthesised in CLI format so text parsers
   (`#print axioms`, eval markers) work for both backends.
@@ -171,18 +180,41 @@ run_lean(source, *, wall_s) -> LeanRun(returncode, messages: list[Msg], stdout, 
 locked template with candidate regions (proof region = candidate proof in proof modes, else `sorry`); then a
 generated harness section: in proof modes `#print axioms F_spec_satisfied`; one `#guard` per test; one
 `set_option maxHeartbeats <entry tier> in theorem prl_try_k <statement> := by <script>` + `#print axioms
-prl_try_k` per entry. `import Mathlib` is ensured. The precondition argument of test calls is
+prl_try_k` per entry. The builder uses only the frozen specific tactic imports; bare `import Mathlib`
+is forbidden in evaluation files. The precondition argument of test calls is
 `(by first | decide | trivial | (simp_all; done) | omega | sorry)` — or omitted when the locked header has no
 `h_precond` (some VERINA functions). The harness `sorry` never enters an accepted proof (axioms are checked
 only on proof declarations). `build_batch` (dataset building) and `build_eval` (`#eval!` with
 `<<PRL:k>>…<</PRL>>` markers) use the same rendering.
 
 ### 5.3 Result interpretation (in `verify.py`)
+
 - `compile_ok` ⇔ no error in the template lines before `proof_aux`.
 - Test i passes ⇔ no error on its line.
 - Entry closed ⇔ no error in its range ∧ `#print axioms` (matched by declaration name — Lean prints it without
   a position in CLI mode) ⊆ {propext, Classical.choice, Quot.sound}.
 - Model proof ok ⇔ no error in the proof span ∧ clean axioms of `F_spec_satisfied`.
+
+### 5.3a Cross-evaluation and B proof logging
+
+For every B attempt with compiling code and a failed model proof, the driver stores a
+secondary candidate containing only B's implementation region. Proof text and proof
+declarations are removed before the candidate is passed to C's verifier. The secondary
+run executes the complete C pipeline: portfolio tactics, hidden tests, and `#print axioms`.
+Its records carry `analysis_kind="b_to_c_cross_eval"` and are excluded from primary B/C
+success rates. Report three mutually exclusive buckets: `c_proves_tests_pass`,
+`c_proves_tests_fail`, and `c_cannot_prove`. The middle bucket is a finding about a
+weak contract, not a verified repair.
+
+Every B attempt record also carries `proof_tactic_used`, a normalized list of tactics
+found in the model-written proof. A single-call automation proof is one whose normalized
+list contains only `grind`, `aesop`, or another registered single-call automation tactic.
+The report emits both B overall and B excluding that subset; the raw attempt records
+remain unchanged and automation is never rejected by the integrity checker.
+
+If the study adds B-hammer, it is a separate exploratory condition whose prompt exposes
+the same frozen tactic list available to C. Its extra generation and verification cost
+is reported, and its results are never substituted for or pooled with primary B.
 
 ### 5.4 Verify (`verify.py`)
 `Judge.verify(fam, cand, mode, *, tests="all", skip_static=False, full_vector=False, force_portfolio=False)`,
@@ -368,6 +400,16 @@ Computed by `prl.driver.runner.outcome_label` at run time (priority order in §1
 - `cluster_bootstrap_diff(x, y, B, seed)`: resample families with replacement, return mean diff and percentile 95% CI.
 - `cohens_h(p1, p2) = 2·asin(√p1) − 2·asin(√p2)`.
 - `min_detectable(D, alpha)`: smallest b such that one-sided binomial(b; D, 0.5) p ≤ alpha.
+- `pilot_power(p01, p10, p_both, alpha=0.05, target=0.80, seeds=3)`: collapse each family
+  to majority-solved over its three seeds, simulate paired outcomes with probabilities
+  `p01`, `p10`, `p_both`, and `1 - p01 - p10 - p_both`, and call
+  `statsmodels.stats.contingency_tables.mcnemar` for the supporting test. The simulation
+  also applies the task-clustered primary sign-flip procedure, rather than treating the
+  three seed observations as independent tasks. Sweep pessimistic and optimistic pilot
+  ranges and return the smallest main-set family counts whose rejection rate reaches
+  `target`; also return `ceil(main_count / 0.70)` as the total eligible-family target.
+  Store pilot estimates, ranges, seed count, simulation seed, and the chosen primary-test
+  unit with the power note.
 - Unit-tested against scipy/statsmodels and hand-computed cases.
 
 ### 11.3 Mechanism (`mechanism.py`)
