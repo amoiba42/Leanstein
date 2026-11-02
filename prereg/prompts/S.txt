@@ -1,0 +1,3 @@
+The current implementation is behaviourally correct, but Lean's automatic tactics (simp, omega, grind, aesop, induction) cannot prove the theorem for it. Rewrite it into an equivalent implementation (same results on every valid input) that the automatic tactics can prove without any hand-written proof.
+Prefer structural recursion that follows the structure of the specification, pattern matching, and plain arithmetic in the specification's types. Avoid partial definitions, imperative loops and unnecessary helper functions.
+Output exactly one ```lean block containing the complete definition `def $fn ...` (you may put helper definitions before it). Do NOT write any theorem or proof.

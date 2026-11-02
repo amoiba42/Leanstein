@@ -1,0 +1,36 @@
+# Pre-registered automation portfolio (FR-PORT). Frozen by `prl freeze`.
+#
+# Two tiers (final architecture §2, G7): every Tier-L entry is tried first (cheap, low heartbeat budget),
+# then Tier-H entries (heavy search). Limits are Lean heartbeats, not wall clock, so outcomes are
+# deterministic. The SAME portfolio, order and limits are used by every condition that uses automation
+# (T, BP, C, Cplain, S, Splain). No per-task customisation; no model-chosen tactics.
+#
+# Template variables (mechanically derived from the locked signature and the candidate code):
+#   {F} function name, {P} postcondition name, {Q} precondition name,
+#   {H} ", h1, h2" helper names declared in solution_aux / precond_aux / postcond_aux / code_aux and
+#       F.<let rec | where> names,
+#   {x} each parameter of type List _ or Nat (foreach: x),
+#   {R} each recursive function among F and its helpers (foreach: R);
+#   {U} expands to "" when R is F itself, else an "unfold {F} {P}" line (exposes the helper call).
+# Entries are tried in order; the first closing entry is the `closing_entry`.
+version: 2
+max_entries: 24
+tiers:
+  L: {heartbeats: 50000}    # light: decision procedures and simplification
+  H: {heartbeats: 200000}   # heavy: search (Lean's default maxHeartbeats)
+entries:
+  - {id: decide,         tier: L, script: "decide"}
+  - {id: simp,           tier: L, script: "simp [{F}, {P}, {Q}{H}]"}
+  - {id: simp_all,       tier: L, script: "simp_all [{F}, {P}, {Q}{H}]"}
+  - {id: unfold_omega,   tier: L, script: "unfold {F} {P} at *\nomega"}
+  - {id: simp_omega,     tier: L, script: "simp [{F}, {P}, {Q}{H}] <;> omega"}
+  - {id: simp_all_omega, tier: L, script: "simp_all [{F}, {P}, {Q}{H}] <;> omega"}
+  - {id: split_simp_all, tier: L, script: "unfold {F} {P}\nsplit <;> simp_all [{Q}{H}]"}
+  - {id: split_omega,    tier: L, script: "unfold {F} {P}\nsplit <;> (simp_all [{Q}{H}]) <;> omega"}
+  - {id: grind,          tier: H, script: "grind [{F}, {P}, {Q}{H}]"}
+  - {id: simp_grind,     tier: H, script: "simp [{F}, {P}, {Q}{H}] <;> grind"}
+  - {id: aesop,          tier: H, script: "aesop (add norm unfold [{F}, {P}, {Q}{H}])"}
+  - {id: fun_ind_simp,   tier: H, script: "{U}fun_induction {R} <;> simp_all [{F}, {P}, {Q}{H}]", foreach: R}
+  - {id: fun_ind_grind,  tier: H, script: "{U}fun_induction {R} <;> grind [{F}, {P}, {Q}{H}]", foreach: R}
+  - {id: ind_simp_all,   tier: H, script: "induction {x} <;> simp_all [{F}, {P}, {Q}{H}]", foreach: x}
+  - {id: ind_grind,      tier: H, script: "induction {x} <;> grind [{F}, {P}, {Q}{H}]", foreach: x}

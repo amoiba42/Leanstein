@@ -1,0 +1,13 @@
+# Structural pointer catalogue for the C / S stuck-point hint (FR-HINT). Rule-based; no LLM.
+version: 1
+max_chars: 1200
+goal_chars: 600
+pointers:
+  partial_def: "The implementation uses `partial def`; Lean cannot unfold partial definitions in proofs. Use structural recursion instead."
+  well_founded: "The implementation uses well-founded recursion (termination_by/decreasing_by). Structural recursion on a list or natural number is much easier for the automatic tactics."
+  imperative_loop: "The implementation uses an imperative loop (for/while/mut). Loops are opaque to the automatic tactics; rewrite with structural recursion or list functions that mirror the specification."
+  nat_int_mix: "The implementation mixes Nat and Int (casts such as toNat/natAbs/↑). Casts often block omega and simp; keep arithmetic in the type the specification uses."
+  opaque_helper: "A helper function is used that the tactics cannot see through. Inline it or define it by simple structural recursion."
+  array_index: "The implementation uses unchecked indexing (`a[i]!` / `get!`). Panicking indexing is hard to reason about; prefer pattern matching, list functions or `a[i]?` with explicit cases."
+  fold_accumulator: "The implementation uses a fold with an accumulator. If the specification is stated directly (e.g. by recursion or a closed formula), a direct structural definition is easier to prove."
+  spec_shape_mismatch: "The structure of the implementation does not mirror the specification. Make the code follow the same recursion/case structure as the postcondition so that simp and induction line up."

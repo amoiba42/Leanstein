@@ -1,0 +1,2 @@
+Write an implementation of the function.
+Output exactly one ```lean block containing the complete definition `def $fn ...` (you may put helper definitions before it).

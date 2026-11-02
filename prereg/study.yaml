@@ -1,0 +1,57 @@
+# Pre-registered study configuration (SR-PRE-1), final architecture v2 (docs/final_architecture.md).
+# Frozen by `prl freeze`; the driver refuses to run the confirmatory splits (main / heldout) if any file in
+# prereg/ differs from prereg/FREEZE.json.
+study_id: prl-main-v2
+
+lean:
+  wall_guard_s: 120        # per Lean request; hang protection only (proof decisions use heartbeats)
+  workers: 0               # 0 = derive from free RAM at start (prl.lean.runner.auto_workers), max 6
+  mem_limit_gb: 4          # Windows Job Object cap per Lean worker (Mathlib alone needs ~1.8-2.7 GB)
+  test_heartbeats: 0       # 0 = Lean default for test guards
+  batch_wall_s: 20         # dataset building: wall guard per candidate test run (mutants may not terminate)
+
+budget:                    # per (instance, condition, model, seed); first binding cap ends the run
+  n_gen: 8
+  max_total_tokens: 48000
+  max_completion_tokens: 1536
+  max_infer_s: 240
+
+decoding: {temperature: 0.7, top_p: 0.95, reasoning_effort: none}
+c_round_k: 2               # C/Cplain/S/Splain sample k candidates per feedback round
+history_turns: 2           # previous turns kept verbatim in the conversation (all conditions)
+seeds: [11, 23, 37]
+
+models:                    # LM Studio model keys (GGUF 4-bit, CUDA engine); see prl/models/registry.py
+  primary: [qwen3.5-2b, qwen3.5-4b]
+  secondary: [gemma-4-e4b-it]            # other model family
+  specialist: [goedel-code-prover-8b]    # proof-specialist reference, conditions A and B only
+  natural_generators: [qwen3.5-0.8b, qwen3.5-9b]   # zero-shot bug sources; never used as repairers
+
+conditions: [A, B, BP, C, Cplain]
+specialist_conditions: [A, B]
+shaping_conditions: [S, Splain]
+
+splits: {pilot_n: 20, heldout_frac: 0.30, seed: 2026}
+mutants_per_family: 2
+hidden_tests: {per_family: 30, seed: 7, candidates_factor: 4}
+natural: {samples: 4, per_family_per_generator: 1}   # resample cap (G13)
+
+bugs:
+  # Primary (confirmatory) bug pool, decided before any result (G1): natural bugs if they cover at least
+  # `min_natural_families` eligible families of the confirmatory split, otherwise natural ∪ mutant.
+  # Mutants are always also reported separately (controlled, per-operator analysis).
+  primary: natural
+  min_natural_families: 60
+  fallback: natural+mutant
+
+energy:
+  cpu_watts_per_thread: 2.29     # i7-14650HX base power 55 W / 24 threads (estimate; no RAPL on Windows)
+  grid_kg_co2_per_kwh: 0.716     # India CEA grid average (estimate)
+
+analysis:
+  bootstrap: 10000
+  permutations: 100000
+  alpha: 0.05
+  seed: 99
+  revert_distance: 0.15
+  audit_frac: 0.10               # plus every success carrying a degeneracy flag (G11)

@@ -1,0 +1,4 @@
+The current implementation is incorrect. Write a correct implementation and a proof of the theorem.
+Output exactly two ```lean blocks:
+1. The complete definition `def $fn ...` (you may put helper definitions before it).
+2. `theorem ${fn}_spec_satisfied ... := by` followed by the tactic proof (you may put helper lemmas before it).

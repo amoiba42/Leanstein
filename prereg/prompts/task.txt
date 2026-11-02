@@ -1,0 +1,22 @@
+## Task
+$description
+
+## Precondition and postcondition (fixed; do not modify)
+```lean
+$spec
+```
+
+## Function signature (fixed)
+```lean
+$header
+```
+
+## Theorem that must hold (fixed)
+```lean
+theorem ${fn}_spec_satisfied $theorem_stmt
+```
+
+## Current implementation$start_note
+```lean
+$start_def
+```

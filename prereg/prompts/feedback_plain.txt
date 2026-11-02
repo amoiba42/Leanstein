@@ -1,0 +1,2 @@
+The candidate was rejected. Try again.
+Output the complete definition again in one ```lean block. Do NOT write any proof.

@@ -1,0 +1,216 @@
+# Prove Less, Repair Better
+## Automation-Friendly Program Repair for Small Models in Lean 4 — Final Proposal (living document)
+
+**Course:** Agentic Software Engineering (AutoSE, CS6.403) · **Team:** Agents of Ultron — Inesh Dheer, Poojitha J, Gracy Garg
+**Repository:** Leanstein (`https://github.com/amoiba42/Leanstein`) · **Version:** v2.0 · last updated 2026-11-02
+**Status:** design final; harness implemented and tested; **no experiment has been run yet** (clean state).
+
+This is the single document to follow. It supersedes the original proposal and plan where they differ, and it
+records *why* each part exists and *where* it lives in the repository. Update the "Status" lines and §12 as the
+study progresses; never edit pre-registered parts after `prl freeze` without a logged deviation.
+
+---
+
+## 1. Summary
+
+Small, locally runnable language models are poor at writing Lean 4 proofs; even strong models produce correct
+code far more often than valid proofs on verified-code benchmarks such as VERINA. We test whether small models
+obtain **more end-to-end verified repairs when they repair only the implementation — shaping it so that a fixed,
+pre-registered Lean automation portfolio proves the unchanged specification — than when they write proofs**.
+We compare this against budget-matched proof-writing agents, including one that is given the same automation
+first, and we measure *why* it works: whether successes come from re-shaping code for automation or merely from
+undoing the bug, and which code shapes make automation succeed.
+
+## 2. Inputs this proposal consolidates (all in `context/`)
+
+| Input | Location | How it is used |
+|---|---|---|
+| Original proposal | `context/InitialProposal/Prove_Less_Repair_Better_Proposal.pdf` | Research question, H1, B vs C, VERINA, integrity rules, outcome labels — **kept** |
+| Original project plan | `context/InitialProposal/AutoSE_Project_Plan.pdf` | Team split, interfaces, conditions T/C-plain, pre-registration, gate, backups — **kept** |
+| Claude verdict | `context/InitialVerdicts/ClaudeVerdict` | B+P baseline, shaping-vs-reverting metric, T first, floor check — **adopted (mandatory)** |
+| Gemini verdict | `context/InitialVerdicts/GeminiVerdict` | Per-category reporting, spec-copying checks, audit — **adopted** |
+| GPT verdict | `context/InitialVerdicts/GPTVerdict` | Consolidated framework, proofability study (S), natural + synthetic bugs, generated hidden tests, fair budgets — **adopted as backbone** |
+| Gracy's additions | `context/GracyAdditions/Text.txt`, `context/GracyAdditions/images/Gracy1.jpeg`, `context/GracyAdditions/images/Gracy2.jpeg` | Real errors first, energy, sandbox, infra handling, tiered tactics, feedback router, pre-filter, audit, resample cap — **adopted / adapted** (§10) |
+
+**Agreed verdict:** the proposal's hypothesis, run under the GPT verdict's framework, with Claude's B+P baseline
+and shaping metric as mandatory parts of the main study, Gemini's reporting advice, and Gracy's engineering.
+Full deliberation: `docs/final_architecture.md` §1–§2.
+
+## 3. Research gap and novelty (scoped)
+
+Close work (as identified in the proposal and the verdicts; each item is re-checked in the related-work pass
+before any submission):
+
+- **Proof repair from compiler feedback** (APRIL, APOLLO, "Fix, Not Just Resample"): repair the *proof*, not the code.
+- **Joint program–proof planning** (P³) and **proof stability under refactoring** (RefactorProof, on VERINA):
+  code structure matters for proofs, studied with frontier models and model-written proofs.
+- **Verification-aware restructuring / repair in Dafny** (Dissect-and-Restore, DafnyFix): SMT-based, not Lean,
+  not small models.
+- **Strong proof models for code** (Goedel-Code-Prover): large search budgets, model-written proofs.
+
+**Our claim:** we investigate whether resource-constrained code models achieve more reliable formally verified
+program repair by optimising implementation structure for a fixed, pre-registered Lean 4 automation pipeline,
+rather than generating proofs; we evaluate this against budget-matched proof-writing agents (including one that
+gets the same automation first and a proof-specialist model), on natural model errors as well as controlled
+mutants, and we characterise mechanistically when the gain comes from re-shaping rather than reverting, and which
+implementation shapes make automation succeed. We do not claim novelty for compiler feedback, structured repair
+messages, automated tactics or code restructuring in isolation.
+
+**What makes it more than a prompting comparison:** (i) the B+P control isolates "do not write proofs" from
+"automation exists"; (ii) the shaping-vs-reverting classification and study S (re-shape *correct* code that
+automation cannot prove) test the mechanism directly; (iii) a code-shape catalogue (RQ4) and a released
+buggy-VERINA dataset with proved-precondition hidden tests; (iv) energy per verified repair on a laptop.
+
+## 4. Research questions and hypotheses
+
+| RQ | Question | Primary measure | Hypothesis |
+|---|---|---|---|
+| **RQ1** (confirmatory) | At matched budget, does C beat B and B+P in verified-repair rate? | family-level rate, paired | C > B and C > B+P |
+| RQ2 Mechanism | Shaping vs reverting share; can models re-shape correct-but-unprovable code (S vs S-plain)? | shaping share; S rate | non-trivial shaping share; S > S-plain |
+| RQ3 Feedback | Does the structured hint beat plain retry? | C vs C-plain | C > C-plain |
+| RQ4 Code shapes | Which implementation features predict automation success? | feature tables | a small set explains most successes |
+| RQ5 Costs & scale | Tokens, latency, Lean CPU, **energy per verified repair**, patch size, regressions, integrity flags; 2B vs 4B; Qwen vs Gemma | cost and energy tables | exploratory |
+
+A clean negative result is a valid, reported outcome. Details and requirement IDs: `docs/requirements.md` §1.4.
+
+## 5. Method
+
+### 5.1 Benchmark and tasks
+VERINA (189 Lean 4 tasks, pinned commit `66b3ce50`). Eligible = reference compiles and passes its tests (a human
+proof is *not* required: only 46/189 ship one). Families are the statistical unit; splits are family-level
+(pilot 20, main, held-out 30% of main). Code: `prl/tasks/`.
+
+### 5.2 Bugs
+- **Natural (primary):** zero-shot implementations from Qwen3.5-0.8B and Qwen3.5-9B (never repairers), ≤4 samples
+  per generator per family, kept if they compile and fail ≥1 test, ≤1 per family per generator.
+- **Mutants (secondary, controlled):** operators on the implementation (arith, relational, boolean, constants,
+  negated conditions, swapped branches, dropped ±1, swapped arguments), kept if they compile and fail a test,
+  ≤2 per family. Condition T on each buggy start flags weak specifications.
+- **Shaping instances (study S):** correct references that T cannot prove.
+- Pre-registered pool rule: natural if ≥60 confirmatory families, else natural ∪ mutant (`prereg/study.yaml: bugs`).
+Code: `prl/natural/`, `prl/mutate/`.
+
+### 5.3 Tests
+Visible = VERINA tests (one failing witness may be shown). Hidden = generated inputs whose **precondition is
+proved in Lean**, expected outputs from the reference, round-trip checked; never shown, failures reported only as a
+count. Code: `prl/testgen/`.
+
+### 5.4 Conditions (`prl/conditions/protocols.py`)
+| ID | Model writes | Proof from | Feedback |
+|---|---|---|---|
+| T | — | portfolio | — |
+| A | code + proof | model | none (N independent samples) |
+| B | code + proof | model | Lean errors, failing witness, proof errors |
+| BP | code + proof | portfolio first, else model | as B |
+| **C** | code only | portfolio | witness / errors + best unsolved goal + structural hint |
+| C-plain | code only | portfolio | generic retry (same format reminder) |
+| S / S-plain | code only, from a correct reference | portfolio | as C / as C-plain |
+
+Budget per (instance, condition, model, seed): ≤8 generations, ≤48k tokens, ≤240 s inference; first cap wins.
+
+### 5.5 Models (`prereg/study.yaml: models`)
+Repairers: Qwen3.5-2B, Qwen3.5-4B (primary), Gemma-4-E4B-it (secondary family); proof specialist
+Goedel-Code-Prover-8B (A, B); generators Qwen3.5-0.8B, 9B. GGUF 4-bit, LM Studio CUDA engine, temperature 0.7,
+top-p 0.95, `reasoning_effort: none`, seeds 11/23/37.
+
+### 5.6 Verification (`prl/lean/`, `lean_env/PrlRepl.lean`)
+Lean 4.24.0 + Mathlib v4.24.0. Own verification server (Mathlib loaded once per worker, 4 GB memory cap).
+Staged: compile + all tests (+ model proof), then the two-tier portfolio (Tier L 50k heartbeats, Tier H 200k;
+frozen order; early stop). Success = compile ∧ visible ∧ hidden tests ∧ proof by the allowed source ∧ axioms ⊆
+{propext, Classical.choice, Quot.sound} ∧ locked regions unchanged ∧ static integrity. Infrastructure failures
+never charge the budget; non-terminating candidate code does.
+
+### 5.7 Integrity (`prl/lean/integrity.py`)
+Reject before Lean: proof escapes (sorry, admit, axiom, native_decide, implemented_by, unsafe, macros,
+set_option, attribute, # commands), redefinition of locked names, proofs in code-only conditions, empty body.
+Flag (then audit): spec-copying, constant bodies, hard-coded tests, choice. 10% stratified audit + all flagged
+successes (`prl audit`).
+
+### 5.8 Analysis (`prl/analysis/`)
+Family score = mean over seeds of "any instance solved". RQ1: one-sided paired sign-flip permutation test,
+Holm over the primary tests, McNemar on majority-solved, 95% family-cluster bootstrap CI, Cohen's h, minimum
+detectable effect. RQ2: shaping / revert / other; C by reference provability; S vs S-plain. RQ4: feature tables.
+RQ5: costs, energy (GPU measured, CPU estimated, CO2 estimated) per verified repair; sensitivity to N.
+
+### 5.9 Pre-registration
+`prereg/` (study, portfolio, hints, prompts) is hashed by `prl freeze`; the driver refuses confirmatory splits if
+anything changed; changes are logged in `prereg/deviations.md` (which also discloses the one v1 number the team saw).
+
+## 6. Architecture
+
+The authoritative diagram is in `docs/final_architecture.md` §5 (Mermaid; renders on GitHub). Layered package
+view and component responsibilities: `docs/high_level_design.md`; module-level specification:
+`docs/low_level_design.md`.
+
+## 7. Threats to validity (summary)
+
+Construct (a proof certifies only its spec → hidden tests, verified-but-wrong label, weak-spec flags; known
+VERINA test defects excluded); selection (coverage reported on the full eligible pool; T is a screening and
+stratification variable only); hand-tuning (pilot-only tuning, freeze, held-out run once, disclosure); spec
+gaming (static rejection, axiom check, flags, audit); internal (equal budgets and turn-0 information; B+P);
+external (small standalone functions; one benchmark; two model families); statistical (family unit, exact tests,
+power note); shared hardware (memory caps, idle-GPU rule, energy per block). Full list: `docs/requirements.md` §13.
+
+## 8. Plan of work and gate
+
+Phases (commands in `README.md`, statuses in `docs/implementation_plan.md`):
+0 feasibility (T, compile probe, determinism) → 2 dataset → 3 pilot + gate → 4 freeze + confirmatory run →
+5 analysis and audit.
+**Gate (end of pilot):** T ≥20% of eligible pilot references; compile rate >10% in C; ≥1 hand-verified repair by
+C that neither B nor B+P finds; zero false successes; cost fits. If the decisive criterion fails: Backup 2 —
+proof-friendliness benchmark (T over reference / mutated / model-rewritten code, with study S as headline).
+
+## 9. Team roles
+
+As in the plan (assignment to people to be confirmed by the team): **A — Verification Engine** (`prl/lean`,
+`lean_env`, integrity, portfolio, T, RQ4 catalogue); **B — Tasks & Models** (`prl/tasks`, `prl/mutate`,
+`prl/natural`, `prl/testgen`, `prl/models`, prompts); **C — Study Lead** (`prereg/`, `prl/conditions`,
+`prl/driver`, `prl/analysis`, related work, paper).
+
+## 10. Gracy's additions — resolution
+
+| # | Suggestion | Resolution |
+|---|---|---|
+| G1 | Real model errors first | Adopted: natural bugs primary (0.8B, 9B; never repairers) |
+| G2 | Energy tracking | Adopted: GPU measured via NVML per block; CPU/CO2 estimated and labelled |
+| G3 | 2 GB memory sandbox | Adapted: 4 GB Windows Job Object per Lean worker (Mathlib needs ~2.5 GB) |
+| G4 | Infra failures don't burn budget | Adopted; candidate-caused timeouts still count after confirmation |
+| G5, G6 | model/Lean seconds; log every attempt | Adopted |
+| G7 | Adaptive light→heavy tactics | Adopted as deterministic two-tier portfolio, same for every condition |
+| G8, G9 | Feedback router; hidden tests private | Adopted (`prl/conditions/feedback.py`) |
+| G10 | C-plain | Adopted |
+| G11 | Spec-gaming pre-filter | Adopted: reject vs flag |
+| G12 | 10% audit | Adopted (+ all flagged successes) |
+| G13 | Resample cap | Adopted (4 samples per generator per family) |
+| — | B/A get only "failed, retry" (diagram) | Declined: B keeps Lean errors (no strawman), A has no feedback by definition |
+
+## 11. Repository map
+
+| Path | Content |
+|---|---|
+| `README.md` | setup, pipeline commands, tests |
+| `memory.md` | living project memory (decisions, environment facts, lessons, status) |
+| `context/` | original inputs (proposal, plan, verdicts, Gracy's additions) |
+| `docs/final_proposal.md` | this document |
+| `docs/final_architecture.md` | deliberation and the architecture diagram |
+| `docs/requirements.md`, `high_level_design.md`, `low_level_design.md`, `implementation_plan.md` | v2 specification chain |
+| `docs/feasibility.md` | Phase-0 evidence (pending re-run) |
+| `prereg/` | frozen study inputs and the deviation log |
+| `prl/` | harness (tasks, lean, testgen, mutate, natural, models, conditions, driver, analysis, energy, cli) |
+| `lean_env/` | pinned Lean project and the verification server |
+| `tests/` | 79 unit tests + 24 real-Lean integration tests |
+| `scripts/pdownload.py` | parallel downloader for throttled networks |
+
+## 12. Status and next steps
+
+- [x] Design consolidated (v2); docs updated; context folder created.
+- [x] Harness implemented: all v2 components; 79 unit tests and 24 Lean integration tests pass; lint clean.
+- [ ] Phase 0 (T, hidden tests, compile/determinism probes) — CPU parts can run any time; GPU parts on an idle GPU.
+- [ ] Dataset (natural bugs need the GPU), splits, pilot, gate, freeze, confirmatory run, analysis, audit.
+- [ ] Related-work re-check before writing; venue choice (candidates named in the GPT verdict: LLM4Code / FormaliSE
+  workshops; ISSTA or ASE/ICSE/FSE only if results and scope justify it).
+
+## 13. Deliverables
+
+Research report; repair harness (`prl/`); buggy-VERINA dataset with provenance and hidden tests; experiment logs;
+pre-registered portfolio, prompts and configuration; code-shape catalogue; replication instructions.
