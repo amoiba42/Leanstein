@@ -195,3 +195,20 @@ def test_study_config_declares_new_arms():
     cfg = study_config()
     assert cfg["exploratory_conditions"] == ["Bhammer"] and cfg["crosseval_conditions"] == ["B"]
     assert "Bhammer" not in cfg["conditions"]  # never part of the main plan by default
+
+
+def test_primary_pool_uses_dataset_count_and_heldout_is_labelled(tmp_path):
+    import pandas as pd
+
+    from prl.analysis.report import primary_pool
+    cfg = {"bugs": {"primary": "natural", "min_natural_families": 60}}
+    pilot = pd.DataFrame({"split": ["pilot"], "kind": ["natural"], "family_id": ["a"]})
+    assert primary_pool(pilot, cfg, n_natural=75)[0] == ("natural",)   # pilot rows do not decide the pool
+    assert primary_pool(pilot, cfg, n_natural=10)[0] == ("mutant", "natural")
+    _runs(tmp_path / "h")
+    rows = [json.loads(x) for x in (tmp_path / "h" / "runs.jsonl").read_text().splitlines()]
+    (tmp_path / "h" / "runs.jsonl").write_text("".join(json.dumps({**r, "split": "heldout"}) + "\n" for r in rows))
+    cfg = {**study_config(), "analysis": {**study_config()["analysis"], "bootstrap": 200, "permutations": 500}}
+    analyze([tmp_path / "h"], cfg, tmp_path / "out")
+    assert (tmp_path / "out" / "rq1_main.md").read_text(encoding="utf-8").startswith(
+        "# RQ1 (held-out replication, not confirmatory)")

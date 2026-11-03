@@ -19,7 +19,7 @@ chosen for cost and determinism, not to change coverage; Tier H keeps the same 2
 | verification (LLD §5.4) | Staged verify: portfolio only if compile ∧ tests pass; entries one per request with early stop; full vector only for T | Cost; success semantics and `closing_entry` unchanged by construction |
 | Lean backend (HLD D11) | Own verification server `lean_env/PrlRepl.lean`; CLI fallback | ~0.6 s vs 25–40 s per check; parity with the CLI checked (29/29 identical verdicts in v1 development) |
 | `study.yaml: models` | Repairers Qwen3.5-2B/4B (primary), Gemma-4-E4B (secondary), Goedel-Code-Prover-8B (A/B); generators Qwen3.5-0.8B and 9B | latest small models (team instruction); generators never repair (no self-repair bias) |
-| `study.yaml: bugs` | Natural bugs primary if ≥60 confirmatory families, else natural ∪ mutant | Gracy G1 + all verdicts (realism); rule fixed before any natural bug exists |
+| `study.yaml: bugs` | Natural bugs primary if ≥60 families of the `main` split have one (counted from the dataset manifests; wording clarified in v2.1), else natural ∪ mutant | Gracy G1 + all verdicts (realism); rule fixed before any natural bug exists |
 | `study.yaml: lean` | 4 GB Job-Object cap per Lean worker; workers from free RAM; candidate timeouts confirmed once, then count | Gracy G3/G4 adapted to Windows; shared machine |
 | `study.yaml: energy` | GPU measured (NVML) per (model, condition) block; CPU estimated (2.29 W/thread); CO2 0.716 kg/kWh | Gracy G2; Windows has no RAPL |
 | `study.yaml: decoding` | `reasoning_effort: none` | hidden reasoning would consume the token budget invisibly |

@@ -263,7 +263,7 @@ def analyze(study_dirs: list[Path], cfg: dict, out_dir: Path | None = None) -> d
 
     # ---- RQ1 + secondary comparisons
     models = sorted(df.model.unique())
-    primary_kinds, pool_note = primary_pool(df, cfg)
+    primary_kinds, pool_note = primary_pool(df, cfg, natural_main_families())
     summary["primary_pool"] = {"kinds": list(primary_kinds), "rule": pool_note}
     dfc = with_derived(df)  # comparisons only: derived rows never enter costs, outcomes or audits
     rows = []
@@ -290,8 +290,11 @@ def analyze(study_dirs: list[Path], cfg: dict, out_dir: Path | None = None) -> d
         comp.to_csv(out / "comparisons.csv", index=False)
         cols = ["model", "bugs", "x", "y", "n_families", "rate_x", "rate_y", "diff", "ci_lo", "ci_hi", "p_signflip",
                 "p_holm", "cohens_h", "only_x", "only_y", "both", "neither", "mcnemar_p_greater", "min_detectable"]
+        splits = set(df.split) if "split" in df else set()
+        kind = ("held-out replication, not confirmatory" if splits == {"heldout"} else
+                "pilot, not confirmatory" if splits == {"pilot"} else "confirmatory")
         (out / "rq1_main.md").write_text(
-            "# RQ1 (confirmatory) and secondary paired comparisons\n\n"
+            f"# RQ1 ({kind}) and secondary paired comparisons\n\n"
             "Family-level scores = mean over seeds of 'any instance solved'. One-sided sign-flip permutation test "
             "(x > y); Holm correction over the primary tests only; 95% family-cluster bootstrap CI.\n\n"
             f"Primary bug pool: {pool_note}\n\n"
@@ -361,12 +364,27 @@ def analyze(study_dirs: list[Path], cfg: dict, out_dir: Path | None = None) -> d
     return summary
 
 
-def primary_pool(df: pd.DataFrame, cfg: dict) -> tuple[tuple[str, ...], str]:
-    """Pre-registered rule (study.yaml `bugs`): natural bugs if they cover enough confirmatory families."""
+def natural_main_families() -> int | None:
+    """Families of the confirmatory `main` split that have a natural-bug instance, from the dataset manifests
+    (None before the dataset exists). A property of the dataset, so every analysis uses the same pool."""
+    from prl.tasks import instances as INS
+    ins = INS.load_all()
+    if not ins:
+        return None
+    return len({i.family_id for i in ins if i.kind == "natural" and i.split == "main"})
+
+
+def primary_pool(df: pd.DataFrame, cfg: dict, n_natural: int | None = None) -> tuple[tuple[str, ...], str]:
+    """Pre-registered rule (study.yaml `bugs`): natural bugs if they cover at least `min_natural_families`
+    families of the confirmatory `main` split, else natural ∪ mutant. `n_natural` comes from the dataset
+    (`natural_main_families`); without it the count is taken from the `main` rows of `df`."""
     b = cfg.get("bugs", {})
     need = int(b.get("min_natural_families", 60))
-    conf = df[df.split.isin(["main", "heldout"])] if "split" in df else df
-    n_nat = conf[conf.kind == "natural"].family_id.nunique()
+    if n_natural is not None:
+        n_nat = n_natural
+    else:
+        conf = df[df.split == "main"] if "split" in df else df
+        n_nat = conf[conf.kind == "natural"].family_id.nunique()
     if b.get("primary", "natural") == "natural" and n_nat >= need:
         return ("natural",), f"natural bugs ({n_nat} families >= {need})"
     return ("mutant", "natural"), f"natural + mutant (natural covers {n_nat} < {need} families: pre-registered fallback)"

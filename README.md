@@ -75,14 +75,22 @@ uv run prl bugs natural                        # GPU: natural bugs from Qwen3.5-
 uv run prl bugs mutants                        # controlled mutants
 uv run prl bugs shaping                        # study-S instances
 uv run prl splits                              # pilot / main / held-out
-uv run prl run --study pilot --split pilot --allow-unfrozen --seeds 11
+# pilot (primary models, 1 seed; Bhammer included so its cost can be estimated)
+uv run prl run --study pilot --split pilot --allow-unfrozen --seeds 11 --conditions A,B,BP,Bhammer,C,Cplain
 uv run prl power --study pilot                 # power simulation -> prereg/power_note.json (required by freeze)
 uv run prl freeze                              # pre-registration hashes
-uv run prl run --study main --split main       # confirmatory (refuses if prereg/ changed)
+# confirmatory study `main` (refuses if prereg/ changed)
+uv run prl run --study main --split main                                   # primary x A,B,BP,C,Cplain x 3 seeds
+uv run prl run --study main --split main --models gemma-4-e4b-it --conditions B,BP,C --seeds 11
+uv run prl run --study main --split main --models goedel-code-prover-8b --conditions A,B --seeds 11
+uv run prl run --study main --split main --conditions Bhammer           # optional, only if the pilot cost allows
 uv run prl run --study main-shaping --split main --kinds shaping --conditions S,Splain
-uv run prl run --study main-bhammer --split main --conditions Bhammer   # optional, if the pilot cost allows
-uv run prl crosseval --study main              # B->C cross-evaluation (Lean only, no model)
-uv run prl analyze --study main,main-shaping,main-bhammer   # every table and figure into results/
+# held-out replication, run once
+uv run prl run --study heldout --split heldout --conditions B,BP,C
+# analysis
+uv run prl crosseval --study main,heldout      # B->C cross-evaluation (Lean only, no model)
+uv run prl analyze --study main,main-shaping   # confirmatory + secondary tables into results/
+uv run prl analyze --study heldout --out results/heldout   # replication, never pooled with main
 uv run prl audit --study main                  # 10% + flagged successes -> results/audit/sample.csv
 uv run prl audit --merge                       # after filling the CSV
 ```
@@ -90,7 +98,7 @@ uv run prl audit --merge                       # after filling the CSV
 ## Tests
 
 ```bash
-uv run pytest -m "not lean and not llm"   # 94 unit tests (fast)
+uv run pytest -m "not lean and not llm"   # 95 unit tests (fast)
 uv run pytest -m lean                     # 24 integration tests on real Lean: zero false successes
 uv run ruff check prl tests
 ```

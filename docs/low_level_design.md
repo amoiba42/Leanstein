@@ -350,17 +350,28 @@ failing visible test (actual output via `eval_outputs`), else a hidden test (not
 ### 8.3 Prompts (`prompts.py` + `prereg/prompts/`)
 - `system.txt` (shared): Lean 4 expert; Lean 4 (not Lean 3) syntax; output format rules.
 - `task_block` (shared, generated from `TaskView`): description, Lean signature line, precondition and postcondition definitions (with their aux), the start implementation as a complete `def` (signature line + body).
-- Condition instructions:
+- Condition instructions (the files in `prereg/prompts/` are the reference; summaries here):
+  - `A.txt`, `B.txt`, `BP.txt` (identical text): "The current implementation is incorrect. Write a correct
+    implementation and a proof of the theorem." + exactly two ```lean blocks: (1) the complete `def` (helpers before
+    it allowed); (2) `theorem <F>_spec_satisfied … := by` with the proof (helper lemmas before it allowed).
   - `Bhammer.txt`: as `B.txt`, plus "The checker has these automatic tactic scripts available (the same frozen list
     the code-only conditions use) …" followed by `$tactics` = one bullet per expanded portfolio entry (newlines
     shown as `; `). The menu is computed in `prl.conditions` (the agent layer never imports `prl.lean`).
-  - `A.txt`, `B.txt`, `BP.txt`: "Fix the implementation and prove the theorem. Output exactly two ```lean blocks: (1) the full `def` (helpers before it allowed); (2) the theorem `<name>_spec_satisfied` with its proof (lemmas before it allowed). Do not use sorry/admit/axiom/native_decide."
-  - `C.txt`, `Cplain.txt`: "Fix the implementation so that it is correct **and simple enough for Lean's automatic tactics (simp, omega, grind, induction) to prove the specification**. Prefer structural recursion over the same structure as the specification, pattern matching, and avoid partial/imperative loops. Output exactly one ```lean block with the full `def` (helpers before it allowed). Do NOT write any proof."
-  - `S.txt`, `Splain.txt`: as C but "The implementation below is already behaviourally correct, but Lean's automatic tactics cannot prove it. Rewrite it into an equivalent implementation that the tactics can prove."
-- Feedback blocks (`feedback.py`):
-  - B/BP/Bhammer: `Your previous attempt failed.\n<failing test line if any>\nLean errors:\n<≤3 errors>`.
-  - C/S: `Your previous attempt failed.\n<hint.text>`.
-  - Cplain/Splain: `The candidate was rejected. Try again.`
+  - `C.txt`, `Cplain.txt` (identical text): correct implementation "simple enough for Lean's automatic tactics
+    (simp, omega, grind, aesop, induction) to prove the theorem without any hand-written proof"; prefer structural
+    recursion following the specification, pattern matching, plain arithmetic; avoid partial definitions, imperative
+    loops and unnecessary helpers; exactly one ```lean block; "Do NOT write any theorem or proof."
+  - `S.txt`, `Splain.txt` (identical text): "The current implementation is behaviourally correct, but Lean's
+    automatic tactics … cannot prove the theorem for it. Rewrite it into an equivalent implementation …", same
+    style advice and output rule as C.
+  - `natural.txt`: zero-shot "Write an implementation of the function." (bug generators only).
+- Feedback blocks (templates `feedback_proof.txt`, `feedback_hint.txt`, `feedback_plain.txt`, filled by the router):
+  - A/B/BP/Bhammer (A gets none): "Your previous answer was rejected." + the routed core message (rule violated /
+    ≤3 Lean errors / failing visible witness + failure counts / "did not terminate" / ≤3 proof errors) + "Fix the
+    implementation and/or the proof. Output the two ```lean blocks again."
+  - C/S: "Your previous answer was rejected." + hint text (routed core + unsolved goal + structural pointers) +
+    "Output the complete definition again in one ```lean block. Do NOT write any proof."
+  - Cplain/Splain: "The candidate was rejected. Try again." + the same output-format reminder as C.
 - History: messages = system, user(task + instruction), then for the last `history_turns` turns: assistant(raw output truncated to 4,000 chars), user(feedback). Same rule for all conditions.
 - `TaskView` construction is the only prompt input; a unit test asserts that rendered prompts never contain the reference `code`/`proof` text (when it differs from start), hidden test literals, or paths under `data/hidden`.
 
@@ -418,7 +429,7 @@ seed-determinism checks (idle GPU only).
 Computed by `prl.driver.runner.outcome_label` at run time (priority order in §10).
 
 ### 11.2 Statistics (`stats.py`)
-- `family_scores(runs, cond, model) -> Series[family → mean over seeds of max over instances success]`.
+- `family_scores(df, cond, model, kinds)` (in `report.py`) `-> Series[family → mean over seeds of max over instances success]`.
 - `signflip_test(x, y, n_perm, seed, alternative="greater")`: d = x − y per family; statistic = mean(d); exact enumeration when ≤ 2^16 non-zero diffs else Monte-Carlo with `n_perm`; p = (count(stat* ≥ stat) + 1)/(n + 1).
 - `holm(pvals) -> adjusted`.
 - `mcnemar_exact(b, c)`: two-sided binomial test on discordant counts (b = only-x, c = only-y), plus one-sided.
@@ -455,7 +466,8 @@ entry distribution.
 
 ### 11.5 Reports (`report.py`)
 `analyze(study_dirs, cfg, out)` writes `results/`: `t_coverage.*`, `comparisons.csv` and `rq1_main.md` (primary
-bug pool chosen by `primary_pool` from `study.yaml: bugs`; Holm over the primary tests of the primary models),
+bug pool chosen by `primary_pool` from `study.yaml: bugs`, counting natural-bug families of the `main` split from the
+instance manifests via `natural_main_families()`; Holm over the primary tests of the primary models),
 `rq2_mechanism.md`, `rq4_shapes*.{md,csv}`, `rq5_costs.md` (+ `rq5_energy.csv`: GPU J measured, CPU J and CO2
 estimated, J per verified repair), `outcomes.csv`, `sensitivity_n.csv`, `integrity_flags.csv`,
 `figures/rates.png`, `summary.json`. Deterministic and idempotent (tested).

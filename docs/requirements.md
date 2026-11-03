@@ -104,6 +104,7 @@ All verdicts flagged that the proposal and the plan disagree. Each row is now a 
 | Gracy rev-3 #4 | B-hammer: B told the frozen tactic list | FR-COND-10 / FR-ANA-9 (exploratory arm `Bhammer`, optional) |
 | Gracy rev-3 #5 | RAM-aware Lean workers with an environment override | FR-RES-1 (`lean.workers: 0` → free-RAM rule; `PRL_LEAN_WORKERS` overrides) |
 | Gracy rev-3 #6 | Wall guards are backstops; heartbeats are the tactic budget | FR-PORT-2, FR-FAIL-2 (guard ≥ 50 s; per entry max(30 s, guard/4); no unbounded portfolio heartbeats) |
+| Gracy rev-3 (alternate) | Parallel parameter set and repo layout (N = 5, wall-clock tactic budgets, …) | Not adopted; this document and `prereg/` are authoritative (`final_architecture.md` §2b table); the >5% infra-failure stop rule is adopted as an operating rule |
 | Gracy rev-3 #7 | Replace `import Mathlib` with five tactic modules | **Declined** (FR-RES-2, NFR-ENV-2): three of the modules do not exist in Mathlib v4.24; a smaller import set shrinks the simp set (changes T), breaks specs that use Mathlib definitions, and breaks parity between the server and CLI backends |
 
 ---
@@ -131,7 +132,7 @@ The model is **untrusted**: all its output is treated as adversarial input to th
 - **FR-TASK-2 (MUST)** Check every reference: compile on the pinned toolchain; pass all VERINA tests. Eligibility = compiles ∧ passes tests. Tasks failing either are *excluded with a recorded reason*. The human reference proof is checked **when present** (finding: only 46/189 VERINA tasks ship a proof; 143 have `sorry`), and recorded as `ref_proof ∈ {human_ok, human_broken, absent}` — it is never used by any condition, and its absence is not an exclusion reason. (For `absent` tasks, any portfolio-closed proof is a proof nobody had produced; this is reported as a by-product of T.)
 - **FR-TASK-3 (MUST)** Exclude tasks with known specification defects (VERINA audit, ref. [14] of the proposal) when a machine-readable list is available; otherwise flag tasks where the reference proof is absent or uses `sorry`.
 - **FR-TASK-4 (MUST)** A *task family* = one VERINA task. Every derived instance (mutant, natural bug, seed) belongs to its family. Families are the statistical unit.
-- **FR-TASK-5 (MUST)** Splits at family level with a fixed seed: `pilot` (20 families, stratified by basic/advanced), `main` (remaining eligible). A held-out portion of `main` (~30%) is locked and run once (`heldout`).
+- **FR-TASK-5 (MUST)** Splits at family level with a fixed seed: `pilot` (20 families, stratified by basic/advanced), `main` (remaining eligible). A held-out portion of `main` (~30%) is locked and run once (`heldout`); it is analysed separately as a replication and never pooled into the confirmatory tests, which use `main`.
 - **FR-TASK-6 (MUST)** Emit one JSON task manifest per instance (schema in LLD §3) including SHA-256 hashes of all locked regions and test files.
 
 ### 5.2 Bug sources (Member B)
@@ -141,7 +142,7 @@ The model is **untrusted**: all its output is treated as adversarial input to th
 - **FR-MUT-3 (MUST)** Choose ≤2 mutants per family by deterministic seeded sampling stratified over operator class; record operator, location, original and mutated text.
 - **FR-MUT-4 (MUST)** Mutation is deterministic given a seed.
 - **FR-NAT-1 (MUST)** Natural bugs (**primary bug pool**, Gracy G1): for each family, sample zero-shot implementations (no faulty code shown) from the generators Qwen3.5-0.8B and Qwen3.5-9B, which are never repairers; at most 4 samples per generator per family (resample cap, G13); keep those that compile and fail at least one test; at most 1 per family per generator. Reported separately from mutants.
-- **FR-NAT-2 (MUST)** Primary-pool rule (pre-registered in `prereg/study.yaml: bugs`): the confirmatory bug pool is *natural* if natural bugs cover at least 60 families of the confirmatory split, otherwise *natural ∪ mutant*. Mutants are always reported separately.
+- **FR-NAT-2 (MUST)** Primary-pool rule (pre-registered in `prereg/study.yaml: bugs`): the confirmatory bug pool is *natural* if natural bugs cover at least 60 families of the confirmatory `main` split, otherwise *natural ∪ mutant*. The count is taken from the dataset manifests (not from run results), so the pilot power note, the main analysis and the held-out analysis all use the same pool. Mutants are always reported separately.
 
 ### 5.3 Behavioural tests (Member A/B)
 

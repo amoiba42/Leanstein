@@ -90,7 +90,8 @@ proof is *not* required: only 46/189 ship one). Families are the statistical uni
   negated conditions, swapped branches, dropped ±1, swapped arguments), kept if they compile and fail a test,
   ≤2 per family. Condition T on each buggy start flags weak specifications.
 - **Shaping instances (study S):** correct references that T cannot prove.
-- Pre-registered pool rule: natural if ≥60 confirmatory families, else natural ∪ mutant (`prereg/study.yaml: bugs`).
+- Pre-registered pool rule: natural if ≥60 families of the `main` split have a natural bug (counted from the dataset,
+  not from results), else natural ∪ mutant (`prereg/study.yaml: bugs`).
 Code: `prl/natural/`, `prl/mutate/`.
 
 ### 5.3 Tests
@@ -172,8 +173,9 @@ pilot-based power simulation); shared hardware (memory caps, idle-GPU rule, ener
 ## 8. Plan of work and gate
 
 Phases (commands in `README.md`, statuses in `docs/implementation_plan.md`):
-0 feasibility (T, compile probe, determinism) → 2 dataset → 3 pilot + gate + power note → 4 freeze + confirmatory
-run → 5 cross-evaluation, analysis and audit.
+0 environment and feasibility (T, compile probe, determinism) → 1 components (done) → 2 dataset → 3 pilot, power
+note, gate and freeze → 4 confirmatory run (`main`, `main-shaping`, `heldout` once) → 5 cross-evaluation, analysis
+(held-out analysed separately, never pooled) and audit.
 **Gate (end of pilot):** T ≥20% of eligible pilot references; compile rate >10% in C; ≥1 hand-verified repair by
 C that neither B nor B+P finds; zero false successes; cost fits (the same estimate decides whether Bhammer runs);
 power note written (informative, not pass/fail). If the decisive criterion fails: Backup 2 —
@@ -214,6 +216,7 @@ As in the plan (assignment to people to be confirmed by the team): **A — Verif
 | R3-5 | RAM-aware Lean workers with override | Adopted |
 | R3-6 | Wall guards as backstops, heartbeats as budget | Adopted; enforced (guard ≥ 50 s, positive tier heartbeats) |
 | R3-7 | Five tactic modules instead of `import Mathlib` | Declined: three modules do not exist in Mathlib v4.24; a reduced environment changes T coverage, breaks specs and server/CLI parity |
+| — | The `alternate` branch's own parameter set (N = 5, 1,024 tokens, second-based tactic budgets, other repo layout, …) | Ours stays authoritative; item-by-item comparison in `docs/final_architecture.md` §2b; the >5% infra-failure stop rule adopted |
 
 ## 11. Repository map
 
@@ -229,7 +232,7 @@ As in the plan (assignment to people to be confirmed by the team): **A — Verif
 | `prereg/` | frozen study inputs and the deviation log |
 | `prl/` | harness (tasks, lean, testgen, mutate, natural, models, conditions, driver, analysis, energy, cli) |
 | `lean_env/` | pinned Lean project and the verification server |
-| `tests/` | 94 unit tests + 24 real-Lean integration tests |
+| `tests/` | 95 unit tests + 24 real-Lean integration tests |
 | `scripts/pdownload.py` | parallel downloader for throttled networks |
 
 ## 12. Status and next steps
@@ -237,7 +240,7 @@ As in the plan (assignment to people to be confirmed by the team): **A — Verif
 - [x] Design consolidated (v2); docs updated; context folder created.
 - [x] Harness implemented: all v2 components; lint clean.
 - [x] v2.1 (2026-11-03): Gracy's revision-3 notes reconciled (cross-evaluation, proof-tactic logging, power
-  simulation, Bhammer, worker sizing adopted; reduced imports declined) and implemented; 94 unit tests and 24 Lean
+  simulation, Bhammer, worker sizing adopted; reduced imports declined) and implemented; 95 unit tests and 24 Lean
   integration tests pass.
 - [ ] Phase 0 (T, hidden tests, compile/determinism probes) — CPU parts can run any time; GPU parts on an idle GPU.
 - [ ] Dataset (natural bugs need the GPU), splits, pilot, gate, power note, freeze, confirmatory run,

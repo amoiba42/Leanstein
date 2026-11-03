@@ -79,7 +79,7 @@ B = Tasks & Models, C = Study Lead.
 
 | ID | Step | Acceptance | Status |
 |---|---|---|---|
-| P-1 | `prl run --study pilot --split pilot --kinds natural,mutant --allow-unfrozen --seeds 11` (primary models; A, B, BP, C, Cplain) | logs complete | ☐ |
+| P-1 | `prl run --study pilot --split pilot --kinds natural,mutant --allow-unfrozen --seeds 11 --conditions A,B,BP,Bhammer,C,Cplain` (primary models; Bhammer included only to measure its cost) | logs complete | ☐ |
 | P-2 | Pilot-only tuning of prompts / portfolio; every change logged in `prereg/deviations.md` | — | ☐ |
 | P-3 | `prl power --study pilot`: power simulation (3 scenarios, 3 seeds, sign-flip at α/4, n_main → total eligible incl. pilot) | `prereg/power_note.json`, `results/power_note.md` | ☐ |
 | P-4 | Gate (requirements §11) recorded in `docs/feasibility.md`, incl. the Bhammer go/no-go from the cost estimate (logged in `prereg/deviations.md`) | decision | ☐ |
@@ -89,19 +89,19 @@ B = Tasks & Models, C = Study Lead.
 
 | ID | Step | Status |
 |---|---|---|
-| M-1 | Primary models × {A, B, BP, C, Cplain} × 3 seeds on `main` (natural + mutant instances) | ☐ |
-| M-2 | Primary models × {S, Splain} × 3 seeds on shaping instances | ☐ |
-| M-3 | Gemma-4-E4B × {B, BP, C} × 1 seed | ☐ |
-| M-4 | Goedel-Code-Prover-8B × {A, B} × 1 seed | ☐ |
-| M-5 | `heldout` once: primary models × {B, BP, C} × 3 seeds | ☐ |
-| M-6 | *Optional (P-4 decision):* primary models × Bhammer × 3 seeds on `main` (exploratory; cost reported) | ☐ |
+| M-1 | Study `main`: primary models × {A, B, BP, C, Cplain} × 3 seeds on `main` (natural + mutant instances) | ☐ |
+| M-2 | Study `main-shaping`: primary models × {S, Splain} × 3 seeds on shaping instances | ☐ |
+| M-3 | Study `main`: Gemma-4-E4B × {B, BP, C} × 1 seed | ☐ |
+| M-4 | Study `main`: Goedel-Code-Prover-8B × {A, B} × 1 seed | ☐ |
+| M-5 | Study `heldout` (run once): primary models × {B, BP, C} × 3 seeds; analysed separately as a replication | ☐ |
+| M-6 | *Optional (P-4 decision):* study `main`, primary models × Bhammer × 3 seeds (exploratory; cost reported) | ☐ |
 
 ## Phase 5 — Analysis and reporting
 
 | ID | Step | Status |
 |---|---|---|
-| R-0 | `prl crosseval --study main` (and `heldout`): B→C cross-evaluation, Lean only | ☐ |
-| R-1 | `prl analyze --study main,heldout` (includes `B_noauto`, Bhammer, proof-style table, `crosseval.md`) | ☐ |
+| R-0 | `prl crosseval --study main,heldout`: B→C cross-evaluation, Lean only | ☐ |
+| R-1 | `prl analyze --study main,main-shaping` → `results/` (confirmatory + secondary: `B_noauto`, Bhammer, proof-style table, `crosseval.md`); `prl analyze --study heldout --out results/heldout` (replication, never pooled) | ☐ |
 | R-2 | `prl audit --study main` → fill the CSV → `prl audit --merge` | ☐ |
 | R-3 | Code-shape catalogue with annotated before/after examples | ☐ |
 | R-4 | `docs/results.md` (claims locked to `results/`) and `docs/final_proposal.md` §Results | ☐ |
@@ -117,10 +117,14 @@ B = Tasks & Models, C = Study Lead.
 - Model runs (D-3, F-06, F-07, Phases 3–4) happen only when the GPU is otherwise idle and the team has given the go-ahead.
 - Lean workers are derived from free RAM; never more than the machine can hold next to other jobs.
 - Every change to `prereg/` after `prl freeze` is a logged deviation; results from different portfolios are never pooled.
+- If more than 5% of runs in the confirmatory study end with an infrastructure failure (`driver.log` `[infra]` lines),
+  stop and fix the infrastructure before continuing (adopted from Gracy's revision 3; failed runs re-execute on resume).
+- The `alternate` branch on GitHub is a record of Gracy's revision-3 proposal; where it differs, `docs/final_architecture.md`
+  §2b and `prereg/` are authoritative.
 
 ## Testing strategy
 
-1. Unit tests (no Lean, no LLM): `uv run pytest -m "not lean and not llm"` (94 tests).
+1. Unit tests (no Lean, no LLM): `uv run pytest -m "not lean and not llm"` (95 tests).
 2. Lean integration: `uv run pytest -m lean` (24 tests: integrity, re-shaping mechanism, determinism).
 3. Static: `uv run ruff check prl tests`.
 4. End-to-end dry run before the pilot: 3 families × all conditions × 1 seed × Qwen3.5-2B.

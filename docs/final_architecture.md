@@ -61,7 +61,32 @@ additions are what make a positive result defensible to reviewers ("C only rever
 | R3-4 | **B-hammer**: B whose prompt lists the frozen tactics | **Adopt as an optional exploratory arm (`Bhammer`)** | Asks something BP does not: BP *tries* the tactics automatically; Bhammer tests whether *knowing* them is enough. Primary models only, run only if the pilot cost estimate leaves room (decision logged before the freeze); never pooled with B. |
 | R3-5 | RAM-aware Lean workers with an environment override | **Adopt** | Same rule the CLI already used, now also when the pool is created lazily. |
 | R3-6 | Wall-clock guards are backstops; heartbeats are the tactic budget; no `maxHeartbeats 0` in portfolio entries | **Adopt** | Matches our determinism rule; now enforced in code (guard ≥ 50 s; positive tier heartbeats). |
+| R3-0 | Persistent Lean worker (`import Mathlib` paid once) | **Already in v2** | Our verification server `PrlRepl` (HLD D11) does exactly this. |
 | R3-7 | Replace `import Mathlib` by five tactic modules (`Mathlib.Tactic.{Omega,Linarith,NormNum,Aesop,Grind}`) | **Decline** | Three of the five modules do not exist in Mathlib v4.24 (`omega` and `grind` are in Lean core, Aesop is imported as `Aesop`), so the server could not start. Even with correct names, a smaller environment shrinks the simp set (T coverage changes), breaks task specs that use Mathlib definitions, and makes the server (which ignores file headers) disagree with the CLI backend (which keeps them). One pinned full-Mathlib environment for every condition stays. |
+
+### Revision-3 parameter set (branch `alternate`) vs this design
+
+The `alternate` branch (`ARCHITECTURE.md`, `docs/*.md`) is a complete parallel specification written as a
+companion to `AutoSE_Project_Plan_v2.docx`, which is not in this repository. Where its limits differ, **this
+document and `prereg/study.yaml` / `prereg/portfolio.yaml` are authoritative**; the `alternate` docs are a record of
+the proposal, not a second specification.
+
+| Item | `alternate` | Ours (authoritative) | Why ours |
+|---|---|---|---|
+| Attempts per run | N = 5 | 8 generations + 48k tokens + 240 s inference, first cap wins | settled in requirements R3 (proposal k = 4 rounds vs plan N = 5); C samples in rounds of 2 |
+| Completion length | 1,024 tokens | 1,536 | B must fit two Lean blocks (code + proof); truncation rate is checked in the pilot |
+| Generation timeout | 120 s, infra (no N charged) | inference seconds count against the run's 240 s budget | slow generation is model behaviour, not infrastructure; budgets stay matched |
+| Tactic budgets | 2 s light / 8 s heavy wall clock | 50k / 200k heartbeats | determinism (G7, R3-6) |
+| Wall guards | 40 s per command, 60 s per process, 120 s per candidate | 120 s per request (≥ 50 s), max(30 s, guard/4) per entry | backstops only; heartbeats decide |
+| Lean workers | 2, pause below 2 GB free RAM | from free RAM (⌊(free − 4 GB)/3 GB⌋, ≤ 6), 4 GB Job Object each | uses the machine without starving other jobs |
+| Worker recycling | after 50 candidates or RSS > 3.5 GB | not needed: the 4 GB cap kills a bloated worker, and a death is re-checked in a fresh worker without charging the model | same effect, one mechanism |
+| Infra reruns | 3, then drop the task-seed for all conditions | same candidate re-verified ≤ 2×, then the run is abandoned and re-executed on resume | no run is ever dropped |
+| Feedback length | 400 tokens, equal for B and C | B: ≤ 3 Lean errors + witness; C: ≤ 1,200-character hint | content differs by design; lengths are logged (`feedback_chars`) and reported |
+| Prompt context | 3,072 of 4,096 tokens, trim oldest | context 8,192; last 2 turns verbatim for every condition | Qwen3.5 / Gemma-4 context; same rule for all conditions |
+| Bug source | natural only; drop a task when the resample cap is reached | natural primary; mutants kept as controlled secondary set and as the pre-registered fallback pool | the family stays usable; mutants give per-operator analysis (G1) |
+| Hidden-test role in harvest | bug must fail a hidden test | bug must fail ≥ 1 visible or hidden test | the visible failing witness shown at turn 0 needs a visible failure when one exists; hidden-only failures are kept too |
+| Repository / config layout | `common/ verifier/ tasks/ models/ driver/ analysis/`, `params.yaml`, `models.yaml` | `prl/` package, `prereg/study.yaml`, `portfolio.yaml`, `hints.yaml` | implemented and tested; one frozen config directory |
+| Infra-failure rate stop rule | stop if > 5% in the main run | **adopted** as an operating rule (`docs/implementation_plan.md`) | cheap safeguard |
 
 ---
 

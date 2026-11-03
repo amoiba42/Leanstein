@@ -16,7 +16,7 @@ scratch. The living proposal is `docs/final_proposal.md`; decisions and the diag
 - v2.1 (Gracy revision 3, branches `alternate` / `working` 48e9147): adopted cross-eval, proof-tactic logging, power
   simulation (`prl power`, required by `prl freeze`), Bhammer, RAM-aware workers, wall-guard rules; **declined** the
   reduced Mathlib imports (3 of 5 modules don't exist in v4.24). See final_architecture §2b.
-- Bugs: natural (Qwen3.5-0.8B + 9B, zero-shot, never repairers) = primary if ≥60 confirmatory families, else
+- Bugs: natural (Qwen3.5-0.8B + 9B, zero-shot, never repairers) = primary if ≥60 `main`-split families (from the dataset), else
   natural ∪ mutant; mutants always reported separately.
 - Repairers: Qwen3.5-2B, 4B (primary); Gemma-4-E4B (secondary); Goedel-Code-Prover-8B (A/B only).
 - Lean 4.24.0 + Mathlib v4.24.0 (full `import Mathlib`, never a subset); own verification server
@@ -60,8 +60,8 @@ final_architecture, requirements, HLD, LLD, implementation_plan, feasibility —
 
 ## Status
 
-- [x] v2 design, docs, code, tests — pushed to https://github.com/amoiba42/Leanstein (main = b50a81b).
-- [x] v2.1 reconciliation implemented on local branch `integrate-working` (94 unit + 24 Lean tests) — uncommitted;
-  the user commits and pushes (Claude never commits or pushes).
+- [x] v2 design, docs, code, tests — on GitHub https://github.com/amoiba42/Leanstein.
+- [x] v2.1 reconciliation (2026-11-03) implemented: 95 unit + 24 Lean tests. The user commits and pushes
+  (Claude never commits or pushes).
 - [ ] Phase 0 → dataset → pilot → power note + gate (+ Bhammer decision) → freeze → main → crosseval → analysis
   (GPU steps need an idle GPU + go-ahead).

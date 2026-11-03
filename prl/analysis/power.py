@@ -27,7 +27,14 @@ from typing import Any
 from scipy import stats as st
 
 from prl.analysis import stats as S
-from prl.analysis.report import PRIMARY_COMPARISONS, _md_table, family_scores, load_runs, primary_pool
+from prl.analysis.report import (
+    PRIMARY_COMPARISONS,
+    _md_table,
+    family_scores,
+    load_runs,
+    natural_main_families,
+    primary_pool,
+)
 from prl.config import PATHS, ensure_dir, read_json
 
 NOTE_PATH = PATHS.prereg / "power_note.json"
@@ -80,7 +87,7 @@ def power_note(pilot_dir: Path, cfg: dict[str, Any], *, log=print) -> dict[str, 
     sp = cfg["splits"]
     split_file = PATHS.data / "splits.json"
     n_main = len(read_json(split_file)["main"]) if split_file.exists() else None
-    kinds, pool_rule = primary_pool(df, cfg)
+    kinds, pool_rule = primary_pool(df, cfg, natural_main_families())
     rows, detail = [], []
     for m in primary_models:
         for x, y in PRIMARY_COMPARISONS:

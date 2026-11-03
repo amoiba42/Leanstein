@@ -51,7 +51,7 @@ the filesystem.
 
 | Layer | Packages | Responsibility | Owner |
 |---|---|---|---|
-| **Foundation** | `prl.config`, `prl.util` | Paths, frozen config loading, hashing, JSONL I/O, process control | C |
+| **Foundation** | `prl.config`, `prl.prereg`, `prl.energy` | Paths, frozen config loading, hashing, JSONL I/O, freeze hashes, energy metering | C |
 | **Benchmark** | `prl.tasks` | Parse VERINA, region model, task manifest, splits, eligibility | B |
 | **Judge** | `prl.lean` | Lean runner, file renderer, portfolio, test harness, integrity, axioms, hints, cache | A |
 | **Bug sources** | `prl.mutate`, `prl.natural` | Mutation operators, natural-bug collection | B |
@@ -252,7 +252,7 @@ runs.jsonl + attempts.jsonl + energy.jsonl + crosseval.jsonl + manifests
            Bhammer vs B, proof-style table, B→C cross-evaluation buckets and rescue rates
    ─► RQ3: C vs C-plain (same tests as RQ1, exploratory)
    ─► RQ4: code-feature extraction → feature-by-provability tables, L2 logistic regression with family-clustered bootstrap CIs
-   ─► primary bug pool chosen by the pre-registered rule (natural if ≥60 confirmatory families, else natural ∪ mutant)
+   ─► primary bug pool chosen by the pre-registered rule (natural if ≥60 `main`-split families have a natural bug, counted from the dataset; else natural ∪ mutant)
    ─► RQ5: cost tables, energy per verified repair (GPU measured, CPU estimated, per block), model/family gaps,
            sensitivity to N (post-hoc truncation of logs at N∈{2,4,8})
    ─► overlap (Venn) per model; per-stratum tables; closing-tactic distribution
@@ -292,16 +292,16 @@ Everything is a pure function of the log files and manifests, so `prl analyze` i
 
 ## 13. Experimental pipeline and phases
 
+Numbering follows `docs/implementation_plan.md`.
+
 | Phase | Purpose | Exit |
 |---|---|---|
-| **0 Feasibility** | T on all references; compile-rate probe of each model on 10 tasks; determinism probe; throughput (idle GPU only) | `docs/feasibility.md`; model set confirmed |
-| **1 Build** | All components + unit/integration tests | Test suite green; integrity suite zero false successes |
+| **0 Environment & feasibility** | T on all references; compile-rate probe of each model on 10 tasks; determinism probe; throughput (idle GPU only) | `docs/feasibility.md`; model set confirmed |
+| **1 Components** | All components + unit/integration tests | Test suite green; integrity suite zero false successes |
 | **2 Dataset** | Eligibility, hidden tests, natural bugs (0.8B, 9B), mutants, shaping instances, splits | Manifests + provenance tables |
-| **3 Pilot** | All conditions on 20 pilot families, 1 seed, primary models; portfolio/prompt tuning *only here*; power simulation (`prl power`); Bhammer go/no-go from the cost estimate | Go/no-go (requirements §11); `prereg/power_note.json` |
-| **4 Freeze** | Write `prereg/FREEZE.json` (refused without the power note) | Hash file committed |
-| **5 Main** | Confirmatory run on `main`: primary models × {A, B, BP, C, C-plain} × 3 seeds; S/S-plain on shaping instances; Gemma-4-E4B × {B, BP, C} × 1 seed; Goedel-Code-Prover-8B × {A, B} × 1 seed; optionally primary models × Bhammer × 3 seeds | Logs complete |
-| **6 Held-out** | Run `heldout` once | Logs complete |
-| **7 Analysis** | `prl crosseval`; `prl analyze`; audit; catalogue | `results/` + report |
+| **3 Pilot, gate, freeze** | A, B, BP, Bhammer, C, C-plain on the 20 pilot families, 1 seed, primary models (Bhammer only to measure its cost); portfolio/prompt tuning *only here*; power simulation (`prl power`); gate incl. Bhammer go/no-go; `prl freeze` (refused without the power note) | Go/no-go (requirements §11); `prereg/power_note.json`; `prereg/FREEZE.json` |
+| **4 Confirmatory run** | Study `main`: primary models × {A, B, BP, C, C-plain} × 3 seeds, Gemma-4-E4B × {B, BP, C} × 1 seed, Goedel-Code-Prover-8B × {A, B} × 1 seed, optionally primary models × Bhammer × 3 seeds; study `main-shaping`: S/S-plain; study `heldout`: primary models × {B, BP, C} × 3 seeds, run once | Logs complete |
+| **5 Analysis** | `prl crosseval`; `prl analyze` (main + main-shaping → `results/`; heldout separately → `results/heldout/`, never pooled); audit; catalogue | `results/` + report |
 
 ---
 
