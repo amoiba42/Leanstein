@@ -34,6 +34,11 @@ proofs themselves.
 | **C** | **code only** | **portfolio** | **proposed method** (failing test + unsolved goal + structural hint) |
 | Cplain | code only | portfolio | ablation: plain retry feedback |
 | S / Splain | code only, from a *correct* but unprovable reference | portfolio | mechanism: can a model re-shape code for provability? |
+| Bhammer *(exploratory, optional)* | code + proof; prompt lists the frozen portfolio | model | is knowing the tactics enough? |
+
+Secondary analyses without extra model calls: **B_noauto** (B with single-call automation proofs counted as
+failures, from the logged `proof_tactic_used`) and the **B→C cross-evaluation** (B's code that compiled but was not
+proved, re-checked by C's pipeline).
 
 Success = compiles ∧ locked theorem proved by the allowed source ∧ axioms ⊆ {propext, Classical.choice,
 Quot.sound} ∧ static integrity ∧ visible **and hidden** tests pass.
@@ -71,10 +76,13 @@ uv run prl bugs mutants                        # controlled mutants
 uv run prl bugs shaping                        # study-S instances
 uv run prl splits                              # pilot / main / held-out
 uv run prl run --study pilot --split pilot --allow-unfrozen --seeds 11
+uv run prl power --study pilot                 # power simulation -> prereg/power_note.json (required by freeze)
 uv run prl freeze                              # pre-registration hashes
 uv run prl run --study main --split main       # confirmatory (refuses if prereg/ changed)
 uv run prl run --study main-shaping --split main --kinds shaping --conditions S,Splain
-uv run prl analyze --study main,main-shaping   # every table and figure into results/
+uv run prl run --study main-bhammer --split main --conditions Bhammer   # optional, if the pilot cost allows
+uv run prl crosseval --study main              # B->C cross-evaluation (Lean only, no model)
+uv run prl analyze --study main,main-shaping,main-bhammer   # every table and figure into results/
 uv run prl audit --study main                  # 10% + flagged successes -> results/audit/sample.csv
 uv run prl audit --merge                       # after filling the CSV
 ```
@@ -82,7 +90,7 @@ uv run prl audit --merge                       # after filling the CSV
 ## Tests
 
 ```bash
-uv run pytest -m "not lean and not llm"   # 79 unit tests (fast)
+uv run pytest -m "not lean and not llm"   # 94 unit tests (fast)
 uv run pytest -m lean                     # 24 integration tests on real Lean: zero false successes
 uv run ruff check prl tests
 ```
@@ -93,5 +101,6 @@ uv run ruff check prl tests
 portfolio, integrity, hints, verify) · `prl/testgen` literals and hidden tests · `prl/mutate` mutation operators ·
 `prl/natural` natural bugs and shaping instances · `prl/models` LM Studio client, prompts, extraction, registry ·
 `prl/conditions` protocols, feedback router, probes · `prl/driver` resumable runner with energy blocks ·
-`prl/energy.py` energy meter · `prl/analysis` statistics, mechanism, code shapes, reports · `prl/cli.py` entry point.
+`prl/energy.py` energy meter · `prl/analysis` statistics, power simulation, B→C cross-evaluation, mechanism, code
+shapes, reports · `prl/cli.py` entry point.
 Generated outputs `data/`, `runs/` (except raw prompts/outputs) and `results/` are created by the pipeline and committed as research artifacts; `cache/`, `runs/*/raw/`, `third_party/` and `lean_env/.lake/` are git-ignored.

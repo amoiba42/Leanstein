@@ -26,6 +26,21 @@ chosen for cost and determinism, not to change coverage; Tier H keeps the same 2
 | requirements FR-TASK-2, IR-4 | Eligibility does not require a human proof; `by` allowed inside code | 143/189 VERINA references have `sorry` proofs; term-level bounds proofs are legitimate code |
 | prompts / extraction | Locked header always re-emitted; echoed locked definitions dropped | models often echo the given spec; dropping copies cannot affect verification |
 
+## Pre-freeze decisions (v2.1, 2026-11-03: Gracy's revision-3 notes, `docs/final_architecture.md` §2b)
+
+Decided before any data or result existed (nothing has been run on v2).
+
+| File | Decision | Reason |
+|---|---|---|
+| `study.yaml: crosseval_conditions` | B→C cross-evaluation of B attempts that compile but fail their proof (`prl crosseval`); secondary, never pooled | R3-1: tests the mechanism on B's own code |
+| `portfolio.yaml: single_call_automation` | Registry defining single-call automation proofs; B reported overall and as `B_noauto` | R3-2: answers "B only called grind" without banning automation in B |
+| `study.yaml: analysis.power`, `power_note.json` | Pilot power simulation (3 scenarios, sign-flip at α/4, families and seeds as in the real test); total eligible = ⌈n_main/0.70⌉ + 20; `prl freeze` requires the note | R3-3, adapted (pilot families were missing from the conversion) |
+| `study.yaml: exploratory_conditions`, `prompts/Bhammer.txt` | Exploratory Bhammer arm (B told the frozen tactics), primary models only; whether it runs is decided from the pilot cost estimate and recorded here before the freeze | R3-4 |
+| `study.yaml: lean` | Wall guard must be ≥ 50 s; portfolio entries max(30 s, guard/4); tier heartbeats must be positive | R3-6 (documents existing behaviour, now enforced) |
+| (declined) imports | Five tactic modules instead of `import Mathlib` **not adopted**; full Mathlib stays | R3-7: three modules do not exist in Mathlib v4.24; a smaller environment changes T coverage, breaks specs, breaks server/CLI parity |
+
+Bhammer go/no-go (to be filled after the pilot, before the freeze): _pending_.
+
 ## Post-freeze deviations
 
 None yet.

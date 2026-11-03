@@ -2,7 +2,7 @@
 ## Automation-Friendly Program Repair for Small Models in Lean 4 — Final Proposal (living document)
 
 **Course:** Agentic Software Engineering (AutoSE, CS6.403) · **Team:** Agents of Ultron — Inesh Dheer, Poojitha J, Gracy Garg
-**Repository:** Leanstein (`https://github.com/amoiba42/Leanstein`) · **Version:** v2.0 · last updated 2026-11-02
+**Repository:** Leanstein (`https://github.com/amoiba42/Leanstein`) · **Version:** v2.1 · last updated 2026-11-03
 **Status:** design final; harness implemented and tested; **no experiment has been run yet** (clean state).
 
 This is the single document to follow. It supersedes the original proposal and plan where they differ, and it
@@ -31,10 +31,11 @@ undoing the bug, and which code shapes make automation succeed.
 | Gemini verdict | `context/InitialVerdicts/GeminiVerdict` | Per-category reporting, spec-copying checks, audit — **adopted** |
 | GPT verdict | `context/InitialVerdicts/GPTVerdict` | Consolidated framework, proofability study (S), natural + synthetic bugs, generated hidden tests, fair budgets — **adopted as backbone** |
 | Gracy's additions | `context/GracyAdditions/Text.txt`, `context/GracyAdditions/images/Gracy1.jpeg`, `context/GracyAdditions/images/Gracy2.jpeg` | Real errors first, energy, sandbox, infra handling, tiered tactics, feedback router, pre-filter, audit, resample cap — **adopted / adapted** (§10) |
+| Gracy's revision 3 | GitHub branches `alternate` (architecture docs) and `working` (commit `48e9147`) | B→C cross-evaluation, B proof-tactic logging, pilot power simulation, B-hammer, RAM-aware workers, wall-guard semantics — **adopted / adapted**; reduced Mathlib imports — **declined** (§10b) |
 
 **Agreed verdict:** the proposal's hypothesis, run under the GPT verdict's framework, with Claude's B+P baseline
 and shaping metric as mandatory parts of the main study, Gemini's reporting advice, and Gracy's engineering.
-Full deliberation: `docs/final_architecture.md` §1–§2.
+Full deliberation: `docs/final_architecture.md` §1–§2b.
 
 ## 3. Research gap and novelty (scoped)
 
@@ -51,7 +52,7 @@ before any submission):
 **Our claim:** we investigate whether resource-constrained code models achieve more reliable formally verified
 program repair by optimising implementation structure for a fixed, pre-registered Lean 4 automation pipeline,
 rather than generating proofs; we evaluate this against budget-matched proof-writing agents (including one that
-gets the same automation first and a proof-specialist model), on natural model errors as well as controlled
+gets the same automation first, an exploratory one that is told the automation, and a proof-specialist model), on natural model errors as well as controlled
 mutants, and we characterise mechanistically when the gain comes from re-shaping rather than reverting, and which
 implementation shapes make automation succeed. We do not claim novelty for compiler feedback, structured repair
 messages, automated tactics or code restructuring in isolation.
@@ -59,7 +60,9 @@ messages, automated tactics or code restructuring in isolation.
 **What makes it more than a prompting comparison:** (i) the B+P control isolates "do not write proofs" from
 "automation exists"; (ii) the shaping-vs-reverting classification and study S (re-shape *correct* code that
 automation cannot prove) test the mechanism directly; (iii) a code-shape catalogue (RQ4) and a released
-buggy-VERINA dataset with proved-precondition hidden tests; (iv) energy per verified repair on a laptop.
+buggy-VERINA dataset with proved-precondition hidden tests; (iv) energy per verified repair on a laptop; (v) a
+cross-evaluation that re-checks B's own unproved code through C's pipeline, and B reported without single-call
+automation proofs.
 
 ## 4. Research questions and hypotheses
 
@@ -105,6 +108,10 @@ count. Code: `prl/testgen/`.
 | **C** | code only | portfolio | witness / errors + best unsolved goal + structural hint |
 | C-plain | code only | portfolio | generic retry (same format reminder) |
 | S / S-plain | code only, from a correct reference | portfolio | as C / as C-plain |
+| Bhammer *(exploratory, optional)* | code + proof; prompt lists the frozen portfolio | model | as B |
+
+Bhammer runs for the primary models only if the pilot cost estimate leaves room (decided before the freeze) and
+is never pooled with B.
 
 Budget per (instance, condition, model, seed): ≤8 generations, ≤48k tokens, ≤240 s inference; first cap wins.
 
@@ -114,7 +121,9 @@ Goedel-Code-Prover-8B (A, B); generators Qwen3.5-0.8B, 9B. GGUF 4-bit, LM Studio
 top-p 0.95, `reasoning_effort: none`, seeds 11/23/37.
 
 ### 5.6 Verification (`prl/lean/`, `lean_env/PrlRepl.lean`)
-Lean 4.24.0 + Mathlib v4.24.0. Own verification server (Mathlib loaded once per worker, 4 GB memory cap).
+Lean 4.24.0 + Mathlib v4.24.0. Own verification server (the whole of Mathlib loaded once per worker, 4 GB memory
+cap; worker count from free RAM unless configured). Heartbeats are the tactic budget; wall-clock guards (120 s per
+request, max(30 s, 120/4) per portfolio entry) only stop hangs.
 Staged: compile + all tests (+ model proof), then the two-tier portfolio (Tier L 50k heartbeats, Tier H 200k;
 frozen order; early stop). Success = compile ∧ visible ∧ hidden tests ∧ proof by the allowed source ∧ axioms ⊆
 {propext, Classical.choice, Quot.sound} ∧ locked regions unchanged ∧ static integrity. Infrastructure failures
@@ -131,9 +140,17 @@ Family score = mean over seeds of "any instance solved". RQ1: one-sided paired s
 Holm over the primary tests, McNemar on majority-solved, 95% family-cluster bootstrap CI, Cohen's h, minimum
 detectable effect. RQ2: shaping / revert / other; C by reference provability; S vs S-plain. RQ4: feature tables.
 RQ5: costs, energy (GPU measured, CPU estimated, CO2 estimated) per verified repair; sensitivity to N.
+Secondary (never pooled with the primary estimates): **B_noauto** — B with successes whose proof is a single-call
+automation proof counted as failures (from `proof_tactic_used`); **Bhammer** vs B and C; and the **B→C
+cross-evaluation** — every B attempt whose code compiled but whose proof failed, re-verified as code only through
+C's pipeline (`prl crosseval`), bucketed into proves + tests pass / proves + tests fail (weak contract) / cannot
+prove / rejected by integrity.
 
 ### 5.9 Pre-registration
-`prereg/` (study, portfolio, hints, prompts) is hashed by `prl freeze`; the driver refuses confirmatory splits if
+Before the freeze, `prl power` simulates the primary test's power from the pilot (three scenarios, sign-flip at
+α/4, families and seeds as in the real analysis) and writes `prereg/power_note.json`; VERINA is fixed, so an
+underpowered estimate becomes a stated limitation. `prereg/` (study, portfolio, hints, prompts, power note) is
+hashed by `prl freeze`, which refuses to run without the power note; the driver refuses confirmatory splits if
 anything changed; changes are logged in `prereg/deviations.md` (which also discloses the one v1 number the team saw).
 
 ## 6. Architecture
@@ -147,17 +164,19 @@ view and component responsibilities: `docs/high_level_design.md`; module-level s
 Construct (a proof certifies only its spec → hidden tests, verified-but-wrong label, weak-spec flags; known
 VERINA test defects excluded); selection (coverage reported on the full eligible pool; T is a screening and
 stratification variable only); hand-tuning (pilot-only tuning, freeze, held-out run once, disclosure); spec
-gaming (static rejection, axiom check, flags, audit); internal (equal budgets and turn-0 information; B+P);
+gaming (static rejection, axiom check, flags, audit); internal (equal budgets and turn-0 information; B+P; B_noauto,
+Bhammer and the cross-evaluation against "B is a strawman");
 external (small standalone functions; one benchmark; two model families); statistical (family unit, exact tests,
-power note); shared hardware (memory caps, idle-GPU rule, energy per block). Full list: `docs/requirements.md` §13.
+pilot-based power simulation); shared hardware (memory caps, idle-GPU rule, energy per block). Full list: `docs/requirements.md` §13.
 
 ## 8. Plan of work and gate
 
 Phases (commands in `README.md`, statuses in `docs/implementation_plan.md`):
-0 feasibility (T, compile probe, determinism) → 2 dataset → 3 pilot + gate → 4 freeze + confirmatory run →
-5 analysis and audit.
+0 feasibility (T, compile probe, determinism) → 2 dataset → 3 pilot + gate + power note → 4 freeze + confirmatory
+run → 5 cross-evaluation, analysis and audit.
 **Gate (end of pilot):** T ≥20% of eligible pilot references; compile rate >10% in C; ≥1 hand-verified repair by
-C that neither B nor B+P finds; zero false successes; cost fits. If the decisive criterion fails: Backup 2 —
+C that neither B nor B+P finds; zero false successes; cost fits (the same estimate decides whether Bhammer runs);
+power note written (informative, not pass/fail). If the decisive criterion fails: Backup 2 —
 proof-friendliness benchmark (T over reference / mutated / model-rewritten code, with study S as headline).
 
 ## 9. Team roles
@@ -184,6 +203,18 @@ As in the plan (assignment to people to be confirmed by the team): **A — Verif
 | G13 | Resample cap | Adopted (4 samples per generator per family) |
 | — | B/A get only "failed, retry" (diagram) | Declined: B keeps Lean errors (no strawman), A has no feedback by definition |
 
+## 10b. Gracy's revision 3 — resolution
+
+| # | Suggestion | Resolution |
+|---|---|---|
+| R3-1 | Cross-evaluate B's compiling-but-unproved code through C's pipeline | Adopted (`prl crosseval`; secondary; fourth bucket for integrity rejections) |
+| R3-2 | Log B's proof tactics; report B without single-call automation proofs | Adopted (`proof_tactic_used`, registry frozen in `portfolio.yaml`, derived row `B_noauto`) |
+| R3-3 | Pilot power simulation before the freeze | Adopted, adapted (pilot families added to the eligible-family conversion; Holm bound α/4; `prl freeze` requires it) |
+| R3-4 | B-hammer | Adopted as optional exploratory arm `Bhammer` |
+| R3-5 | RAM-aware Lean workers with override | Adopted |
+| R3-6 | Wall guards as backstops, heartbeats as budget | Adopted; enforced (guard ≥ 50 s, positive tier heartbeats) |
+| R3-7 | Five tactic modules instead of `import Mathlib` | Declined: three modules do not exist in Mathlib v4.24; a reduced environment changes T coverage, breaks specs and server/CLI parity |
+
 ## 11. Repository map
 
 | Path | Content |
@@ -193,20 +224,24 @@ As in the plan (assignment to people to be confirmed by the team): **A — Verif
 | `context/` | original inputs (proposal, plan, verdicts, Gracy's additions) |
 | `docs/final_proposal.md` | this document |
 | `docs/final_architecture.md` | deliberation and the architecture diagram |
-| `docs/requirements.md`, `high_level_design.md`, `low_level_design.md`, `implementation_plan.md` | v2 specification chain |
+| `docs/requirements.md`, `high_level_design.md`, `low_level_design.md`, `implementation_plan.md` | v2.1 specification chain |
 | `docs/feasibility.md` | Phase-0 evidence (pending re-run) |
 | `prereg/` | frozen study inputs and the deviation log |
 | `prl/` | harness (tasks, lean, testgen, mutate, natural, models, conditions, driver, analysis, energy, cli) |
 | `lean_env/` | pinned Lean project and the verification server |
-| `tests/` | 79 unit tests + 24 real-Lean integration tests |
+| `tests/` | 94 unit tests + 24 real-Lean integration tests |
 | `scripts/pdownload.py` | parallel downloader for throttled networks |
 
 ## 12. Status and next steps
 
 - [x] Design consolidated (v2); docs updated; context folder created.
-- [x] Harness implemented: all v2 components; 79 unit tests and 24 Lean integration tests pass; lint clean.
+- [x] Harness implemented: all v2 components; lint clean.
+- [x] v2.1 (2026-11-03): Gracy's revision-3 notes reconciled (cross-evaluation, proof-tactic logging, power
+  simulation, Bhammer, worker sizing adopted; reduced imports declined) and implemented; 94 unit tests and 24 Lean
+  integration tests pass.
 - [ ] Phase 0 (T, hidden tests, compile/determinism probes) — CPU parts can run any time; GPU parts on an idle GPU.
-- [ ] Dataset (natural bugs need the GPU), splits, pilot, gate, freeze, confirmatory run, analysis, audit.
+- [ ] Dataset (natural bugs need the GPU), splits, pilot, gate, power note, freeze, confirmatory run,
+  cross-evaluation, analysis, audit.
 - [ ] Related-work re-check before writing; venue choice (candidates named in the GPT verdict: LLM4Code / FormaliSE
   workshops; ISSTA or ASE/ICSE/FSE only if results and scope justify it).
 

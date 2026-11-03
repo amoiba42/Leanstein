@@ -142,6 +142,8 @@ class Judge:
         self.use_cache = use_cache
         lc = self.cfg["lean"]
         self.wall = float(lc["wall_guard_s"])
+        if self.wall < 50:  # must clear worker start-up plus Tier-H tactic work (LLD §5.1)
+            raise ValueError(f"lean.wall_guard_s must be >= 50 s, got {self.wall}")
         self.test_hb = int(lc.get("test_heartbeats", 0)) or None
         # test evaluation is not heartbeat-bounded (a mutant can loop forever): short guard, then bisect
         self.batch_wall = float(lc.get("batch_wall_s", 60))

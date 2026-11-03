@@ -30,7 +30,9 @@ this file is a study result yet. Sections 3–6 are filled from `results/` after
 
 ## 5. Compile-rate probe (floor effect) and determinism — pending (idle GPU)
 
+## 5b. Pilot power note (SR-STAT-4) — pending (after the pilot; `prl power`)
+
 ## 6. Integrity
 
-The real-Lean integrity suite (`uv run pytest -m lean`) passes on the v2 code: 24/24, zero false successes
+The real-Lean integrity suite (`uv run pytest -m lean`) passes on the v2.1 code: 24/24, zero false successes
 (this is a test of the harness, not a study result).

@@ -2,8 +2,8 @@
 
 **Project:** Prove Less, Repair Better — Automation-Friendly Program Repair for Small Models in Lean 4
 **Course:** Agentic Software Engineering (AutoSE, CS6.403) · Team *Agents of Ultron*
-**Document status:** v2.0 (final architecture; see `docs/final_architecture.md` and `docs/final_proposal.md`) · 2026-11-02
-**Inputs reconciled:** `context/InitialProposal/Prove_Less_Repair_Better_Proposal.pdf` (proposal), `context/InitialProposal/AutoSE_Project_Plan.pdf` (plan), `context/InitialVerdicts/{ClaudeVerdict,GeminiVerdict,GPTVerdict}`, `context/GracyAdditions/` (Text.txt and two architecture diagrams).
+**Document status:** v2.1 (final architecture + revision-3 adoptions; see `docs/final_architecture.md` §2b and `docs/final_proposal.md`) · 2026-11-03
+**Inputs reconciled:** `context/InitialProposal/Prove_Less_Repair_Better_Proposal.pdf` (proposal), `context/InitialProposal/AutoSE_Project_Plan.pdf` (plan), `context/InitialVerdicts/{ClaudeVerdict,GeminiVerdict,GPTVerdict}`, `context/GracyAdditions/` (Text.txt and two architecture diagrams), and Gracy's revision-3 notes (GitHub branches `alternate` and `working`, commit `48e9147`).
 
 ---
 
@@ -79,7 +79,7 @@ All verdicts flagged that the proposal and the plan disagree. Each row is now a 
 | Claude #6 | Statistical power | ≥100 families target (all eligible VERINA families); seeds=3; exact tests (SR-STAT) |
 | Claude #7 / GPT §4E | Reconcile documents | Section 2 |
 | Claude, Gemini, GPT | Natural (model-generated) bugs, not only mutants | DR-BUG-2; reported separately |
-| Gemini #1 | Report per reasoning category | Task-feature stratification (SR-STAT-6) |
+| Gemini #1 | Report per reasoning category | Task-feature stratification (SR-STAT-7) |
 | Gemini #3 | Spec-copying / complexity checks | IR-7, 10% audit |
 | GPT §4B | Proofability study on semantically-equivalent implementations | **Study S** (FR-COND-7) |
 | GPT §4C | Withheld generated tests | DR-TEST-2 |
@@ -98,6 +98,13 @@ All verdicts flagged that the proposal and the plan disagree. Each row is now a 
 | Gracy G11 | Spec-gaming pre-filter | IR-2/IR-4 reject + IR-7 flags (every flagged success is audited) |
 | Gracy G12 | 10% manual audit | FR-ANA-6 (plus all flagged successes) |
 | Gracy G13 | Resample cap | FR-NAT-1 (at most 4 samples per generator per family) |
+| Gracy rev-3 #1 | Cross-evaluate B's compiling-but-unproved code through C's pipeline | FR-ANA-7 (`prl crosseval`; secondary, never pooled) |
+| Gracy rev-3 #2 | Log the tactics of B's proofs; report B without single-call automation proofs | FR-ANA-8, DR-LOG-1 (`proof_tactic_used`; registry frozen in `portfolio.yaml`) |
+| Gracy rev-3 #3 | Pilot-based power simulation before the freeze | SR-STAT-4 (`prl power`; adapted: pilot families added to the eligible-family conversion, Holm bound α/4); gate item 6 |
+| Gracy rev-3 #4 | B-hammer: B told the frozen tactic list | FR-COND-10 / FR-ANA-9 (exploratory arm `Bhammer`, optional) |
+| Gracy rev-3 #5 | RAM-aware Lean workers with an environment override | FR-RES-1 (`lean.workers: 0` → free-RAM rule; `PRL_LEAN_WORKERS` overrides) |
+| Gracy rev-3 #6 | Wall guards are backstops; heartbeats are the tactic budget | FR-PORT-2, FR-FAIL-2 (guard ≥ 50 s; per entry max(30 s, guard/4); no unbounded portfolio heartbeats) |
+| Gracy rev-3 #7 | Replace `import Mathlib` with five tactic modules | **Declined** (FR-RES-2, NFR-ENV-2): three of the modules do not exist in Mathlib v4.24; a smaller import set shrinks the simp set (changes T), breaks specs that use Mathlib definitions, and breaks parity between the server and CLI backends |
 
 ---
 
@@ -155,7 +162,7 @@ The model is **untrusted**: all its output is treated as adversarial input to th
 ### 5.5 Automation portfolio (Member A)
 
 - **FR-PORT-1 (MUST)** A fixed, ordered list of proof scripts, each a closed tactic block not depending on the task except through *names derived mechanically* from the signature (function name, `_postcond`, `_precond`, parameter names, helper names declared in `code_aux`). Families: `decide`; `simp` / `simp_all` (with function/postcond unfolded); `omega`; `grind`; `aesop`; `unfold … ; split <;> simp_all`; `fun_induction f <;> simp_all` / `<;> grind`; structural `induction` on each List/Array/Nat parameter with `simp_all`/`grind`/`omega` closers.
-- **FR-PORT-2 (MUST)** Each entry runs under `set_option maxHeartbeats H` (frozen H). The whole portfolio file has a wall-clock guard.
+- **FR-PORT-2 (MUST)** Each entry runs under `set_option maxHeartbeats H` (frozen H > 0; `maxHeartbeats 0` is never allowed in a portfolio entry and the loader rejects it). Heartbeats are the tactic budget; wall-clock guards are hang backstops only: the per-request guard `lean.wall_guard_s` (120 s, must be ≥ 50 s) and, per portfolio entry, max(30 s, guard/4).
 - **FR-PORT-3 (MUST)** Frozen in `prereg/portfolio.yaml` with SHA-256 before the confirmatory run. Tuning allowed only on pilot families. Any change after freeze is a logged deviation; results from different portfolios are never pooled.
 - **FR-PORT-4 (MUST)** No per-task customization and no model-chosen tactics in C, C-plain, S.
 - **FR-PORT-5 (MUST)** Two tiers (Gracy G7): all Tier-L entries (decide, simp, simp_all, omega, split; 50k heartbeats each) before Tier-H entries (grind, aesop, fun_induction, induction; 200k). Limits are heartbeats (deterministic). Entries run in frozen order and stop at the first closing entry (full vector only for T). The same portfolio is used by T, BP, C, C-plain, S and S-plain.
@@ -169,13 +176,13 @@ The model is **untrusted**: all its output is treated as adversarial input to th
 ### 5.6b Feedback router (Members A/B)
 
 - **FR-FB-1 (MUST)** One router maps (failure type × condition) to the next-turn message. Failure types: extraction, integrity, compile, visible-test, hidden-test, timeout/resource, proof.
-- **FR-FB-2 (MUST)** A: no feedback. B/BP: Lean errors, failing visible witness, proof errors. C/S: the same core message plus the structural hint (FR-HINT). C-plain/S-plain: a fixed generic message with the same output-format reminder as C.
+- **FR-FB-2 (MUST)** A: no feedback. B/BP/Bhammer: Lean errors, failing visible witness, proof errors. C/S: the same core message plus the structural hint (FR-HINT). C-plain/S-plain: a fixed generic message with the same output-format reminder as C.
 - **FR-FB-3 (MUST)** Hidden-test failures are reported only as a count, never inputs or expected outputs (G9).
 
 ### 5.6c Resources, failures, energy (Members A/C)
 
-- **FR-RES-1 (MUST)** Each Lean worker runs under a per-process memory cap (Windows Job Object, default 4 GB) and a per-request wall guard; the number of workers is derived from free RAM at start (max 6).
-- **FR-RES-2 (MUST)** Lean verification uses a persistent verification server (`lean_env/PrlRepl.lean`) that imports Mathlib once per worker and elaborates each file against a fresh copy of that environment; verdict parity with the plain `lean` CLI is tested.
+- **FR-RES-1 (MUST)** Each Lean worker runs under a per-process memory cap (Windows Job Object, default 4 GB) and a per-request wall guard; the number of workers is `lean.workers`, or, when it is 0, derived from free RAM at start (max 6); `--lean-workers` or `PRL_LEAN_WORKERS` override it.
+- **FR-RES-2 (MUST)** Lean verification uses a persistent verification server (`lean_env/PrlRepl.lean`) that imports the **whole of Mathlib** once per worker and elaborates each file against a fresh copy of that environment; verdict parity with the plain `lean` CLI is tested. A reduced import set is not allowed (it changes what the portfolio can prove and breaks parity; see §3, rev-3 #7).
 - **FR-FAIL-1 (MUST)** Infrastructure failures (verifier crash, spawn failure, model-server errors) re-verify or re-request the *same* candidate and never charge the model budget; persistent infrastructure failure abandons the run, which the resumable driver re-executes.
 - **FR-FAIL-2 (MUST)** A timeout or worker death while evaluating a candidate is confirmed once in a fresh worker; if it repeats, it is the candidate's fault (non-terminating or memory-exhausting code) and counts as a failed attempt (`failure_kind` timeout/resource).
 - **FR-FAIL-3 (MUST)** Every attempt record carries `failure_kind` in {None, extraction, integrity, compile, test, timeout, resource, proof}.
@@ -206,6 +213,7 @@ See IR-1..IR-9 (§7). Must reject before any proof is attempted when a static vi
 | **FR-COND-5 C** | Automation-friendly repair (proposed) | code only | failing witness + unsolved goal + structural hint | portfolio | The contribution |
 | **FR-COND-6 C-plain** | Code-only, plain retry | code only | "The candidate was rejected. Try again." | portfolio | RQ3 ablation |
 | **FR-COND-7 S / S-plain** | Proofability shaping study | code only, starting from the *correct reference* that T cannot prove | S: goal + hint; S-plain: plain retry | portfolio | RQ2 mechanism |
+| **FR-COND-10 Bhammer** (exploratory) | B told the automation | code + proof; the prompt also lists the frozen portfolio scripts expanded for the task | as B | model | Is C's gain more than knowing which tactics exist? (FR-ANA-9) |
 
 - **FR-COND-8 (MUST)** All conditions use identical task instances, models, decoding, budgets and the same initial preflight (compile + visible tests + portfolio on the faulty code). The preflight output is not charged to the model budget.
 - **FR-COND-9 (MUST)** In C, C-plain, S, any candidate that contains proof text, tactic blocks, `theorem`/`lemma` declarations, attributes that change simp sets globally (`@[simp]` on new declarations is allowed only on helper *definitions* inside `code_aux`; `attribute [simp]` commands are rejected), or edits outside the region is rejected (counts as a used attempt).
@@ -233,9 +241,9 @@ See IR-1..IR-9 (§7). Must reject before any proof is attempted when a static vi
 - **FR-ANA-4 (MUST)** Code-shape feature extraction on every verified and every unverified-but-test-passing candidate (RQ4).
 - **FR-ANA-5 (MUST)** Statistical tests per SR-STAT; tables + figures written to `results/`.
 - **FR-ANA-6 (MUST)** 10% stratified hand-audit sample exported for manual review with a form (CSV) and the results folded back.
-- **FR-ANA-7 (MUST)** Run the B-to-C cross-evaluation: for every B attempt that compiles but fails its model proof, extract only the implementation region, remove all proof text, and replay that implementation through C's complete pipeline (portfolio tactics, hidden tests, and `#print axioms`). Record it as a secondary analysis and never merge it into the primary B or C estimate. Report three buckets: C proves and tests pass; C proves but tests fail (behaviourally wrong under the weak contract); and C cannot prove.
-- **FR-ANA-8 (MUST)** Report condition B twice: overall, and excluding attempts whose proof is a single-call automation proof (`grind`, `aesop`, or an equivalent registered automation invocation). The exclusion is analysis-only; automation remains legal and all attempts remain in the raw logs.
-- **FR-ANA-9 (SHOULD)** If compute permits, add B-hammer as a separate exploratory arm: give B the same frozen tactic list available to C, report its additional compute cost, and never replace or pool it with the primary B arm. B-hammer tests whether C's benefit is code shaping rather than merely awareness of automation.
+- **FR-ANA-7 (MUST)** Run the B-to-C cross-evaluation (`prl crosseval`, Lean only, no model): for every B attempt whose code compiles but whose model proof fails, take only the implementation regions (`code_aux`, `code`), drop all proof text, and verify that implementation through C's complete pipeline (static integrity, visible + hidden tests, frozen portfolio run even when tests fail, `#print axioms`). Identical code of a family is verified once. Records carry `analysis_kind = "b_to_c_cross_eval"`, live in `runs/<study>/crosseval.jsonl`, and are never merged into the primary B or C estimates. Buckets (mutually exclusive): `c_proves_tests_pass` (a verified repair B's proof missed); `c_proves_tests_fail` (behaviourally wrong yet provable: a finding about a weak contract, never a repair); `c_cannot_prove`; and `c_rejected_integrity` (C's static checks reject the code; expected to be rare, reported separately).
+- **FR-ANA-8 (MUST)** Every attempt of a proof-writing condition logs `proof_tactic_used` (sorted tactic names found in the model's proof) and `automation_only_proof`. A proof is a *single-call automation proof* when it declares no helper lemma and every tactic it uses is in the frozen registry `single_call_automation` of `prereg/portfolio.yaml` (or is glue: `intro`, `intros`, `unfold`, `first`, `try`, `repeat`, `all_goals`, `any_goals`). B is reported twice: overall, and as the derived row `B_noauto` in which such successes count as failures. The exclusion is analysis-only; automation remains legal and the raw records are unchanged.
+- **FR-ANA-9 (SHOULD)** If the pilot cost estimate leaves room in the compute budget (decided and logged before the freeze), run the exploratory arm **Bhammer** (FR-COND-10) for the primary models, report its additional compute cost, and never replace or pool it with the primary B arm. Bhammer tests whether C's benefit is code shaping rather than mere awareness of automation.
 
 ---
 
@@ -260,7 +268,7 @@ See IR-1..IR-9 (§7). Must reject before any proof is attempted when a static vi
 - **SR-STAT-1 (MUST)** Unit of analysis: task family. A family is "solved" by a (condition, model, seed) if any of its instances is solved; the family-level score for a (condition, model) is the mean over seeds (∈ {0, 1/3, 2/3, 1}).
 - **SR-STAT-2 (MUST)** Primary test (RQ1): one-sided paired sign-flip permutation test on family scores, C vs B and C vs B+P, per primary model, Holm-corrected over the 4 tests (2 comparisons × 2 primary models). α = 0.05.
 - **SR-STAT-3 (MUST)** Supporting: exact McNemar on the "solved in majority of seeds" binary; family-cluster bootstrap 95% CI (10,000 resamples, fixed seed) of the rate difference; Cohen's h effect size; number of discordant families.
-- **SR-STAT-4 (MUST)** Before freezing the confirmatory split, estimate paired power from pilot results. Compute `p01 = P(B solved, C failed)` and `p10 = P(C solved, B failed)` at the family level, along with `p_both` and `p_neither`. Because 20 pilot families produce noisy estimates, simulate a pessimistic and optimistic range of plausible `(p01, p10, p_both, p_neither)` values rather than reporting one point estimate. Use `statsmodels.stats.contingency_tables.mcnemar` for the supporting McNemar analysis and simulate the same task-clustered unit and primary sign-flip test used for confirmatory claims. Use the three seeds per family when forming the majority-solved outcome. Power applies to the 70% main split only; convert the required main-set family count to total eligible families by dividing by 0.70 and round up.
+- **SR-STAT-4 (MUST)** Before freezing, estimate paired power from the pilot (`prl power --study pilot`). For each primary model and primary comparison (C vs B, C vs B+P) compute, at the family level, `p10 = P(C solved, baseline failed)`, `p01 = P(baseline solved, C failed)`, `p_both` and `p_neither` from the majority-solved outcome over the three seeds. Because 20 pilot families give noisy estimates, simulate three scenarios — `point` (add-½ smoothed), `pessimistic` (p10 at the lower and p01 at the upper 80% Jeffreys bound) and `optimistic` (the reverse) — instead of one point estimate. Each simulated family draws its category and then a (score_C, score_baseline) pair from the pilot families of that category, so the simulation uses the same task-clustered unit and the same one-sided sign-flip test as the confirmatory analysis, at α/4 (the smallest per-test level Holm can require over the 4 primary tests); the exact McNemar rate (`statsmodels.stats.contingency_tables.mcnemar`) is reported beside it. Report the smallest number of confirmatory (`main`) families reaching 80% power, its conversion to total eligible families = ⌈n_main / 0.70⌉ + 20 pilot families, and the power at the actual `main` size. The note is written to `prereg/power_note.json` (frozen) and `results/power_note.md`; `prl freeze` refuses to run without it. VERINA is fixed, so an underpowered estimate is recorded as a limitation, not fixed by adding tasks.
 - **SR-STAT-5 (MUST)** With observed `D = b + c` discordant families, report the minimum detectable split and the observed `b`/`c` counts.
 - **SR-STAT-6 (MUST)** No post-hoc subsets in confirmatory claims; any exploratory subset is labelled as such.
 - **SR-STAT-7 (SHOULD)** Stratify by tier (basic/advanced), bug operator class, bug source (mutant/natural), `ref_auto`, and input type (scalar / list / array / string).
@@ -289,7 +297,8 @@ See IR-1..IR-9 (§7). Must reject before any proof is attempted when a static vi
 - **DR-BUG-2** Natural-bug provenance: generator model, seed, raw output, failing witness.
 - **DR-TEST-1** Visible tests copied from VERINA with hashes.
 - **DR-TEST-2** Hidden tests: generator seed, inputs, reference outputs, hash; stored in `data/hidden/` which the prompt builder cannot read (enforced by an allow-list in the prompt builder).
-- **DR-LOG-1** Attempt record (JSONL) fields: see LLD §3.4 (superset of the plan's §3.1 record).
+- **DR-LOG-1** Attempt record (JSONL) fields: see LLD §3.4 (superset of the plan's §3.1 record), including `proof_tactic_used` and `automation_only_proof` for proof-writing conditions.
+- **DR-LOG-3** Cross-evaluation records (`runs/<study>/crosseval.jsonl`) and the power note (`prereg/power_note.json`) are stored next to the logs they derive from.
 - **DR-LOG-2** Every prompt, raw output, rendered Lean file hash, and Lean log is stored (Lean logs compressed).
 - **DR-REL** Release package: manifests, mutation scripts, provenance tables, prompts, portfolio, logs, analysis scripts, environment description (subject to VERINA licence, Apache-2.0).
 
@@ -330,7 +339,10 @@ See IR-1..IR-9 (§7). Must reject before any proof is attempted when a static vi
 | FR-BUD | Run records show which cap ended each run; no run exceeds caps. |
 | FR-DRV | Kill-and-resume test produces identical final logs. |
 | SR-PRE | Driver refuses a modified prereg file (test). |
-| SR-STAT | Statistics unit tests on synthetic data with known answers. |
+| SR-STAT | Statistics unit tests on synthetic data with known answers; power simulation finds a small n for a large effect and none without an effect. |
+| FR-ANA-7 | Cross-evaluation unit test: buckets, de-duplication, resumability, only compiling-but-unproved B attempts. |
+| FR-ANA-8 | Tactic-extraction unit tests; `B_noauto` derived only inside comparisons (never in costs or audits). |
+| FR-COND-10 | Bhammer prompt differs from B's only by the tactic list; feedback identical to B. |
 | NFR-REP-1 | `prl analyze` regenerates `results/` byte-identically from logs. |
 
 ---
@@ -343,7 +355,8 @@ Continue to the confirmatory run only if all hold on the 20 pilot families:
 2. Primary models reach a compile rate > 10% in C on pilot instances (floor-effect check).
 3. C produces ≥1 hand-verified repair that neither B nor B+P produces on the same instance (decisive).
 4. Integrity suite: zero false successes.
-5. Estimated full-study cost fits available compute (≤ ~72 h wall time).
+5. Estimated full-study cost fits available compute (≤ ~72 h wall time). The same estimate decides whether the exploratory Bhammer arm is run (logged in `prereg/deviations.md`).
+6. The power note (SR-STAT-4) is written. It is not a pass/fail criterion: an underpowered estimate is reported as a limitation before the freeze.
 
 If (3) fails: switch to **Backup 2 — proof-friendliness benchmark** (T over reference, mutated and model-rewritten variants, plus study S as the headline), which reuses the same harness.
 
@@ -366,12 +379,13 @@ If (3) fails: switch to **Backup 2 — proof-friendliness benchmark** (T over re
 | Portfolio proves too little | NFR-FEAS-1, gate 1, backup study |
 | Floor effect in Lean fluency | NFR-FEAS-2, 4B model, gate 2 |
 | C wins only by reverting the mutation | SR-MECH-*, study S |
-| Strawman baseline | B+P, Goedel-Code-Prover-8B reference |
+| Strawman baseline | B+P, Goedel-Code-Prover-8B reference, Bhammer (exploratory), B-to-C cross-evaluation |
+| "B just called `grind`" objection | FR-ANA-8 (`B_noauto`) |
 | Mutant unrealism | FR-NAT-1/2 (natural bugs primary), separate reporting |
 | Machine shared with other jobs | FR-RES-1 (memory cap, RAM-derived workers); model runs only on an idle GPU |
 | Energy claims unsupported | FR-EN-1..3 (measured GPU, labelled CPU estimate) |
 | Spec gaming | IR-*, hidden tests, audit |
 | Budget unfairness | FR-BUD-1..4 |
 | Hand-tuning | SR-PRE-*, pilot-only tuning |
-| Low power | all eligible families, 3 seeds, exact tests, power note |
+| Low power | all eligible families, 3 seeds, exact tests, pilot-based power simulation before the freeze (SR-STAT-4) |
 | Non-deterministic inference | FR-GEN-5, seeds logged, 3 seeds |

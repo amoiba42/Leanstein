@@ -16,7 +16,11 @@ from prl.driver.runner import read_jsonl
 from prl.tasks import verina as V
 
 PRIMARY_COMPARISONS = [("C", "B"), ("C", "BP")]
-SECONDARY_COMPARISONS = [("C", "Cplain"), ("C", "A"), ("BP", "B"), ("S", "Splain")]
+# B_noauto = B with single-call automation proofs counted as failures (FR-ANA-8, derived, analysis only);
+# Bhammer = exploratory arm (FR-ANA-9), never pooled with B.
+SECONDARY_COMPARISONS = [("C", "Cplain"), ("C", "A"), ("BP", "B"), ("C", "B_noauto"), ("C", "Bhammer"),
+                         ("Bhammer", "B"), ("S", "Splain")]
+DERIVED_CONDITIONS = {"B_noauto"}
 
 
 def _md_table(df: pd.DataFrame, floatfmt: str = "{:.3f}") -> str:
@@ -45,6 +49,33 @@ def load_runs(study_dirs: list[Path]) -> pd.DataFrame:
     df = pd.DataFrame(rows)
     df["success"] = df["success"].astype(bool)
     return df
+
+
+def with_derived(df: pd.DataFrame) -> pd.DataFrame:
+    """Append `B_noauto`: every B run, with successes whose accepted model proof is a single-call automation
+    proof counted as failures. Raw records are unchanged; the rows exist only inside the analysis."""
+    if df.empty or "B" not in set(df.condition):
+        return df
+    b = df[df.condition == "B"].copy()
+    auto = b["automation_only_proof"].fillna(False).astype(bool) if "automation_only_proof" in b else False
+    b["success"] = b.success & ~auto
+    b["condition"] = "B_noauto"
+    b["run_id"] = b.run_id + ":noauto"
+    return pd.concat([df, b], ignore_index=True)
+
+
+def proof_style_table(df: pd.DataFrame) -> pd.DataFrame:
+    """Successful runs whose proof the model wrote: how many were single-call automation, and the tactics."""
+    if df.empty or "automation_only_proof" not in df:
+        return pd.DataFrame()
+    s = df[df.success & (df.proof_source == "model") & ~df.condition.isin(DERIVED_CONDITIONS)]
+    rows = []
+    for (m, c), g in s.groupby(["model", "condition"]):
+        tac = pd.Series([t for ts in g.proof_tactic_used if isinstance(ts, list) for t in ts])
+        rows.append({"model": m, "condition": c, "model_proof_successes": len(g),
+                     "automation_only": int(g.automation_only_proof.fillna(False).astype(bool).sum()),
+                     "top_tactics": ", ".join(f"{k}:{v}" for k, v in tac.value_counts().head(6).items())})
+    return pd.DataFrame(rows)
 
 
 def family_scores(df: pd.DataFrame, cond: str, model: str, kinds: tuple[str, ...]) -> pd.Series:
@@ -179,7 +210,7 @@ def _plot_rates(df: pd.DataFrame, out: Path) -> None:
     t = df[df.kind.isin(["mutant", "natural"])].groupby(["model", "condition"]).success.mean().unstack()
     if t.empty:
         return
-    order = [c for c in ["A", "B", "BP", "C", "Cplain"] if c in t.columns]
+    order = [c for c in ["A", "B", "BP", "Bhammer", "C", "Cplain"] if c in t.columns]
     ax = t[order].plot(kind="bar", figsize=(8, 4), rot=0)
     ax.set_ylabel("verified-repair rate (runs)")
     ax.set_title("Verified repair rate by condition and model")
@@ -234,6 +265,7 @@ def analyze(study_dirs: list[Path], cfg: dict, out_dir: Path | None = None) -> d
     models = sorted(df.model.unique())
     primary_kinds, pool_note = primary_pool(df, cfg)
     summary["primary_pool"] = {"kinds": list(primary_kinds), "rule": pool_note}
+    dfc = with_derived(df)  # comparisons only: derived rows never enter costs, outcomes or audits
     rows = []
     for m in models:
         pools = [(primary_kinds, "primary_pool"), (("mutant",), "mutant"), (("natural",), "natural")]
@@ -244,7 +276,7 @@ def analyze(study_dirs: list[Path], cfg: dict, out_dir: Path | None = None) -> d
                 k = ("shaping",) if (x, y) == ("S", "Splain") else kinds
                 if (x, y) == ("S", "Splain") and label != "primary_pool":
                     continue
-                r = compare(df, x, y, m, k, cfg)
+                r = compare(dfc, x, y, m, k, cfg)
                 if r:
                     r["bugs"] = "shaping" if k == ("shaping",) else label
                     r["primary"] = (x, y) in PRIMARY_COMPARISONS and label == "primary_pool" and m in cfg["models"]["primary"]
@@ -264,7 +296,10 @@ def analyze(study_dirs: list[Path], cfg: dict, out_dir: Path | None = None) -> d
             "(x > y); Holm correction over the primary tests only; 95% family-cluster bootstrap CI.\n\n"
             f"Primary bug pool: {pool_note}\n\n"
             "## Primary\n\n" + _md_table(comp[comp.primary][cols]) + "\n## Secondary / exploratory\n\n"
-            + _md_table(comp[~comp.primary][[c for c in cols if c != "p_holm"]]), encoding="utf-8")
+            + _md_table(comp[~comp.primary][[c for c in cols if c != "p_holm"]])
+            + "\n`B_noauto` = B with single-call automation proofs counted as failures (analysis only); `Bhammer` "
+              "is exploratory and never pooled with B.\n\n## Proofs written by the model (successful runs)\n\n"
+            + _md_table(proof_style_table(df)), encoding="utf-8")
         summary["primary"] = comp[comp.primary][["model", "x", "y", "rate_x", "rate_y", "diff", "p_holm"]].to_dict("records")
 
     # ---- RQ2 mechanism
@@ -304,6 +339,21 @@ def analyze(study_dirs: list[Path], cfg: dict, out_dir: Path | None = None) -> d
         with open(out / "rq5_costs.md", "a", encoding="utf-8") as fh:
             fh.write("\n## Energy per (model, condition) block\n\nGPU energy is measured (NVML counter); Lean CPU "
                      "energy and CO2 are estimates (see prereg/study.yaml `energy`).\n\n" + _md_table(en))
+    # ---- B→C cross-evaluation (secondary; FR-ANA-7)
+    from prl.analysis.crosseval import crosseval_tables, load_crosseval
+    ce = load_crosseval(study_dirs)
+    if not ce.empty:
+        att, rescue = crosseval_tables(ce, df)
+        att.to_csv(out / "crosseval_attempts.csv", index=False)
+        rescue.to_csv(out / "crosseval_runs.csv", index=False)
+        (out / "crosseval.md").write_text(
+            "# B to C cross-evaluation (secondary analysis)\n\n"
+            "Every B attempt whose code compiled but whose model proof failed, re-verified as code only through "
+            "C's full pipeline (integrity, visible + hidden tests, frozen portfolio, axioms). Not part of the "
+            "primary B or C estimates. `c_proves_tests_fail` is a finding about a weak specification, never a "
+            "repair.\n\n## Attempts by bucket\n\n" + _md_table(att, "{:.0f}")
+            + "\n## Failed B runs that C's pipeline would have verified\n\n" + _md_table(rescue), encoding="utf-8")
+        summary["crosseval"] = att.to_dict("records")
     flags = df.explode("flags").dropna(subset=["flags"]).groupby(["condition", "flags"]).size().rename("n").reset_index()
     flags.to_csv(out / "integrity_flags.csv", index=False)
     _plot_rates(df, out / "figures" / "rates.png")

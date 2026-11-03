@@ -1,10 +1,11 @@
-# Pre-registered study configuration (SR-PRE-1), final architecture v2 (docs/final_architecture.md).
+# Pre-registered study configuration (SR-PRE-1), final architecture v2.1 (docs/final_architecture.md).
 # Frozen by `prl freeze`; the driver refuses to run the confirmatory splits (main / heldout) if any file in
 # prereg/ differs from prereg/FREEZE.json.
 study_id: prl-main-v2
 
 lean:
-  wall_guard_s: 120        # per Lean request; hang protection only (proof decisions use heartbeats)
+  wall_guard_s: 120        # per Lean request; hang protection only (proof decisions use heartbeats); must be >= 50
+                           # portfolio entries get max(30, wall_guard_s / 4) each
   workers: 0               # 0 = derive from free RAM at start (prl.lean.runner.auto_workers), max 6
   mem_limit_gb: 4          # Windows Job Object cap per Lean worker (Mathlib alone needs ~1.8-2.7 GB)
   test_heartbeats: 0       # 0 = Lean default for test guards
@@ -30,6 +31,11 @@ models:                    # LM Studio model keys (GGUF 4-bit, CUDA engine); see
 conditions: [A, B, BP, C, Cplain]
 specialist_conditions: [A, B]
 shaping_conditions: [S, Splain]
+# Exploratory arm (FR-ANA-9): B whose prompt lists the frozen portfolio. Primary models only, run only if the
+# pilot cost estimate leaves room in the compute budget; this decision is recorded in deviations.md before
+# `prl freeze`. Never pooled with or substituted for B.
+exploratory_conditions: [Bhammer]
+crosseval_conditions: [B]          # FR-ANA-7: B attempts re-verified through C's pipeline (secondary)
 
 splits: {pilot_n: 20, heldout_frac: 0.30, seed: 2026}
 mutants_per_family: 2
@@ -55,3 +61,9 @@ analysis:
   seed: 99
   revert_distance: 0.15
   audit_frac: 0.10               # plus every success carrying a degeneracy flag (G11)
+  power:                         # SR-STAT-4: pre-freeze simulation from the pilot (prl power)
+    target: 0.80
+    sims: 500
+    permutations: 999
+    seed: 4242
+    n_max: 600

@@ -1,6 +1,6 @@
 """Feedback router (final architecture §5, G8/G9): failure type × condition → message for the next turn.
 
-| failure \\ cond | A    | B / BP                      | C / S                               | Cplain / Splain |
+| failure \\ cond | A    | B / BP / Bhammer            | C / S                               | Cplain / Splain |
 |----------------|------|-----------------------------|-------------------------------------|-----------------|
 | extraction     | none | "no `def F` found"          | "no `def F` found"                  | generic         |
 | integrity      | none | rule(s) violated            | rule(s) violated                    | generic         |

@@ -1,0 +1,6 @@
+The current implementation is incorrect. Write a correct implementation and a proof of the theorem.
+The checker has these automatic tactic scripts available (the same frozen list the code-only conditions use). Your proof may use any of them, alone or combined, or any other tactics:
+$tactics
+Output exactly two ```lean blocks:
+1. The complete definition `def $fn ...` (you may put helper definitions before it).
+2. `theorem ${fn}_spec_satisfied ... := by` followed by the tactic proof (you may put helper lemmas before it).

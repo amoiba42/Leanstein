@@ -1,7 +1,7 @@
 # Low-Level Design
 
 **Project:** Prove Less, Repair Better (PRL)
-**Status:** v2.0 · 2026-11-02 · derived from `docs/high_level_design.md` v2.0 and `docs/final_architecture.md`; every module named here exists under `prl/`
+**Status:** v2.1 · 2026-11-03 · derived from `docs/high_level_design.md` v2.1 and `docs/final_architecture.md`; every module named here exists under `prl/`
 **Scope:** module-by-module specification: data schemas, algorithms, file formats, Lean rendering, integrity rules, prompts, statistics, error handling and tests. Code under `prl/` must conform to this document; deviations are recorded in `prereg/deviations.md`.
 
 ---
@@ -16,9 +16,10 @@ AutoSEGroupProject/  (GitHub: Leanstein)
 │                               implementation_plan, feasibility
 ├── prereg/                     frozen study inputs (hashed by FREEZE.json)
 │   ├── study.yaml              conditions, budgets, decoding, models, seeds, splits, bug pool, energy, analysis
-│   ├── portfolio.yaml          two-tier tactic templates (heartbeats per tier)
+│   ├── portfolio.yaml          two-tier tactic templates (heartbeats per tier) + single-call automation registry
 │   ├── hints.yaml              structural pointer catalogue + caps
-│   ├── prompts/*.txt           system, task, per-condition, feedback templates
+│   ├── prompts/*.txt           system, task, per-condition (incl. Bhammer), feedback templates
+│   ├── power_note.json         pre-freeze power simulation (written by `prl power`)
 │   └── deviations.md           logged changes (pre-freeze and post-freeze)
 ├── prl/                        python package (sections 2–12)
 │   ├── config.py, prereg.py, energy.py, cli.py
@@ -30,7 +31,7 @@ AutoSEGroupProject/  (GitHub: Leanstein)
 │   ├── models/     lmstudio, prompts, extract, registry
 │   ├── conditions/ protocols, feedback (router), probes
 │   ├── driver/     runner (plan, blocks, resume, records)
-│   └── analysis/   stats, mechanism, features, report
+│   └── analysis/   stats, power, crosseval, mechanism, features, report
 ├── lean_env/                   pinned Lean project + PrlRepl.lean (verification server)
 ├── tests/                      unit + `lean`-marked integration tests
 ├── scripts/pdownload.py        parallel downloader (throttled networks)
@@ -47,13 +48,14 @@ AutoSEGroupProject/  (GitHub: Leanstein)
   `lake-manifest.json` hash.
 - `study_config()` → parsed `prereg/study.yaml`; unknown keys raise.
 
-`prereg/study.yaml` (v2) keys: `study_id`, `lean{wall_guard_s, workers (0 = from free RAM), mem_limit_gb,
+`prereg/study.yaml` (v2.1) keys: `study_id`, `lean{wall_guard_s (≥ 50), workers (0 = from free RAM), mem_limit_gb,
 test_heartbeats, batch_wall_s}`, `budget{n_gen, max_total_tokens, max_completion_tokens, max_infer_s}`,
 `decoding{temperature, top_p, reasoning_effort}`, `c_round_k`, `history_turns`, `seeds`,
 `models{primary, secondary, specialist, natural_generators}`, `conditions`, `specialist_conditions`,
-`shaping_conditions`, `splits`, `mutants_per_family`, `hidden_tests`, `natural{samples, per_family_per_generator}`,
+`shaping_conditions`, `exploratory_conditions` ([Bhammer]), `crosseval_conditions` ([B]), `splits`, `mutants_per_family`, `hidden_tests`, `natural{samples, per_family_per_generator}`,
 `bugs{primary, min_natural_families, fallback}`, `energy{cpu_watts_per_thread, grid_kg_co2_per_kwh}`,
-`analysis{bootstrap, permutations, alpha, seed, revert_distance, audit_frac}`. The file itself is the reference.
+`analysis{bootstrap, permutations, alpha, seed, revert_distance, audit_frac, power{target, sims, permutations, seed,
+n_max}}`. The file itself is the reference.
 
 ---
 
@@ -102,7 +104,8 @@ extract_ok, extract_error, extract_notes[], code_aux, code, proof_aux, proof, fa
 static_ok, static_reasons[], compile_ok, visible_pass, hidden_pass, n_visible_fail, n_hidden_fail,
 proof_ok, proof_source(portfolio|model|none), closing_entry, entry_vector{entry: closed},
 axioms_ok, axioms[], integrity_ok, integrity_reasons[], hint_kinds[], feedback_chars,
-lean_s, lean_timeout, cache_hit, verify_key, success, ts
+lean_s, lean_timeout, cache_hit, verify_key, success, ts,
+proof_tactic_used[], automation_only_proof          (proof-writing conditions only, when extraction succeeded)
 ```
 (`verify` is nested as one object; raw prompts and outputs are stored under `runs/<study>/raw/`.)
 
@@ -117,9 +120,22 @@ run_id, instance_id, family_id, kind, split, condition, model, seed,
 n_attempts, total_tokens, infer_s_total, lean_s_total, stop_reason(success|n_gen|tokens|infer_time),
 success, outcome(verified_repair|verified_but_wrong|correct_unverified|integrity_violation|unresolved),
 success_attempt_idx, final_code_aux, final_code, proof_source, closing_entry,
+proof_tactic_used, automation_only_proof            (of the accepted model proof; null if none or portfolio)
 dist_to_ref, dist_to_start, equiv_to_ref, ref_auto, features{...}, flags[], prereg_sha, ts
 ```
 `run_id = sha256(study_id|instance_id|condition|model|seed)[:16]`.
+
+### 3.6 Cross-evaluation record (`runs/<study>/crosseval.jsonl`, one line per eligible B attempt)
+```
+analysis_kind="b_to_c_cross_eval", run_id, attempt_idx, family_id, instance_id, condition, model, seed, study_id,
+code_key (sha of family + code), b_failure_kind, bucket, closing_entry, c_failure_kind, visible_pass, hidden_pass, axioms[]
+```
+
+### 3.7 Power note (`prereg/power_note.json`)
+`{unit, test, alpha, alpha_per_test, primary_tests, target_power, seeds, sims, permutations, simulation_seed,
+bug_pool, pilot_dir, rows: [{model, x, y, scenario, pilot_families, pilot_<category>, p10, p01, p_both,
+required_main_families, required_total_eligible, main_families_available, power_at_available,
+mcnemar_power_at_available}]}`
 
 ---
 
@@ -156,12 +172,13 @@ Eligible families sorted by id, shuffled with `random.Random(seed)`. Pilot: firs
 run_lean(source, *, wall_s) -> LeanRun(returncode, messages: list[Msg], stdout, elapsed_s, timeout, infra_error, extra)
 ```
 - **Backend `repl` (default):** a pool of `_ReplWorker`s, each a `prlrepl` process (`lean_env/PrlRepl.lean`)
-  that imports the frozen specific tactic modules once and answers one JSON line per request (`{"ok", "messages": [{line, col, severity,
+  that imports the whole of Mathlib once and answers one JSON line per request (`{"ok", "messages": [{line, col, severity,
   text}]}`) for the file path it receives. Each worker is placed in a **Windows Job Object** with a
   per-process memory cap (`lean.mem_limit_gb`, default 4 GB). Pool size = `lean.workers` or, if 0,
-  `auto_workers()` = ⌊(free RAM − 4 GB) / 3 GB⌋ capped at 6.
+  `auto_workers()` = ⌊(free RAM − 4 GB) / 3 GB⌋ capped at 6; `PRL_LEAN_WORKERS` (or the CLI's
+  `--lean-workers`) overrides both. A reduced import set is not used (final architecture §2b, R3-7).
 - `lean.wall_guard_s` is the normal per-request wall-clock guard (`120` seconds in the
-  frozen study config), and must be at least 50 seconds to clear startup and tactic work.
+  frozen study config), and must be at least 50 seconds to clear startup and tactic work (`Judge` raises otherwise).
   A request that exceeds it kills the worker (which restarts lazily); a worker that dies returns
   `infra_error="repl process died"`, `extra.died=True`. CPU seconds of killed workers are accumulated for energy.
 - `lean.batch_wall_s` is the shorter dataset-building guard (`20` seconds in the
@@ -170,7 +187,8 @@ run_lean(source, *, wall_s) -> LeanRun(returncode, messages: list[Msg], stdout, 
   seconds in `Judge._portfolio`.
 - Wall-clock guards are backstops, not tactic budgets: `maxHeartbeats` is the deterministic
   tactic limit and does not count or bypass imports. `maxHeartbeats 0` is reserved for
-  the explicitly unbounded test guards and is forbidden in calibrated portfolio entries.
+  the explicitly unbounded test guards and is forbidden in portfolio entries (`load_portfolio` rejects a tier
+  with non-positive heartbeats).
 - **Backend `cli`:** `lean Main.lean` per request with `LEAN_PATH` (fallback; parity tested).
 - Messages from the server carry exact positions; `stdout` is synthesised in CLI format so text parsers
   (`#print axioms`, eval markers) work for both backends.
@@ -180,8 +198,7 @@ run_lean(source, *, wall_s) -> LeanRun(returncode, messages: list[Msg], stdout, 
 locked template with candidate regions (proof region = candidate proof in proof modes, else `sorry`); then a
 generated harness section: in proof modes `#print axioms F_spec_satisfied`; one `#guard` per test; one
 `set_option maxHeartbeats <entry tier> in theorem prl_try_k <statement> := by <script>` + `#print axioms
-prl_try_k` per entry. The builder uses only the frozen specific tactic imports; bare `import Mathlib`
-is forbidden in evaluation files. The precondition argument of test calls is
+prl_try_k` per entry. `import Mathlib` is ensured (`ensure_mathlib`). The precondition argument of test calls is
 `(by first | decide | trivial | (simp_all; done) | omega | sorry)` — or omitted when the locked header has no
 `h_precond` (some VERINA functions). The harness `sorry` never enters an accepted proof (axioms are checked
 only on proof declarations). `build_batch` (dataset building) and `build_eval` (`#eval!` with
@@ -197,24 +214,27 @@ only on proof declarations). `build_batch` (dataset building) and `build_eval` (
 
 ### 5.3a Cross-evaluation and B proof logging
 
-For every B attempt with compiling code and a failed model proof, the driver stores a
-secondary candidate containing only B's implementation region. Proof text and proof
-declarations are removed before the candidate is passed to C's verifier. The secondary
-run executes the complete C pipeline: portfolio tactics, hidden tests, and `#print axioms`.
-Its records carry `analysis_kind="b_to_c_cross_eval"` and are excluded from primary B/C
-success rates. Report three mutually exclusive buckets: `c_proves_tests_pass`,
-`c_proves_tests_fail`, and `c_cannot_prove`. The middle bucket is a finding about a
-weak contract, not a verified repair.
+**Cross-evaluation** (`prl/analysis/crosseval.py`, command `prl crosseval --study S`; Lean only, after the run):
+every attempt of a `crosseval_conditions` condition (B) with `extract_ok ∧ compile_ok ∧ ¬proof_ok` yields a
+secondary candidate `{code_aux, code}` only — proof text and proof declarations are dropped. It is verified by
+`Judge.verify(fam, cand, "portfolio", force_portfolio=True)` through `verify_with_infra_retry`, i.e. the complete
+C pipeline (static integrity, visible + hidden tests, portfolio run even when tests fail, `#print axioms`).
+Identical code of a family (`code_key`) is verified once; the step is resumable by `(run_id, attempt_idx)`.
+Buckets (`bucket(vr)`, mutually exclusive): `c_rejected_integrity` (¬static_ok ∨ ¬integrity_ok),
+`c_cannot_prove` (¬proof_ok, including timeouts), `c_proves_tests_pass`, `c_proves_tests_fail`. The last is a
+finding about a weak contract, never a verified repair. Records (§3.6) are excluded from primary B/C rates.
 
-Every B attempt record also carries `proof_tactic_used`, a normalized list of tactics
-found in the model-written proof. A single-call automation proof is one whose normalized
-list contains only `grind`, `aesop`, or another registered single-call automation tactic.
-The report emits both B overall and B excluding that subset; the raw attempt records
-remain unchanged and automation is never rejected by the integrity checker.
+**Proof logging** (`leantext.proof_tactics`, `protocols.proof_log`): each proof-writing attempt stores
+`proof_tactic_used` = sorted unique tactic heads found in `proof_aux` + `proof` after stripping comments, strings
+and `[...]` lemma lists (segments split at newlines, `;`, `<;>`, `|`, parentheses, `·`, `=>`, braces, commas;
+the head is kept only if it is in the fixed vocabulary `TACTIC_VOCAB`; `simp?`/`simp only` normalise to `simp`).
+`automation_only_proof` ⇔ `proof_aux` declares nothing ∧ the tactics minus glue (`intro`, `intros`, `unfold`,
+`first`, `try`, `repeat`, `all_goals`, `any_goals`) are non-empty and all in `portfolio.yaml:
+single_call_automation`. The report derives `B_noauto` (§11.5); raw records are unchanged and automation is never
+rejected by the integrity checker.
 
-If the study adds B-hammer, it is a separate exploratory condition whose prompt exposes
-the same frozen tactic list available to C. Its extra generation and verification cost
-is reported, and its results are never substituted for or pooled with primary B.
+**Bhammer** (exploratory, §9): a separate condition whose prompt lists the frozen portfolio expanded for the task
+(`protocols.tactic_menu`); its cost is reported and its results are never substituted for or pooled with B.
 
 ### 5.4 Verify (`verify.py`)
 `Judge.verify(fam, cand, mode, *, tests="all", skip_static=False, full_vector=False, force_portfolio=False)`,
@@ -262,7 +282,7 @@ pointers (`partial_def`, `well_founded`, `imperative_loop`, `nat_int_mix`, `opaq
 
 `feedback.route(cond, fam, cand, vr, *, extract_ok, witness_line) -> Feedback(kind, text, hint_kinds)`:
 
-| failure \ cond | A | B / BP | C / S | Cplain / Splain |
+| failure \ cond | A | B / BP / Bhammer | C / S | Cplain / Splain |
 |---|---|---|---|---|
 | extraction | none | "no `def F` found" | "no `def F` found" | generic |
 | integrity | none | rules violated | rules violated | generic |
@@ -331,11 +351,14 @@ failing visible test (actual output via `eval_outputs`), else a hidden test (not
 - `system.txt` (shared): Lean 4 expert; Lean 4 (not Lean 3) syntax; output format rules.
 - `task_block` (shared, generated from `TaskView`): description, Lean signature line, precondition and postcondition definitions (with their aux), the start implementation as a complete `def` (signature line + body).
 - Condition instructions:
+  - `Bhammer.txt`: as `B.txt`, plus "The checker has these automatic tactic scripts available (the same frozen list
+    the code-only conditions use) …" followed by `$tactics` = one bullet per expanded portfolio entry (newlines
+    shown as `; `). The menu is computed in `prl.conditions` (the agent layer never imports `prl.lean`).
   - `A.txt`, `B.txt`, `BP.txt`: "Fix the implementation and prove the theorem. Output exactly two ```lean blocks: (1) the full `def` (helpers before it allowed); (2) the theorem `<name>_spec_satisfied` with its proof (lemmas before it allowed). Do not use sorry/admit/axiom/native_decide."
   - `C.txt`, `Cplain.txt`: "Fix the implementation so that it is correct **and simple enough for Lean's automatic tactics (simp, omega, grind, induction) to prove the specification**. Prefer structural recursion over the same structure as the specification, pattern matching, and avoid partial/imperative loops. Output exactly one ```lean block with the full `def` (helpers before it allowed). Do NOT write any proof."
   - `S.txt`, `Splain.txt`: as C but "The implementation below is already behaviourally correct, but Lean's automatic tactics cannot prove it. Rewrite it into an equivalent implementation that the tactics can prove."
 - Feedback blocks (`feedback.py`):
-  - B/BP: `Your previous attempt failed.\n<failing test line if any>\nLean errors:\n<≤3 errors>`.
+  - B/BP/Bhammer: `Your previous attempt failed.\n<failing test line if any>\nLean errors:\n<≤3 errors>`.
   - C/S: `Your previous attempt failed.\n<hint.text>`.
   - Cplain/Splain: `The candidate was rejected. Try again.`
 - History: messages = system, user(task + instruction), then for the last `history_turns` turns: assistant(raw output truncated to 4,000 chars), user(feedback). Same rule for all conditions.
@@ -359,12 +382,14 @@ failing visible test (actual output via `eval_outputs`), else a hidden test (not
 - Per generation: messages (A: no history; others: last `history_turns` turns) → completion (seed
   `seed·1000 + attempt`) → charge tokens and seconds → extract (dropping echoed locked definitions) →
   `verify_with_infra_retry` (same candidate re-verified up to 2× on infrastructure failure, then `InfraError`
-  abandons the run for re-execution) → attempt record (with `failure_kind`, `feedback_kind`, `hint_kinds`).
-- B/BP: feedback after every attempt via the router. C/C-plain/S/S-plain: rounds of `c_round_k` samples
+  abandons the run for re-execution) → attempt record (with `failure_kind`, `feedback_kind`, `hint_kinds`, and for
+  proof-writing conditions `proof_tactic_used` / `automation_only_proof`).
+- B/BP/Bhammer: feedback after every attempt via the router. C/C-plain/S/S-plain: rounds of `c_round_k` samples
   sharing the same history; after each round, feedback for the round's best candidate (compiled ∧ tests pass >
   compiled > other).
-- `MODE = {A, B: model_proof; BP: portfolio_then_model; C, Cplain, S, Splain: portfolio}`.
-- Turn-0 information is identical for B, BP, C, C-plain (task + visible failing witness).
+- `MODE = {A, B, Bhammer: model_proof; BP: portfolio_then_model; C, Cplain, S, Splain: portfolio}`.
+- Turn-0 information is identical for B, BP, Bhammer, C, C-plain (task + visible failing witness); only the
+  instruction block differs.
 
 `probes.compile_probe(models, n_tasks)` and `probes.determinism_probe(models)`: Phase-0 floor-effect and
 seed-determinism checks (idle GPU only).
@@ -400,16 +425,21 @@ Computed by `prl.driver.runner.outcome_label` at run time (priority order in §1
 - `cluster_bootstrap_diff(x, y, B, seed)`: resample families with replacement, return mean diff and percentile 95% CI.
 - `cohens_h(p1, p2) = 2·asin(√p1) − 2·asin(√p2)`.
 - `min_detectable(D, alpha)`: smallest b such that one-sided binomial(b; D, 0.5) p ≤ alpha.
-- `pilot_power(p01, p10, p_both, alpha=0.05, target=0.80, seeds=3)`: collapse each family
-  to majority-solved over its three seeds, simulate paired outcomes with probabilities
-  `p01`, `p10`, `p_both`, and `1 - p01 - p10 - p_both`, and call
-  `statsmodels.stats.contingency_tables.mcnemar` for the supporting test. The simulation
-  also applies the task-clustered primary sign-flip procedure, rather than treating the
-  three seed observations as independent tasks. Sweep pessimistic and optimistic pilot
-  ranges and return the smallest main-set family counts whose rejection rate reaches
-  `target`; also return `ceil(main_count / 0.70)` as the total eligible-family target.
-  Store pilot estimates, ranges, seed count, simulation seed, and the chosen primary-test
-  unit with the power note.
+- `simulate_power(probs, n, *, pairs, alpha, sims, n_perm, seed)`: each simulated family draws its majority
+  category (`both`, `only_x` = p10, `only_y` = p01, `neither`) and then a (score_x, score_y) pair over the three
+  seeds from the pilot families of that category (pure 0/1 pair if none). Returns the rejection rate of the
+  one-sided Monte-Carlo sign-flip test (one shared sign matrix, `n_perm` flips) and of the one-sided exact
+  McNemar test (`statsmodels.stats.contingency_tables.mcnemar`, p/2 when b > c) on the majority binary. One
+  paired observation per family — seeds are never treated as independent tasks.
+- `pilot_power(p01, p10, p_both, *, pairs, alpha, target=0.80, seeds=3, sims, n_perm, seed, n_min=10, n_max=600)`:
+  bisection for the smallest family count whose sign-flip rejection rate reaches `target`; `required_n=None` if
+  p10 ≤ p01 or `n_max` is not enough.
+- `power.power_note(pilot_dir, cfg)` (`prl power`): per primary model × primary comparison, pilot counts per
+  category → scenarios `point` (add-½ smoothed), `pessimistic` (p10 at the lower and p01 at the upper 80% Jeffreys
+  bound), `optimistic` (reverse); α per test = α / (#primary tests) = 0.0125 (Holm's smallest step);
+  `required_total_eligible = ⌈n_main / (1 − heldout_frac)⌉ + pilot_n`; also the power at the actual `main` size
+  from `data/splits.json`. Writes `prereg/power_note.json` (§3.7) and `results/power_note.md`. `prl freeze`
+  refuses without the note unless `--no-power-note` (to be justified in `deviations.md`).
 - Unit-tested against scipy/statsmodels and hand-computed cases.
 
 ### 11.3 Mechanism (`mechanism.py`)
@@ -429,6 +459,12 @@ bug pool chosen by `primary_pool` from `study.yaml: bugs`; Holm over the primary
 `rq2_mechanism.md`, `rq4_shapes*.{md,csv}`, `rq5_costs.md` (+ `rq5_energy.csv`: GPU J measured, CPU J and CO2
 estimated, J per verified repair), `outcomes.csv`, `sensitivity_n.csv`, `integrity_flags.csv`,
 `figures/rates.png`, `summary.json`. Deterministic and idempotent (tested).
+Secondary analyses: `with_derived(df)` appends `B_noauto` (every B run; successes with `automation_only_proof`
+count as failures) **only for the comparisons** — derived rows never enter costs, outcomes, energy or audits.
+Secondary comparisons: C vs C-plain, C vs A, BP vs B, C vs B_noauto, C vs Bhammer, Bhammer vs B, S vs S-plain.
+`rq1_main.md` also has a proof-style table (model-proof successes, automation-only count, top tactics).
+If `crosseval.jsonl` exists: `crosseval.md`, `crosseval_attempts.csv` (bucket counts per model × condition) and
+`crosseval_runs.csv` (failed B runs with a `c_proves_tests_pass` attempt; runs with a weak-spec candidate).
 `audit_sample`: stratified `audit_frac` of successes **plus every flagged success**; `prl audit --merge`
 summarises the filled-in CSV into `results/audit/summary.md`.
 
@@ -450,8 +486,10 @@ Post-hoc truncation: a run counts as success at budget n if `success_attempt_idx
 | `prl bugs shaping` | study-S instances |
 | `prl splits` | family-level splits, stamps instances |
 | `prl probe compile|determinism --models …` | Phase-0 probes (GPU) |
-| `prl run --study S --split … --kinds … --conditions … --models … [--seeds] [--families] [--limit-families]` | driver |
-| `prl freeze [--note]` | write `prereg/FREEZE.json` |
+| `prl run --study S --split … --kinds … --conditions … --models … [--seeds] [--families] [--limit-families]` | driver (conditions incl. `Bhammer`) |
+| `prl power [--study pilot]` | pre-freeze power simulation → `prereg/power_note.json`, `results/power_note.md` |
+| `prl freeze [--note] [--no-power-note]` | write `prereg/FREEZE.json` (refuses without the power note) |
+| `prl crosseval --study S [--conditions B]` | B→C cross-evaluation (Lean only) → `runs/S/crosseval.jsonl` |
 | `prl analyze --study S1,S2` | all tables and figures |
 | `prl audit --study S [--merge]` | audit sample / merge filled audit |
 
@@ -480,8 +518,9 @@ Global option `--lean-workers N` (default from `study.yaml`, 0 = from free RAM).
 |---|---|---|
 | `test_core_units.py` | regions round-trip on all 189 templates and locked-hash invariance; literals; extraction (fenced, proof split, echoed locked definitions); static integrity (every rejection, comment/string evasion, legitimate code); portfolio expansion and tier order; failure classification; feedback-router paths; energy arithmetic; primary-pool rule; mechanism; package layering | — |
 | `test_hints_mutate.py` | every structural pointer; hint stages; hidden-test privacy; cap; mutation operators, comment/string safety, determinism | — |
-| `test_protocols_driver.py` | every condition with a fake model and judge: early stop, budget caps, A without history, C rounds, C-plain feedback, turn-0 parity, prompt leakage; driver kill-and-resume | — |
+| `test_protocols_driver.py` | every condition (incl. Bhammer) with a fake model and judge: early stop, budget caps, A without history, C rounds, C-plain feedback, turn-0 parity, prompt leakage; driver kill-and-resume | — |
 | `test_stats.py` | sign-flip exactness, Holm, McNemar vs scipy, bootstrap determinism, Cohen's h, minimum detectable effect | — |
 | `test_report.py` | analysis idempotence on synthetic logs | — |
+| `test_v21_additions.py` | proof-tactic extraction and the automation-only rule; attempt logging; Bhammer prompt parity and feedback; cross-evaluation buckets, de-duplication, resume; power simulation (large effect vs none; family pairs); `B_noauto` and cross-evaluation report; wall-guard minimum; positive heartbeats; freeze requires the power note | — |
 | `test_lean_integrity.py` | 18 escape attempts on real Lean (zero false successes), reference vs re-shaped code, determinism | `lean` |
 

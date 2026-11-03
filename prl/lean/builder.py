@@ -8,13 +8,6 @@ from prl.lean.portfolio import Entry
 from prl.tasks import regions as R
 
 PRE_PROOF = "(by first | decide | trivial | (simp_all; done) | omega | sorry)"
-TACTIC_IMPORTS = (
-    "Mathlib.Tactic.Omega",
-    "Mathlib.Tactic.Linarith",
-    "Mathlib.Tactic.NormNum",
-    "Mathlib.Tactic.Aesop",
-    "Mathlib.Tactic.Grind",
-)
 
 
 @dataclass
@@ -31,29 +24,11 @@ def _line_of(text: str, offset: int) -> int:
     return text.count("\n", 0, offset) + 1
 
 
-def ensure_tactic_imports(template: str) -> str:
-    """Replace bare Mathlib imports and add the frozen tactic modules per import region."""
-    regions = R.parse_regions(template)
-    out = template
-    import_regions = sorted(
-        (region for name, region in regions.items() if name == "import" or name.startswith("import#")),
-        key=lambda region: region.start,
-        reverse=True,
-    )
-    for region in import_regions:
-        lines = [
-            line for line in region.content.splitlines()
-            if not re.match(r"^\s*import\s+Mathlib\s*$", line)
-        ]
-        existing = {line.strip().removeprefix("import ") for line in lines if line.strip().startswith("import ")}
-        missing = [f"import {module}" for module in TACTIC_IMPORTS if module not in existing]
-        content = "\n".join(missing + lines)
-        if content:
-            content += "\n"
-        out = out[:region.start] + content + out[region.end:]
-    if not import_regions:
-        return "\n".join([*(f"import {module}" for module in TACTIC_IMPORTS), template])
-    return out
+def ensure_mathlib(template: str) -> str:
+    imp = R.region_text(template, "import")
+    if re.search(r"^\s*import\s+Mathlib\s*$", imp, re.M):
+        return template
+    return "import Mathlib\n" + template
 
 
 def candidate_template(template: str, cand: dict[str, str], with_proof: bool) -> str:
@@ -64,7 +39,7 @@ def candidate_template(template: str, cand: dict[str, str], with_proof: bool) ->
     else:
         repl["proof_aux"] = ""
         repl["proof"] = "sorry"
-    return ensure_tactic_imports(R.render(template, repl))
+    return ensure_mathlib(R.render(template, repl))
 
 
 def pre_arg(template: str, fn: str) -> str:
@@ -131,7 +106,7 @@ def build_batch(template: str, *, fn: str, params: list[tuple[str, str]], ret: s
     Each candidate gets its own copy of the (import-free) template inside `namespace PRLB<k>`, so the
     Mathlib import is paid once. Returns the source and, per candidate, its code span and test spans.
     """
-    first = candidate_template(template, {"code_aux": "", "code": "0"}, False)
+    first = ensure_mathlib(candidate_template(template, {"code_aux": "", "code": "0"}, False))
     imports = [ln for ln in first.split("\n") if ln.startswith("import ")]
     out = list(dict.fromkeys(imports))
     spans = []

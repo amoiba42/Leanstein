@@ -1,7 +1,8 @@
 # Implementation Plan
 
 **Project:** Prove Less, Repair Better (PRL)
-**Status:** v2.0 · 2026-11-02 · derived from requirements v2.0, HLD v2.0, LLD v2.0 and `docs/final_architecture.md`.
+**Status:** v2.1 · 2026-11-03 · derived from requirements v2.1, HLD v2.1, LLD v2.1 and `docs/final_architecture.md`
+(v2.1 = Gracy's revision-3 notes reconciled, final architecture §2b).
 **State:** all code is implemented and tested; **no dataset has been generated and no experiment has been run**
 (all earlier outputs were deleted; everything is produced from scratch by the phases below).
 
@@ -32,11 +33,11 @@ B = Tasks & Models, C = Study Lead.
 | F-11 | VERINA regions, render, locked hash | `prl/tasks/regions.py` | FR-TASK-1, IR-1 | round-trip on 189 templates | ☑ |
 | F-12 | Family loader (repeated imports, functions without `h_precond`) | `prl/tasks/verina.py` | FR-TASK-1 | 189 load | ☑ |
 | F-13 | Type parser, literals, random values | `prl/testgen/literals.py` | FR-TEST | unit | ☑ |
-| F-20 | Lean runner: server pool, Job-Object memory cap, RAM-derived workers, CLI fallback | `prl/lean/runner.py` | FR-RES-1/2 | integration | ☑ |
+| F-20 | Lean runner: server pool (full Mathlib), Job-Object memory cap, workers from config / free RAM / `PRL_LEAN_WORKERS`, CLI fallback | `prl/lean/runner.py` | FR-RES-1/2 | integration | ☑ |
 | F-21 | File builder (per-entry heartbeats, conditional precondition argument, eval markers) | `prl/lean/builder.py` | FR-VER-2 | integration | ☑ |
-| F-22 | Two-tier portfolio | `prl/lean/portfolio.py`, `prereg/portfolio.yaml` | FR-PORT-1..5 | unit (tier order) | ☑ |
+| F-22 | Two-tier portfolio (positive heartbeats enforced) + single-call automation registry | `prl/lean/portfolio.py`, `prereg/portfolio.yaml` | FR-PORT-1..5, FR-ANA-8 | unit (tier order, unbounded rejected) | ☑ |
 | F-23 | Static pre-filter (reject) + degeneracy flags | `prl/lean/integrity.py` | IR-1..7 | unit | ☑ |
-| F-25 | Staged verify, early stop, failure taxonomy, cache | `prl/lean/verify.py` | FR-VER, FR-FAIL-2/3 | unit + integration | ☑ |
+| F-25 | Staged verify, early stop, failure taxonomy, cache, wall guard ≥ 50 s | `prl/lean/verify.py` | FR-VER, FR-FAIL-2/3, FR-PORT-2 | unit + integration | ☑ |
 | F-26 | Hint extractor | `prl/lean/hints.py` | FR-HINT | unit | ☑ |
 | F-27 | Integrity suite on real Lean | `tests/test_lean_integrity.py` | IR-8 | 24 pass, zero false successes | ☑ |
 | F-30 | Reference checks, eligibility, T | `prl/tasks/eligibility.py` | FR-TASK-2 | — | ☑ |
@@ -48,16 +49,20 @@ B = Tasks & Models, C = Study Lead.
 | F-41 | Model registry | `prl/models/registry.py` | NFR-ENV-2 | — | ☑ |
 | F-42 | Prompts + TaskView (no leakage) | `prl/models/prompts.py`, `prereg/prompts/` | FR-GEN-3, IR-9 | leakage test | ☑ |
 | F-43 | Extraction (drops echoed locked definitions) | `prl/models/extract.py` | FR-GEN-4 | unit | ☑ |
-| F-50 | Protocols A, B, BP, C, Cplain, S, Splain; budget; infra retry | `prl/conditions/protocols.py` | FR-COND, FR-BUD, FR-FAIL-1 | fake-model tests | ☑ |
+| F-50 | Protocols A, B, BP, C, Cplain, S, Splain and exploratory Bhammer (tactic menu); budget; infra retry; proof-tactic logging | `prl/conditions/protocols.py`, `prereg/prompts/Bhammer.txt` | FR-COND, FR-COND-10, FR-BUD, FR-FAIL-1, FR-ANA-8 | fake-model tests | ☑ |
 | F-51 | Feedback router | `prl/conditions/feedback.py` | FR-FB-1..3 | unit (all paths) | ☑ |
 | F-52 | Driver: (model, condition) blocks, resume, records, freeze guard | `prl/driver/runner.py` | FR-DRV, SR-PRE-2 | kill/resume test | ☑ |
 | F-53 | Energy meter (GPU measured, CPU estimated, CO2) | `prl/energy.py` | FR-EN-1..3 | unit | ☑ |
-| F-54 | Statistics | `prl/analysis/stats.py` | SR-STAT | unit vs scipy | ☑ |
+| F-54 | Statistics + power simulation (`simulate_power`, `pilot_power`) | `prl/analysis/stats.py` | SR-STAT | unit vs scipy; power sanity | ☑ |
 | F-55 | Mechanism (shaping vs reverting) | `prl/analysis/mechanism.py` | SR-MECH | unit | ☑ |
 | F-56 | Code features + shapes | `prl/analysis/features.py`, `report.py` | RQ4 | — | ☑ |
 | F-57 | Report: primary-pool rule, energy, audit sample (+ flagged) and merge | `prl/analysis/report.py` | FR-ANA, FR-EN-3 | idempotence test | ☑ |
 | F-58 | CLI | `prl/cli.py` | FR-DRV-4 | `prl --help` | ☑ |
-| F-59 | Pre-registration freeze | `prl/prereg.py` | SR-PRE | — | ☑ |
+| F-59 | Pre-registration freeze (refuses without the power note) | `prl/prereg.py`, `prl/cli.py` | SR-PRE, SR-STAT-4 | unit | ☑ |
+| F-60 | Tactic extraction (`proof_tactic_used`) and automation-only rule | `prl/lean/leantext.py` | FR-ANA-8 | unit | ☑ |
+| F-61 | B→C cross-evaluation (buckets, de-dup, resume) + report section | `prl/analysis/crosseval.py`, `prl crosseval`, `report.py` | FR-ANA-7 | unit | ☑ |
+| F-62 | Pilot power note (three scenarios, α/4, eligible-family conversion incl. pilot) | `prl/analysis/power.py`, `prl power` | SR-STAT-4 | unit | ☑ |
+| F-63 | Derived `B_noauto` comparison, Bhammer comparisons, proof-style table | `prl/analysis/report.py` | FR-ANA-8/9 | unit | ☑ |
 
 ## Phase 2 — Dataset build (from scratch)
 
@@ -76,8 +81,9 @@ B = Tasks & Models, C = Study Lead.
 |---|---|---|---|
 | P-1 | `prl run --study pilot --split pilot --kinds natural,mutant --allow-unfrozen --seeds 11` (primary models; A, B, BP, C, Cplain) | logs complete | ☐ |
 | P-2 | Pilot-only tuning of prompts / portfolio; every change logged in `prereg/deviations.md` | — | ☐ |
-| P-3 | Gate (requirements §11) recorded in `docs/feasibility.md` | decision | ☐ |
-| P-4 | `prl freeze` | `prereg/FREEZE.json` | ☐ |
+| P-3 | `prl power --study pilot`: power simulation (3 scenarios, 3 seeds, sign-flip at α/4, n_main → total eligible incl. pilot) | `prereg/power_note.json`, `results/power_note.md` | ☐ |
+| P-4 | Gate (requirements §11) recorded in `docs/feasibility.md`, incl. the Bhammer go/no-go from the cost estimate (logged in `prereg/deviations.md`) | decision | ☐ |
+| P-5 | `prl freeze` (refuses without the power note) | `prereg/FREEZE.json` | ☐ |
 
 ## Phase 4 — Confirmatory run
 
@@ -88,19 +94,21 @@ B = Tasks & Models, C = Study Lead.
 | M-3 | Gemma-4-E4B × {B, BP, C} × 1 seed | ☐ |
 | M-4 | Goedel-Code-Prover-8B × {A, B} × 1 seed | ☐ |
 | M-5 | `heldout` once: primary models × {B, BP, C} × 3 seeds | ☐ |
+| M-6 | *Optional (P-4 decision):* primary models × Bhammer × 3 seeds on `main` (exploratory; cost reported) | ☐ |
 
 ## Phase 5 — Analysis and reporting
 
 | ID | Step | Status |
 |---|---|---|
-| R-1 | `prl analyze --study main,heldout` | ☐ |
+| R-0 | `prl crosseval --study main` (and `heldout`): B→C cross-evaluation, Lean only | ☐ |
+| R-1 | `prl analyze --study main,heldout` (includes `B_noauto`, Bhammer, proof-style table, `crosseval.md`) | ☐ |
 | R-2 | `prl audit --study main` → fill the CSV → `prl audit --merge` | ☐ |
 | R-3 | Code-shape catalogue with annotated before/after examples | ☐ |
 | R-4 | `docs/results.md` (claims locked to `results/`) and `docs/final_proposal.md` §Results | ☐ |
-| R-5 | Cross-evaluate compiling-but-unproved B implementations through C's full pipeline; write secondary results separately | ☐ |
-| R-6 | Report B overall and B excluding single-call automation proofs using `proof_tactic_used` from attempt logs | ☐ |
-| R-7 | Run pilot-based `p01`/`p10` McNemar power simulation at 80% power, account for 3 seeds and the 70% main split, and store the power note before freeze | ☐ |
-| R-8 | If compute permits, run B-hammer as a separate exploratory arm with C's frozen tactic list and report its compute cost | ☐ |
+| R-5 | Write up the cross-evaluation buckets (R-0) as a secondary result, separate from B and C | ☐ |
+| R-6 | Write up B overall vs `B_noauto` (from R-1) | ☐ |
+| R-7 | Report the pre-freeze power note (P-3) and, if underpowered, state it as a limitation | ☐ |
+| R-8 | If M-6 ran: Bhammer vs B and C with its compute cost, labelled exploratory | ☐ |
 
 ---
 
@@ -112,7 +120,7 @@ B = Tasks & Models, C = Study Lead.
 
 ## Testing strategy
 
-1. Unit tests (no Lean, no LLM): `uv run pytest -m "not lean and not llm"` (79 tests).
+1. Unit tests (no Lean, no LLM): `uv run pytest -m "not lean and not llm"` (94 tests).
 2. Lean integration: `uv run pytest -m lean` (24 tests: integrity, re-shaping mechanism, determinism).
 3. Static: `uv run ruff check prl tests`.
 4. End-to-end dry run before the pilot: 3 families × all conditions × 1 seed × Qwen3.5-2B.

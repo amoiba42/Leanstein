@@ -13,6 +13,12 @@
 #   {R} each recursive function among F and its helpers (foreach: R);
 #   {U} expands to "" when R is F itself, else an "unfold {F} {P}" line (exposes the helper call).
 # Entries are tried in order; the first closing entry is the `closing_entry`.
+# Heartbeat limits must be positive: `maxHeartbeats 0` (unbounded) is never allowed in a portfolio entry.
+#
+# `single_call_automation` (analysis only, FR-ANA-8): a model-written proof (A/B/BP/Bhammer) counts as a
+# single-call automation proof when it has no helper lemmas and every tactic it uses is in this list (or
+# is glue: intro, intros, unfold, first, try, repeat, all_goals, any_goals). Such proofs remain legal; B is
+# reported both overall and without them.
 version: 2
 max_entries: 24
 tiers:
@@ -34,3 +40,5 @@ entries:
   - {id: fun_ind_grind,  tier: H, script: "{U}fun_induction {R} <;> grind [{F}, {P}, {Q}{H}]", foreach: R}
   - {id: ind_simp_all,   tier: H, script: "induction {x} <;> simp_all [{F}, {P}, {Q}{H}]", foreach: x}
   - {id: ind_grind,      tier: H, script: "induction {x} <;> grind [{F}, {P}, {Q}{H}]", foreach: x}
+single_call_automation: [decide, simp, simp_all, simp_arith, omega, grind, aesop, linarith, nlinarith, norm_num,
+                         tauto, trivial, rfl, split, fun_induction, induction, positivity]

@@ -1,4 +1,4 @@
-"""Paired statistics at the task-family level (SR-STAT-1..4)."""
+"""Paired statistics at the task-family level (SR-STAT-1..5) and the pre-freeze power simulation."""
 from __future__ import annotations
 
 import itertools
@@ -139,3 +139,80 @@ def paired_compare(x: np.ndarray, y: np.ndarray, *, B: int, n_perm: int, seed: i
         only_x=b, only_y=c, both=int((xb & yb).sum()), neither=int((~xb & ~yb).sum()),
         mcnemar_p_greater=mcnemar_exact(b, c)["p_greater"], min_detectable=min_detectable(b + c, alpha),
     )
+
+
+# ---- pre-freeze power simulation (SR-STAT-4)
+
+CATS = ("both", "only_x", "only_y", "neither")  # majority-solved category of a family (x = C, y = baseline)
+_DEFAULT_PAIR = {"both": (1.0, 1.0), "only_x": (1.0, 0.0), "only_y": (0.0, 1.0), "neither": (0.0, 0.0)}
+
+
+def _signflip_p_batch(d: np.ndarray, signs: np.ndarray) -> np.ndarray:
+    """One-sided (greater) Monte-Carlo sign-flip p-values for many simulated studies at once.
+    d: (sims, n) family-score differences; signs: (n_perm, n) shared ±1 matrix."""
+    obs = d.mean(axis=1)
+    null = d @ signs.T / d.shape[1]  # (sims, n_perm)
+    return ((null >= obs[:, None] - 1e-12).sum(axis=1) + 1) / (signs.shape[0] + 1)
+
+
+def simulate_power(probs: dict[str, float], n: int, *, pairs: dict[str, list[tuple[float, float]]] | None = None,
+                   alpha: float = 0.05, sims: int = 500, n_perm: int = 999, seed: int = 4242) -> dict[str, float]:
+    """Rejection rates of the primary sign-flip test and the supporting exact McNemar test for `n` families.
+
+    Each simulated family draws its majority category from `probs` (p_both, p10 = only_x, p01 = only_y,
+    p_neither) and then a (score_x, score_y) pair over the three seeds from the pilot pairs of that category
+    (or the pure 0/1 pair if the pilot has none). This keeps the task-clustered unit of the real test:
+    one paired observation per family, never per seed."""
+    from statsmodels.stats.contingency_tables import mcnemar
+
+    rng = np.random.default_rng(seed)
+    p = np.array([max(0.0, probs[c]) for c in CATS], float)
+    p = p / p.sum()
+    pools = [np.array(pairs.get(c) or [_DEFAULT_PAIR[c]], float) if pairs else np.array([_DEFAULT_PAIR[c]])
+             for c in CATS]
+    cat = rng.choice(len(CATS), size=(sims, n), p=p)
+    x = np.empty((sims, n))
+    y = np.empty((sims, n))
+    for k, pool in enumerate(pools):
+        m = cat == k
+        pick = pool[rng.integers(0, len(pool), size=int(m.sum()))]
+        x[m], y[m] = pick[:, 0], pick[:, 1]
+    signs = rng.choice([-1.0, 1.0], size=(n_perm, n))
+    p_sf = _signflip_p_batch(x - y, signs)
+    xb, yb = x > 0.5, y > 0.5
+    b = (xb & ~yb).sum(axis=1)
+    c = (~xb & yb).sum(axis=1)
+    rej_mc = 0
+    for bi, ci in zip(b, c, strict=True):
+        if bi > ci:  # one-sided: only x-favouring discordance can reject
+            t = mcnemar([[0, int(bi)], [int(ci), 0]], exact=True)
+            rej_mc += (t.pvalue / 2) <= alpha
+    return {"n": n, "power_signflip": float((p_sf <= alpha).mean()), "power_mcnemar": float(rej_mc / sims)}
+
+
+def pilot_power(p01: float, p10: float, p_both: float, *, pairs: dict[str, list[tuple[float, float]]] | None = None,
+                alpha: float = 0.05, target: float = 0.80, seeds: int = 3, sims: int = 500, n_perm: int = 999,
+                seed: int = 4242, n_min: int = 10, n_max: int = 600) -> dict[str, object]:
+    """Smallest number of confirmatory families whose sign-flip rejection rate reaches `target`.
+
+    p01 = P(baseline solved, C failed), p10 = P(C solved, baseline failed), p_both; p_neither is the rest.
+    Family outcomes are majority-solved over `seeds` seeds. Bisection over n (power is monotone up to
+    simulation noise); returns None for `required_n` if even `n_max` families do not reach the target."""
+    probs = {"both": p_both, "only_x": p10, "only_y": p01, "neither": max(0.0, 1.0 - p01 - p10 - p_both)}
+
+    def pw(n: int) -> dict[str, float]:
+        return simulate_power(probs, n, pairs=pairs, alpha=alpha, sims=sims, n_perm=n_perm, seed=seed)
+
+    top = pw(n_max)
+    if p10 <= p01 or top["power_signflip"] < target:
+        return {"required_n": None, "at_n_max": top, "probs": probs, "seeds": seeds}
+    lo, hi = n_min, n_max
+    if pw(lo)["power_signflip"] >= target:
+        hi = lo
+    while hi - lo > 1:
+        mid = (lo + hi) // 2
+        if pw(mid)["power_signflip"] >= target:
+            hi = mid
+        else:
+            lo = mid
+    return {"required_n": hi, "at_required": pw(hi), "probs": probs, "seeds": seeds}

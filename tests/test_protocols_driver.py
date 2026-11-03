@@ -71,16 +71,19 @@ INST = Instance("verina_basic_1__mut__x__0", "verina_basic_1", "mutant", {"code_
                          "actual": "true"})
 
 
-@pytest.mark.parametrize("cond", ["A", "B", "BP", "C", "Cplain"])
+PROOF = ("A", "B", "BP", "Bhammer")
+
+
+@pytest.mark.parametrize("cond", ["A", "B", "BP", "Bhammer", "C", "Cplain"])
 def test_success_stops_early(cond):
-    g = FakeGen(succeed_at=3, proof=cond in ("A", "B", "BP"))
+    g = FakeGen(succeed_at=3, proof=cond in PROOF)
     rr = run_condition(cond, INST, FAM, "m", 11, CFG, FakeJudge(), g)
     assert rr.success and rr.success_idx == 2 and rr.stop_reason == "success" and len(rr.attempts) == 3
 
 
-@pytest.mark.parametrize("cond", ["A", "B", "BP", "C", "Cplain"])
+@pytest.mark.parametrize("cond", ["A", "B", "BP", "Bhammer", "C", "Cplain"])
 def test_budget_exhausts_at_n_gen(cond):
-    rr = run_condition(cond, INST, FAM, "m", 11, CFG, FakeJudge(), FakeGen(None, cond in ("A", "B", "BP")))
+    rr = run_condition(cond, INST, FAM, "m", 11, CFG, FakeJudge(), FakeGen(None, cond in PROOF))
     assert not rr.success and rr.stop_reason == "n_gen" and len(rr.attempts) == 8
 
 
@@ -115,8 +118,8 @@ def test_Cplain_feedback_has_no_information():
 
 def test_turn0_information_equal_across_conditions():
     firsts = {}
-    for c in ("B", "BP", "C", "Cplain"):
-        g = FakeGen(1, proof=c in ("B", "BP"))
+    for c in ("B", "BP", "Bhammer", "C", "Cplain"):
+        g = FakeGen(1, proof=c in PROOF)
         run_condition(c, INST, FAM, "m", 11, CFG, FakeJudge(), g)
         firsts[c] = g.calls[0][1]["content"]
     for c in firsts:

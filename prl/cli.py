@@ -37,14 +37,7 @@ def cmd_env(a) -> int:
     e = lean_env()
     print("toolchain:", e.toolchain_id)
     print("backend:", backend())
-    imports = "\n".join([
-        "import Mathlib.Tactic.Omega",
-        "import Mathlib.Tactic.Linarith",
-        "import Mathlib.Tactic.NormNum",
-        "import Mathlib.Tactic.Aesop",
-        "import Mathlib.Tactic.Grind",
-    ])
-    r = run_lean(f"{imports}\nexample : (2 : Nat) + 2 = 4 := by decide\n#print axioms Nat.add_comm\n", wall_s=600)
+    r = run_lean("import Mathlib\nexample : (2 : Nat) + 2 = 4 := by decide\n#print axioms Nat.add_comm\n", wall_s=600)
     print("lean smoke:", "OK" if not r.errors() else r.errors(), f"({r.elapsed_s:.1f}s)")
     try:
         from prl.models.lmstudio import LMStudio
@@ -228,7 +221,12 @@ def cmd_run(a) -> int:
 
 
 def cmd_freeze(a) -> int:
+    from prl.analysis.power import has_power_note
     from prl.prereg import freeze
+    if not has_power_note() and not a.no_power_note:
+        print("REFUSING TO FREEZE: prereg/power_note.json is missing. Run `prl power --study pilot` first "
+              "(or pass --no-power-note and record why in prereg/deviations.md).")
+        return 2
     rec = freeze(a.note or "")
     print(json.dumps({"digest": rec["digest"], "frozen_at": rec["frozen_at"], "n_files": len(rec["files"])}, indent=1))
     return 0
@@ -254,6 +252,25 @@ def cmd_audit(a) -> int:
     s = audit_sample([PATHS.runs / x for x in a.study.split(",")], float(cfg["analysis"]["audit_frac"]),
                      int(cfg["analysis"]["seed"]), out)
     print(f"{len(s)} runs sampled for audit -> {out} (fill audit_* columns, then run `prl audit --merge`)")
+    return 0
+
+
+def cmd_crosseval(a) -> int:
+    from prl.analysis.crosseval import cross_evaluate
+    from prl.lean.verify import Judge
+    n = _workers(a)
+    conds = tuple(a.conditions.split(",")) if a.conditions else tuple(study_config()["crosseval_conditions"])
+    for s in a.study.split(","):
+        d = PATHS.runs / s
+        counts = cross_evaluate(d, Judge(), conditions=conds, workers=n, log=_log(d / "crosseval.log"))
+        print(s, counts)
+    return 0
+
+
+def cmd_power(a) -> int:
+    from prl.analysis.power import NOTE_PATH, power_note
+    note = power_note(PATHS.runs / a.study, study_config(), log=_log())
+    print(f"{len(note['rows'])} scenario rows -> {NOTE_PATH} and results/power_note.md")
     return 0
 
 
@@ -301,7 +318,7 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--study", required=True)
     r.add_argument("--split", default="pilot")
     r.add_argument("--kinds", default="mutant,natural")
-    r.add_argument("--conditions", default="A,B,BP,C,Cplain")
+    r.add_argument("--conditions", default="A,B,BP,C,Cplain", help="also: S,Splain (shaping) and Bhammer (exploratory)")
     r.add_argument("--models", default="qwen3.5-2b,qwen3.5-4b")
     r.add_argument("--seeds", default="")
     r.add_argument("--families", default="")
@@ -311,7 +328,15 @@ def main(argv: list[str] | None = None) -> int:
     r.set_defaults(fn=cmd_run)
     f = sub.add_parser("freeze")
     f.add_argument("--note", default="")
+    f.add_argument("--no-power-note", action="store_true", help="freeze without prereg/power_note.json")
     f.set_defaults(fn=cmd_freeze)
+    ce = sub.add_parser("crosseval", help="B-to-C cross-evaluation (secondary; Lean only, no model)")
+    ce.add_argument("--study", required=True)
+    ce.add_argument("--conditions", default="")
+    ce.set_defaults(fn=cmd_crosseval)
+    pw = sub.add_parser("power", help="pre-freeze power note from the pilot")
+    pw.add_argument("--study", default="pilot")
+    pw.set_defaults(fn=cmd_power)
     an = sub.add_parser("analyze")
     an.add_argument("--study", default="")
     an.add_argument("--out", default="")

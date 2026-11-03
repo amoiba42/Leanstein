@@ -1,4 +1,5 @@
-"""Condition protocols T, A, B, BP, C, Cplain, S, Splain with exact budget accounting (FR-COND, FR-BUD)."""
+"""Condition protocols A, B, BP, C, Cplain, S, Splain and exploratory Bhammer, with exact budget accounting
+(FR-COND, FR-BUD). T has no model and lives in `prl.tasks.eligibility`."""
 from __future__ import annotations
 
 import time
@@ -7,7 +8,9 @@ from typing import Any, Protocol
 
 from prl.conditions.feedback import route
 from prl.config import sha256_text
+from prl.lean import leantext as LT
 from prl.lean.integrity import locked_names
+from prl.lean.portfolio import expand, load_portfolio
 from prl.lean.verify import VerifyResult
 from prl.models import extract as X
 from prl.models import prompts as P
@@ -15,11 +18,11 @@ from prl.models.lmstudio import InfraError
 from prl.tasks.instances import Instance
 from prl.tasks.verina import Family
 
-ALL_CONDITIONS = ("A", "B", "BP", "C", "Cplain", "S", "Splain")
+ALL_CONDITIONS = ("A", "B", "BP", "C", "Cplain", "S", "Splain", "Bhammer")
 MODE = {"A": "model_proof", "B": "model_proof", "BP": "portfolio_then_model", "C": "portfolio",
-        "Cplain": "portfolio", "S": "portfolio", "Splain": "portfolio"}
+        "Cplain": "portfolio", "S": "portfolio", "Splain": "portfolio", "Bhammer": "model_proof"}
 ROUND_CONDITIONS = {"C", "Cplain", "S", "Splain"}
-SEQUENTIAL = {"B", "BP"}
+SEQUENTIAL = {"B", "BP", "Bhammer"}
 
 
 class Generator(Protocol):
@@ -74,15 +77,16 @@ class RunResult:
     budget: Budget | None = None
 
 
-def verify_with_infra_retry(judge, fam: Family, cand: dict[str, str], mode: str, retries: int = 2) -> VerifyResult:
+def verify_with_infra_retry(judge, fam: Family, cand: dict[str, str], mode: str, retries: int = 2,
+                            **kw: Any) -> VerifyResult:
     """Infrastructure failures (verifier crash, spawn failure) never charge the model's budget: the same
     candidate is re-verified; if infrastructure keeps failing, the whole run is abandoned (InfraError) and
     re-executed later by the resumable driver (final architecture G4)."""
-    vr = judge.verify(fam, cand, mode)
+    vr = judge.verify(fam, cand, mode, **kw)
     while vr.failure_kind == "infra" and retries > 0:
         retries -= 1
         time.sleep(5)
-        vr = judge.verify(fam, cand, mode)
+        vr = judge.verify(fam, cand, mode, **kw)
     if vr.failure_kind == "infra":
         raise InfraError(f"verifier infrastructure failure: {vr.infra_error}")
     return vr
@@ -90,6 +94,22 @@ def verify_with_infra_retry(judge, fam: Family, cand: dict[str, str], mode: str,
 
 def derive_seed(seed: int, attempt: int) -> int:
     return seed * 1000 + attempt
+
+
+def tactic_menu(fam: Family, code_aux: str, code: str) -> str:
+    """The frozen portfolio expanded for this task and its start code, one script per line (Bhammer prompt).
+    Uses only locked names and the start code the model already sees."""
+    entries = expand(load_portfolio(), fn=fam.fn, params=fam.signature.params, code_aux=code_aux, code=code,
+                     aux_names=fam.aux_names)
+    return "\n".join("- `" + e.script.replace("\n", "; ") + "`" for e in entries)
+
+
+def proof_log(cand: dict[str, str]) -> dict[str, Any]:
+    """`proof_tactic_used` + `automation_only_proof` for a model-written proof (FR-ANA-8; analysis only)."""
+    tac = LT.proof_tactics(cand.get("proof", ""), cand.get("proof_aux", ""))
+    return {"proof_tactic_used": tac,
+            "automation_only_proof": LT.automation_only(tac, cand.get("proof_aux", ""),
+                                                        load_portfolio().single_call_automation)}
 
 
 def _rank(vr: VerifyResult) -> tuple:
@@ -107,6 +127,7 @@ def run_condition(cond: str, inst: Instance, fam: Family, model: str, seed: int,
     want_proof = cond in P.PROOF_CONDITIONS
     view = P.make_view(fam, inst.start["code_aux"], inst.start["code"], inst.kind)
     wline = inst.witness_line(fam.fn) if inst.kind != "shaping" else None
+    tactics = tactic_menu(fam, inst.start["code_aux"], inst.start["code"]) if cond in P.TACTIC_MENU_CONDITIONS else ""
     history: list[tuple[str, str]] = []
     k = int(cfg.get("c_round_k", 2)) if cond in ROUND_CONDITIONS else 1
     hist_turns = int(cfg.get("history_turns", 2))
@@ -121,7 +142,7 @@ def run_condition(cond: str, inst: Instance, fam: Family, model: str, seed: int,
             break
         # ---- one generation
         hist = [] if cond == "A" else history
-        msgs = P.messages(view, cond, wline, hist, hist_turns)
+        msgs = P.messages(view, cond, wline, hist, hist_turns, tactics)
         prompt_text = "\n".join(m["content"] for m in msgs)
         s = derive_seed(seed, attempt)
         t0 = time.time()
@@ -141,6 +162,8 @@ def run_condition(cond: str, inst: Instance, fam: Family, model: str, seed: int,
             "extract_ok": ex.ok, "extract_error": ex.error, "extract_notes": ex.notes,
             **cand, "verify": vr.to_json(), "success": vr.success, "failure_kind": vr.failure_kind, "ts": t0,
         }
+        if want_proof and ex.ok:
+            rec.update(proof_log(cand))
         if raw_sink is not None:
             raw_sink(attempt, msgs, comp.text)
         attempt += 1

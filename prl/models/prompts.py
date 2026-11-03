@@ -7,9 +7,10 @@ from string import Template
 
 from prl.config import PATHS
 
-CONDITION_TEMPLATE = {"A": "A", "B": "B", "BP": "BP", "C": "C", "Cplain": "Cplain", "S": "S", "Splain": "Splain",
-                      "natural": "natural"}
-PROOF_CONDITIONS = {"A", "B", "BP"}
+CONDITION_TEMPLATE = {"A": "A", "B": "B", "BP": "BP", "Bhammer": "Bhammer", "C": "C", "Cplain": "Cplain", "S": "S",
+                      "Splain": "Splain", "natural": "natural"}
+PROOF_CONDITIONS = {"A", "B", "BP", "Bhammer"}
+TACTIC_MENU_CONDITIONS = {"Bhammer"}  # exploratory arm: B told the frozen portfolio (FR-ANA-9)
 HINT_CONDITIONS = {"C", "S"}
 PLAIN_CONDITIONS = {"Cplain", "Splain"}
 
@@ -85,8 +86,8 @@ def task_block(v: TaskView) -> str:
     return t
 
 
-def initial_user(v: TaskView, cond: str, witness_line: str | None) -> str:
-    instr = _tmpl(CONDITION_TEMPLATE[cond]).safe_substitute(fn=v.fn)
+def initial_user(v: TaskView, cond: str, witness_line: str | None, tactics: str = "") -> str:
+    instr = _tmpl(CONDITION_TEMPLATE[cond]).safe_substitute(fn=v.fn, tactics=tactics)
     parts = [task_block(v)]
     if witness_line and cond not in ("S", "Splain"):
         parts.append("## Failing test\n" + witness_line)
@@ -111,9 +112,9 @@ def feedback(cond: str, *, witness_line: str | None, errors: list[str], hint_tex
 
 
 def messages(v: TaskView, cond: str, witness_line: str | None, history: list[tuple[str, str]],
-             history_turns: int) -> list[dict[str, str]]:
+             history_turns: int, tactics: str = "") -> list[dict[str, str]]:
     msgs = [{"role": "system", "content": system()},
-            {"role": "user", "content": initial_user(v, cond, witness_line)}]
+            {"role": "user", "content": initial_user(v, cond, witness_line, tactics)}]
     for out, fb in history[-history_turns:] if history_turns > 0 else []:
         msgs.append({"role": "assistant", "content": out[:4000]})
         msgs.append({"role": "user", "content": fb})

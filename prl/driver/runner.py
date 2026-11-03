@@ -196,6 +196,8 @@ class Runner:
         start_code = (inst.start["code_aux"] + "\n" + inst.start["code"]).strip()
         vr = rr.final_vr
         outcome = outcome_label(rr.attempts)
+        win = rr.attempts[rr.success_idx] if (rr.success and rr.success_idx is not None) else {}
+        model_proof = bool(vr and rr.success and vr.proof_source == "model")
         return {
             **base, "kind": inst.kind, "split": inst.split, "n_attempts": len(rr.attempts),
             "total_tokens": b.used_tokens, "infer_s_total": round(b.used_infer_s, 3),
@@ -204,6 +206,9 @@ class Runner:
             "outcome": outcome, "final_code_aux": final.get("code_aux", ""), "final_code": final.get("code", ""),
             "proof_source": vr.proof_source if (vr and rr.success) else "none",
             "closing_entry": vr.closing_entry if (vr and rr.success) else None,
+            # FR-ANA-8: tactics of the accepted model-written proof (None when the portfolio closed it)
+            "proof_tactic_used": win.get("proof_tactic_used") if model_proof else None,
+            "automation_only_proof": bool(win.get("automation_only_proof")) if model_proof else None,
             "dist_to_ref": code_distance(fin_code, ref_code) if rr.success else None,
             "dist_to_start": code_distance(fin_code, start_code) if rr.success else None,
             "equiv_to_ref": (normalise_code(fin_code) == normalise_code(ref_code)) if rr.success else None,

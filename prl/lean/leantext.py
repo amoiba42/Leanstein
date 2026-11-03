@@ -148,3 +148,43 @@ def recursive_functions(fn: str, code_aux: str, code: str) -> list[str]:
         if n not in seen:
             seen.append(n)
     return seen
+
+
+# ---- tactic names used in a model-written proof (FR-ANA-8; logged as `proof_tactic_used`)
+
+TACTIC_VOCAB = frozenset("""
+intro intros rintro exact apply refine refine' rfl simp simp_all simp_arith dsimp omega decide native_decide
+grind aesop linarith nlinarith positivity norm_num ring ring_nf field_simp tauto trivial contradiction exfalso
+constructor cases rcases obtain induction fun_induction match split by_cases by_contra unfold rw rewrite rwa
+erw calc have show suffices use exists existsi left right subst injection congr ext funext specialize
+generalize revert clear assumption first try repeat all_goals any_goals next case focus sorry admit
+simp_wf termination_by decreasing_by nofun nomatch exact_mod_cast push_cast norm_cast gcongr bound
+""".split())
+# tactics that only restructure the goal; they do not count against "automation only"
+GLUE_TACTICS = frozenset({"intro", "intros", "unfold", "first", "try", "repeat", "all_goals", "any_goals"})
+_SEG_SPLIT = re.compile(r"<;>|;|\||\(|\)|·|=>|\{|\}|,|\n")
+_HEAD = re.compile(r"^\s*([A-Za-z_][A-Za-z0-9_']*)")
+
+
+def proof_tactics(proof: str, proof_aux: str = "") -> list[str]:
+    """Sorted, de-duplicated tactic names in a proof (text level). Lemma arguments in `[...]` are dropped;
+    `simp?`-style variants and `simp only` normalise to their base tactic."""
+    src = strip_comments_and_strings(proof_aux + "\n" + proof)
+    src = re.sub(r"\[[^\]]*\]", " ", src)
+    src = re.sub(r":=\s*by\b", "\n", src)
+    src = re.sub(r"\bby\b", "\n", src)
+    found = set()
+    for seg in _SEG_SPLIT.split(src):
+        m = _HEAD.match(seg.replace("?", ""))
+        if m and m.group(1) in TACTIC_VOCAB:
+            found.add(m.group(1))
+    return sorted(found)
+
+
+def automation_only(tactics: list[str], proof_aux: str, registry: frozenset[str] | set[str]) -> bool:
+    """A single-call automation proof: no helper lemmas, and every tactic is a registered automation tactic
+    (or pure glue such as `intro` / `unfold` / `first`). Analysis-only; such proofs stay legal."""
+    if top_level_decls(strip_comments_and_strings(proof_aux)):
+        return False
+    core = [t for t in tactics if t not in GLUE_TACTICS]
+    return bool(core) and all(t in registry for t in core)

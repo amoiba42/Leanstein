@@ -95,7 +95,7 @@ def write_json(p: Path, obj: Any) -> None:
 _STUDY_KEYS = {
     "study_id", "lean", "budget", "decoding", "c_round_k", "history_turns", "seeds", "models",
     "conditions", "shaping_conditions", "splits", "mutants_per_family", "hidden_tests", "analysis",
-    "natural", "specialist_conditions", "bugs", "energy",
+    "natural", "specialist_conditions", "bugs", "energy", "exploratory_conditions", "crosseval_conditions",
 }
 
 

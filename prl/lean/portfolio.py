@@ -25,6 +25,7 @@ class Portfolio:
     tiers: tuple[tuple[str, int], ...]  # ordered (tier, heartbeats)
     templates: tuple[dict, ...]
     sha256: str
+    single_call_automation: frozenset[str] = frozenset()
 
     def heartbeats(self, tier: str) -> int:
         return dict(self.tiers)[tier]
@@ -39,11 +40,15 @@ def load_portfolio(path: str | None = None) -> Portfolio:
     p = Path(path) if path else PATHS.prereg / "portfolio.yaml"
     d = load_yaml(p)
     tiers = tuple((k, int(v["heartbeats"])) for k, v in d["tiers"].items())
+    for k, hb in tiers:
+        if hb <= 0:  # maxHeartbeats 0 = unbounded: only the explicit test guards may use it
+            raise ValueError(f"portfolio tier {k} must have positive heartbeats, got {hb}")
     known = {k for k, _ in tiers}
     for e in d["entries"]:
         if e.get("tier") not in known:
             raise ValueError(f"portfolio entry {e['id']} has unknown tier {e.get('tier')}")
-    return Portfolio(int(d["version"]), int(d["max_entries"]), tiers, tuple(d["entries"]), sha256_file(p))
+    return Portfolio(int(d["version"]), int(d["max_entries"]), tiers, tuple(d["entries"]), sha256_file(p),
+                     frozenset(d.get("single_call_automation", [])))
 
 
 def inductive_params(params: list[tuple[str, str]]) -> list[str]:

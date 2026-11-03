@@ -1,7 +1,7 @@
 # High-Level Design
 
 **Project:** Prove Less, Repair Better (PRL)
-**Status:** v2.0 · 2026-11-02 · derived from `docs/requirements.md` v2.0 and `docs/final_architecture.md` (the diagram there is the authoritative overview)
+**Status:** v2.1 · 2026-11-03 · derived from `docs/requirements.md` v2.1 and `docs/final_architecture.md` (the diagram there is the authoritative overview)
 **Scope:** architecture, components, data flow, condition protocols, trust boundaries, deployment and the experimental pipeline. Byte-level formats and algorithms are in `docs/low_level_design.md`.
 
 ---
@@ -57,9 +57,9 @@ the filesystem.
 | **Bug sources** | `prl.mutate`, `prl.natural` | Mutation operators, natural-bug collection | B |
 | **Tests** | `prl.testgen` | Visible-test rendering, hidden differential test generation | A/B |
 | **Agent** | `prl.models` | LM Studio client, prompts, extraction, determinism probe | B |
-| **Protocols** | `prl.conditions` | T, A, B, B+P, C, C-plain, S, S-plain loops with budget accounting | B/C |
+| **Protocols** | `prl.conditions` | A, B, B+P, C, C-plain, S, S-plain and exploratory Bhammer loops with budget accounting (T lives in `prl.tasks.eligibility`) | B/C |
 | **Orchestration** | `prl.driver` | Experiment plan expansion, scheduling, resume, records | C |
-| **Science** | `prl.analysis` | Outcome labels, statistics, mechanism, code shapes, figures, audit | C |
+| **Science** | `prl.analysis` | Outcome labels, statistics, power simulation, B→C cross-evaluation, mechanism, code shapes, figures, audit | C |
 | **Interface** | `prl.cli` | `prl <command>` entry points | C |
 
 Dependencies point downward only. `prl.lean` has no dependency on `prl.models`; `prl.models` has none on `prl.lean`. They meet only in `prl.conditions` — this is the plan's "two small interfaces" rule, enforced by package structure and by an import-lint unit test.
@@ -103,26 +103,29 @@ Run: (instance, condition, model, seed) → attempts[≤ N_gen] → outcome labe
 ## 5. The judge (`prl.lean`)
 
 ### 5.1 Verification server pool
-`lean_env/PrlRepl.lean` (our own ~60-line Lean program, built with `lake build prlrepl`) imports Mathlib once
+`lean_env/PrlRepl.lean` (our own ~60-line Lean program, built with `lake build prlrepl`) imports the whole of Mathlib once
 and then elaborates one file per request against a fresh copy of the imported environment (environments are
 immutable values, so every request starts from the same state). A pool of such workers (count derived from
-free RAM, max 6) serves all verifications: ~0.6 s per check instead of 25–40 s with a plain `lean` process.
+free RAM unless `lean.workers` is set, max 6; `PRL_LEAN_WORKERS` overrides) serves all verifications: ~0.6 s per check instead of 25–40 s with a plain `lean` process.
 Each worker runs inside a Windows Job Object with a 4 GB per-process memory cap. The plain `lean` CLI remains
-available as a fallback backend (`PRL_LEAN_BACKEND=cli`); verdict parity between the two is tested.
+available as a fallback backend (`PRL_LEAN_BACKEND=cli`); verdict parity between the two is tested. A reduced import
+set was considered and declined (D16).
 
 ### 5.2 One rendered file per request; staged verification
 A request is one self-contained `.lean` file: the locked VERINA template with the candidate's `code_aux` / `code`
 (and, in proof modes, `proof_aux` / `proof`) spliced into their regions, followed by a generated harness section.
 Line ranges of every part are recorded so messages are attributed exactly.
 
-* **Stage 1** (one request): compile, every visible and hidden test as a `#guard`, and in A/B/BP the model's
+* **Stage 1** (one request): compile, every visible and hidden test as a `#guard`, and in A/B/BP/Bhammer the model's
   proof followed by `#print axioms`.
 * **Stage 2** (only if the mode uses the portfolio and stage 1 compiled and passed all tests): portfolio
   entries one request each, Tier L then Tier H, in frozen order, stopping at the first closing entry
   (condition T on references runs the full vector for RQ4).
 
 ### 5.3 Determinism, timeouts and failure taxonomy
-Every proof decision uses **heartbeats** (deterministic). Wall-clock guards only protect against hangs.
+Every proof decision uses **heartbeats** (deterministic; portfolio tiers must be positive, never `maxHeartbeats 0`).
+Wall-clock guards only protect against hangs: 120 s per request (must be ≥ 50 s), max(30 s, 120/4) per portfolio
+entry, 20 s per dataset-building batch.
 A timeout or worker death is confirmed once in a fresh worker: if it repeats, the candidate's code is at fault
 (`failure_kind` = timeout / resource) and the attempt counts as failed; otherwise the confirmed result is used.
 Verifier infrastructure failures (spawn errors, crashes unrelated to the candidate) are retried without
@@ -209,9 +212,11 @@ All runs share the same start code, budgets, decoding and turn-0 information (ta
 | C-plain | as C | code | portfolio | fixed "rejected, try again" + format reminder |
 | S | as C, start = correct reference T cannot prove | code | portfolio | as C |
 | S-plain | as S | code | portfolio | as C-plain |
+| Bhammer *(exploratory)* | as B; the prompt also lists the frozen portfolio scripts expanded for the task | code + proof | model_proof | as B |
 
 **Stop rule:** first success, or the first budget cap reached (8 generations, 48k tokens, 240 s inference).
 **History:** last 2 turns verbatim for every iterative condition.
+**Proof logging:** every proof-writing attempt records `proof_tactic_used` and `automation_only_proof` (FR-ANA-8).
 
 ---
 
@@ -224,6 +229,9 @@ plan ─► expand (split × condition × model × seed × instance) ─► sort
            thread pool of run-workers: each run = loop{generate → extract → pre-filter → verify → route feedback}
            EnergyMeter.finish → energy.jsonl
      ─► attempts.jsonl / runs.jsonl / energy.jsonl (atomic line writes, fsync)
+after a study:  prl crosseval ─► B attempts that compiled but whose proof failed ─► code only through C's verify
+                (Lean only, de-duplicated, resumable) ─► crosseval.jsonl
+before freeze:  prl power ─► pilot runs ─► simulated power (3 scenarios) ─► prereg/power_note.json
 ```
 - **Resume:** a run is complete iff its run record exists; incomplete runs restart from scratch.
 - **Freeze guard:** `main`/`heldout` refuse to run if `prereg/` differs from `FREEZE.json`.
@@ -235,11 +243,13 @@ plan ─► expand (split × condition × model × seed × instance) ─► sort
 ## 10. Analysis pipeline (`prl.analysis`)
 
 ```
-runs.jsonl + attempts.jsonl + energy.jsonl + manifests
+runs.jsonl + attempts.jsonl + energy.jsonl + crosseval.jsonl + manifests
    ─► outcome labels per run (5 labels)
    ─► family-level scores (mean over seeds)
    ─► RQ1: sign-flip permutation (one-sided), Holm; McNemar exact; cluster bootstrap CI; Cohen's h; discordant counts
    ─► RQ2: mechanism classification (revert / shaping / other), C rate by ref_auto, S vs S-plain
+   ─► secondary (never pooled): C vs B_noauto (B without single-call automation proofs), C vs Bhammer,
+           Bhammer vs B, proof-style table, B→C cross-evaluation buckets and rescue rates
    ─► RQ3: C vs C-plain (same tests as RQ1, exploratory)
    ─► RQ4: code-feature extraction → feature-by-provability tables, L2 logistic regression with family-clustered bootstrap CIs
    ─► primary bug pool chosen by the pre-registered rule (natural if ≥60 confirmatory families, else natural ∪ mutant)
@@ -287,11 +297,11 @@ Everything is a pure function of the log files and manifests, so `prl analyze` i
 | **0 Feasibility** | T on all references; compile-rate probe of each model on 10 tasks; determinism probe; throughput (idle GPU only) | `docs/feasibility.md`; model set confirmed |
 | **1 Build** | All components + unit/integration tests | Test suite green; integrity suite zero false successes |
 | **2 Dataset** | Eligibility, hidden tests, natural bugs (0.8B, 9B), mutants, shaping instances, splits | Manifests + provenance tables |
-| **3 Pilot** | All conditions on 20 pilot families, 1 seed, primary models; portfolio/prompt tuning *only here* | Go/no-go (requirements §11) |
-| **4 Freeze** | Write `prereg/FREEZE.json` | Hash file committed |
-| **5 Main** | Confirmatory run on `main`: primary models × {A, B, BP, C, C-plain} × 3 seeds; S/S-plain on shaping instances; Gemma-4-E4B × {B, BP, C} × 1 seed; Goedel-Code-Prover-8B × {A, B} × 1 seed | Logs complete |
+| **3 Pilot** | All conditions on 20 pilot families, 1 seed, primary models; portfolio/prompt tuning *only here*; power simulation (`prl power`); Bhammer go/no-go from the cost estimate | Go/no-go (requirements §11); `prereg/power_note.json` |
+| **4 Freeze** | Write `prereg/FREEZE.json` (refused without the power note) | Hash file committed |
+| **5 Main** | Confirmatory run on `main`: primary models × {A, B, BP, C, C-plain} × 3 seeds; S/S-plain on shaping instances; Gemma-4-E4B × {B, BP, C} × 1 seed; Goedel-Code-Prover-8B × {A, B} × 1 seed; optionally primary models × Bhammer × 3 seeds | Logs complete |
 | **6 Held-out** | Run `heldout` once | Logs complete |
-| **7 Analysis** | `prl analyze`; audit; catalogue | `results/` + report |
+| **7 Analysis** | `prl crosseval`; `prl analyze`; audit; catalogue | `results/` + report |
 
 ---
 
@@ -314,3 +324,7 @@ Everything is a pure function of the log files and manifests, so `prl analyze` i
 | D13 | Natural bugs primary, mutants secondary | mutants only | realism; weakens the "C reverts mutants" objection (Gracy G1, all verdicts) |
 | D14 | Energy per (model, condition) block | per attempt | concurrent requests make per-attempt GPU energy ill-defined |
 | D15 | Job Object 4 GB cap per Lean worker | 2 GB `setrlimit` (Gracy G3) | Linux-only API; Mathlib alone needs ~2.5 GB |
+| D16 | Full `import Mathlib` in every worker | five tactic modules (Gracy rev-3) | three of those modules do not exist in Mathlib v4.24; a reduced environment changes what the portfolio proves, breaks specs using Mathlib definitions and breaks server/CLI parity |
+| D17 | B→C cross-evaluation as a separate Lean-only step | inside the run loop | no extra model calls; cannot affect budgets or primary records; resumable |
+| D18 | Power simulated by resampling pilot family pairs at α/4 | analytic McNemar power | keeps the confirmatory unit (families, three seeds, sign-flip) and Holm's worst case |
+| D19 | Bhammer exploratory and optional | add to the confirmatory set | would change the Holm family and the pre-registered primary comparisons |
