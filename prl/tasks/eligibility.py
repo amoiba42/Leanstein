@@ -5,9 +5,19 @@ import concurrent.futures as cf
 import re
 from collections.abc import Callable
 
+from prl.config import PATHS, load_yaml
 from prl.lean.verify import Judge
 from prl.tasks import verina as V
 from prl.tasks.verina import Family
+
+
+def known_exclusions() -> dict[str, str]:
+    """Family id -> exclusion code from prereg/exclusions.yaml (pre-registered known-bad VERINA tasks)."""
+    p = PATHS.prereg / "exclusions.yaml"
+    if not p.exists():
+        return {}
+    data = load_yaml(p) or {}
+    return {e["id"]: e["code"] for e in data.get("exclusions", [])}
 
 
 def ref_proof_status(fam: Family) -> str:
@@ -36,6 +46,9 @@ def check_family(fam: Family, judge: Judge, tests: str = "all") -> Family:
         ref["proof"] = "human_ok" if pv.model_proof_ok else "human_broken"
     fam.ref = ref
     reasons = []
+    code = known_exclusions().get(fam.family_id)
+    if code:
+        reasons.append(f"known_defect:{code}")
     if not ref["compiles"]:
         reasons.append("ref_compile_error")
     elif not ref["visible_pass"]:

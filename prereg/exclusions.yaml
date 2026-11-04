@@ -1,0 +1,26 @@
+# Pre-registered exclusion list of known-bad VERINA tasks (FR-TASK-3). Frozen by `prl freeze` with the rest of prereg/.
+# Each entry removes a task family from every analysis. Excluded families keep their record in data/ with
+# exclusion_reason = "known_defect:<code>" so the counts of screened, included and excluded tasks can be published.
+#
+# Source of each entry: the team's own Phase-0 findings (docs/feasibility.md), found before any v2 result existed.
+# Entries may be added before `prl freeze` only, and each addition is logged in deviations.md.
+version: 1
+verina_commit: 66b3ce5014edafb20cb26b87c681e7f31847249f
+exclusions:
+  - id: verina_basic_67
+    code: test_contradicts_description
+    reason: A VERINA test expects ['a','b','c'] to be a palindrome, which contradicts the task description.
+  - id: verina_basic_80
+    code: test_contradicts_spec
+    reason: A VERINA test expects true for a key occurring twice, but the spec says "exactly once".
+  - id: verina_advanced_10
+    code: not_evaluable
+    reason: Inputs are too large to evaluate within Lean's recursion limits.
+  - id: verina_basic_104
+    code: unsupported_map_type
+    reason: The signature uses a custom `Map Int Int` structure (update_map), which the harness cannot render as test literals.
+# Checked 2026-11-04 on the pinned VERINA checkout: verina_basic_104 is the only task with `Map` in its signature.
+# verina_advanced_29, _35 and _55 use Std HashMap only inside their implementation (signatures are List/Nat/Int),
+# so they are NOT excluded here. Earlier notes mention "two Map tasks"; the second one is unidentified. If
+# `prl tasks build` or the hidden-test generator reports another unsupported_param_type / unsupported_return_type
+# family, add it here before `prl freeze`.

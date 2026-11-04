@@ -39,6 +39,15 @@ Decided before any data or result existed (nothing has been run on v2).
 | `study.yaml: lean` | Wall guard must be ≥ 50 s; portfolio entries max(30 s, guard/4); tier heartbeats must be positive | R3-6 (documents existing behaviour, now enforced) |
 | (declined) imports | Five tactic modules instead of `import Mathlib` **not adopted**; full Mathlib stays | R3-7: three modules do not exist in Mathlib v4.24; a smaller environment changes T coverage, breaks specs, breaks server/CLI parity |
 
+## Pre-freeze decisions (2026-11-04: pre-pilot review)
+
+Decided before any data or result existed (nothing has been run on v2).
+
+| File | Decision | Reason |
+|---|---|---|
+| `exclusions.yaml` (new), `prl/tasks/eligibility.py` | Recorded exclusion list of known-bad VERINA tasks: `verina_basic_67` (test contradicts the description), `verina_basic_80` (test contradicts the spec), `verina_advanced_10` (not evaluable within Lean's recursion limits), `verina_basic_104` (custom `Map` type in the signature, checked on the pinned VERINA checkout). Eligibility now marks them `known_defect:<code>`. Earlier notes said "two Map tasks"; only one was found, and `verina_advanced_29/35/55` use HashMap only internally, so they stay in. Any other family flagged unsupported by the hidden-test generator is added here before the freeze | FR-TASK-3 required a recorded exclusion list but no list existed in `prereg/` or `prl/`; the defects were found in Phase 0 (`docs/feasibility.md`), before any v2 result |
+| `docs/requirements.md` R1 | VERINA headline numbers checked against the paper (v3): 72.6% / 4.9% is o3, 61.4% / 3.6% is o4-mini, same paper, same pass@1 setting. No conflict; cite o3 and the paper version | The row previously said "different models/settings" and asked for a check |
+
 Bhammer go/no-go (to be filled after the pilot, before the freeze): _pending_.
 
 ## Post-freeze deviations
