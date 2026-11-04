@@ -1,0 +1,95 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis problem involves determining the index of the first occurrence of a specified element within an array of integers. The objective is to identify the correct position where the target element appears for the first time, ensuring that all elements prior to that index are different from the target.\n\n-----Input-----  \nThe input consists of:  \n• a: An array of integers.  \n• e: An integer representing the element to search for.\n\n-----Output-----  \nThe output is a natural number (Nat) representing the index of the first occurrence of e in the array.  \n• If the element e exists in the array, the index n will satisfy the conditions specified above.\n\n-----Note-----  \nIt is assumed that the input satisfies the precondition where at least one index i in a exists such that a[i]! = e.  \nThe implementation uses a helper function to iterate through the array recursively.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_69",
+ "flags": [],
+ "header": "def LinearSearch (a : Array Int) (e : Int) (h_precond : LinearSearch_precond (a) (e)) : Nat :=",
+ "locked_hash": "956210e3061cdd92474edf208c3f9415fbf39fbdbd767470329ae79dacb2d6ea",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@linearSearchAux": false,
+    "fun_ind_simp@linearSearchAux": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 73.0,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "LinearSearch",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ],
+   [
+    "e",
+    "Int"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef LinearSearch_precond (a : Array Int) (e : Int) : Prop :=\n  -- !benchmark @start precond\n  ∃ i, i < a.size ∧ a[i]! = e\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef linearSearchAux (a : Array Int) (e : Int) (n : Nat) : Nat :=\n  if n < a.size then\n    if a[n]! = e then n else linearSearchAux a e (n + 1)\n  else\n    0\n-- !benchmark @end code_aux\n\n\ndef LinearSearch (a : Array Int) (e : Int) (h_precond : LinearSearch_precond (a) (e)) : Nat :=\n  -- !benchmark @start code\n  linearSearchAux a e 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef LinearSearch_postcond (a : Array Int) (e : Int) (result: Nat) (h_precond : LinearSearch_precond (a) (e)) :=\n  -- !benchmark @start postcond\n  (result < a.size) ∧ (a[result]! = e) ∧ (∀ k : Nat, k < result → a[k]! ≠ e)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem LinearSearch_spec_satisfied (a: Array Int) (e: Int) (h_precond : LinearSearch_precond (a) (e)) :\n    LinearSearch_postcond (a) (e) (LinearSearch (a) (e) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (e: Int) (h_precond : LinearSearch_precond (a) (e)) :\n    LinearSearch_postcond (a) (e) (LinearSearch (a) (e) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "a": "#[1, 2, 3, 4, 5]",
+    "e": "3"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "#[10, 20, 30, 40, 50]",
+    "e": "10"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "a": "#[5, 4, 3, 2, 1]",
+    "e": "1"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "#[-1, 0, 1, 2]",
+    "e": "(-1)"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "#[7, 8, 7, 9, 7]",
+    "e": "7"
+   }
+  }
+ ]
+}

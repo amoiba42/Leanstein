@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_68",
+ "flags": [],
+ "hashes": {
+  "locked": "a6b1b731fc61c915fa38e73f89a95cbc2bbd85460dbc5f60cd05a3e182c1eac1"
+ },
+ "instance_id": "verina_advanced_68__mut__arith__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "-",
+  "before": "+",
+  "col": 34,
+  "line": 30,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  -- Convert string to character list\n  let chars : String → List Char := fun s => s.data\n\n  -- Check character equality\n  let charEq : Char → Char → Bool := fun c1 c2 => c1 == c2\n\n  -- Convert number to string\n  let numToString : Nat → String := fun n =>\n    let rec digits : Nat → List Char := fun n =>\n      if n < 10 then\n        [Char.ofNat (n + 48)]  -- ASCII '0' is 48\n      else\n        digits (n / 10) ++ [Char.ofNat (n % 10 + 48)]\n    String.mk (digits n)\n\n  -- Main encoding logic (fixed version)\n  let rec encode : List Char → Option Char → Nat → String :=\n    fun input currentChar count =>\n      match input with\n      | [] =>\n        -- Process remaining characters\n        match currentChar with\n        | none => \"\"\n        | some c => String.mk [c] ++ numToString count\n      | c::rest =>\n        match currentChar with\n        | none => encode rest c 1\n        | some c' =>\n          if charEq c c' then\n            encode rest c' (count - 1)\n          else\n            let currentPart := String.mk [c'] ++ numToString count\n            currentPart ++ encode rest c 1\n\n  -- Handle empty input\n  if input.isEmpty then\n    \"\"\n  else\n    let firstChar := (chars input).head?\n    encode (chars input).tail firstChar 1\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "\"a0b0c0\"",
+  "expected": "\"a3b3c2\"",
+  "index": 0,
+  "input_lean": {
+   "input": "\"aaabbbcc\""
+  },
+  "source": "visible"
+ }
+}

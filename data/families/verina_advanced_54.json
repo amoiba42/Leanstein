@@ -1,0 +1,86 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 function that finds the one missing number in a list of distinct natural numbers from 0 to n. The list contains exactly n numbers and all numbers are in the range [0, n], but one number in that range is missing.\n\nYour function must return the missing number. You may assume the input list contains no duplicates and only one number is missing.\n\n-----Input-----\n- nums: A list of natural numbers of length n, each in the range [0, n] with exactly one number missing.\n\n-----Output-----\n- A natural number: the missing number in the range [0, n] not present in the list.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_54",
+ "flags": [],
+ "header": "def missingNumber (nums : List Nat) (h_precond : missingNumber_precond (nums)) : Nat :=",
+ "locked_hash": "dfa73053154c6703d196ac06bd46141cb5c25bde28d58d08c4cba8e8039d5512",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@nums": false,
+    "ind_simp_all@nums": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 8.5,
+  "n_hidden": 13,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "missingNumber",
+  "params": [
+   [
+    "nums",
+    "List Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef missingNumber_precond (nums : List Nat) : Prop :=\n  -- !benchmark @start precond\n  nums.all (fun x => x ≤ nums.length) ∧ List.Nodup nums\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef missingNumber (nums : List Nat) (h_precond : missingNumber_precond (nums)) : Nat :=\n  -- !benchmark @start code\n  let n := nums.length\n  let expectedSum := (n * (n + 1)) / 2\n  let actualSum := nums.foldl (· + ·) 0\n  expectedSum - actualSum\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef missingNumber_postcond (nums : List Nat) (result: Nat) (h_precond : missingNumber_precond (nums)) : Prop :=\n  -- !benchmark @start postcond\n  let n := nums.length\n  (result ∈ List.range (n + 1)) ∧\n  ¬(result ∈ nums) ∧\n  ∀ x, (x ∈ List.range (n + 1)) → x ≠ result → x ∈ nums\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem missingNumber_spec_satisfied (nums: List Nat) (h_precond : missingNumber_precond (nums)) :\n    missingNumber_postcond (nums) (missingNumber (nums) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(nums: List Nat) (h_precond : missingNumber_precond (nums)) :\n    missingNumber_postcond (nums) (missingNumber (nums) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "nums": "[3, 0, 1]"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "nums": "[0, 1]"
+   }
+  },
+  {
+   "expected_lean": "8",
+   "input_lean": {
+    "nums": "[9, 6, 4, 2, 3, 5, 7, 0, 1]"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "nums": "[0]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "nums": "[1]"
+   }
+  }
+ ]
+}

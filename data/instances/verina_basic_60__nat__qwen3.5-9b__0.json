@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_basic_60",
+ "flags": [],
+ "hashes": {
+  "locked": "7239c581254ff759d89a16ba4b610d3b078c9281fb3459df06c46626406c5ea9"
+ },
+ "instance_id": "verina_basic_60__nat__qwen3.5-9b__0",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef FindEvenNumbers (arr : Array Int) (h_precond : FindEvenNumbers_precond (arr)) : Array Int :=\n  arr.map (fun x => if isEven x then x else 0) |>.filter isEven\n```",
+  "seed": 5000
+ },
+ "split": "main",
+ "start": {
+  "code": "arr.map (fun x => if isEven x then x else 0) |>.filter isEven",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[0, 2, 0, 4, 0, 6]",
+  "expected": "#[2, 4, 6]",
+  "index": 0,
+  "input_lean": {
+   "arr": "#[1, 2, 3, 4, 5, 6]"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_31",
+ "flags": [],
+ "hashes": {
+  "locked": "7a802b92c00acb213239bf5eeb5c4f3959a3a52f859a061a38d0b5baad78182a"
+ },
+ "instance_id": "verina_advanced_31__mut__swap_branches__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "if x < y then false else isStrictlyIncreasing (y :: rest)",
+  "before": "if x < y then isStrictlyIncreasing (y :: rest) else false",
+  "col": 22,
+  "line": 12,
+  "operator": "swap_branches",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let subs := subsequences xs\n  let increasing := subs.filter isStrictlyIncreasing\n  increasing.foldl (fun acc s => max acc s.length) 0\n",
+  "code_aux": "-- Generate all subsequences\ndef subsequences {α : Type} : List α → List (List α)\n  | [] => [[]]\n  | x :: xs =>\n    let subs := subsequences xs\n    subs ++ subs.map (fun s => x :: s)\n\n-- Check if a list is strictly increasing\ndef isStrictlyIncreasing : List Int → Bool\n  | [] => true\n  | [_] => true\n  | x :: y :: rest => if x < y then false else isStrictlyIncreasing (y :: rest)\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "4",
+  "index": 0,
+  "input_lean": {
+   "xs": "[1, 2, 3, 4]"
+  },
+  "source": "visible"
+ }
+}

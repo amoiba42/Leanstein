@@ -1,0 +1,99 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 method that returns the k most frequent elements from a list of integers. The method should count the frequency of each distinct element in the list and return the k elements with the highest frequency.\n\n-----Input-----\nThe input consists of two values:\nnums: A list of integers, possibly with duplicates.\nk: A natural number indicating how many of the most frequent elements to return. Assuming k <= # of distinct elements in nums.\n\n-----Output-----\nThe output is a list of integers:\nReturns exactly k integers representing the elements that appear most frequently in the input list in order from higher frequency to lower frequency.\nIf two numbers have the same frequency, any consistent ordering is acceptable (no strict tie-breaking requirement).",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_76",
+ "flags": [],
+ "header": "def topKFrequent (nums : List Int) (k : Nat) (h_precond : topKFrequent_precond (nums) (k)) : List Int :=",
+ "locked_hash": "fa711c71969d9b43412d5e276949a8526e9a57a3486d638819e247cde8c905f6",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@topKFrequent.insertSorted": false,
+    "fun_ind_simp@topKFrequent.insertSorted": false,
+    "grind": false,
+    "ind_grind@k": false,
+    "ind_grind@nums": false,
+    "ind_simp_all@k": false,
+    "ind_simp_all@nums": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 16.8,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "topKFrequent",
+  "params": [
+   [
+    "nums",
+    "List Int"
+   ],
+   [
+    "k",
+    "Nat"
+   ]
+  ],
+  "ret": "List Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef topKFrequent_precond (nums : List Int) (k : Nat) : Prop :=\n  -- !benchmark @start precond\n  k ≤ nums.eraseDups.length\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef topKFrequent (nums : List Int) (k : Nat) (h_precond : topKFrequent_precond (nums) (k)) : List Int :=\n  -- !benchmark @start code\n  -- Build frequency list maintaining first occurrence order (deterministic)\n  let freqList : List (Int × Nat) :=\n    nums.foldl (init := []) fun acc n =>\n      match acc.find? (fun (key, _) => key == n) with\n      | some _ => acc.map (fun (key, cnt) => if key == n then (key, cnt + 1) else (key, cnt))\n      | none => acc ++ [(n, 1)]\n  -- Sort by frequency (descending), stable sort preserves first-occurrence order for ties\n  let sorted := freqList.foldl\n    (fun acc pair =>\n      let (x, cx) := pair\n      let rec insertSorted (xs : List (Int × Nat)) : List (Int × Nat) :=\n        match xs with\n        | [] => [pair]\n        | (y, cy) :: ys =>\n          if cx > cy then\n            pair :: (y, cy) :: ys\n          else\n            (y, cy) :: insertSorted ys\n      insertSorted acc\n    ) []\n\n  sorted.take k |>.map (fun (n, _) => n)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef topKFrequent_postcond (nums : List Int) (k : Nat) (result: List Int) (h_precond : topKFrequent_precond (nums) (k)) : Prop :=\n  -- !benchmark @start postcond\n  -- Result contains exactly k elements\n  result.length = k ∧\n\n  -- All elements in result appear in the original list\n  result.all (· ∈ nums) ∧\n\n  -- All elements in result are distinct\n  List.Pairwise (· ≠ ·) result ∧\n\n  -- For any element in result and any element not in result, the frequency of the\n  -- element in result is greater or equal (simplified: no tie-breaking constraint on ordering)\n  (result.all (fun x =>\n    nums.all (fun y =>\n      y ∈ result ∨ nums.count x ≥ nums.count y\n    ))) ∧\n\n  -- Elements in result are ordered by non-increasing frequency\n  List.Pairwise (fun (x, i) (y, j) =>\n    i < j → nums.count x ≥ nums.count y\n  ) result.zipIdx\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem topKFrequent_spec_satisfied (nums: List Int) (k: Nat) (h_precond : topKFrequent_precond (nums) (k)) :\n    topKFrequent_postcond (nums) (k) (topKFrequent (nums) (k) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(nums: List Int) (k: Nat) (h_precond : topKFrequent_precond (nums) (k)) :\n    topKFrequent_postcond (nums) (k) (topKFrequent (nums) (k) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "[1, 2]",
+   "input_lean": {
+    "k": "2",
+    "nums": "[1, 1, 1, 2, 2, 3]"
+   }
+  },
+  {
+   "expected_lean": "[-1, 2]",
+   "input_lean": {
+    "k": "2",
+    "nums": "[4, 1, -1, 2, -1, 2, 3]"
+   }
+  },
+  {
+   "expected_lean": "[5]",
+   "input_lean": {
+    "k": "1",
+    "nums": "[5]"
+   }
+  },
+  {
+   "expected_lean": "[7]",
+   "input_lean": {
+    "k": "1",
+    "nums": "[7, 7, 7, 8, 8, 9]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "k": "0",
+    "nums": "[]"
+   }
+  }
+ ]
+}

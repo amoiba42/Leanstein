@@ -1,0 +1,94 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that computes the sum of the fourth power of the first n odd natural numbers. In other words, given a non-negative integer n, the method should calculate the sum: 1⁴ + 3⁴ + 5⁴ + ... for the first n odd numbers.\n\n-----Input-----\nThe input consists of:\nn: A non-negative natural number representing the number of odd natural numbers to consider.\n\n-----Output----- \nThe output is a natural number:\nReturns the sum of the fourth power of the first n odd natural numbers.\n\n-----Note----- \nThe input n is assumed to be a non-negative integer.\nThe correctness of the result is established by a theorem that relates the computed sum to a specific formula.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_43",
+ "flags": [],
+ "header": "def sumOfFourthPowerOfOddNumbers (n : Nat) (h_precond : sumOfFourthPowerOfOddNumbers_precond (n)) : Nat :=",
+ "locked_hash": "ee25275ee39730860de3e00b3b42227e5b43f38d2267774e545dad2abd909081",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@sumOfFourthPowerOfOddNumbers": false,
+    "fun_ind_simp@sumOfFourthPowerOfOddNumbers": false,
+    "grind": false,
+    "ind_grind@n": false,
+    "ind_simp_all@n": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 6.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "sumOfFourthPowerOfOddNumbers",
+  "params": [
+   [
+    "n",
+    "Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef sumOfFourthPowerOfOddNumbers_precond (n : Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef sumOfFourthPowerOfOddNumbers (n : Nat) (h_precond : sumOfFourthPowerOfOddNumbers_precond (n)) : Nat :=\n  -- !benchmark @start code\n  match n with\n  | 0 => 0\n  | n + 1 =>\n    let prev := sumOfFourthPowerOfOddNumbers n h_precond\n    let nextOdd := 2 * n + 1\n    prev + nextOdd^4\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef sumOfFourthPowerOfOddNumbers_postcond (n : Nat) (result: Nat) (h_precond : sumOfFourthPowerOfOddNumbers_precond (n)) :=\n  -- !benchmark @start postcond\n  15 * result = n * (2 * n + 1) * (7 + 24 * n^3 - 12 * n^2 - 14 * n)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem sumOfFourthPowerOfOddNumbers_spec_satisfied (n: Nat) (h_precond : sumOfFourthPowerOfOddNumbers_precond (n)) :\n    sumOfFourthPowerOfOddNumbers_postcond (n) (sumOfFourthPowerOfOddNumbers (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(n: Nat) (h_precond : sumOfFourthPowerOfOddNumbers_precond (n)) :\n    sumOfFourthPowerOfOddNumbers_postcond (n) (sumOfFourthPowerOfOddNumbers (n) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "n": "0"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "n": "1"
+   }
+  },
+  {
+   "expected_lean": "82",
+   "input_lean": {
+    "n": "2"
+   }
+  },
+  {
+   "expected_lean": "707",
+   "input_lean": {
+    "n": "3"
+   }
+  },
+  {
+   "expected_lean": "3108",
+   "input_lean": {
+    "n": "4"
+   }
+  },
+  {
+   "expected_lean": "9669",
+   "input_lean": {
+    "n": "5"
+   }
+  }
+ ]
+}

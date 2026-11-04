@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_56",
+ "flags": [],
+ "hashes": {
+  "locked": "f1daae402504c9c887d2afbd204c65aeab775b3255e6f1e28294b7c5156cfbb1"
+ },
+ "instance_id": "verina_basic_56__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  if len = 0 then dest\n  else\n    let r := dest\n    updateSegment r src sStart dStart len\n",
+  "code_aux": "def updateSegment : Array Int → Array Int → Nat → Nat → Nat → Array Int\n  | r, src, sStart, dStart, 0 => r\n  | r, src, sStart, dStart, n+1 =>\n      let rNew := r.set! (dStart + n) (src[sStart + n]!)\n      updateSegment rNew src sStart dStart n\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

@@ -1,0 +1,84 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires computing three times the given integer. The goal is to determine the product of the input integer and 3.\n\n-----Input-----  \nThe input consists of:  \n• x: An integer.\n\n-----Output-----  \nThe output is an integer that represents three times the input value.\n\n-----Note-----  \nThe implementation uses two different branches based on the value of x (i.e., x < 18 or x ≥ 18), but both branches guarantee that the result equals 3*x.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_99",
+ "flags": [],
+ "header": "def Triple (x : Int) (h_precond : Triple_precond (x)) : Int :=",
+ "locked_hash": "77ad54d8c1be0c3a7624bcfdb5e93c8b8806b8f48e7964c12ecd60669dc782b4",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": true,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 7.9,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "Triple",
+  "params": [
+   [
+    "x",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Mathlib\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef Triple_precond (x : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef Triple (x : Int) (h_precond : Triple_precond (x)) : Int :=\n  -- !benchmark @start code\n  if x < 18 then\n    let a := 2 * x\n    let b := 4 * x\n    (a + b) / 2\n  else\n    let y := 2 * x\n    x + y\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef Triple_postcond (x : Int) (result: Int) (h_precond : Triple_precond (x)) :=\n  -- !benchmark @start postcond\n  result / 3 = x ∧ result / 3 * 3 = result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem Triple_spec_satisfied (x: Int) (h_precond : Triple_precond (x)) :\n    Triple_postcond (x) (Triple (x) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold Triple_postcond Triple\n  simp\n  split_ifs with h₁\n  . rw [←Int.add_mul]\n    simp\n    have h : (6: ℤ) = 3 * 2 := by simp\n    rw [h, Int.mul_comm, Int.mul_ediv_assoc, Int.mul_ediv_assoc]\n    simp\n    rw [Int.mul_comm]\n    rfl\n    simp\n  . rw (occs := [1]) [←Int.one_mul x]\n    rw [←Int.add_mul]\n    simp +arith\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(x: Int) (h_precond : Triple_precond (x)) :\n    Triple_postcond (x) (Triple (x) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "30",
+   "input_lean": {
+    "x": "10"
+   }
+  },
+  {
+   "expected_lean": "54",
+   "input_lean": {
+    "x": "18"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "x": "0"
+   }
+  },
+  {
+   "expected_lean": "(-15)",
+   "input_lean": {
+    "x": "(-5)"
+   }
+  },
+  {
+   "expected_lean": "75",
+   "input_lean": {
+    "x": "25"
+   }
+  }
+ ]
+}

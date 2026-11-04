@@ -1,0 +1,120 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 method that returns the majority element from a list of integers.\n\nThe majority element is the one that appears more than ⌊n / 2⌋ times in the list, where n is the list's length. You may assume that a majority element always exists in the input.\n\n-----Input-----\n- nums: A list of integers (with at least one majority element).\n\n-----Output-----\nReturns the majority element — the value that appears more than ⌊n / 2⌋ times.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_37",
+ "flags": [],
+ "header": "def majorityElement (nums : List Int) (h_precond : majorityElement_precond (nums)) : Int :=",
+ "locked_hash": "8e4711baa3ada4292e536fba0f977f97f2a5d890a9782e1a4c73c49286cb9719",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@majorityElement.insert": false,
+    "fun_ind_grind@majorityElement.insertionSort": false,
+    "fun_ind_simp@majorityElement.insert": false,
+    "fun_ind_simp@majorityElement.insertionSort": false,
+    "grind": false,
+    "ind_grind@nums": false,
+    "ind_simp_all@nums": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 9.0,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "majorityElement",
+  "params": [
+   [
+    "nums",
+    "List Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef majorityElement_precond (nums : List Int) : Prop :=\n  -- !benchmark @start precond\n  nums.length > 0 ∧ nums.any (fun x => nums.count x > nums.length / 2)  -- majority element must exist\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef majorityElement (nums : List Int) (h_precond : majorityElement_precond (nums)) : Int :=\n  -- !benchmark @start code\n  let rec insert (x : Int) (xs : List Int) : List Int :=\n    match xs with\n    | [] => [x]\n    | h :: t =>\n      if x ≤ h then\n        x :: h :: t\n      else\n        h :: insert x t\n\n  let rec insertionSort (xs : List Int) : List Int :=\n    match xs with\n    | [] => []\n    | h :: t =>\n      let sortedTail := insertionSort t\n      let sorted := insert h sortedTail\n      sorted\n\n  let getAt := fun (xs : List Int) (i : Nat) =>\n    match xs.drop i with\n    | [] => 0\n    | h :: _ => h\n\n  let sorted := insertionSort nums\n\n  let len := sorted.length\n  let mid := len / 2\n  getAt sorted mid\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef majorityElement_postcond (nums : List Int) (result: Int) (h_precond : majorityElement_precond (nums)) : Prop :=\n  -- !benchmark @start postcond\n  let n := nums.length\n  (List.count result nums > n / 2) ∧\n  nums.all (fun x => x = result ∨ List.count x nums ≤ n / 2)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem majorityElement_spec_satisfied (nums: List Int) (h_precond : majorityElement_precond (nums)) :\n    majorityElement_postcond (nums) (majorityElement (nums) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(nums: List Int) (h_precond : majorityElement_precond (nums)) :\n    majorityElement_postcond (nums) (majorityElement (nums) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "nums": "[3, 2, 3]"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "nums": "[2, 2, 1, 1, 1, 2, 2]"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "nums": "[1]"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "nums": "[4, 4, 4, 4, 4, 2, 2, 3, 3]"
+   }
+  },
+  {
+   "expected_lean": "9",
+   "input_lean": {
+    "nums": "[9, 8, 9, 9, 7, 9, 6, 9, 9]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "nums": "[0, 0, 0, 0, 1]"
+   }
+  },
+  {
+   "expected_lean": "100000",
+   "input_lean": {
+    "nums": "[100000, 100000, 100000, 100000, -100000]"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "nums": "[-1, -1, -1, -1, 0, 1, 2]"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "nums": "[5, 5, 5, 5, 5, 5, 5]"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "nums": "[1, 2, 3, 3, 3, 3, 3]"
+   }
+  }
+ ]
+}

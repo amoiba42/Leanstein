@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_10",
+ "flags": [],
+ "hashes": {
+  "locked": "8a2a8686d82530e8818af9fbbb775cd1326d2f8f6f2d8a23dbdaf3196d224ea9"
+ },
+ "instance_id": "verina_basic_10__mut__relflip__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "≥",
+  "before": ">",
+  "col": 19,
+  "line": 1,
+  "operator": "relflip",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  a.all fun x => n ≥ x\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "true",
+  "expected": "false",
+  "index": 2,
+  "input_lean": {
+   "a": "#[5, 5, 5]",
+   "n": "5"
+  },
+  "source": "visible"
+ }
+}

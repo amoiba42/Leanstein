@@ -1,0 +1,84 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nGiven an integer x, determine a pair (a, b) where the first element is twice the value of x and the second element is four times the value of x.\n\n-----Input-----  \nThe input consists of:  \n• x: An integer.\n\n-----Output-----  \nThe output is a tuple (a, b) where:  \n• a = 2 * x  \n• b = 4 * x\n\n-----Note-----  \nThere are no additional preconditions; the method is defined for all integers.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_59",
+ "flags": [],
+ "header": "def DoubleQuadruple (x : Int) (h_precond : DoubleQuadruple_precond (x)) : (Int × Int) :=",
+ "locked_hash": "639a7f34a1e6879a13efe4674a1a3f5d468bc27f0afcccb67aaf2e95f51d4edd",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": true,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 0.8,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "DoubleQuadruple",
+  "params": [
+   [
+    "x",
+    "Int"
+   ]
+  ],
+  "ret": "(Int × Int)"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef DoubleQuadruple_precond (x : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef DoubleQuadruple (x : Int) (h_precond : DoubleQuadruple_precond (x)) : (Int × Int) :=\n  -- !benchmark @start code\n  let a := 2 * x\n  let b := 2 * a\n  (a, b)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef DoubleQuadruple_postcond (x : Int) (result: (Int × Int)) (h_precond : DoubleQuadruple_precond (x)) :=\n  -- !benchmark @start postcond\n  result.fst = 2 * x ∧ result.snd = 2 * result.fst\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem DoubleQuadruple_spec_satisfied (x: Int) (h_precond : DoubleQuadruple_precond (x)) :\n    DoubleQuadruple_postcond (x) (DoubleQuadruple (x) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(x: Int) (h_precond : DoubleQuadruple_precond (x)) :\n    DoubleQuadruple_postcond (x) (DoubleQuadruple (x) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "(0, 0)",
+   "input_lean": {
+    "x": "0"
+   }
+  },
+  {
+   "expected_lean": "(2, 4)",
+   "input_lean": {
+    "x": "1"
+   }
+  },
+  {
+   "expected_lean": "(-2, -4)",
+   "input_lean": {
+    "x": "(-1)"
+   }
+  },
+  {
+   "expected_lean": "(20, 40)",
+   "input_lean": {
+    "x": "10"
+   }
+  },
+  {
+   "expected_lean": "(-10, -20)",
+   "input_lean": {
+    "x": "(-5)"
+   }
+  }
+ ]
+}

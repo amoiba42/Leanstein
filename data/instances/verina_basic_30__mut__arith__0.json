@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_30",
+ "flags": [],
+ "hashes": {
+  "locked": "8e58f86821a81239b21fede4d7da857e3b1c341c4428be0a5006fa460f8ee144"
+ },
+ "instance_id": "verina_basic_30__mut__arith__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "/",
+  "before": "%",
+  "col": 25,
+  "line": 1,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  a.mapIdx (fun i x => x / b[i]!)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[3, 2, 6]",
+  "expected": "#[1, 6, 0]",
+  "index": 0,
+  "input_lean": {
+   "a": "#[10, 20, 30]",
+   "b": "#[3, 7, 5]"
+  },
+  "source": "visible"
+ }
+}

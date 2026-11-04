@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_85",
+ "flags": [],
+ "hashes": {
+  "locked": "05cf727e06b7ce09eb5f144105fa5dcbf48a349341e02d399b3eb81d935d6c0c"
+ },
+ "instance_id": "verina_basic_85__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  reverse_core a 0\n",
+  "code_aux": "def reverse_core (arr : Array Int) (i : Nat) : Array Int :=\n  if i < arr.size / 2 then\n    let j := arr.size - 1 - i\n    let temp := arr[i]!\n    let arr' := arr.set! i (arr[j]!)\n    let arr'' := arr'.set! j temp\n    reverse_core arr'' (i + 1)\n  else\n    arr\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

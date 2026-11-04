@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_basic_38",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "4bef85db9c238cdd6cd12205f3614e22e95ae762d9373c371359d6b24051a184",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"yy\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"c\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"0b\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"aa\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"bbbbc\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"abac\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"bbbba\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"bbb\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"abab\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"abaa\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"ba\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"ab\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"  ax\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"0Bb\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"yz\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"z \""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"bab\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\" xz\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"bbabb\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"bbaba\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"ya\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"0yAz\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"0c c0A\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"yxx0\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"bbabc\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"bAx\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"BBAc\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"b\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"ax\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"B\""
+   }
+  }
+ ]
+}

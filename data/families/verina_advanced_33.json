@@ -1,0 +1,90 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires implementing the \"Longest Increasing Subsequence\" problem in Lean 4.\nGiven a list of integers, the function should compute the length of the longest strictly increasing\nsubsequence. A subsequence is formed by deleting zero or more elements without changing the order.\nIf the list is empty, the function should return 0.\n\n-----Input-----\n- nums: A list of integers.\n\n-----Output-----\n- A natural number representing the length of the longest strictly increasing subsequence.\n- If there is no increasing subsequence, return 0.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_33",
+ "flags": [],
+ "header": "def longestIncreasingSubsequence (nums : List Int) (h_precond : longestIncreasingSubsequence_precond (nums)) : Nat :=",
+ "locked_hash": "a5a9238a901e490c66cbeab977735fe797fe2e245e71351d15e72bb7e81f691b",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@longestIncreasingSubsequence.helper": false,
+    "fun_ind_grind@longestIncreasingSubsequence.listLength": false,
+    "fun_ind_simp@longestIncreasingSubsequence.helper": false,
+    "fun_ind_simp@longestIncreasingSubsequence.listLength": false,
+    "grind": false,
+    "ind_grind@nums": false,
+    "ind_simp_all@nums": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 4.8,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "longestIncreasingSubsequence",
+  "params": [
+   [
+    "nums",
+    "List Int"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Mathlib.Data.List.Basic\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef longestIncreasingSubsequence_precond (nums : List Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef longestIncreasingSubsequence (nums : List Int) (h_precond : longestIncreasingSubsequence_precond (nums)) : Nat :=\n  -- !benchmark @start code\n  let max2 (a : Nat) (b : Nat) : Nat :=\n    if a > b then a else b\n\n  let rec listLength (l : List Int) : Nat :=\n    match l with\n    | []      => 0\n    | _ :: xs => 1 + listLength xs\n\n  let rec helper (lst : List Int) (prev : Option Int) : Nat :=\n    match lst with\n    | [] => 0\n    | h :: t =>\n        let canTake : Bool :=\n          if prev = none then true\n          else if prev.get! < h then true else false\n        let withTake : Nat :=\n          if canTake then 1 + helper t (some h) else 0\n        let withoutTake : Nat := helper t prev\n        max2 withTake withoutTake\n\n  let result := helper nums none\n  result\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef longestIncreasingSubsequence_postcond (nums : List Int) (result: Nat) (h_precond : longestIncreasingSubsequence_precond (nums)) : Prop :=\n  -- !benchmark @start postcond\n  let allSubseq := (nums.foldl fun acc x => acc ++ acc.map (fun sub => x :: sub)) [[]] |>.map List.reverse\n  let increasingSubseqLens := allSubseq.filter (fun l => List.Pairwise (· < ·) l) |>.map (·.length)\n  increasingSubseqLens.contains result ∧ increasingSubseqLens.all (· ≤ result)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem longestIncreasingSubsequence_spec_satisfied (nums: List Int) (h_precond : longestIncreasingSubsequence_precond (nums)) :\n    longestIncreasingSubsequence_postcond (nums) (longestIncreasingSubsequence (nums) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(nums: List Int) (h_precond : longestIncreasingSubsequence_precond (nums)) :\n    longestIncreasingSubsequence_postcond (nums) (longestIncreasingSubsequence (nums) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "nums": "[10, 9, 2, 5, 3, 7, 101, 18]"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "nums": "[0, 1, 0, 3, 2, 3]"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "nums": "[7, 7, 7, 7, 7]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "nums": "[]"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "nums": "[4, 10, 4, 3, 8, 9]"
+   }
+  }
+ ]
+}

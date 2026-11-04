@@ -1,0 +1,99 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nImplement a Lean 4 function that merges two ascendingly sorted lists of integers into one single sorted list (ascending). The resulting list must contain all elements from both input lists, preserving their ascending order.\n\n-----Input-----\nThe input consists of two lists of integers:\narr1: A sorted list of integers (ascending)\narr2: Another sorted list of integers (ascending)\n\n-----Output-----\nThe output is a list of integers:\nReturns a new list containing all elements from arr1 and arr2, sorted in ascending order.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_49",
+ "flags": [],
+ "header": "def mergeSortedLists (arr1 : List Int) (arr2 : List Int) (h_precond : mergeSortedLists_precond (arr1) (arr2)) : List Int :=",
+ "locked_hash": "8845b99313e8dba0fe7fc85d96573b4553c5bb036912b6939338e78e860416c6",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@mergeSortedLists.merge": false,
+    "fun_ind_simp@mergeSortedLists.merge": false,
+    "grind": false,
+    "ind_grind@arr1": false,
+    "ind_grind@arr2": false,
+    "ind_simp_all@arr1": false,
+    "ind_simp_all@arr2": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 27.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "mergeSortedLists",
+  "params": [
+   [
+    "arr1",
+    "List Int"
+   ],
+   [
+    "arr2",
+    "List Int"
+   ]
+  ],
+  "ret": "List Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef mergeSortedLists_precond (arr1 : List Int) (arr2 : List Int) : Prop :=\n  -- !benchmark @start precond\n  List.Pairwise (· ≤ ·) arr1 ∧ List.Pairwise (· ≤ ·) arr2\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef mergeSortedLists (arr1 : List Int) (arr2 : List Int) (h_precond : mergeSortedLists_precond (arr1) (arr2)) : List Int :=\n  -- !benchmark @start code\n  let rec merge (xs : List Int) (ys : List Int) : List Int :=\n    match xs, ys with\n    | [], _ => ys\n    | _, [] => xs\n    | x :: xt, y :: yt =>\n      if x <= y then\n        x :: merge xt (y :: yt)\n      else\n        y :: merge (x :: xt) yt\n\n  merge arr1 arr2\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef mergeSortedLists_postcond (arr1 : List Int) (arr2 : List Int) (result: List Int) (h_precond : mergeSortedLists_precond (arr1) (arr2)) : Prop :=\n  -- !benchmark @start postcond\n  List.Pairwise (· ≤ ·) result ∧ List.isPerm (arr1 ++ arr2) result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem mergeSortedLists_spec_satisfied (arr1: List Int) (arr2: List Int) (h_precond : mergeSortedLists_precond (arr1) (arr2)) :\n    mergeSortedLists_postcond (arr1) (arr2) (mergeSortedLists (arr1) (arr2) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(arr1: List Int) (arr2: List Int) (h_precond : mergeSortedLists_precond (arr1) (arr2)) :\n    mergeSortedLists_postcond (arr1) (arr2) (mergeSortedLists (arr1) (arr2) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "[1, 2, 3, 4, 5, 6]",
+   "input_lean": {
+    "arr1": "[1, 3, 5]",
+    "arr2": "[2, 4, 6]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "arr1": "[]",
+    "arr2": "[]"
+   }
+  },
+  {
+   "expected_lean": "[-3, -2, -1, 0, 1]",
+   "input_lean": {
+    "arr1": "[-2, 0, 1]",
+    "arr2": "[-3, -1]"
+   }
+  },
+  {
+   "expected_lean": "[5, 10, 20, 25, 30, 35]",
+   "input_lean": {
+    "arr1": "[10, 20, 30]",
+    "arr2": "[5, 25, 35]"
+   }
+  },
+  {
+   "expected_lean": "[1, 2, 2, 2, 3, 3]",
+   "input_lean": {
+    "arr1": "[1, 2, 2]",
+    "arr2": "[2, 3, 3]"
+   }
+  }
+ ]
+}

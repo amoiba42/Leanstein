@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_21",
+ "flags": [],
+ "hashes": {
+  "locked": "45755115da860baca1926affaa3821dad7a0ae0f2b055595e1e4efa41d0061d6"
+ },
+ "instance_id": "verina_advanced_21__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let length := s.length\n\nif length <= 1 then\n  true\nelse\n  let arr := s.toList\n\n  let rec checkIndices (left : Nat) (right : Nat) (chars : List Char) : Bool :=\n    if left >= right then\n      true\n    else\n      match chars[left]?, chars[right]? with\n      | some cLeft, some cRight =>\n        if cLeft == cRight then\n          checkIndices (left + 1) (right - 1) chars\n        else\n          false\n      | _, _ => false\n  let approach1 := checkIndices 0 (length - 1) arr\n\n  let rec reverseList (acc : List Char) (xs : List Char) : List Char :=\n    match xs with\n    | []      => acc\n    | h :: t  => reverseList (h :: acc) t\n  let reversed := reverseList [] arr\n  let approach2 := (arr == reversed)\n\n  approach1 && approach2\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

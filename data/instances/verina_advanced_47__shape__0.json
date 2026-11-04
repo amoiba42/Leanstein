@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_47",
+ "flags": [],
+ "hashes": {
+  "locked": "5541e2a150c683169ba4c3d4c99d79a856bfaffaedd2f7c3263476c211709a13"
+ },
+ "instance_id": "verina_advanced_47__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  -- Insertion sort based on the start of intervals\n  let rec insert (x : Prod Int Int) (sorted : List (Prod Int Int)) : List (Prod Int Int) :=\n    match sorted with\n    | [] => [x]\n    | y :: ys => if x.fst ≤ y.fst then x :: sorted else y :: insert x ys\n\n  let rec sort (xs : List (Prod Int Int)) : List (Prod Int Int) :=\n    match xs with\n    | [] => []\n    | x :: xs' => insert x (sort xs')\n\n  let sorted := sort intervals\n\n  -- Merge sorted intervals\n  let rec merge (xs : List (Prod Int Int)) (acc : List (Prod Int Int)) : List (Prod Int Int) :=\n    match xs, acc with\n    | [], _ => acc.reverse\n    | (s, e) :: rest, [] => merge rest [(s, e)]\n    | (s, e) :: rest, (ps, pe) :: accTail =>\n      if s ≤ pe then\n        merge rest ((ps, max pe e) :: accTail)\n      else\n        merge rest ((s, e) :: (ps, pe) :: accTail)\n\n  merge sorted []\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

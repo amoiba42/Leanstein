@@ -1,0 +1,114 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nGiven an integer array arr and a positive integer k, this task requires writing a Lean 4 method that finds the\nmaximum sum of a subarray of arr, such that the length of the subarray is divisible by k.\nIf the array is empty, or generally if there exists no subarray with length divisible by k, \nthe default return value should be 0.\n\n-----Input-----\nThe input consists of:\narr: The array of integers.\nk: A positive integer.\n\n-----Output-----\nThe output is an integer:\nReturns the maximum positive integer x such that there exists a subarray where the sum equals x, and the length\nof the subarray is divisible by k.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_44",
+ "flags": [],
+ "header": "def maxSubarraySumDivisibleByK (arr : Array Int) (k : Int) : Int :=",
+ "locked_hash": "ed63c1103a1dc76875947f7cc56f396d175a3eeed599b386f9deefcaf2083189",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 67.9,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "maxSubarraySumDivisibleByK",
+  "params": [
+   [
+    "arr",
+    "Array Int"
+   ],
+   [
+    "k",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef maxSubarraySumDivisibleByK_precond (arr : Array Int) (k : Int) : Prop :=\n  -- !benchmark @start precond\n  k > 0\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef maxSubarraySumDivisibleByK (arr : Array Int) (k : Int) : Int :=\n  -- !benchmark @start code\n  let n := arr.size\n  if n = 0 || k = 0 then 0\n  else\n    --compute prefix sums for efficient subarray sum calculation\n    let prefixSums := Id.run do\n      let mut prefixSums := Array.mkArray (n + 1) 0\n      for i in [0:n] do\n        prefixSums := prefixSums.set! (i+1) (prefixSums[i]! + arr[i]!)\n      prefixSums\n\n    let result := Id.run do\n      let mut best : Option Int := none\n      for len in List.range (n+1) do\n        if len % k = 0 && len > 0 then\n          for start in [0:(n - len + 1)] do\n            let endIdx := start + len\n            let subarraySum := prefixSums[endIdx]! - prefixSums[start]!\n            best := match best with\n              | none => some subarraySum\n              | some b => some (max b subarraySum)\n      best\n\n    match result with\n    | none => 0\n    | some s => s\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef maxSubarraySumDivisibleByK_postcond (arr : Array Int) (k : Int) (result: Int) : Prop :=\n  -- !benchmark @start postcond\n  let subarrays := List.range (arr.size) |>.flatMap (fun start =>\n    List.range (arr.size - start + 1) |>.map (fun len => arr.extract start (start + len)))\n  let divisibleSubarrays := subarrays.filter (fun subarray => subarray.size % k.toNat = 0 && subarray.size > 0)\n  let subarraySums := divisibleSubarrays.map (fun subarray => subarray.toList.sum)\n  -- No valid subarrays -> result is 0\n  (subarraySums.length = 0 → result = 0) ∧\n  -- Valid subarrays exist -> result is the maximum sum\n  (subarraySums.length > 0 → result ∈ subarraySums ∧ subarraySums.all (fun sum => sum ≤ result))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem maxSubarraySumDivisibleByK_spec_satisfied (arr: Array Int) (k: Int) :\n    maxSubarraySumDivisibleByK_postcond (arr) (k) (maxSubarraySumDivisibleByK (arr) (k)) := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(arr: Array Int) (k: Int) :\n    maxSubarraySumDivisibleByK_postcond (arr) (k) (maxSubarraySumDivisibleByK (arr) (k))",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "14",
+   "input_lean": {
+    "arr": "#[1, 2, 3, 4, 5]",
+    "k": "2"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "arr": "#[1, -2, 3, -4, 5]",
+    "k": "3"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "arr": "#[]",
+    "k": "5"
+   }
+  },
+  {
+   "expected_lean": "10",
+   "input_lean": {
+    "arr": "#[1, 2, 3, 4]",
+    "k": "1"
+   }
+  },
+  {
+   "expected_lean": "9",
+   "input_lean": {
+    "arr": "#[-2, 7, 1, 3]",
+    "k": "2"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "arr": "#[-100, 0, 1]",
+    "k": "5"
+   }
+  },
+  {
+   "expected_lean": "13328",
+   "input_lean": {
+    "arr": "#[1999, 1, -1023, 12351, -9999]",
+    "k": "2"
+   }
+  },
+  {
+   "expected_lean": "(-10)",
+   "input_lean": {
+    "arr": "#[-5, -5]",
+    "k": "2"
+   }
+  }
+ ]
+}

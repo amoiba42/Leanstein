@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_37",
+ "flags": [],
+ "hashes": {
+  "locked": "8e4711baa3ada4292e536fba0f977f97f2a5d890a9782e1a4c73c49286cb9719"
+ },
+ "instance_id": "verina_advanced_37__nat__qwen3.5-9b__1",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef majorityElement (nums : List Int) (h_precond : majorityElement_precond (nums)) : Int :=\n  nums.head!\n```",
+  "seed": 5001
+ },
+ "split": "heldout",
+ "start": {
+  "code": "nums.head!",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "3",
+  "index": 9,
+  "input_lean": {
+   "nums": "[1, 2, 3, 3, 3, 3, 3]"
+  },
+  "source": "visible"
+ }
+}

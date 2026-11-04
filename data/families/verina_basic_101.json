@@ -1,0 +1,84 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis problem involves computing the triple of a given integer. The goal is to produce an output that is exactly three times the input value.\n\n-----Input-----  \nThe input consists of:  \n• x: An integer representing the value to be tripled.\n\n-----Output-----  \nThe output is an integer that is three times the input value (i.e., 3 * x).\n\n-----Note-----  \nThe implementation uses a local variable to first compute double the input and then adds the original input to get the final result. The accompanying theorem asserts that the function satisfies the specification of computing 3 * x.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_101",
+ "flags": [],
+ "header": "def Triple (x : Int) (h_precond : Triple_precond (x)) : Int :=",
+ "locked_hash": "17a5e883af7f9727a18d4d844868c4ebe6d0d37fa22e5d473bec84429fe29f71",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 2.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "Triple",
+  "params": [
+   [
+    "x",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef Triple_precond (x : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef Triple (x : Int) (h_precond : Triple_precond (x)) : Int :=\n  -- !benchmark @start code\n  let y := x * 2\n  y + x\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef Triple_postcond (x : Int) (result: Int) (h_precond : Triple_precond (x)) :=\n  -- !benchmark @start postcond\n  result / 3 = x ∧ result / 3 * 3 = result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem Triple_spec_satisfied (x: Int) (h_precond : Triple_precond (x)) :\n    Triple_postcond (x) (Triple (x) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold Triple_postcond Triple\n  simp\n  rw (occs := [2]) [←Int.mul_one x]\n  rw [←Int.mul_add]\n  simp +arith\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(x: Int) (h_precond : Triple_precond (x)) :\n    Triple_postcond (x) (Triple (x) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "x": "0"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "x": "1"
+   }
+  },
+  {
+   "expected_lean": "(-3)",
+   "input_lean": {
+    "x": "(-1)"
+   }
+  },
+  {
+   "expected_lean": "15",
+   "input_lean": {
+    "x": "5"
+   }
+  },
+  {
+   "expected_lean": "(-30)",
+   "input_lean": {
+    "x": "(-10)"
+   }
+  }
+ ]
+}

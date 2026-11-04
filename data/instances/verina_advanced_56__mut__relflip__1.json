@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_56",
+ "flags": [],
+ "hashes": {
+  "locked": "d68a2e122eea0fc9cf5ad749dbb46d2d6d5d2c3eec7afbb2bf5e1d175ffe9e75"
+ },
+ "instance_id": "verina_advanced_56__mut__relflip__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "=",
+  "before": "≠",
+  "col": 40,
+  "line": 1,
+  "operator": "relflip",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let nonzeros := xs.filter (fun x => x = 0)\n  let zeros := xs.filter (fun x => x = 0)\n  nonzeros ++ zeros\n",
+  "code_aux": "-- Count how many times a specific value appears in the list\n\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "[0, 0, 0, 0]",
+  "expected": "[1, 3, 12, 0, 0]",
+  "index": 0,
+  "input_lean": {
+   "xs": "[0, 1, 0, 3, 12]"
+  },
+  "source": "visible"
+ }
+}

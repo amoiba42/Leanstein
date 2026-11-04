@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_52",
+ "flags": [],
+ "hashes": {
+  "locked": "9f2ef29fdacd7b53728c266f6656ebc98b10f9f032a86e02418763c46ab01e42"
+ },
+ "instance_id": "verina_advanced_52__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  -- edge case k=0, requires 0 operations\n  if k == 0 then 0 else\n  -- recursive helper function\n  let rec loop (remaining : List Nat) (collected : List Nat) (collected_count : Nat) (ops : Nat) : Nat :=\n    match remaining with\n    | [] => ops -- base case\n    | head :: tail =>\n      let ops' := ops + 1\n      -- check if the element is relevant (1 <= head <= k) and not already collected\n      -- use a list `collected` to keep track of unique numbers found so far\n      if head > 0 && head <= k && !(List.elem head collected) then\n          let collected' := head :: collected -- add new unique element to our tracking list\n          let collected_count' := collected_count + 1\n          if collected_count' == k then\n            ops' -- found all k distinct required numbers\n          else\n            loop tail collected' collected_count' ops' -- continue searching, count increased\n      else\n        -- element is irrelevant (> k), zero/negative, or a duplicate (already in `collected`)\n        loop tail collected collected_count ops' -- continue searching, count not increased\n  -- start the loop, initially empty collection, 0 count, 0 operations\n  loop nums.reverse [] 0 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

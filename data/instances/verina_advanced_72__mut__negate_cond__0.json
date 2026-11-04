@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_72",
+ "flags": [],
+ "hashes": {
+  "locked": "341550680aad0036f7dfeb360ed22c2b9cc1d284cf8e60d5c6af7a4c73f872f7"
+ },
+ "instance_id": "verina_advanced_72__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(n % 5 == 0)",
+  "before": "n % 5 == 0",
+  "col": 9,
+  "line": 4,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  if n == 0 then 0\n  else if n % 2 == 0 then 2\n  else if n % 3 == 0 then 3\n  else if ¬(n % 5 == 0) then 5\n  else if n % 7 == 0 then 7\n  else 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "5",
+  "expected": "0",
+  "index": 3,
+  "input_lean": {
+   "n": "73"
+  },
+  "source": "visible"
+ }
+}

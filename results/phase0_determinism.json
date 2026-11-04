@@ -1,0 +1,12 @@
+{
+ "qwen3.5-2b": {
+  "different_seed_differs": true,
+  "has_think": false,
+  "same_seed_identical": true
+ },
+ "qwen3.5-4b": {
+  "different_seed_differs": true,
+  "has_think": false,
+  "same_seed_identical": true
+ }
+}

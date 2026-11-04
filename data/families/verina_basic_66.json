@@ -1,0 +1,84 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task focuses on determining if a given integer is even. The problem requires checking whether the integer can be represented as twice another integer, meaning it is divisible by 2 without any remainder.\n\n-----Input-----  \nThe input consists of a single integer:  \n• x: An integer to be evaluated.\n\n-----Output-----  \nThe output is a boolean value:  \n• true if x is even (x mod 2 equals 0).  \n• false if x is odd.\n\n-----Note-----  \nNo additional preconditions are required. The method should work correctly for any integer value.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_66",
+ "flags": [],
+ "header": "def ComputeIsEven (x : Int) (h_precond : ComputeIsEven_precond (x)) : Bool :=",
+ "locked_hash": "dc296e1a63e567f0655073660b8e976c0a7ffc79645a7e917feb0a0a749c3d2c",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "split_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": true,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 3.0,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "ComputeIsEven",
+  "params": [
+   [
+    "x",
+    "Int"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Mathlib\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef ComputeIsEven_precond (x : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef ComputeIsEven (x : Int) (h_precond : ComputeIsEven_precond (x)) : Bool :=\n  -- !benchmark @start code\n  if x % 2 = 0 then true else false\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef ComputeIsEven_postcond (x : Int) (result: Bool) (h_precond : ComputeIsEven_precond (x)) :=\n  -- !benchmark @start postcond\n  result = true ↔ ∃ k : Int, x = 2 * k\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem ComputeIsEven_spec_satisfied (x: Int) (h_precond : ComputeIsEven_precond (x)) :\n    ComputeIsEven_postcond (x) (ComputeIsEven (x) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold ComputeIsEven ComputeIsEven_postcond\n  simp\n  rfl\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(x: Int) (h_precond : ComputeIsEven_precond (x)) :\n    ComputeIsEven_postcond (x) (ComputeIsEven (x) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "x": "4"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "x": "7"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "x": "0"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "x": "(-2)"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "x": "(-3)"
+   }
+  }
+ ]
+}

@@ -1,0 +1,106 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that determines whether a given natural number is prime. A number (with n ≥ 2) is considered prime if it is divisible only by 1 and itself. The method should return true when the input number is prime and false otherwise.\n\n-----Input-----\nThe input consists of:\nn: A natural number (Nat) such that n ≥ 2.\n\n-----Output-----\nThe output is a Boolean value:\nReturns true if the input number is prime (i.e., there is no integer k with 1 < k < n that divides n).\nReturns false if the input number is not prime (i.e., there exists an integer k with 1 < k < n that divides n).\n\n-----Note-----\nThe input is expected to satisfy the condition n ≥ 2.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_28",
+ "flags": [],
+ "header": "def isPrime (n : Nat) (h_precond : isPrime_precond (n)) : Bool :=",
+ "locked_hash": "f8a4ed5a047a51aab52771e1e2c4b93e4328cba6e6f7ae3b5e7ba8d96e445c8d",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@isPrime.check": false,
+    "fun_ind_simp@isPrime.check": false,
+    "grind": false,
+    "ind_grind@n": false,
+    "ind_simp_all@n": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 101.9,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "isPrime",
+  "params": [
+   [
+    "n",
+    "Nat"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef isPrime_precond (n : Nat) : Prop :=\n  -- !benchmark @start precond\n  n ≥ 2\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef isPrime (n : Nat) (h_precond : isPrime_precond (n)) : Bool :=\n  -- !benchmark @start code\n  let bound := n\n  let rec check (i : Nat) (fuel : Nat) : Bool :=\n    if fuel = 0 then true\n    else if i * i > n then true\n    else if n % i = 0 then false\n    else check (i + 1) (fuel - 1)\n  check 2 bound\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef isPrime_postcond (n : Nat) (result: Bool) (h_precond : isPrime_precond (n)) :=\n  -- !benchmark @start postcond\n  (result → (List.range' 2 (n - 2)).all (fun k => n % k ≠ 0)) ∧\n  (¬ result → (List.range' 2 (n - 2)).any (fun k => n % k = 0))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem isPrime_spec_satisfied (n: Nat) (h_precond : isPrime_precond (n)) :\n    isPrime_postcond (n) (isPrime (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(n: Nat) (h_precond : isPrime_precond (n)) :\n    isPrime_postcond (n) (isPrime (n) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "2"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "3"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "4"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "5"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "9"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "11"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "12"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "13"
+   }
+  }
+ ]
+}

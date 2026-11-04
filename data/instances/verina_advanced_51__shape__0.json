@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_51",
+ "flags": [],
+ "hashes": {
+  "locked": "256d63690dca2f5a77724bb999cf54146826ac02b5a90302ea20799dcbf38156"
+ },
+ "instance_id": "verina_advanced_51__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let merged := mergeSortedAux a b\n  merged\n",
+  "code_aux": "def mergeSortedAux : List Int → List Int → List Int\n| [], ys => ys\n| xs, [] => xs\n| x :: xs', y :: ys' =>\n  if x ≤ y then\n    let merged := mergeSortedAux xs' (y :: ys')\n    x :: merged\n  else\n    let merged := mergeSortedAux (x :: xs') ys'\n    y :: merged\n\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

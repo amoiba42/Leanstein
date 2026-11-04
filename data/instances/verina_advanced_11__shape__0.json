@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_11",
+ "flags": [],
+ "hashes": {
+  "locked": "b04c436496bdc54b02993fcef6a1d4cd8f5232eae70af137914cb638553a990a"
+ },
+ "instance_id": "verina_advanced_11__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let n := lst.length\n  let majority := lst.find? (fun x => countOccurrences x lst > n / 2)\n  match majority with\n  | some x => x\n  | none => -1\n",
+  "code_aux": "def countOccurrences (n : Int) (lst : List Int) : Nat :=\n  lst.foldl (fun acc x => if x = n then acc + 1 else acc) 0\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

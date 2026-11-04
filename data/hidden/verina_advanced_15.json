@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_advanced_15",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "357d7151f6a94d2a863aa6df3d26ea05d3e58ac446638dc10bd368e07b1f83fc",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "nums": "[5, (-7), 5, 1, 5, (-7)]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[5, 4, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[3, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[5, 3, 4]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "nums": "[3, 1, 4, 0, 5, 1]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[8]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "nums": "[(-7), 96, 2, 0, (-52), 3, (-10), 2]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[1, (-10), (-10)]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[5, 4, 3, 3]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "nums": "[(-2), 0, 10, (-2), 2]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[4, 3, 0, 5, 1, 1]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[(-1)]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[1, 4, 1]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "nums": "[1, 5, 0, 4, 1, 3, 4]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[2]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[1, 2]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[(-10), (-15), 0]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[(-2), (-1)]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[3]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[1, 2, (-1)]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "nums": "[0, 2, 4, 6, 1, 5]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[15]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[4, 5, 1, 3, 2]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[5, 4, 4, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "nums": "[1, 2, 3, 1]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[5, 4, 3, 5]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "nums": "[3, 5, 0, 4, 1, 3]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "nums": "[0, 5, 6, 1, 2, 4]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "nums": "[2, 1, 5, 0, 4, 6, 2]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "nums": "[5, 0, 3]"
+   }
+  }
+ ]
+}

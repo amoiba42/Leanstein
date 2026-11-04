@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_81",
+ "flags": [],
+ "hashes": {
+  "locked": "2ac724985afb4a2b968e6d57f8092fc92a1fdc7b9ecb77934f1f4ffc8796eaf8"
+ },
+ "instance_id": "verina_basic_81__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  if y = 0 then (Int.ofNat x, 0) else divMod x y\n",
+  "code_aux": "def divMod (x y : Nat) : Int × Int :=\n  let q : Int := Int.ofNat (x / y)\n  let r : Int := Int.ofNat (x % y)\n  (r, q)\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

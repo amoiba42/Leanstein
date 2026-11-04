@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_advanced_65",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "f3fff2c556f5242d5346c7e8689923dfd6a75306241f76a3147d43bf8ac97581",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "\"aeL\"",
+   "input_lean": {
+    "s": "\"Lea\""
+   }
+  },
+  {
+   "expected_lean": "\"bracecar\"",
+   "input_lean": {
+    "s": "\"racecarb\""
+   }
+  },
+  {
+   "expected_lean": "\"z\"",
+   "input_lean": {
+    "s": "\"z\""
+   }
+  },
+  {
+   "expected_lean": "\"raceca\"",
+   "input_lean": {
+    "s": "\"acecar\""
+   }
+  },
+  {
+   "expected_lean": "\"za\"",
+   "input_lean": {
+    "s": "\"az\""
+   }
+  },
+  {
+   "expected_lean": "\"oleh\"",
+   "input_lean": {
+    "s": "\"helo\""
+   }
+  },
+  {
+   "expected_lean": "\"aa\"",
+   "input_lean": {
+    "s": "\"aa\""
+   }
+  },
+  {
+   "expected_lean": "\"ccayA \"",
+   "input_lean": {
+    "s": "\" Ayacc\""
+   }
+  },
+  {
+   "expected_lean": "\"bnaeL\"",
+   "input_lean": {
+    "s": "\"Leanb\""
+   }
+  },
+  {
+   "expected_lean": "\"x\"",
+   "input_lean": {
+    "s": "\"x\""
+   }
+  },
+  {
+   "expected_lean": "\"aB\"",
+   "input_lean": {
+    "s": "\"Ba\""
+   }
+  },
+  {
+   "expected_lean": "\"b\"",
+   "input_lean": {
+    "s": "\"b\""
+   }
+  },
+  {
+   "expected_lean": "\"aracecar\"",
+   "input_lean": {
+    "s": "\"racecara\""
+   }
+  },
+  {
+   "expected_lean": "\"yc\"",
+   "input_lean": {
+    "s": "\"cy\""
+   }
+  },
+  {
+   "expected_lean": "\"Bz\"",
+   "input_lean": {
+    "s": "\"zB\""
+   }
+  },
+  {
+   "expected_lean": "\"azzz\"",
+   "input_lean": {
+    "s": "\"zzza\""
+   }
+  },
+  {
+   "expected_lean": "\"c\"",
+   "input_lean": {
+    "s": "\"c\""
+   }
+  },
+  {
+   "expected_lean": "\"bolleh\"",
+   "input_lean": {
+    "s": "\"hellob\""
+   }
+  },
+  {
+   "expected_lean": "\"cxyBzB\"",
+   "input_lean": {
+    "s": "\"BzByxc\""
+   }
+  },
+  {
+   "expected_lean": "\"xb\"",
+   "input_lean": {
+    "s": "\"bx\""
+   }
+  },
+  {
+   "expected_lean": "\"0\"",
+   "input_lean": {
+    "s": "\"0\""
+   }
+  },
+  {
+   "expected_lean": "\"aay \"",
+   "input_lean": {
+    "s": "\" yaa\""
+   }
+  },
+  {
+   "expected_lean": "\"ybx\"",
+   "input_lean": {
+    "s": "\"xby\""
+   }
+  },
+  {
+   "expected_lean": "\"bc\"",
+   "input_lean": {
+    "s": "\"cb\""
+   }
+  },
+  {
+   "expected_lean": "\"0z\"",
+   "input_lean": {
+    "s": "\"z0\""
+   }
+  },
+  {
+   "expected_lean": "\"ba\"",
+   "input_lean": {
+    "s": "\"ab\""
+   }
+  },
+  {
+   "expected_lean": "\"colleh\"",
+   "input_lean": {
+    "s": "\"helloc\""
+   }
+  },
+  {
+   "expected_lean": "\"aolleh\"",
+   "input_lean": {
+    "s": "\"helloa\""
+   }
+  },
+  {
+   "expected_lean": "\"yBz0cz\"",
+   "input_lean": {
+    "s": "\"zc0zBy\""
+   }
+  },
+  {
+   "expected_lean": "\"BBax\"",
+   "input_lean": {
+    "s": "\"xaBB\""
+   }
+  }
+ ]
+}

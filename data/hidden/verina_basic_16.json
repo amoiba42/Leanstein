@@ -1,0 +1,250 @@
+{
+ "family_id": "verina_basic_16",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "80ef86590a84574686713e9c786966d9d1506248708c8a0a254434a5d4b5ea35",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "\"abcAxa\"",
+   "input_lean": {
+    "newChar": "'a'",
+    "oldChar": "'z'",
+    "s": "\"abcAxz\""
+   }
+  },
+  {
+   "expected_lean": "\"hellb, wbrld!\"",
+   "input_lean": {
+    "newChar": "'b'",
+    "oldChar": "'o'",
+    "s": "\"hello, world!\""
+   }
+  },
+  {
+   "expected_lean": "\"zzBzBy\"",
+   "input_lean": {
+    "newChar": "'9'",
+    "oldChar": "'b'",
+    "s": "\"zzBzBy\""
+   }
+  },
+  {
+   "expected_lean": "\"aa\"",
+   "input_lean": {
+    "newChar": "'0'",
+    "oldChar": "'z'",
+    "s": "\"aa\""
+   }
+  },
+  {
+   "expected_lean": "\"hellO, wOrld!b\"",
+   "input_lean": {
+    "newChar": "'O'",
+    "oldChar": "'o'",
+    "s": "\"hello, world!b\""
+   }
+  },
+  {
+   "expected_lean": "\"hell; world!\"",
+   "input_lean": {
+    "newChar": "';'",
+    "oldChar": "','",
+    "s": "\"hell, world!\""
+   }
+  },
+  {
+   "expected_lean": "\"000\"",
+   "input_lean": {
+    "newChar": "'0'",
+    "oldChar": "'a'",
+    "s": "\"aaa\""
+   }
+  },
+  {
+   "expected_lean": "\"x\"",
+   "input_lean": {
+    "newChar": "'Z'",
+    "oldChar": "'z'",
+    "s": "\"x\""
+   }
+  },
+  {
+   "expected_lean": "\"aBa\"",
+   "input_lean": {
+    "newChar": "'9'",
+    "oldChar": "'z'",
+    "s": "\"aBa\""
+   }
+  },
+  {
+   "expected_lean": "\"unchanged\"",
+   "input_lean": {
+    "newChar": "'u'",
+    "oldChar": "'z'",
+    "s": "\"unchanged\""
+   }
+  },
+  {
+   "expected_lean": "\"zxA\"",
+   "input_lean": {
+    "newChar": "'Z'",
+    "oldChar": "'9'",
+    "s": "\"zxA\""
+   }
+  },
+  {
+   "expected_lean": "\"c\"",
+   "input_lean": {
+    "newChar": "'y'",
+    "oldChar": "'x'",
+    "s": "\"c\""
+   }
+  },
+  {
+   "expected_lean": "\"xya\"",
+   "input_lean": {
+    "newChar": "'9'",
+    "oldChar": "'0'",
+    "s": "\"xya\""
+   }
+  },
+  {
+   "expected_lean": "\"9y yBc\"",
+   "input_lean": {
+    "newChar": "'9'",
+    "oldChar": "'z'",
+    "s": "\"zy yBc\""
+   }
+  },
+  {
+   "expected_lean": "\"aaa\"",
+   "input_lean": {
+    "newChar": "'b'",
+    "oldChar": "'z'",
+    "s": "\"aaa\""
+   }
+  },
+  {
+   "expected_lean": "\"Z0xcAB\"",
+   "input_lean": {
+    "newChar": "'Z'",
+    "oldChar": "'b'",
+    "s": "\"b0xcAB\""
+   }
+  },
+  {
+   "expected_lean": "\"aaa\"",
+   "input_lean": {
+    "newChar": "'b'",
+    "oldChar": "'Z'",
+    "s": "\"aaa\""
+   }
+  },
+  {
+   "expected_lean": "\"0Aa\"",
+   "input_lean": {
+    "newChar": "'A'",
+    "oldChar": "'b'",
+    "s": "\"0ba\""
+   }
+  },
+  {
+   "expected_lean": "\"hello, world!\"",
+   "input_lean": {
+    "newChar": "';'",
+    "oldChar": "'a'",
+    "s": "\"hello, world!\""
+   }
+  },
+  {
+   "expected_lean": "\"0y\"",
+   "input_lean": {
+    "newChar": "'0'",
+    "oldChar": "' '",
+    "s": "\" y\""
+   }
+  },
+  {
+   "expected_lean": "\"\"",
+   "input_lean": {
+    "newChar": "'A'",
+    "oldChar": "'x'",
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "\"c\"",
+   "input_lean": {
+    "newChar": "'z'",
+    "oldChar": "'a'",
+    "s": "\"c\""
+   }
+  },
+  {
+   "expected_lean": "\"hello, world!\"",
+   "input_lean": {
+    "newChar": "'O'",
+    "oldChar": "'9'",
+    "s": "\"hello, world!\""
+   }
+  },
+  {
+   "expected_lean": "\"\"",
+   "input_lean": {
+    "newChar": "'Z'",
+    "oldChar": "'b'",
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "\"b\"",
+   "input_lean": {
+    "newChar": "'z'",
+    "oldChar": "'z'",
+    "s": "\"b\""
+   }
+  },
+  {
+   "expected_lean": "\"test\"",
+   "input_lean": {
+    "newChar": "'Z'",
+    "oldChar": "'x'",
+    "s": "\"test\""
+   }
+  },
+  {
+   "expected_lean": "\"\"",
+   "input_lean": {
+    "newChar": "'9'",
+    "oldChar": "'a'",
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "\"hellO, wOrld!c\"",
+   "input_lean": {
+    "newChar": "'O'",
+    "oldChar": "'o'",
+    "s": "\"hello, world!c\""
+   }
+  },
+  {
+   "expected_lean": "\"unchanged\"",
+   "input_lean": {
+    "newChar": "'u'",
+    "oldChar": "' '",
+    "s": "\"unchanged\""
+   }
+  },
+  {
+   "expected_lean": "\"a:b.cc\"",
+   "input_lean": {
+    "newChar": "':'",
+    "oldChar": "','",
+    "s": "\"a,b.cc\""
+   }
+  }
+ ]
+}

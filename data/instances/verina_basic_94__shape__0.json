@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_94",
+ "flags": [],
+ "hashes": {
+  "locked": "aa94bbdba32c6b154d840166cdda5967f63c4e13af983922822b70c0a498288f"
+ },
+ "instance_id": "verina_basic_94__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec loop (i : Nat) (acc : Array Int) : Array Int :=\n    if i < s.size then\n      match s[i]? with\n      | some val => loop (i + 1) (acc.push val)\n      | none => acc  -- This case shouldn't happen when i < s.size\n    else\n      acc\n  loop 0 Array.empty\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

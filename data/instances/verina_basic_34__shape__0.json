@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_34",
+ "flags": [],
+ "hashes": {
+  "locked": "6bc64de4862e0668df9cf11ce9406e17c5112a76b59b7cf2f712ebbc9bd29d46"
+ },
+ "instance_id": "verina_basic_34__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  arr.foldl (fun acc x => if isEven x then acc.push x else acc) #[]\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

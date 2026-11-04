@@ -1,0 +1,102 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires writing a Lean 4 method that locates the first occurrence of a specified integer within a sorted array of integers. The method returns the index corresponding to the first time the target value appears in the array; if the target is absent, it returns -1. It is also essential that the original array remains unchanged.\n\n-----Input-----  \nThe input consists of:  \n• arr: An array of integers sorted in non-decreasing order.  \n• target: An integer representing the value to search for.\n\n-----Output-----  \nThe output is an integer:  \n• If the target is found, the method returns the index of its first occurrence.  \n• If the target is not found, the method returns -1.\n\n-----Note-----  \n• The input array must be sorted in non-decreasing order.  \n• The array is guaranteed to remain unmodified after the method executes.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_37",
+ "flags": [],
+ "header": "def findFirstOccurrence (arr : Array Int) (target : Int) (h_precond : findFirstOccurrence_precond (arr) (target)) : Int :=",
+ "locked_hash": "3e91f3fa0e7d83da7e7d5ff3352073f717650dd91c4bccb1397e35b67cacf1f8",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@findFirstOccurrence.loop": false,
+    "fun_ind_simp@findFirstOccurrence.loop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 45.8,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "findFirstOccurrence",
+  "params": [
+   [
+    "arr",
+    "Array Int"
+   ],
+   [
+    "target",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef findFirstOccurrence_precond (arr : Array Int) (target : Int) : Prop :=\n  -- !benchmark @start precond\n  List.Pairwise (· ≤ ·) arr.toList\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef findFirstOccurrence (arr : Array Int) (target : Int) (h_precond : findFirstOccurrence_precond (arr) (target)) : Int :=\n  -- !benchmark @start code\n  let rec loop (i : Nat) : Int :=\n    if i < arr.size then\n      let a := arr[i]!\n      if a = target then i\n      else if a > target then -1\n      else loop (i + 1)\n    else -1\n  loop 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef findFirstOccurrence_postcond (arr : Array Int) (target : Int) (result: Int) (h_precond : findFirstOccurrence_precond (arr) (target)) :=\n  -- !benchmark @start postcond\n  (result = -1 ∨ result ≥ 0) ∧\n  (result ≥ 0 →\n    result.toNat < arr.size ∧\n    arr[result.toNat]! = target ∧\n    (∀ i : Nat, i < result.toNat → arr[i]! ≠ target)) ∧\n  (result = -1 →\n    (∀ i : Nat, i < arr.size → arr[i]! ≠ target))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem findFirstOccurrence_spec_satisfied (arr: Array Int) (target: Int) (h_precond : findFirstOccurrence_precond (arr) (target)) :\n    findFirstOccurrence_postcond (arr) (target) (findFirstOccurrence (arr) (target) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(arr: Array Int) (target: Int) (h_precond : findFirstOccurrence_precond (arr) (target)) :\n    findFirstOccurrence_postcond (arr) (target) (findFirstOccurrence (arr) (target) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "arr": "#[1, 2, 2, 3, 4, 5]",
+    "target": "2"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "arr": "#[1, 2, 2, 3, 4, 5]",
+    "target": "6"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "arr": "#[1, 2, 3, 4, 5]",
+    "target": "1"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "arr": "#[1, 2, 3, 4, 5]",
+    "target": "5"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "arr": "#[1, 2, 3, 4, 5]",
+    "target": "0"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "arr": "#[]",
+    "target": "0"
+   }
+  }
+ ]
+}

@@ -1,0 +1,108 @@
+{
+ "aux_names": [
+  "secondOccIdx"
+ ],
+ "description": "-----Description-----\nWrite a Lean 4 function that returns the first duplicate integer found in a list. The function should return the value of the first duplicate it encounters, scanning from left to right. If no duplicates exist, return -1.\n\n-----Input-----\nlst: A list of integers.\n\n-----Output-----\nAn Option Int:\n- `some x` where x is the first duplicated value encountered when scanning left to right\n- `none` if no duplicates exist in the list",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_12",
+ "flags": [],
+ "header": "def firstDuplicate (lst : List Int) (h_precond : firstDuplicate_precond (lst)) : Option Int :=",
+ "locked_hash": "34d9b39b1a4d1fcf4c9bcda5a118983a56fd387e8a92c29408f04682a710d601",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@firstDuplicate.helper": false,
+    "fun_ind_simp@firstDuplicate.helper": false,
+    "grind": false,
+    "ind_grind@lst": false,
+    "ind_simp_all@lst": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 6.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "firstDuplicate",
+  "params": [
+   [
+    "lst",
+    "List Int"
+   ]
+  ],
+  "ret": "Option Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef firstDuplicate_precond (lst : List Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef firstDuplicate (lst : List Int) (h_precond : firstDuplicate_precond (lst)) : Option Int :=\n  -- !benchmark @start code\n  let rec helper (seen : List Int) (rem : List Int) : Option Int :=\n    match rem with\n    | [] => none\n    | h :: t => if seen.contains h then some h else helper (h :: seen) t\n  helper [] lst\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\ndef secondOccIdx (lst : List Int) (v : Int) : Nat :=\n  let first := lst.idxOf v\n  first + 1 + (lst.drop (first + 1)).idxOf v\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef firstDuplicate_postcond (lst : List Int) (result: Option Int) (h_precond : firstDuplicate_precond (lst)) : Prop :=\n  -- !benchmark @start postcond\n  match result with\n  | none => List.Nodup lst\n  | some x =>\n      lst.count x > 1 ∧\n      lst.all (fun y => (lst.count y = 1) ∨ (secondOccIdx lst x ≤ secondOccIdx lst y))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem firstDuplicate_spec_satisfied (lst: List Int) (h_precond : firstDuplicate_precond (lst)) :\n    firstDuplicate_postcond (lst) (firstDuplicate (lst) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(lst: List Int) (h_precond : firstDuplicate_precond (lst)) :\n    firstDuplicate_postcond (lst) (firstDuplicate (lst) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "some 2",
+   "input_lean": {
+    "lst": "[1, 2, 3, 2, 4]"
+   }
+  },
+  {
+   "expected_lean": "some 5",
+   "input_lean": {
+    "lst": "[5, 1, 2, 3, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "lst": "[1, 2, 3, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "some 7",
+   "input_lean": {
+    "lst": "[7, 7, 7, 7]"
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "lst": "[]"
+   }
+  },
+  {
+   "expected_lean": "some (-1)",
+   "input_lean": {
+    "lst": "[-1, 2, -1]"
+   }
+  },
+  {
+   "expected_lean": "some 2",
+   "input_lean": {
+    "lst": "[1, 2, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "some 1",
+   "input_lean": {
+    "lst": "[3, 1, 2, 1, 3]"
+   }
+  }
+ ]
+}

@@ -1,0 +1,95 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nDetermine whether two strings match based on a specific pattern: for each position in the strings, either the characters are the same, or the character in p is a wildcard represented by a question mark '?' that may match any character.\n\n-----Input-----  \nThe input consists of:  \n• s: A string that is to be matched.  \n• p: A pattern string of equal length, where each character is either a specific character or the wildcard '?'.\n\n-----Output-----  \nThe output is a Boolean value:  \n• Returns true if the length of s is equal to the length of p and each corresponding character in s and p are either identical or the character in p is a '?'.  \n• Returns false if any character in s does not match the corresponding character in p and the character in p is not a '?'.\n\n-----Note-----  \nIt is assumed that both strings provided have the same length.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_73",
+ "flags": [],
+ "header": "def Match (s : String) (p : String) (h_precond : Match_precond (s) (p)) : Bool :=",
+ "locked_hash": "dce43228c7539fdfd6607bc62c9e75262e2499b4744c25f95e5f141912fed717",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@Match.loop": false,
+    "fun_ind_simp@Match.loop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 68.3,
+  "n_hidden": 12,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "Match",
+  "params": [
+   [
+    "s",
+    "String"
+   ],
+   [
+    "p",
+    "String"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef Match_precond (s : String) (p : String) : Prop :=\n  -- !benchmark @start precond\n  s.toList.length = p.toList.length\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef Match (s : String) (p : String) (h_precond : Match_precond (s) (p)) : Bool :=\n  -- !benchmark @start code\n  let sList := s.toList\n  let pList := p.toList\n  let rec loop (i : Nat) : Bool :=\n    if i < sList.length then\n      if (sList[i]! ≠ pList[i]!) ∧ (pList[i]! ≠ '?') then false\n      else loop (i + 1)\n    else true\n  loop 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef Match_postcond (s : String) (p : String) (result: Bool) (h_precond : Match_precond (s) (p)) :=\n  -- !benchmark @start postcond\n  (result = true ↔ ∀ n : Nat, n < s.toList.length → ((s.toList[n]! = p.toList[n]!) ∨ (p.toList[n]! = '?')))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem Match_spec_satisfied (s: String) (p: String) (h_precond : Match_precond (s) (p)) :\n    Match_postcond (s) (p) (Match (s) (p) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: String) (p: String) (h_precond : Match_precond (s) (p)) :\n    Match_postcond (s) (p) (Match (s) (p) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "p": "\"a?c\"",
+    "s": "\"abc\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "p": "\"he?lo\"",
+    "s": "\"hello\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "p": "\"w?rld\"",
+    "s": "\"world\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "p": "\"te?t\"",
+    "s": "\"test\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"abd\"",
+    "s": "\"abc\""
+   }
+  }
+ ]
+}

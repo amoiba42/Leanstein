@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_5",
+ "flags": [],
+ "hashes": {
+  "locked": "be5f883bd6009da54a4cd99a79b8c6362c3c643b3dddbbeaceff2d3cdf224565"
+ },
+ "instance_id": "verina_basic_5__mut__arith__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "+",
+  "before": "*",
+  "col": 4,
+  "line": 1,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  a + b\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "7",
+  "expected": "12",
+  "index": 0,
+  "input_lean": {
+   "a": "3",
+   "b": "4"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,93 @@
+{
+ "aux_names": [
+  "toLower",
+  "normalize_str"
+ ],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that determines whether a given string contains all 5 English vowels: a, e, i, o, u.\n\nThe check is case-insensitive, meaning that both uppercase and lowercase vowels count.\n\n-----Input-----\nThe input consists of a string:\ns: A string of alphabetic characters (may include uppercase and lowercase)\n\n-----Output-----\nThe output is true or false:\nReturns true if the input string contains all 5 vowels (a, e, i, o, u), false otherwise.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_6",
+ "flags": [],
+ "header": "def allVowels (s : String) (h_precond : allVowels_precond (s)) : Bool :=",
+ "locked_hash": "1dee143996cabdae04c0a2415808ce9223f386ad3d8b15f72bd20129d921bfa6",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": true,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 7.7,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "allVowels",
+  "params": [
+   [
+    "s",
+    "String"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\ndef toLower (c : Char) : Char :=\n  if 'A' ≤ c && c ≤ 'Z' then\n    Char.ofNat (Char.toNat c + 32)\n  else\n    c\n\ndef normalize_str (s : String) : List Char :=\n  s.data.map toLower\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef allVowels_precond (s : String) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef allVowels (s : String) (h_precond : allVowels_precond (s)) : Bool :=\n  -- !benchmark @start code\n  let chars := normalize_str s\n  let vowelSet := ['a', 'e', 'i', 'o', 'u']\n  vowelSet.all (fun v => chars.contains v)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef allVowels_postcond (s : String) (result: Bool) (h_precond : allVowels_precond (s)) : Prop :=\n  -- !benchmark @start postcond\n  let chars := normalize_str s\n  (result ↔ List.all ['a', 'e', 'i', 'o', 'u'] (fun v => chars.contains v))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem allVowels_spec_satisfied (s: String) (h_precond : allVowels_precond (s)) :\n    allVowels_postcond (s) (allVowels (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(s: String) (h_precond : allVowels_precond (s)) :\n    allVowels_postcond (s) (allVowels (s) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"education\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"education123\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"AEIOU\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"hello\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"apple orange union\""
+   }
+  }
+ ]
+}

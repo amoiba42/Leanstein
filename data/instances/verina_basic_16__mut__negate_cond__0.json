@@ -1,0 +1,39 @@
+{
+ "family_id": "verina_basic_16",
+ "flags": [],
+ "hashes": {
+  "locked": "6148ef551b49be530cc8a8e7cac7cd43e05fcfc681695fa7115a0d3a5b67ff97"
+ },
+ "instance_id": "verina_basic_16__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(c = oldChar)",
+  "before": "c = oldChar",
+  "col": 32,
+  "line": 2,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let cs := s.toList\n  let cs' := cs.map (fun c => if ¬(c = oldChar) then newChar else c)\n  String.mk cs'\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "\";;;;;,;;;;;;;\"",
+  "expected": "\"hello; world!\"",
+  "index": 0,
+  "input_lean": {
+   "newChar": "';'",
+   "oldChar": "','",
+   "s": "\"hello, world!\""
+  },
+  "source": "visible"
+ }
+}

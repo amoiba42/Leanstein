@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_46",
+ "flags": [],
+ "hashes": {
+  "locked": "999d4aed3a9867889be8e93ab0fa8e88c9fddf78e5b65092af59a391b860e016"
+ },
+ "instance_id": "verina_basic_46__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(a = elem)",
+  "before": "a = elem",
+  "col": 8,
+  "line": 4,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec loop (i : Nat) (pos : Int) : Int :=\n    if i < arr.size then\n      let a := arr[i]!\n      if ¬(a = elem) then loop (i + 1) i\n      else loop (i + 1) pos\n    else pos\n  loop 0 (-1)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "5",
+  "expected": "2",
+  "index": 0,
+  "input_lean": {
+   "arr": "#[1, 2, 2, 3, 4, 5]",
+   "elem": "2"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_24",
+ "flags": [],
+ "hashes": {
+  "locked": "5b822817e3c01c457f8b7d9f3523b7b66e32c1def4be8764aabcee7eab493d5e"
+ },
+ "instance_id": "verina_advanced_24__nat__qwen3.5-9b__0",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef lengthOfLIS (nums : List Int) (h_precond : lengthOfLIS_precond (nums)) : Int :=\n  List.foldl (fun acc x =>\n    List.foldl (fun acc' y =>\n      if y < x then acc'\n      else max acc' (acc' + 1)\n    ) 0 nums) 0 nums\n  |>.max 0\n```\n\n```lean\ndef lengthOfLIS (nums : List Int) (h_precond : lengthOfLIS_precond (nums)) : Int :=\n  List.foldl (fun acc x =>\n    List.foldl (fun acc' y =>\n      if y < x then acc'\n      else max acc' (acc' + 1)\n    ) 0 nums) 0 nums\n  |>.max 0\n```\n\nWait, the above implementation is incorrect. Let me provide a correct implementation using dynamic programming with O(n²) time complexity:\n\n```lean\ndef lengthOfLIS (nums : List Int) (h_precond : lengthOfLIS_precond (nums)) : Int :=\n  if nums.length = 0 then 0\n  else\n    let rec helper (index : Nat) (memo : List Int) : Int :=\n      match index with\n      | 0 => 1\n      | i + 1 =>\n        let maxLen := List.foldl (fun acc' j =>\n          let jVal := get (j : Nat) nums\n          let iVal := get (i : Nat) nums\n          if jVal < iVal then acc'\n          else max acc' (helper j memo) + 1\n        ) 0 (List.range i)\n        maxLen\n    -- This is getting too complex. Let me use a simpler DP approach.\n    -- We'll compute for each position the length of LIS ending at that position.\n    let rec computeLIS (idx : Nat) : Int :=\n      match idx with\n      | 0 => 1\n      | i + 1 =>\n        let currentVal := get (i + 1 : Nat) nums\n        let maxPrev := List.foldl (fun acc' j =>\n          let prevVal := get j nums\n          if prevVal < currentVal then\n            max acc' (computeLIS j)\n          else acc'\n        ) 0 (List.range i)\n        1 + maxPrev\n    -- Actually, let's use the standard O(n²) DP approach properly.\n    -- For each element, compute the length of LIS ending at that element.\n    -- Then take the maximum of all these lengths.\n    let rec computeLISLength (index : Nat) : Int :=\n      match index with\n      | 0 => 1\n      | i + 1 =>\n        let currentVal := get (i + 1 : Nat) nums\n        let maxPrev := List.foldl (fun acc' j =>\n          let prevVal := get j nums\n          if prevVal < currentVal then\n            max acc' (computeLISLength j)\n          else acc'\n        ) 0 (List.range i)\n        1 + maxPrev\n    -- Compute for each position and take the maximum\n    List.foldl (fun acc' idx =>\n      let len := computeLISLength idx\n      if len > acc' then len else acc'\n    ) 0 (List.range (nums.length - 1))\n```\n\nActually, let me write a cleaner implementation using Mathlib's List operations properly:\n\n```lean\ndef lengthOfLIS (nums : List Int) (h_precond : lengthOfLIS_precond (nums)) : Int :=\n  if nums.length = 0 then 0\n  else\n    let rec computeLISEndingAt (idx : Nat) : Int :=\n      match idx with\n      | 0 => 1\n      | i + 1 =>\n        let currentVal := nums.get? i\n        let maxPrev := List.foldl (fun acc' j =>\n          let prevVal := nums.get? j\n          match prevVal, currentVal with\n          | (some p), (some c) => if p < c then max acc' (computeLISEndingAt j) else acc'\n          | _, _ => acc'\n        ) 0 (List.range i)\n        1 + maxPrev\n    -- This is getting too complicated. Let me use a standard DP approach with proper indexing.\n    -- We'll build up the LIS lengths for each position.\n    let rec buildLISLengths (idx : Nat) : List Int :=\n      match idx with\n      | 0 => [1]\n      | i + 1 =>\n        let currentVal := nums.get? i\n        let prevLengths := buildLISLengths i\n        let currentLen := 1 + List.foldl (fun acc' j =>\n          let prevVal := nums.get? j\n          match prevVal, currentVal with\n          | (some p), (some c) => if p < c then acc' + 1 else acc'\n          | _, _ => acc'\n        ) 0 (List.range i)\n        prevLengths ++ [currentLen]\n    -- Actually, let's use a much simpler and correct approach:\n    -- For each position, compute the LIS ending at that position by checking all previous positions.\n    let rec computeEndingAt (idx : Nat) : Int :=\n      match idx with\n      | 0 => 1\n      | i + 1 =>\n        let currentVal := nums.get? i\n        let maxPrev := List.foldl (fun acc' j =>\n          let prevVal := nums.get? j\n          match prevVal, currentVal with\n          | (some p), (some c) => if p < c then max acc' (computeEndingAt j) else acc'\n          | _, _ => acc'\n        ) 0 (List.range i)\n        1 + maxPrev\n    -- Compute the maximum LIS ending at any position\n    List.foldl (fun acc' idx =>\n      let len := computeEndingAt idx\n      if len > acc' then len else acc'\n    ) 0 (List.range (nums.length - 1))\n```\n\nActually, I'm overcomplicating this. Let me write a clean, correct implementation:\n\n```lean\ndef lengthOfLIS (nums : List Int) (h_precond : lengthOfLIS_precond (nums)) : Int :=\n  if nums.length = 0 then 0\n  else\n    let rec computeEndingAt (idx : Nat) : Int :=\n      match idx with\n      | 0 => 1\n      | i + 1 =>\n        let currentVal := nums.get? i\n        let maxPrev := List.foldl (fun acc' j =>\n          let prevVal := nums.get? j\n          match prevVal, currentVal with\n          | (some p), (some c) => if",
+  "seed": 5000
+ },
+ "split": "pilot",
+ "start": {
+  "code": "List.foldl (fun acc x =>\n  List.foldl (fun acc' y =>\n    if y < x then acc'\n    else max acc' (acc' + 1)\n  ) 0 nums) 0 nums\n|>.max 0",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "2",
+  "expected": "4",
+  "index": 0,
+  "input_lean": {
+   "nums": "[10, 9, 2, 5, 3, 7, 101, 18]"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_70",
+ "flags": [],
+ "hashes": {
+  "locked": "5a1d30f983c3d0f6fe599f184c9ad9ab2dde71cd77d512af570206c87e82e70b"
+ },
+ "instance_id": "verina_advanced_70__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(needAdjustment)",
+  "before": "needAdjustment",
+  "col": 25,
+  "line": 19,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let lengthList := nums.length\n  let numOne : Int := 1\n  let largestNum : Int := Int.ofNat lengthList\n\n  let firstIndex := nums.idxOf numOne\n  let lastIndex := nums.idxOf largestNum\n\n  let startPosition := 0\n  let endPosition := lengthList - 1\n\n  let shouldMoveOne := firstIndex != startPosition\n  let shouldMoveLast := lastIndex != endPosition\n\n  let distanceOne := if shouldMoveOne then firstIndex else 0\n  let distanceLast := if shouldMoveLast then endPosition - lastIndex else 0\n\n  let totalMoves := distanceOne + distanceLast\n  let needAdjustment := firstIndex > lastIndex\n  let adjustedMoves := if ¬(needAdjustment) then totalMoves - 1 else totalMoves\n\n  adjustedMoves\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "2",
+  "index": 0,
+  "input_lean": {
+   "nums": "[2, 1, 4, 3]"
+  },
+  "source": "visible"
+ }
+}

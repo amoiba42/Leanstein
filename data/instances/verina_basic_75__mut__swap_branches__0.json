@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_75",
+ "flags": [],
+ "hashes": {
+  "locked": "4e34dd42a2fc9d1272e172e6e13806c94674a0e02f47e7c1d603f97e8a5bb876"
+ },
+ "instance_id": "verina_basic_75__mut__swap_branches__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "if currentMin > a[i]! then currentMin else a[i]!",
+  "before": "if currentMin > a[i]! then a[i]! else currentMin",
+  "col": 18,
+  "line": 3,
+  "operator": "swap_branches",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  loop a 1 (a[0]!)\n",
+  "code_aux": "def loop (a : Array Int) (i : Nat) (currentMin : Int) : Int :=\n  if i < a.size then\n    let newMin := if currentMin > a[i]! then currentMin else a[i]!\n    loop a (i + 1) newMin\n  else\n    currentMin\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "8",
+  "expected": "2",
+  "index": 0,
+  "input_lean": {
+   "a": "#[5, 3, 8, 2, 7]"
+  },
+  "source": "visible"
+ }
+}

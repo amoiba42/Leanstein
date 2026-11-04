@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_4",
+ "flags": [],
+ "hashes": {
+  "locked": "4abaac71f577548edae87679e21cb8a7ba37d19dfbebc6fcae2f2ed243282775"
+ },
+ "instance_id": "verina_basic_4__mut__drop_succ__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "",
+  "before": " - 1",
+  "col": 7,
+  "line": 1,
+  "operator": "drop_succ",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  arr[k]!\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "20",
+  "expected": "10",
+  "index": 0,
+  "input_lean": {
+   "arr": "#[10, 20, 30, 40, 50]",
+   "k": "1"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_18",
+ "flags": [],
+ "hashes": {
+  "locked": "071797060d8b6e84fefe7b2b4462a49702583b832c087763c39b5dc17097f310"
+ },
+ "instance_id": "verina_advanced_18__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let k := countDigits n\n  sumPowers n k = n\n",
+  "code_aux": "def sumPowers (n : Nat) (k : Nat) : Nat :=\n  let rec go (n acc : Nat) : Nat :=\n    if n = 0 then acc\n    else\n      let digit := n % 10\n      go (n / 10) (acc + digit ^ k)\n  go n 0\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

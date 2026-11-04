@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_25",
+ "flags": [],
+ "hashes": {
+  "locked": "b6ecd8cfebb03bb0d9bd44297fc4ed5f18787d00c667731b934cf04e1dcfa499"
+ },
+ "instance_id": "verina_basic_25__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  if n ≤ 0 then (0, 0.0)\n  else\n    let sum := (List.range (n + 1)).sum\n    let average : Float := sum.toFloat / (n.toFloat)\n    (sum, average)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_basic_42",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "c16539aa225ef5884a1f31ef234ca3f53b37d1e2c1bc8e1d69e23ecb42c2d61e",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"bcbc a\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"yxz\""
+   }
+  },
+  {
+   "expected_lean": "6",
+   "input_lean": {
+    "s": "\"123abc456c\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"b\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"AAc\""
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "s": "\"a1b2c3b\""
+   }
+  },
+  {
+   "expected_lean": "9",
+   "input_lean": {
+    "s": "\"124567890\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"b \""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"c\""
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "s": "\"a12c3\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"z\""
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "s": "\"0c\""
+   }
+  },
+  {
+   "expected_lean": "10",
+   "input_lean": {
+    "s": "\"1234567890c\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"zAzB\""
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "s": "\"a1b2c3c\""
+   }
+  },
+  {
+   "expected_lean": "6",
+   "input_lean": {
+    "s": "\"123abc456b\""
+   }
+  },
+  {
+   "expected_lean": "10",
+   "input_lean": {
+    "s": "\"1234567890b\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"yzA \""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"BB\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"ayc\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"no digits here!c\""
+   }
+  },
+  {
+   "expected_lean": "9",
+   "input_lean": {
+    "s": "\"234567890\""
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "s": "\"12abc456\""
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "s": "\"x0AB\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"ba xbc\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"Aa\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"no digits her!\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"no igits here!\""
+   }
+  },
+  {
+   "expected_lean": "9",
+   "input_lean": {
+    "s": "\"123456789\""
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "s": "\"123abc56\""
+   }
+  }
+ ]
+}

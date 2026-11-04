@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_33",
+ "flags": [],
+ "hashes": {
+  "locked": "b60dedf4f19eb8015f06d67c73e079e089f923d932fa59a8af2d8e97f06a00f1"
+ },
+ "instance_id": "verina_basic_33__mut__relflip__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "≠",
+  "before": "=",
+  "col": 16,
+  "line": 6,
+  "operator": "relflip",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec findMissing (v : Nat) (l : List Nat) : Nat :=\n    match l with\n    | [] => v\n    | x :: xs =>\n      if x > v then v\n      else if x ≠ v then findMissing (v + 1) xs\n      else findMissing v xs\n  findMissing 0 s\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "3",
+  "index": 0,
+  "input_lean": {
+   "s": "[0, 1, 2, 6, 9]"
+  },
+  "source": "visible"
+ }
+}

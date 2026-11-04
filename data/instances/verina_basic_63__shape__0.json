@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_63",
+ "flags": [],
+ "hashes": {
+  "locked": "7504fcdb536161f4f63cb60ea8a498485eff4a9b155b3e558d731bb368e1a0a2"
+ },
+ "instance_id": "verina_basic_63__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let len := numbers.length\n  let rec outer (idx : Nat) : Bool :=\n    if idx < len then\n      let rec inner (idx2 : Nat) : Bool :=\n        if idx2 < idx then\n          let a := numbers.getD idx2 0.0\n          let b := numbers.getD idx 0.0\n          let d := absDiff a b\n          if d < threshold then true else inner (idx2 + 1)\n        else\n          false\n      if inner 0 then true else outer (idx + 1)\n    else\n      false\n  outer 0\n",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

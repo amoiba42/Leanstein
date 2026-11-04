@@ -1,0 +1,93 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires swapping two integer values. Given two integers as input, the objective is to produce an output where their order is reversed: the first element of the output corresponds to the second input and the second element corresponds to the first input.\n\n-----Input-----  \nThe input consists of two integers:  \n• X: An integer value.  \n• Y: Another integer value.\n\n-----Output-----  \nThe output is a tuple (Int × Int) where:  \n• The first element is equal to Y.  \n• The second element is equal to X.\n\n-----Note-----  \nThere are no additional preconditions for this task. The function simply returns a swapped tuple of its two input integers.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_96",
+ "flags": [],
+ "header": "def SwapSimultaneous (X : Int) (Y : Int) (h_precond : SwapSimultaneous_precond (X) (Y)) : Int × Int :=",
+ "locked_hash": "22f0e67d5862983e28a1c1cac43144af7f2d878f6538cd0b3632109163244202",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "unfold_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": true
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 1.6,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "SwapSimultaneous",
+  "params": [
+   [
+    "X",
+    "Int"
+   ],
+   [
+    "Y",
+    "Int"
+   ]
+  ],
+  "ret": "Int × Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef SwapSimultaneous_precond (X : Int) (Y : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef SwapSimultaneous (X : Int) (Y : Int) (h_precond : SwapSimultaneous_precond (X) (Y)) : Int × Int :=\n  -- !benchmark @start code\n  (Y, X)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef SwapSimultaneous_postcond (X : Int) (Y : Int) (result: Int × Int) (h_precond : SwapSimultaneous_precond (X) (Y)) :=\n  -- !benchmark @start postcond\n  result.1 = Y ∧ result.2 = X ∧\n  (X ≠ Y → result.fst ≠ X ∧ result.snd ≠ Y)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem SwapSimultaneous_spec_satisfied (X: Int) (Y: Int) (h_precond : SwapSimultaneous_precond (X) (Y)) :\n    SwapSimultaneous_postcond (X) (Y) (SwapSimultaneous (X) (Y) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold SwapSimultaneous_postcond SwapSimultaneous\n  simp_all\n  exact fun a a_1 => a (id (Eq.symm a_1))\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(X: Int) (Y: Int) (h_precond : SwapSimultaneous_precond (X) (Y)) :\n    SwapSimultaneous_postcond (X) (Y) (SwapSimultaneous (X) (Y) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "(4, 3)",
+   "input_lean": {
+    "X": "3",
+    "Y": "4"
+   }
+  },
+  {
+   "expected_lean": "(20, -10)",
+   "input_lean": {
+    "X": "(-10)",
+    "Y": "20"
+   }
+  },
+  {
+   "expected_lean": "(0, 0)",
+   "input_lean": {
+    "X": "0",
+    "Y": "0"
+   }
+  },
+  {
+   "expected_lean": "(-456, 123)",
+   "input_lean": {
+    "X": "123",
+    "Y": "(-456)"
+   }
+  },
+  {
+   "expected_lean": "(-2, -1)",
+   "input_lean": {
+    "X": "(-1)",
+    "Y": "(-2)"
+   }
+  }
+ ]
+}

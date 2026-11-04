@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_advanced_6",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "2074b6a54f60534d8468da352489f9a7051266f6c21ed1ca833879b24c458c2d",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"AEIO\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"education123c\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"czxc\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"helloc\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"AEIOUc\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"education23\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"apple orange unionc\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"c\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"apple range union\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"yB\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"educationc\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"AEIOUb\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"bB0x\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"BBxA\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"educationa\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"AEIOUa\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"aA azx\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"hllo\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"apple orange unionb\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"a\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"b\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"hell\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"educaion\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"x BB\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"zbcxzA\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"helloa\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"ducation\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"AA0b\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"yac0xy\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"educaion123\""
+   }
+  }
+ ]
+}

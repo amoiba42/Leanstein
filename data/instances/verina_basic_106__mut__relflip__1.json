@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_106",
+ "flags": [],
+ "hashes": {
+  "locked": "d85b4a1797fa8f06376c99bf61624d23c4277f6c998c677c56a5fc73c62bed61"
+ },
+ "instance_id": "verina_basic_106__mut__relflip__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "=",
+  "before": "≠",
+  "col": 12,
+  "line": 1,
+  "operator": "relflip",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  if a.size = b.size then\n    panic! \"Array lengths mismatch\"\n  else\n    let n := a.size;\n    let c := Array.mkArray n 0;\n    let rec loop (i : Nat) (c : Array Int) : Array Int :=\n      if i < n then\n        let c' := c.set! i (a[i]! + b[i]!);\n        loop (i + 1) c'\n      else c;\n    loop 0 c\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[]",
+  "expected": "#[5, 7, 9]",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 2, 3]",
+   "b": "#[4, 5, 6]"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,92 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that calculates the difference between the maximum and minimum values in an array of integers. In other words, the method should determine the highest and lowest numbers in the array and return the result of subtracting the minimum from the maximum.\n\n-----Input-----\nThe input consists of:\na: An array of integers.\n\n-----Output-----\nThe output is an integer:\nReturns the difference between the largest and the smallest values in the input array.\n\n-----Note-----\nThe input array is assumed to be non-empty.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_23",
+ "flags": [],
+ "header": "def differenceMinMax (a : Array Int) (h_precond : differenceMinMax_precond (a)) : Int :=",
+ "locked_hash": "d8673dc7d938a22bcd0a3ed789a46cc626b56b804eee63fa2d56447016dbd487",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@differenceMinMax.loop": false,
+    "fun_ind_simp@differenceMinMax.loop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 108.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "differenceMinMax",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef differenceMinMax_precond (a : Array Int) : Prop :=\n  -- !benchmark @start precond\n  a.size > 0\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef differenceMinMax (a : Array Int) (h_precond : differenceMinMax_precond (a)) : Int :=\n  -- !benchmark @start code\n  let rec loop (i : Nat) (minVal maxVal : Int) : Int :=\n    if i < a.size then\n      let x := a[i]!\n      let newMin := if x < minVal then x else minVal\n      let newMax := if x > maxVal then x else maxVal\n      loop (i + 1) newMin newMax\n    else\n      maxVal - minVal\n  loop 1 (a[0]!) (a[0]!)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef differenceMinMax_postcond (a : Array Int) (result: Int) (h_precond : differenceMinMax_precond (a)) :=\n  -- !benchmark @start postcond\n  result + (a.foldl (fun acc x => if x < acc then x else acc) (a[0]!)) = (a.foldl (fun acc x => if x > acc then x else acc) (a[0]!))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem differenceMinMax_spec_satisfied (a: Array Int) (h_precond : differenceMinMax_precond (a)) :\n    differenceMinMax_postcond (a) (differenceMinMax (a) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (h_precond : differenceMinMax_precond (a)) :\n    differenceMinMax_postcond (a) (differenceMinMax (a) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "8",
+   "input_lean": {
+    "a": "#[3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]"
+   }
+  },
+  {
+   "expected_lean": "40",
+   "input_lean": {
+    "a": "#[10, 20, 30, 40, 50]"
+   }
+  },
+  {
+   "expected_lean": "40",
+   "input_lean": {
+    "a": "#[-10, -20, -30, -40, -50]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "#[7]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "#[5, 5, 5, 5]"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "a": "#[1, -1, 2, -2]"
+   }
+  }
+ ]
+}

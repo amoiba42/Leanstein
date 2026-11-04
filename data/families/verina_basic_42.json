@@ -1,0 +1,98 @@
+{
+ "aux_names": [
+  "isDigit"
+ ],
+ "description": "-----Description-----  \nThis task requires writing a Lean 4 method that counts the number of digit characters within a given string. A digit is any character between '0' and '9'. The method should determine how many such digit characters appear in the input.\n\n-----Input-----  \nThe input consists of:  \ns: A string.\n\n-----Output-----  \nThe output is a natural number (Nat):  \nReturns a non-negative count representing the number of digit characters found in the input string.\n\n-----Note-----  \nThere are no additional preconditions; the method works for any provided string.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_42",
+ "flags": [],
+ "header": "def countDigits (s : String) (h_precond : countDigits_precond (s)) : Nat :=",
+ "locked_hash": "2ed38552a0d1fd510c83345536946744f15493cb604d2a77877a34c78128d4f2",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": true,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": true
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 1.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "countDigits",
+  "params": [
+   [
+    "s",
+    "String"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\ndef isDigit (c : Char) : Bool :=\n  '0' ≤ c ∧ c ≤ '9'\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef countDigits_precond (s : String) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef countDigits (s : String) (h_precond : countDigits_precond (s)) : Nat :=\n  -- !benchmark @start code\n  List.length (List.filter isDigit s.toList)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef countDigits_postcond (s : String) (result: Nat) (h_precond : countDigits_precond (s)) :=\n  -- !benchmark @start postcond\n  result - List.length (List.filter isDigit s.toList) = 0 ∧\n  List.length (List.filter isDigit s.toList) - result = 0\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem countDigits_spec_satisfied (s: String) (h_precond : countDigits_precond (s)) :\n    countDigits_postcond (s) (countDigits (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold countDigits countDigits_postcond\n  simp\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: String) (h_precond : countDigits_precond (s)) :\n    countDigits_postcond (s) (countDigits (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "6",
+   "input_lean": {
+    "s": "\"123abc456\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"no digits here!\""
+   }
+  },
+  {
+   "expected_lean": "10",
+   "input_lean": {
+    "s": "\"1234567890\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "s": "\"a1b2c3\""
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "s": "\"0\""
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "s": "\"abc\""
+   }
+  }
+ ]
+}

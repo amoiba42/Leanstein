@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_27",
+ "flags": [],
+ "hashes": {
+  "locked": "91a41fe1aea9c3f2d36f37c4f4dfc48360d0a2b31b2a1d695a2e086d4322d57d"
+ },
+ "instance_id": "verina_basic_27__mut__const__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "1",
+  "before": "0",
+  "col": 7,
+  "line": 12,
+  "operator": "const",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let cs := s.toList\n  let rec loop (i : Nat) (seen : Std.HashSet Char) : Option Char :=\n    if i < cs.length then\n      let c := cs[i]!\n      if seen.contains c then\n        some c\n      else\n        loop (i + 1) (seen.insert c)\n    else\n      -- When no repeated char is found, return (false, arbitrary char)\n      none\n  loop 1 Std.HashSet.empty\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "none",
+  "expected": "some ('a')",
+  "index": 0,
+  "input_lean": {
+   "s": "\"abca\""
+  },
+  "source": "visible"
+ }
+}

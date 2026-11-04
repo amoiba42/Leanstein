@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_85",
+ "flags": [],
+ "hashes": {
+  "locked": "05cf727e06b7ce09eb5f144105fa5dcbf48a349341e02d399b3eb81d935d6c0c"
+ },
+ "instance_id": "verina_basic_85__mut__const__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "2",
+  "before": "1",
+  "col": 24,
+  "line": 3,
+  "operator": "const",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  reverse_core a 0\n",
+  "code_aux": "def reverse_core (arr : Array Int) (i : Nat) : Array Int :=\n  if i < arr.size / 2 then\n    let j := arr.size - 2 - i\n    let temp := arr[i]!\n    let arr' := arr.set! i (arr[j]!)\n    let arr'' := arr'.set! j temp\n    reverse_core arr'' (i + 1)\n  else\n    arr\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[4, 3, 2, 1, 5]",
+  "expected": "#[5, 4, 3, 2, 1]",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 2, 3, 4, 5]"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_77",
+ "flags": [],
+ "hashes": {
+  "locked": "7bf8bdd5001f4fa0621d928cbe37983ac2a3a623e5ddde109da4b960b0e95d0a"
+ },
+ "instance_id": "verina_advanced_77__mut__arith__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "-",
+  "before": "+",
+  "col": 69,
+  "line": 7,
+  "operator": "arith",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  trapLoop height 0 (height.length - 1) 0 0 0\n",
+  "code_aux": "def trapLoop (height : List Nat) (left right leftMax rightMax water : Nat) : Nat :=\n  if h : left < right then\n    let hLeft := height[left]!\n    let hRight := height[right]!\n    if hLeft < hRight then\n      let (leftMax, water) :=\n        if hLeft >= leftMax then (hLeft, water) else (leftMax, water - (leftMax - hLeft))\n      trapLoop height (left + 1) right leftMax rightMax water\n    else\n      let (rightMax, water) :=\n        if hRight >= rightMax then (hRight, water) else (rightMax, water + (rightMax - hRight))\n      trapLoop height left (right - 1) leftMax rightMax water\n  else\n    water\ntermination_by right - left\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "6",
+  "index": 0,
+  "input_lean": {
+   "height": "[0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]"
+  },
+  "source": "visible"
+ }
+}

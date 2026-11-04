@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_7",
+ "flags": [],
+ "hashes": {
+  "locked": "0008cd5f74a9f38a581370f3f4954cbc19aad81703301122928daa0d7373f421"
+ },
+ "instance_id": "verina_advanced_7__mut__arith__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "+",
+  "before": "*",
+  "col": 29,
+  "line": 4,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec helper (digits : List Nat) : Nat :=\n    match digits with\n    | [] => 0\n    | first :: rest => first + Nat.pow 2 rest.length + helper rest\n  helper digits\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "9",
+  "expected": "5",
+  "index": 0,
+  "input_lean": {
+   "digits": "[1, 0, 1]"
+  },
+  "source": "visible"
+ }
+}

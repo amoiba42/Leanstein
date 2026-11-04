@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_97",
+ "flags": [],
+ "hashes": {
+  "locked": "baa088b4ca7e79ec432f9fc8a86928ce753898152789174001dc0e3f1ace6a19"
+ },
+ "instance_id": "verina_basic_97__mut__const__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "59",
+  "before": "60",
+  "col": 11,
+  "line": 1,
+  "operator": "const",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  a.set! j 59\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[1, 2, 59, 4, 5]",
+  "expected": "#[1, 2, 60, 4, 5]",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 2, 3, 4, 5]",
+   "j": "2"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_12",
+ "flags": [],
+ "hashes": {
+  "locked": "34d9b39b1a4d1fcf4c9bcda5a118983a56fd387e8a92c29408f04682a710d601"
+ },
+ "instance_id": "verina_advanced_12__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec helper (seen : List Int) (rem : List Int) : Option Int :=\n    match rem with\n    | [] => none\n    | h :: t => if seen.contains h then some h else helper (h :: seen) t\n  helper [] lst\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

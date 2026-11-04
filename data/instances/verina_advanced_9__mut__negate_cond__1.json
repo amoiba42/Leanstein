@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_advanced_9",
+ "flags": [],
+ "hashes": {
+  "locked": "d4ee9f06fe0e5084e17379b525a8fe60ab516a99b961f83be81b9176b9bfb8d5"
+ },
+ "instance_id": "verina_advanced_9__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(isSumDivisibleBy i' d)",
+  "before": "isSumDivisibleBy i' d",
+  "col": 20,
+  "line": 5,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec go (i acc : Nat) : Nat :=\n    match i with\n    | 0 => acc\n    | i'+1 =>\n      let acc' := if ¬(isSumDivisibleBy i' d) then acc + 1 else acc\n      go i' acc'\n  go n 0\n",
+  "code_aux": "def isSumDivisibleBy (x : Nat) (d:Nat) : Bool :=\n  (sumOfDigits x) % d = 0\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "1",
+  "index": 1,
+  "input_lean": {
+   "d": "2",
+   "n": "1"
+  },
+  "source": "visible"
+ }
+}

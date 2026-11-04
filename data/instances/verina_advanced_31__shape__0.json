@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_31",
+ "flags": [],
+ "hashes": {
+  "locked": "7a802b92c00acb213239bf5eeb5c4f3959a3a52f859a061a38d0b5baad78182a"
+ },
+ "instance_id": "verina_advanced_31__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let subs := subsequences xs\n  let increasing := subs.filter isStrictlyIncreasing\n  increasing.foldl (fun acc s => max acc s.length) 0\n",
+  "code_aux": "-- Generate all subsequences\ndef subsequences {α : Type} : List α → List (List α)\n  | [] => [[]]\n  | x :: xs =>\n    let subs := subsequences xs\n    subs ++ subs.map (fun s => x :: s)\n\n-- Check if a list is strictly increasing\ndef isStrictlyIncreasing : List Int → Bool\n  | [] => true\n  | [_] => true\n  | x :: y :: rest => if x < y then isStrictlyIncreasing (y :: rest) else false\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

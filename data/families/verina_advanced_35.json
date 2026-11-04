@@ -1,0 +1,86 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 function that finds the majority element in a list of integers. The majority element is the element that appears more than ⌊n/2⌋ times, where n is the list’s length. You may assume that a majority element always exists in the input.\n\n-----Input-----\n- nums: A list of integers of length ≥ 1, containing a majority element.\n\n-----Output-----\n- An integer: the element that appears more than ⌊n/2⌋ times.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_35",
+ "flags": [],
+ "header": "def majorityElement (nums : List Int) (h_precond : majorityElement_precond (nums)) : Int :=",
+ "locked_hash": "0367a2ac61292233f34821dbf5e92ef6c01e57a783adf964a4693e087c1d141e",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@nums": false,
+    "ind_simp_all@nums": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 13.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "majorityElement",
+  "params": [
+   [
+    "nums",
+    "List Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Std.Data.HashMap\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\nopen Std\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef majorityElement_precond (nums : List Int) : Prop :=\n  -- !benchmark @start precond\n  nums.length > 0 ∧ nums.any (fun x => nums.count x > nums.length / 2)\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef majorityElement (nums : List Int) (h_precond : majorityElement_precond (nums)) : Int :=\n  -- !benchmark @start code\n  Id.run do\n    let mut counts : HashMap Int Nat := {}\n    let n := nums.length\n    for x in nums do\n      let count := counts.getD x 0\n      counts := counts.insert x (count + 1)\n    match counts.toList.find? (fun (_, c) => c > n / 2) with\n    | some (k, _) => k\n    | none      => 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef majorityElement_postcond (nums : List Int) (result: Int) (h_precond : majorityElement_precond (nums)) : Prop :=\n  -- !benchmark @start postcond\n  let n := nums.length\n  (nums.count result) > n / 2\n  ∧ ∀ x ∈ nums, x ≠ result → nums.count x ≤ n / 2\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem majorityElement_spec_satisfied (nums: List Int) (h_precond : majorityElement_precond (nums)) :\n    majorityElement_postcond (nums) (majorityElement (nums) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(nums: List Int) (h_precond : majorityElement_precond (nums)) :\n    majorityElement_postcond (nums) (majorityElement (nums) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "nums": "[3, 2, 3]"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "nums": "[2, 2, 1, 1, 1, 2, 2]"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "nums": "[1, 1, 1, 2, 3, 1]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "nums": "[0, 0, 0, 0]"
+   }
+  },
+  {
+   "expected_lean": "7",
+   "input_lean": {
+    "nums": "[7]"
+   }
+  }
+ ]
+}

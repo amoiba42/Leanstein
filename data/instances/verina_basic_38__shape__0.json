@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_38",
+ "flags": [],
+ "hashes": {
+  "locked": "1671532ed2abcbbe34961dedb2b961f0e8d032e992f15d87763cb9610a3a001f"
+ },
+ "instance_id": "verina_basic_38__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  match s.toList with\n  | []      => true\n  | c :: cs => cs.all (fun x => x = c)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

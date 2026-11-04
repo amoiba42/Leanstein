@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_74",
+ "flags": [],
+ "hashes": {
+  "locked": "a8818e336b39f714bd435c28ad27097868756b1e6700202c2a1f008f9f14be82"
+ },
+ "instance_id": "verina_basic_74__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  maxArray_aux a 1 a[0]!\n",
+  "code_aux": "def maxArray_aux (a : Array Int) (index : Nat) (current : Int) : Int :=\n  if index < a.size then\n    let new_current := if current > a[index]! then current else a[index]!\n    maxArray_aux a (index + 1) new_current\n  else\n    current\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_75",
+ "flags": [],
+ "hashes": {
+  "locked": "75c875a6dfcdb1d3aa0079089795be560b653d0eb01cfd0631c7b4d367aeb463"
+ },
+ "instance_id": "verina_advanced_75__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  match sequence with\n  | []      => 0  -- If no elements are provided (should not happen according to the problem)\n  | x :: xs =>\n      let (_, maxSoFar) :=\n        xs.foldl (fun (acc : Int × Int) (x : Int) =>\n          let (cur, maxSoFar) := acc\n          let newCur := if cur + x >= x then cur + x else x\n          let newMax := if maxSoFar >= newCur then maxSoFar else newCur\n          (newCur, newMax)\n        ) (x, x)\n      maxSoFar\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

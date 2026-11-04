@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_25",
+ "flags": [],
+ "hashes": {
+  "locked": "b6ecd8cfebb03bb0d9bd44297fc4ed5f18787d00c667731b934cf04e1dcfa499"
+ },
+ "instance_id": "verina_basic_25__mut__drop_succ__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "",
+  "before": " + 1",
+  "col": 29,
+  "line": 3,
+  "operator": "drop_succ",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  if n ≤ 0 then (0, 0.0)\n  else\n    let sum := (List.range (n)).sum\n    let average : Float := sum.toFloat / (n.toFloat)\n    (sum, average)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "(10, 2.000000)",
+  "expected": "(15, 3.0)",
+  "index": 0,
+  "input_lean": {
+   "n": "5"
+  },
+  "source": "visible"
+ }
+}

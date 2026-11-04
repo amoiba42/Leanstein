@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_72",
+ "flags": [],
+ "hashes": {
+  "locked": "3738a40376ca60646f105bbe8893829268f041b92a1e51a8dd5cc0bede2e2f45"
+ },
+ "instance_id": "verina_basic_72__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let c_initial := copy a 0 (Array.empty)\n  let c_full := c_initial.push b\n  c_full\n",
+  "code_aux": "def copy (a : Array Int) (i : Nat) (acc : Array Int) : Array Int :=\n  if i < a.size then\n    copy a (i + 1) (acc.push (a[i]!))\n  else\n    acc\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

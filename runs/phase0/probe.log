@@ -1,0 +1,4 @@
+15:46:03 compile probe qwen3.5-2b: {"n": 20, "extract": 0.9, "compile": 0.15, "tests": 0.15, "model_proof": 0.05, "portfolio": 0.15, "mean_gen_s": 2.26, "mean_tok_per_s": 114.5}
+15:49:27 compile probe qwen3.5-4b: {"n": 20, "extract": 1.0, "compile": 0.35, "tests": 0.3, "model_proof": 0.0, "portfolio": 0.2, "mean_gen_s": 7.88, "mean_tok_per_s": 60.2}
+15:49:36 determinism qwen3.5-2b: {'same_seed_identical': True, 'different_seed_differs': True, 'has_think': False}
+15:49:49 determinism qwen3.5-4b: {'same_seed_identical': True, 'different_seed_differs': True, 'has_think': False}

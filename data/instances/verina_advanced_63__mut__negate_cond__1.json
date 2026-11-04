@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_63",
+ "flags": [],
+ "hashes": {
+  "locked": "69e178f9fc248197db80aececd88df68b292c8b7fd13683ecfbc5ad19f00ad2b"
+ },
+ "instance_id": "verina_advanced_63__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(isDuplicate)",
+  "before": "isDuplicate",
+  "col": 10,
+  "line": 13,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  match nums with\n  | [] =>\n    0\n  | h :: t =>\n    let init := h\n    let initCount := 1\n    let rec countUniques (prev : Int) (xs : List Int) (k : Nat) : Nat :=\n      match xs with\n      | [] =>\n        k\n      | head :: tail =>\n        let isDuplicate := head = prev\n        if ¬(isDuplicate) then\n          countUniques prev tail k\n        else\n          let newK := k + 1\n          countUniques head tail newK\n    countUniques init t initCount\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "2",
+  "expected": "5",
+  "index": 1,
+  "input_lean": {
+   "nums": "[0, 0, 1, 1, 1, 2, 2, 3, 3, 4]"
+  },
+  "source": "visible"
+ }
+}

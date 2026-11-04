@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_45",
+ "flags": [],
+ "hashes": {
+  "locked": "f6f1fcad37433110e62fdfb523e8259d6d304b303046b8a6cd235e8a7cb54a7e"
+ },
+ "instance_id": "verina_advanced_45__mut__swap_args__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "min x (curMax",
+  "before": "max x (curMax",
+  "col": 23,
+  "line": 5,
+  "operator": "swap_args",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec helper (lst : List Int) (curMax : Int) (globalMax : Int) : Int :=\n    match lst with\n    | [] => globalMax\n    | x :: rest =>\n      let newCurMax := min x (curMax + x)\n      let newGlobal := max globalMax newCurMax\n      helper rest newCurMax newGlobal\n  match xs with\n  | [] => 0\n  | x :: rest => helper rest x x\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "4",
+  "expected": "7",
+  "index": 0,
+  "input_lean": {
+   "xs": "[1, -2, 3, 4, -1]"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,93 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task involves computing the average of two integers. The objective is to determine a value that closely approximates the true arithmetic mean when using integer division, ensuring that the result reflects the necessary rounding behavior.\n\n-----Input-----  \nThe input consists of:  \n• a: An integer.  \n• b: An integer.\n\n-----Output-----  \nThe output is an integer representing the computed average of a and b using integer division.\n\n-----Note-----  \nThe specification requires that the computed average satisfies the condition that 2 * avg is between (a + b - 1) and (a + b + 1), ensuring that the result meets the expected rounding boundaries.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_107",
+ "flags": [],
+ "header": "def ComputeAvg (a : Int) (b : Int) (h_precond : ComputeAvg_precond (a) (b)) : Int :=",
+ "locked_hash": "57d07674b65bab4417f4a94028cd67ba7eee6bdffb90089fa78ffdb556a55b30",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "unfold_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": true
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 3.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "ComputeAvg",
+  "params": [
+   [
+    "a",
+    "Int"
+   ],
+   [
+    "b",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef ComputeAvg_precond (a : Int) (b : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef ComputeAvg (a : Int) (b : Int) (h_precond : ComputeAvg_precond (a) (b)) : Int :=\n  -- !benchmark @start code\n  (a + b) / 2\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef ComputeAvg_postcond (a : Int) (b : Int) (result: Int) (h_precond : ComputeAvg_precond (a) (b)) :=\n  -- !benchmark @start postcond\n  2 * result = a + b - ((a + b) % 2)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem ComputeAvg_spec_satisfied (a: Int) (b: Int) (h_precond : ComputeAvg_precond (a) (b)) :\n    ComputeAvg_postcond (a) (b) (ComputeAvg (a) (b) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Int) (b: Int) (h_precond : ComputeAvg_precond (a) (b)) :\n    ComputeAvg_postcond (a) (b) (ComputeAvg (a) (b) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "a": "4",
+    "b": "6"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "a": "3",
+    "b": "5"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "a": "3",
+    "b": "4"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "a": "(-3)",
+    "b": "7"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "(-5)",
+    "b": "5"
+   }
+  }
+ ]
+}

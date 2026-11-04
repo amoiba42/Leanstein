@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_81",
+ "flags": [],
+ "hashes": {
+  "locked": "2ac724985afb4a2b968e6d57f8092fc92a1fdc7b9ecb77934f1f4ffc8796eaf8"
+ },
+ "instance_id": "verina_basic_81__mut__arith__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "/",
+  "before": "%",
+  "col": 30,
+  "line": 3,
+  "operator": "arith",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  if y = 0 then (Int.ofNat x, 0) else divMod x y\n",
+  "code_aux": "def divMod (x y : Nat) : Int × Int :=\n  let q : Int := Int.ofNat (x / y)\n  let r : Int := Int.ofNat (x / y)\n  (r, q)\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "(3, 3)",
+  "expected": "(1, 3)",
+  "index": 0,
+  "input_lean": {
+   "x": "10",
+   "y": "3"
+  },
+  "source": "visible"
+ }
+}

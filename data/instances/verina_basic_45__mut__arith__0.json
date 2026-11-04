@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_45",
+ "flags": [],
+ "hashes": {
+  "locked": "786a5aedd2100a32e252d4d85640263d2e413d0e02ebc7184acf346c2f6d765f"
+ },
+ "instance_id": "verina_basic_45__mut__arith__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "+",
+  "before": "*",
+  "col": 30,
+  "line": 2,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  match firstEvenOddIndices lst with\n  | some (ei, oi) => lst[ei]! + lst[oi]!\n  | none => 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "5",
+  "expected": "6",
+  "index": 0,
+  "input_lean": {
+   "lst": "[2, 3, 4, 5]"
+  },
+  "source": "visible"
+ }
+}

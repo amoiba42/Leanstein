@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_1",
+ "flags": [],
+ "hashes": {
+  "locked": "7418eb7e77673f0e1ee3d203f88324c2b6e5843d6871bb4a49cac7df5cf4f973"
+ },
+ "instance_id": "verina_advanced_1__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec findUnique (remaining : List Int) : Int :=\n    match remaining with\n    | [] =>\n      0\n    | x :: xs =>\n      let filtered : List Int :=\n        filterlist x nums\n      let count : Nat :=\n        filtered.length\n      if count = 1 then\n        x\n      else\n        findUnique xs\n  findUnique nums\n",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

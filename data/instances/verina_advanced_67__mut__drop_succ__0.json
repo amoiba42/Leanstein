@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_67",
+ "flags": [],
+ "hashes": {
+  "locked": "0333803c6aa4f61e3c2b56e6ea9d09e8d12010c59fb2bad2d78db2de2f2bb667"
+ },
+ "instance_id": "verina_advanced_67__mut__drop_succ__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "",
+  "before": " + 1",
+  "col": 31,
+  "line": 10,
+  "operator": "drop_succ",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let chars := s.data\n\n  let rec encodeAux (acc : List (Char × Nat)) (rest : List Char) : List (Char × Nat) :=\n    match rest with\n    | [] => acc.reverse\n    | h :: t =>\n      match acc with\n      | (ch, count) :: accTail =>\n        if ch = h then\n          encodeAux ((ch, count) :: accTail) t\n        else\n          encodeAux ((h, 1) :: (ch, count) :: accTail) t\n      | [] =>\n        encodeAux ([(h, 1)]) t\n\n  let encoded := encodeAux [] chars\n  encoded\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "[('a', 1)]",
+  "expected": "[('a', 3)]",
+  "index": 1,
+  "input_lean": {
+   "s": "\"aaa\""
+  },
+  "source": "visible"
+ }
+}

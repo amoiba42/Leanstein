@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_46",
+ "flags": [],
+ "hashes": {
+  "locked": "625f2df62286a838fada48cd2cc16d3ed5e4c60d567f7259b4845ebf75497502"
+ },
+ "instance_id": "verina_advanced_46__nat__qwen3.5-9b__2",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef maxSubarraySum (numbers : List Int) (h_precond : maxSubarraySum_precond (numbers)) : Int :=\n  match numbers with\n  | [] => 0\n  | head :: tail =>\n      -- We need to find the maximum sum of any contiguous subarray.\n      -- If all numbers are negative, we return 0 (empty subarray).\n      -- Otherwise, we return the maximum sum.\n      -- We can use Kadane's algorithm for efficiency, but since the precondition is always True,\n      -- we can directly compute the maximum subarray sum.\n      -- Let's compute all subarray sums and find the maximum.\n      -- However, to handle the case where all numbers are negative, we need to check if the maximum sum is negative.\n      -- If the maximum sum is negative, we return 0.\n      -- Otherwise, we return the maximum sum.\n      -- We can use List.fold to compute the maximum subarray sum.\n      let rec maxSubarraySumHelper (currentSum : Int) (maxSum : Int) (numbers : List Int) : Int × Int :=\n        match numbers with\n        | [] => (currentSum, maxSum)\n        | head :: tail =>\n            let newCurrentSum := max currentSum 0 + head\n            let newMaxSum := max maxSum newCurrentSum\n            maxSubarraySumHelper newCurrentSum newMaxSum tail\n      match numbers with\n      | [] => 0\n      | head :: tail =>\n          let (currentSum, maxSum) := maxSubarraySumHelper 0 (head) tail\n          if maxSum < 0 then 0 else maxSum\n```",
+  "seed": 5002
+ },
+ "split": "main",
+ "start": {
+  "code": "match numbers with\n| [] => 0\n| head :: tail =>\n    -- We need to find the maximum sum of any contiguous subarray.\n    -- If all numbers are negative, we return 0 (empty subarray).\n    -- Otherwise, we return the maximum sum.\n    -- We can use Kadane's algorithm for efficiency, but since the precondition is always True,\n    -- we can directly compute the maximum subarray sum.\n    -- Let's compute all subarray sums and find the maximum.\n    -- However, to handle the case where all numbers are negative, we need to check if the maximum sum is negative.\n    -- If the maximum sum is negative, we return 0.\n    -- Otherwise, we return the maximum sum.\n    -- We can use List.fold to compute the maximum subarray sum.\n    let rec maxSubarraySumHelper (currentSum : Int) (maxSum : Int) (numbers : List Int) : Int × Int :=\n      match numbers with\n      | [] => (currentSum, maxSum)\n      | head :: tail =>\n          let newCurrentSum := max currentSum 0 + head\n          let newMaxSum := max maxSum newCurrentSum\n          maxSubarraySumHelper newCurrentSum newMaxSum tail\n    match numbers with\n    | [] => 0\n    | head :: tail =>\n        let (currentSum, maxSum) := maxSubarraySumHelper 0 (head) tail\n        if maxSum < 0 then 0 else maxSum",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "8",
+  "expected": "9",
+  "index": 0,
+  "input_lean": {
+   "numbers": "[1, 2, 3, -2, 5]"
+  },
+  "source": "visible"
+ }
+}

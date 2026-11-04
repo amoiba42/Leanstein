@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_24",
+ "flags": [],
+ "hashes": {
+  "locked": "65395841ba838a9dd603212a2feb71530a6b0e14a7c90ee0737d3582fc398e11"
+ },
+ "instance_id": "verina_basic_24__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec findFirstEvenOdd (i : Nat) (firstEven firstOdd : Option Nat) : Int :=\n    if i < a.size then\n      let x := a[i]!\n      let firstEven := if firstEven.isNone && isEven x then some i else firstEven\n      let firstOdd := if firstOdd.isNone && isOdd x then some i else firstOdd\n      match firstEven, firstOdd with\n      | some e, some o => a[e]! - a[o]!\n      | _, _ => findFirstEvenOdd (i + 1) firstEven firstOdd\n    else\n      -- This case is impossible due to h2, but we need a value\n      0\n  findFirstEvenOdd 0 none none\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

@@ -1,0 +1,100 @@
+{
+ "aux_names": [
+  "pow"
+ ],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that determines whether a given integer is a power of two.\nAn integer n is a power of two if there exists an integer x such that n = 2^x.\nThe method should return true if n is a power of two, and false otherwise.\nNote that negative numbers and zero are not powers of two.\n\n-----Input-----\nThe input consists of one integer:\nn: The integer to be tested.\n\n-----Output-----\nThe output is a boolean:\nReturns true if there exists an integer x such that n = 2^x (with n > 0), otherwise false.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_23",
+ "flags": [],
+ "header": "def isPowerOfTwo (n : Int) (h_precond : isPowerOfTwo_precond (n)) : Bool :=",
+ "locked_hash": "2f4001e7384ffaf4aa76e35ffca8cf12f602a8e01ff9679cbf80745f017407ea",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@isPowerOfTwo.aux": false,
+    "fun_ind_simp@isPowerOfTwo.aux": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 76.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "isPowerOfTwo",
+  "params": [
+   [
+    "n",
+    "Int"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef isPowerOfTwo_precond (n : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef isPowerOfTwo (n : Int) (h_precond : isPowerOfTwo_precond (n)) : Bool :=\n  -- !benchmark @start code\n  if n <= 0 then false\n  else\n    let rec aux (m : Int) (fuel : Nat) : Bool :=\n      if fuel = 0 then false\n      else if m = 1 then true\n      else if m % 2 ≠ 0 then false\n      else aux (m / 2) (fuel - 1)\n    aux n n.natAbs\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\ndef pow (base : Int) (exp : Nat) : Int :=\n  match exp with\n  | 0 => 1\n  | n+1 => base * pow base n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef isPowerOfTwo_postcond (n : Int) (result: Bool) (h_precond : isPowerOfTwo_precond (n)) : Prop :=\n  -- !benchmark @start postcond\n  if result then ∃ (x : Nat), (pow 2 x = n) ∧ (n > 0)\n  else ¬ (∃ (x : Nat), (pow 2 x = n) ∧ (n > 0))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem isPowerOfTwo_spec_satisfied (n: Int) (h_precond : isPowerOfTwo_precond (n)) :\n    isPowerOfTwo_postcond (n) (isPowerOfTwo (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(n: Int) (h_precond : isPowerOfTwo_precond (n)) :\n    isPowerOfTwo_postcond (n) (isPowerOfTwo (n) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "1"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "16"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "3"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "0"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "(-2)"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "8"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "10"
+   }
+  }
+ ]
+}

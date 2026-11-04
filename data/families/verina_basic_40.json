@@ -1,0 +1,94 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that finds the second-smallest number in an array of integers. The method should determine and return the number that is larger than the smallest element in the array. It is crucial that the input array remains unchanged after the computation.\n\n-----Input-----\nThe input consists of:\ns: An array of integers containing at least two elements.\n\n-----Output-----\nThe output is an integer:\nReturns the second-smallest number in the input array.\n\n-----Note-----\n- The input array must contain at least two elements.\n- The array must contain at least two distinct values (enforced by precondition).\n- The original array remains unmodified.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_40",
+ "flags": [
+  "hidden_unavailable"
+ ],
+ "header": "def secondSmallest (s : Array Int) (h_precond : secondSmallest_precond (s)) : Int :=",
+ "locked_hash": "193f05dc53c45202126bead07fc2dc8879308f78ff7e513b9fff989ba78f260f",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@secondSmallestAux": false,
+    "fun_ind_simp@secondSmallestAux": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": null,
+  "lean_s": 67.3,
+  "n_hidden": 0,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "secondSmallest",
+  "params": [
+   [
+    "s",
+    "Array Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef secondSmallest_precond (s : Array Int) : Prop :=\n  -- !benchmark @start precond\n  s.size > 1 ∧ ∃ i j, i < s.size ∧ j < s.size ∧ s[i]! ≠ s[j]!  -- at least two distinct values\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef secondSmallestAux (s : Array Int) (i minIdx : Nat) (secondIdx : Option Nat) : Int :=\n  if i ≥ s.size then\n    match secondIdx with\n    | some si => s[si]!\n    | none => panic! \"no second smallest\"  -- unreachable given precondition\n  else\n    let x := s[i]!\n    let m := s[minIdx]!\n    match secondIdx with\n    | none =>\n      if x < m then\n        secondSmallestAux s (i + 1) i (some minIdx)\n      else if x > m then\n        secondSmallestAux s (i + 1) minIdx (some i)\n      else\n        secondSmallestAux s (i + 1) minIdx none\n    | some si =>\n      let smin := s[si]!\n      if x < m then\n        secondSmallestAux s (i + 1) i (some minIdx)\n      else if x < smin ∧ x > m then\n        secondSmallestAux s (i + 1) minIdx (some i)\n      else\n        secondSmallestAux s (i + 1) minIdx (some si)\ntermination_by s.size - i\n-- !benchmark @end code_aux\n\n\ndef secondSmallest (s : Array Int) (h_precond : secondSmallest_precond (s)) : Int :=\n  -- !benchmark @start code\n  secondSmallestAux s 1 0 none\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef secondSmallest_postcond (s : Array Int) (result: Int) (h_precond : secondSmallest_precond (s)) :=\n  -- !benchmark @start postcond\n  (∃ i, i < s.size ∧ s[i]! = result) ∧\n  (∃ j, j < s.size ∧ s[j]! < result ∧\n    ∀ k, k < s.size → s[k]! ≠ s[j]! → s[k]! ≥ result)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem secondSmallest_spec_satisfied (s: Array Int) (h_precond : secondSmallest_precond (s)) :\n    secondSmallest_postcond (s) (secondSmallest (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: Array Int) (h_precond : secondSmallest_precond (s)) :\n    secondSmallest_postcond (s) (secondSmallest (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "s": "#[5, 3, 1, 4, 2]"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "s": "#[7, 2, 5, 3]"
+   }
+  },
+  {
+   "expected_lean": "20",
+   "input_lean": {
+    "s": "#[10, 20]"
+   }
+  },
+  {
+   "expected_lean": "20",
+   "input_lean": {
+    "s": "#[20, 10]"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "s": "#[3, 1, 2]"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "s": "#[1, 1, 2]"
+   }
+  }
+ ]
+}

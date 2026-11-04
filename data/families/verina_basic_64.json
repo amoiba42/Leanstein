@@ -1,0 +1,126 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires writing a Lean 4 method that inserts a subarray of characters into another array of characters at a specified index. The method takes the original array (oline) and, given the effective length l to consider, inserts another array of characters (nl) of effective length p starting at the index atPos. The resulting array is of length l + p and is constructed as follows:\n• All characters before the insertion position (atPos) remain unchanged.  \n• The new characters from nl are inserted starting at index atPos.  \n• The remaining characters from the original array (starting at atPos) are shifted right by p positions.\n\n-----Input-----  \nThe input consists of:  \n• oline: An array of characters representing the original sequence.  \n• l: A natural number indicating how many characters from oline to consider.  \n• nl: An array of characters to be inserted into oline.  \n• p: A natural number indicating how many characters from nl to consider for insertion.  \n• atPos: A natural number indicating the position in oline where the insertion should occur (0-indexed).\n\n-----Output-----  \nThe output is an array of characters that is the result of inserting nl into oline at the given atPos. Specifically, the output array should:  \n• Contain the original characters from index 0 up to (but not including) atPos.  \n• Have the next p characters equal to the characters from nl.  \n• Contain the remaining characters from oline (starting from atPos) shifted right by p positions.\n\n-----Note-----  \nIt is assumed that:  \n• atPos is within the range [0, l].  \n• l does not exceed the size of oline.  \n• p does not exceed the size of nl.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_64",
+ "flags": [],
+ "header": "def insert (oline : Array Char) (l : Nat) (nl : Array Char) (p : Nat) (atPos : Nat) (h_precond : insert_precond (oline) (l) (nl) (p) (atPos)) : Array Char :=",
+ "locked_hash": "b240e19a6cd3065ef00498bf75361ff5f3fd456734d873e4289ab8ddeff9845d",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@atPos": false,
+    "ind_grind@l": false,
+    "ind_grind@p": false,
+    "ind_simp_all@atPos": false,
+    "ind_simp_all@l": false,
+    "ind_simp_all@p": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 19.2,
+  "n_hidden": 6,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "insert",
+  "params": [
+   [
+    "oline",
+    "Array Char"
+   ],
+   [
+    "l",
+    "Nat"
+   ],
+   [
+    "nl",
+    "Array Char"
+   ],
+   [
+    "p",
+    "Nat"
+   ],
+   [
+    "atPos",
+    "Nat"
+   ]
+  ],
+  "ret": "Array Char"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef insert_precond (oline : Array Char) (l : Nat) (nl : Array Char) (p : Nat) (atPos : Nat) : Prop :=\n  -- !benchmark @start precond\n  l ≤ oline.size ∧\n  p ≤ nl.size ∧\n  atPos ≤ l\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef insert (oline : Array Char) (l : Nat) (nl : Array Char) (p : Nat) (atPos : Nat) (h_precond : insert_precond (oline) (l) (nl) (p) (atPos)) : Array Char :=\n  -- !benchmark @start code\n  let result := Array.mkArray (l + p) ' '\n\n  let result := Array.foldl\n    (fun acc i =>\n      if i < atPos then acc.set! i (oline[i]!) else acc)\n    result\n    (Array.range l)\n\n  let result := Array.foldl\n    (fun acc i =>\n      acc.set! (atPos + i) (nl[i]!))\n    result\n    (Array.range p)\n\n  let result := Array.foldl\n    (fun acc i =>\n      if i >= atPos then acc.set! (i + p) (oline[i]!) else acc)\n    result\n    (Array.range l)\n\n  result\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef insert_postcond (oline : Array Char) (l : Nat) (nl : Array Char) (p : Nat) (atPos : Nat) (result: Array Char) (h_precond : insert_precond (oline) (l) (nl) (p) (atPos)) :=\n  -- !benchmark @start postcond\n  result.size = l + p ∧\n  (List.range p).all (fun i => result[atPos + i]! = nl[i]!) ∧\n  (List.range atPos).all (fun i => result[i]! = oline[i]!) ∧\n  (List.range (l - atPos)).all (fun i => result[atPos + p + i]! = oline[atPos + i]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem insert_spec_satisfied (oline: Array Char) (l: Nat) (nl: Array Char) (p: Nat) (atPos: Nat) (h_precond : insert_precond (oline) (l) (nl) (p) (atPos)) :\n    insert_postcond (oline) (l) (nl) (p) (atPos) (insert (oline) (l) (nl) (p) (atPos) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(oline: Array Char) (l: Nat) (nl: Array Char) (p: Nat) (atPos: Nat) (h_precond : insert_precond (oline) (l) (nl) (p) (atPos)) :\n    insert_postcond (oline) (l) (nl) (p) (atPos) (insert (oline) (l) (nl) (p) (atPos) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#['a','b','X','Y','c','d','e']",
+   "input_lean": {
+    "atPos": "2",
+    "l": "5",
+    "nl": "#['X','Y']",
+    "oline": "#['a','b','c','d','e']",
+    "p": "2"
+   }
+  },
+  {
+   "expected_lean": "#['W','o','r','l','d','H','e','l','l','o']",
+   "input_lean": {
+    "atPos": "0",
+    "l": "5",
+    "nl": "#['W','o','r','l','d']",
+    "oline": "#['H','e','l','l','o']",
+    "p": "5"
+   }
+  },
+  {
+   "expected_lean": "#['L','e','a','n','4']",
+   "input_lean": {
+    "atPos": "4",
+    "l": "4",
+    "nl": "#['4']",
+    "oline": "#['L','e','a','n']",
+    "p": "1"
+   }
+  },
+  {
+   "expected_lean": "#['T','e','s','t']",
+   "input_lean": {
+    "atPos": "2",
+    "l": "4",
+    "nl": "#[]",
+    "oline": "#['T','e','s','t']",
+    "p": "0"
+   }
+  },
+  {
+   "expected_lean": "#['1','2','3','a','b','c','4','5']",
+   "input_lean": {
+    "atPos": "3",
+    "l": "5",
+    "nl": "#['a','b','c']",
+    "oline": "#['1','2','3','4','5','6']",
+    "p": "3"
+   }
+  }
+ ]
+}

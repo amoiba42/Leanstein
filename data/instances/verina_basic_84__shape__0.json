@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_84",
+ "flags": [],
+ "hashes": {
+  "locked": "2a8a4c0006617f22013059731149103d05decb0934adb28a4b64a522c4807d20"
+ },
+ "instance_id": "verina_basic_84__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  replace_loop arr k 0 arr\n",
+  "code_aux": "def replace_loop (oldArr : Array Int) (k : Int) : Nat → Array Int → Array Int\n| i, acc =>\n  if i < oldArr.size then\n    if (oldArr[i]!) > k then\n      replace_loop oldArr k (i+1) (acc.set! i (-1))\n    else\n      replace_loop oldArr k (i+1) acc\n  else\n    acc\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

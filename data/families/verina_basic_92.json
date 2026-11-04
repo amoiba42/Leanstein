@@ -1,0 +1,93 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis problem involves swapping the values of two integers. Given two integers as inputs, the objective is to return the two numbers in reversed order.\n\n-----Input-----  \nThe input consists of two integers:  \n• X: The first integer.  \n• Y: The second integer.\n\n-----Output-----  \nThe output is a tuple of two integers (Int × Int) where:  \n• The first element is equal to Y.  \n• The second element is equal to X.\n\n-----Note-----  \nThere are no restrictions on the input values. The function must correctly swap the inputs regardless of whether they are positive, negative, or zero.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_92",
+ "flags": [],
+ "header": "def SwapArithmetic (X : Int) (Y : Int) (h_precond : SwapArithmetic_precond (X) (Y)) : (Int × Int) :=",
+ "locked_hash": "5fee6b51ba828b6f01922e0997d79841e863a3376064ab01956d6d39d5300065",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 1.7,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_broken",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "SwapArithmetic",
+  "params": [
+   [
+    "X",
+    "Int"
+   ],
+   [
+    "Y",
+    "Int"
+   ]
+  ],
+  "ret": "(Int × Int)"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef SwapArithmetic_precond (X : Int) (Y : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef SwapArithmetic (X : Int) (Y : Int) (h_precond : SwapArithmetic_precond (X) (Y)) : (Int × Int) :=\n  -- !benchmark @start code\n  let x1 := X\n  let y1 := Y\n  let x2 := y1 - x1\n  let y2 := y1 - x2\n  let x3 := y2 + x2\n  (x3, y2)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef SwapArithmetic_postcond (X : Int) (Y : Int) (result: (Int × Int)) (h_precond : SwapArithmetic_precond (X) (Y)) :=\n  -- !benchmark @start postcond\n  result.1 = Y ∧ result.2 = X ∧\n  (X ≠ Y → result.fst ≠ X ∧ result.snd ≠ Y)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem SwapArithmetic_spec_satisfied (X: Int) (Y: Int) (h_precond : SwapArithmetic_precond (X) (Y)) :\n    SwapArithmetic_postcond (X) (Y) (SwapArithmetic (X) (Y) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold SwapArithmetic_postcond SwapArithmetic\n  simp\n  rw [Int.sub_sub_self]\n  simp_all\n  exact fun a a_1 => a (id (Eq.symm a_1))\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(X: Int) (Y: Int) (h_precond : SwapArithmetic_precond (X) (Y)) :\n    SwapArithmetic_postcond (X) (Y) (SwapArithmetic (X) (Y) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "(4, 3)",
+   "input_lean": {
+    "X": "3",
+    "Y": "4"
+   }
+  },
+  {
+   "expected_lean": "(10, -1)",
+   "input_lean": {
+    "X": "(-1)",
+    "Y": "10"
+   }
+  },
+  {
+   "expected_lean": "(0, 0)",
+   "input_lean": {
+    "X": "0",
+    "Y": "0"
+   }
+  },
+  {
+   "expected_lean": "(50, 100)",
+   "input_lean": {
+    "X": "100",
+    "Y": "50"
+   }
+  },
+  {
+   "expected_lean": "(-10, -5)",
+   "input_lean": {
+    "X": "(-5)",
+    "Y": "(-10)"
+   }
+  }
+ ]
+}

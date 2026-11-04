@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_58",
+ "flags": [],
+ "hashes": {
+  "locked": "9e9c8d99ca96c6c882c109959f20cc112d9851483af15365372aad14e6907246"
+ },
+ "instance_id": "verina_basic_58__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  double_array_elements_aux s s 0\n",
+  "code_aux": "def double_array_elements_aux (s_old s : Array Int) (i : Nat) : Array Int :=\n  if i < s.size then\n    let new_s := s.set! i (2 * (s_old[i]!))\n    double_array_elements_aux s_old new_s (i + 1)\n  else\n    s\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

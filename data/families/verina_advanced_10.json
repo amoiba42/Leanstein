@@ -1,0 +1,112 @@
+{
+ "aux_names": [
+  "removePrimeFactor",
+  "removeAllPrimeFactors"
+ ],
+ "description": "-----Description-----  \nhis task requires writing a Lean 4 method decomposes a natural number `n` into its prime factorization components based on a user-provided list of primes. Specifically, it calculates the exponents for each prime in the factorization such that:\n\\[ n = \\prod p^e \\]\nIn other words, it determines the exponent e for each prime p.\n\n-----Input-----\nThe input consists of:\n- n: A positive natural number (n > 0) that can be expressed as a product of powers of the given primes.\n- primes: A non-empty list of distinct prime numbers whose product of powers equals n.  \n\n-----Output-----  \nThe output is `List (Nat × Nat)`:\nReturn a list of pair/Cartesian product of two natural numbers (p, e), where p is the prime and e is the exponent of p in the factorization. Each prime in the output must be from the input list, and every prime in the input list must appear in the output.",
+ "eligible": false,
+ "exclusion_reason": "known_defect:not_evaluable,ref_visible_fail",
+ "family_id": "verina_advanced_10",
+ "flags": [],
+ "header": "def findExponents (n : Nat) (primes : List Nat) (h_precond : findExponents_precond (n) (primes)) : List (Nat × Nat) :=",
+ "locked_hash": "ee824cb2729674310264ffe834a417d519140c89982b2cfd40bb336e3b3565f4",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@findExponents.countFactor": false,
+    "fun_ind_grind@findExponents.countFactors": false,
+    "fun_ind_grind@findExponents.have": false,
+    "fun_ind_simp@findExponents.countFactor": false,
+    "fun_ind_simp@findExponents.countFactors": false,
+    "fun_ind_simp@findExponents.have": false,
+    "grind": false,
+    "ind_grind@n": false,
+    "ind_grind@primes": false,
+    "ind_simp_all@n": false,
+    "ind_simp_all@primes": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": null,
+  "lean_s": 48.1,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 2,
+  "proof": "absent",
+  "visible_pass": false
+ },
+ "signature": {
+  "name": "findExponents",
+  "params": [
+   [
+    "n",
+    "Nat"
+   ],
+   [
+    "primes",
+    "List Nat"
+   ]
+  ],
+  "ret": "List (Nat × Nat)"
+ },
+ "template": "-- !benchmark @start import type=task\nimport Mathlib.Data.Nat.Prime.Defs\n-- !benchmark @end import\n\n-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\ndef removePrimeFactor (n : Nat) (p : Nat) : Nat :=\n  if h : p > 1 ∧ n > 0 then\n    if n % p = 0 then\n      have : n / p < n := Nat.div_lt_self h.2 h.1\n      removePrimeFactor (n / p) p\n    else n\n  else n\ntermination_by n\n\ndef removeAllPrimeFactors (n : Nat) (primes : List Nat) : Nat :=\n  primes.foldl removePrimeFactor n\n-- !benchmark @end precond_aux\n\n@[reducible]\ndef findExponents_precond (n : Nat) (primes : List Nat) : Prop :=\n  -- !benchmark @start precond\n  n > 0 ∧\n  primes.length > 0 ∧\n  primes.all (fun p => Nat.Prime p) ∧\n  List.Nodup primes ∧\n  removeAllPrimeFactors n primes = 1\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef findExponents (n : Nat) (primes : List Nat) (h_precond : findExponents_precond (n) (primes)) : List (Nat × Nat) :=\n  -- !benchmark @start code\n  let rec countFactors (n : Nat) (primes : List Nat) : List (Nat × Nat) :=\n    match primes with\n    | [] => []\n    | p :: ps =>\n      let (count, n') :=\n        countFactor n p 0\n      (p, count) :: countFactors n' ps\n\n  countFactors n primes\n  where\n\n  countFactor : Nat → Nat → Nat → Nat × Nat\n  | 0, _, count =>\n    (count, 0)\n  | n, p, count =>\n    if h : n > 0 ∧ p > 1 then\n      have : n / p < n :=\n        Nat.div_lt_self h.1 h.2\n      if n % p == 0 then\n        countFactor (n / p) p (count + 1)\n      else\n        (count, n)\n    else\n      (count, n)\n  termination_by n _ _ => n\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef findExponents_postcond (n : Nat) (primes : List Nat) (result: List (Nat × Nat)) (h_precond : findExponents_precond (n) (primes)) : Prop :=\n  -- !benchmark @start postcond\n  (n = result.foldl (fun acc (p, e) => acc * p ^ e) 1) ∧\n  result.all (fun (p, _) => p ∈ primes) ∧\n  primes.all (fun p => result.any (fun pair => pair.1 = p))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem findExponents_spec_satisfied (n: Nat) (primes: List Nat) (h_precond : findExponents_precond (n) (primes)) :\n    findExponents_postcond (n) (primes) (findExponents (n) (primes) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(n: Nat) (primes: List Nat) (h_precond : findExponents_precond (n) (primes)) :\n    findExponents_postcond (n) (primes) (findExponents (n) (primes) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "[(2, 1), (3, 1)]",
+   "input_lean": {
+    "n": "6",
+    "primes": "[2, 3]"
+   }
+  },
+  {
+   "expected_lean": "[(2, 55), (3, 55), (5, 0)]",
+   "input_lean": {
+    "n": "6285195213566005335561053533150026217291776",
+    "primes": "[2, 3, 5]"
+   }
+  },
+  {
+   "expected_lean": "[(2, 3), (3, 2), (5, 1)]",
+   "input_lean": {
+    "n": "360",
+    "primes": "[2, 3, 5]"
+   }
+  },
+  {
+   "expected_lean": "[(2, 2), (43, 1), (823, 1), (133543, 1)]",
+   "input_lean": {
+    "n": "18903812908",
+    "primes": "[2, 43, 823, 133543]"
+   }
+  },
+  {
+   "expected_lean": "[(2, 1), (31, 1), (1847, 1)]",
+   "input_lean": {
+    "n": "114514",
+    "primes": "[2, 31, 1847]"
+   }
+  },
+  {
+   "expected_lean": "[(3, 3), (5, 2), (7, 1), (11, 3), (31, 1), (47, 3)]",
+   "input_lean": {
+    "n": "20241147794175",
+    "primes": "[3, 5, 7, 11, 31, 47]"
+   }
+  }
+ ]
+}

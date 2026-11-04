@@ -1,0 +1,114 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that determines the minimum of two integers. The method should return the smaller of the two numbers. When both numbers are equal, either one may be returned.\n\n-----Input-----\nThe input consists of two integers:\na: The first integer.\nb: The second integer.\n\n-----Output-----\nThe output is an integer:\nReturns the smaller value between the input integers, ensuring that the result is less than or equal to both inputs.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_8",
+ "flags": [],
+ "header": "def myMin (a : Int) (b : Int) (h_precond : myMin_precond (a) (b)) : Int :=",
+ "locked_hash": "d5b5656aa1c74da003faff764be2c78ba47608540d2433fb1233ec1bbe31897a",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "unfold_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": true,
+    "split_simp_all": false,
+    "unfold_omega": true
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 3.6,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "myMin",
+  "params": [
+   [
+    "a",
+    "Int"
+   ],
+   [
+    "b",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef myMin_precond (a : Int) (b : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef myMin (a : Int) (b : Int) (h_precond : myMin_precond (a) (b)) : Int :=\n  -- !benchmark @start code\n  if a <= b then a else b\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef myMin_postcond (a : Int) (b : Int) (result: Int) (h_precond : myMin_precond (a) (b)) :=\n  -- !benchmark @start postcond\n  (result ≤ a ∧ result ≤ b) ∧\n  (result = a ∨ result = b)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem myMin_spec_satisfied (a: Int) (b: Int) (h_precond : myMin_precond (a) (b)) :\n    myMin_postcond (a) (b) (myMin (a) (b) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold myMin myMin_postcond\n  constructor\n  · split\n    case left.isTrue h =>\n      simp\n      exact h\n    case left.isFalse h =>\n      simp\n      rw [Int.not_le] at h\n      exact Int.le_of_lt h\n  · split <;> simp\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Int) (b: Int) (h_precond : myMin_precond (a) (b)) :\n    myMin_postcond (a) (b) (myMin (a) (b) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "a": "3",
+    "b": "5"
+   }
+  },
+  {
+   "expected_lean": "7",
+   "input_lean": {
+    "a": "10",
+    "b": "7"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "a": "4",
+    "b": "4"
+   }
+  },
+  {
+   "expected_lean": "(-3)",
+   "input_lean": {
+    "a": "(-3)",
+    "b": "5"
+   }
+  },
+  {
+   "expected_lean": "(-5)",
+   "input_lean": {
+    "a": "3",
+    "b": "(-5)"
+   }
+  },
+  {
+   "expected_lean": "(-5)",
+   "input_lean": {
+    "a": "(-3)",
+    "b": "(-5)"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "0",
+    "b": "10"
+   }
+  },
+  {
+   "expected_lean": "(-10)",
+   "input_lean": {
+    "a": "0",
+    "b": "(-10)"
+   }
+  }
+ ]
+}

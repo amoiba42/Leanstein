@@ -1,0 +1,220 @@
+{
+ "family_id": "verina_basic_93",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "7e8f1d494e168caf0289e212b1c051a1e00545bbb86c0b73071eb0392e1b69e7",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "(48, 127)",
+   "input_lean": {
+    "X": "127",
+    "Y": "48"
+   }
+  },
+  {
+   "expected_lean": "(64, 130)",
+   "input_lean": {
+    "X": "130",
+    "Y": "64"
+   }
+  },
+  {
+   "expected_lean": "(67, 128)",
+   "input_lean": {
+    "X": "128",
+    "Y": "67"
+   }
+  },
+  {
+   "expected_lean": "(127, 57)",
+   "input_lean": {
+    "X": "57",
+    "Y": "127"
+   }
+  },
+  {
+   "expected_lean": "(255, 255)",
+   "input_lean": {
+    "X": "255",
+    "Y": "255"
+   }
+  },
+  {
+   "expected_lean": "(10, 9)",
+   "input_lean": {
+    "X": "9",
+    "Y": "10"
+   }
+  },
+  {
+   "expected_lean": "(97, 10)",
+   "input_lean": {
+    "X": "10",
+    "Y": "97"
+   }
+  },
+  {
+   "expected_lean": "(3, 255)",
+   "input_lean": {
+    "X": "255",
+    "Y": "3"
+   }
+  },
+  {
+   "expected_lean": "(64, 127)",
+   "input_lean": {
+    "X": "127",
+    "Y": "64"
+   }
+  },
+  {
+   "expected_lean": "(48, 48)",
+   "input_lean": {
+    "X": "48",
+    "Y": "48"
+   }
+  },
+  {
+   "expected_lean": "(1, 254)",
+   "input_lean": {
+    "X": "254",
+    "Y": "1"
+   }
+  },
+  {
+   "expected_lean": "(11, 5)",
+   "input_lean": {
+    "X": "5",
+    "Y": "11"
+   }
+  },
+  {
+   "expected_lean": "(127, 10)",
+   "input_lean": {
+    "X": "10",
+    "Y": "127"
+   }
+  },
+  {
+   "expected_lean": "(10, 8)",
+   "input_lean": {
+    "X": "8",
+    "Y": "10"
+   }
+  },
+  {
+   "expected_lean": "(0, 97)",
+   "input_lean": {
+    "X": "97",
+    "Y": "0"
+   }
+  },
+  {
+   "expected_lean": "(10, 97)",
+   "input_lean": {
+    "X": "97",
+    "Y": "10"
+   }
+  },
+  {
+   "expected_lean": "(0, 1)",
+   "input_lean": {
+    "X": "1",
+    "Y": "0"
+   }
+  },
+  {
+   "expected_lean": "(57, 2)",
+   "input_lean": {
+    "X": "2",
+    "Y": "57"
+   }
+  },
+  {
+   "expected_lean": "(18, 15)",
+   "input_lean": {
+    "X": "15",
+    "Y": "18"
+   }
+  },
+  {
+   "expected_lean": "(15, 14)",
+   "input_lean": {
+    "X": "14",
+    "Y": "15"
+   }
+  },
+  {
+   "expected_lean": "(57, 9)",
+   "input_lean": {
+    "X": "9",
+    "Y": "57"
+   }
+  },
+  {
+   "expected_lean": "(16, 15)",
+   "input_lean": {
+    "X": "15",
+    "Y": "16"
+   }
+  },
+  {
+   "expected_lean": "(2, 2)",
+   "input_lean": {
+    "X": "2",
+    "Y": "2"
+   }
+  },
+  {
+   "expected_lean": "(65, 128)",
+   "input_lean": {
+    "X": "128",
+    "Y": "65"
+   }
+  },
+  {
+   "expected_lean": "(1, 0)",
+   "input_lean": {
+    "X": "256",
+    "Y": "1"
+   }
+  },
+  {
+   "expected_lean": "(48, 65)",
+   "input_lean": {
+    "X": "65",
+    "Y": "48"
+   }
+  },
+  {
+   "expected_lean": "(64, 126)",
+   "input_lean": {
+    "X": "126",
+    "Y": "64"
+   }
+  },
+  {
+   "expected_lean": "(97, 255)",
+   "input_lean": {
+    "X": "255",
+    "Y": "97"
+   }
+  },
+  {
+   "expected_lean": "(9, 255)",
+   "input_lean": {
+    "X": "255",
+    "Y": "9"
+   }
+  },
+  {
+   "expected_lean": "(0, 255)",
+   "input_lean": {
+    "X": "255",
+    "Y": "0"
+   }
+  }
+ ]
+}

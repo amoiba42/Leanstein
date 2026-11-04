@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_25",
+ "flags": [],
+ "hashes": {
+  "locked": "4fd9d10e8189f8f30dc9e28c6b0355808a01b3fc06ada7d60f1b087fd80f8ac7"
+ },
+ "instance_id": "verina_advanced_25__mut__const__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "0",
+  "before": "1",
+  "col": 45,
+  "line": 9,
+  "operator": "const",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  if nums.isEmpty then 0\n  else\n    let n := nums.length\n    Id.run do\n      let mut dp : Array Nat := Array.mkArray n 1\n\n      for i in [1:n] do\n        for j in [0:i] do\n          if nums[j]! < nums[i]! && dp[j]! + 0 > dp[i]! then\n            dp := dp.set! i (dp[j]! + 1)\n\n      maxInArray dp\n",
+  "code_aux": "def maxInArray (arr : Array Nat) : Nat :=\n  arr.foldl (fun a b => if a ≥ b then a else b) 0\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "4",
+  "index": 0,
+  "input_lean": {
+   "nums": "[10, 9, 2, 5, 3, 7, 101, 18]"
+  },
+  "source": "visible"
+ }
+}

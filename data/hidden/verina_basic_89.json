@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_basic_89",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "7652d5ece380e9edbe47d74a7bd3306b5f2184f5df91c7c1e6b6919ab3c54802",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "[-1, 2, 3, 1]",
+   "input_lean": {
+    "s": "[(-1), 2, 2, 3, 1]"
+   }
+  },
+  {
+   "expected_lean": "[3, 2, 1]",
+   "input_lean": {
+    "s": "[3, 2, 1, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "[5, 8]",
+   "input_lean": {
+    "s": "[5, 8, 5, 5]"
+   }
+  },
+  {
+   "expected_lean": "[1, 2]",
+   "input_lean": {
+    "s": "[1, 2, 2, 1, 1]"
+   }
+  },
+  {
+   "expected_lean": "[10, -97, 2]",
+   "input_lean": {
+    "s": "[10, (-97), 2]"
+   }
+  },
+  {
+   "expected_lean": "[11, 22, 35]",
+   "input_lean": {
+    "s": "[11, 22, 35]"
+   }
+  },
+  {
+   "expected_lean": "[-23]",
+   "input_lean": {
+    "s": "[(-23)]"
+   }
+  },
+  {
+   "expected_lean": "[-10]",
+   "input_lean": {
+    "s": "[(-10)]"
+   }
+  },
+  {
+   "expected_lean": "[11, 22, 31]",
+   "input_lean": {
+    "s": "[11, 22, 31]"
+   }
+  },
+  {
+   "expected_lean": "[10]",
+   "input_lean": {
+    "s": "[10]"
+   }
+  },
+  {
+   "expected_lean": "[2]",
+   "input_lean": {
+    "s": "[2]"
+   }
+  },
+  {
+   "expected_lean": "[5]",
+   "input_lean": {
+    "s": "[5, 5, 5]"
+   }
+  },
+  {
+   "expected_lean": "[33, 22, 11]",
+   "input_lean": {
+    "s": "[33, 22, 11]"
+   }
+  },
+  {
+   "expected_lean": "[10, -10, 5, 2]",
+   "input_lean": {
+    "s": "[10, (-10), 5, 2, 10, (-10)]"
+   }
+  },
+  {
+   "expected_lean": "[1, 2, 3]",
+   "input_lean": {
+    "s": "[1, 2, 2, 3, 1, 1]"
+   }
+  },
+  {
+   "expected_lean": "[11, 22]",
+   "input_lean": {
+    "s": "[11, 22]"
+   }
+  },
+  {
+   "expected_lean": "[-1, 1]",
+   "input_lean": {
+    "s": "[(-1), 1]"
+   }
+  },
+  {
+   "expected_lean": "[-1, 2, 0, -10, -2]",
+   "input_lean": {
+    "s": "[(-1), 2, 0, (-10), (-2)]"
+   }
+  },
+  {
+   "expected_lean": "[11, 22, 36]",
+   "input_lean": {
+    "s": "[11, 22, 36]"
+   }
+  },
+  {
+   "expected_lean": "[-1, 0, -10]",
+   "input_lean": {
+    "s": "[(-1), 0, (-10)]"
+   }
+  },
+  {
+   "expected_lean": "[2, 1, -2, 5, 80]",
+   "input_lean": {
+    "s": "[2, 1, (-2), 2, 5, 80]"
+   }
+  },
+  {
+   "expected_lean": "[5, 3]",
+   "input_lean": {
+    "s": "[5, 3, 5, 5]"
+   }
+  },
+  {
+   "expected_lean": "[5, -2]",
+   "input_lean": {
+    "s": "[5, (-2)]"
+   }
+  },
+  {
+   "expected_lean": "[22, 33]",
+   "input_lean": {
+    "s": "[22, 33]"
+   }
+  },
+  {
+   "expected_lean": "[3, 4, 1, 5, 9, 2, 6]",
+   "input_lean": {
+    "s": "[3, 3, 4, 1, 5, 9, 2, 6, 5]"
+   }
+  },
+  {
+   "expected_lean": "[-7, -81]",
+   "input_lean": {
+    "s": "[(-7), (-81), (-7)]"
+   }
+  },
+  {
+   "expected_lean": "[5]",
+   "input_lean": {
+    "s": "[5]"
+   }
+  },
+  {
+   "expected_lean": "[-2, 1]",
+   "input_lean": {
+    "s": "[(-2), 1, (-2)]"
+   }
+  },
+  {
+   "expected_lean": "[5, 6]",
+   "input_lean": {
+    "s": "[5, 6, 5, 5]"
+   }
+  },
+  {
+   "expected_lean": "[2, 1, 4, 3, 6, 5, 9]",
+   "input_lean": {
+    "s": "[2, 1, 4, 3, 6, 5, 1, 5, 9]"
+   }
+  }
+ ]
+}

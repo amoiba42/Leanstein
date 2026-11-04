@@ -1,0 +1,90 @@
+{
+ "aux_names": [
+  "List.myprod"
+ ],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 function that takes a list of integers and returns a new list. For each index i in the input list, the output at i is equal to the product of all numbers in the list except the number at index i. The solution must run in O(n) time without using the division operation.\n\n-----Input-----\nThe input is a list of integers. For example, [1,2,3,4].\n\n-----Output-----\nThe output is a list of integers where each element at index i is the product of every input element except the one at that index. For example, for the input [1,2,3,4], the output should be [24,12,8,6]. Each intermediate product is guaranteed to fit in a 32-bit integer.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_61",
+ "flags": [
+  "hidden_unavailable"
+ ],
+ "header": "def productExceptSelf (nums : List Int) (h_precond : productExceptSelf_precond (nums)) : List Int :=",
+ "locked_hash": "6a35eba202b8b94e3af9ea57ada8fa60662454c8e71e01af2bb85f8f088bc6c0",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@nums": false,
+    "ind_simp_all@nums": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": null,
+  "lean_s": 15.1,
+  "n_hidden": 0,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "productExceptSelf",
+  "params": [
+   [
+    "nums",
+    "List Int"
+   ]
+  ],
+  "ret": "List Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef productExceptSelf_precond (nums : List Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n-- Helper: Compute prefix products.\n-- prefix[i] is the product of all elements in nums before index i.\ndef computepref (nums : List Int) : List Int :=\n  nums.foldl (fun acc x => acc ++ [acc.getLast! * x]) [1]\n\n-- Helper: Compute suffix products.\n-- suffix[i] is the product of all elements in nums from index i (inclusive) to the end.\n-- We reverse the list and fold, then reverse back.\ndef computeSuffix (nums : List Int) : List Int :=\n  let revSuffix := nums.reverse.foldl (fun acc x => acc ++ [acc.getLast! * x]) [1]\n  revSuffix.reverse\n-- !benchmark @end code_aux\n\n\ndef productExceptSelf (nums : List Int) (h_precond : productExceptSelf_precond (nums)) : List Int :=\n  -- !benchmark @start code\n  let n := nums.length\n  if n = 0 then []\n  else\n    let pref := computepref nums  -- length = n + 1, where prefix[i] = product of nums[0 ... i-1]\n    let suffix := computeSuffix nums  -- length = n + 1, where suffix[i] = product of nums[i ... n-1]\n    -- For each index i (0 ≤ i < n): result[i] = prefix[i] * suffix[i+1]\n    -- Use array-style indexing as get! is deprecated\n    List.range n |>.map (fun i => pref[i]! * suffix[i+1]!)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n-- Specification Helper: Product of a list of Ints\n-- Defined locally if not available/imported\ndef List.myprod : List Int → Int\n  | [] => 1\n  | x :: xs => x * xs.myprod\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef productExceptSelf_postcond (nums : List Int) (result: List Int) (h_precond : productExceptSelf_precond (nums)) : Prop :=\n  -- !benchmark @start postcond\n  nums.length = result.length ∧\n  (List.range nums.length |>.all (fun i =>\n    result[i]! = some (((List.take i nums).myprod) * ((List.drop (i+1) nums).myprod))))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem productExceptSelf_spec_satisfied (nums: List Int) (h_precond : productExceptSelf_precond (nums)) :\n    productExceptSelf_postcond (nums) (productExceptSelf (nums) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(nums: List Int) (h_precond : productExceptSelf_precond (nums)) :\n    productExceptSelf_postcond (nums) (productExceptSelf (nums) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "[24, 12, 8, 6]",
+   "input_lean": {
+    "nums": "[1, 2, 3, 4]"
+   }
+  },
+  {
+   "expected_lean": "[0, 0, 9, 0, 0]",
+   "input_lean": {
+    "nums": "[-1, 1, 0, -3, 3]"
+   }
+  },
+  {
+   "expected_lean": "[3, 2]",
+   "input_lean": {
+    "nums": "[2, 3]"
+   }
+  },
+  {
+   "expected_lean": "[125, 125, 125, 125]",
+   "input_lean": {
+    "nums": "[5, 5, 5, 5]"
+   }
+  },
+  {
+   "expected_lean": "[2, 0, 0]",
+   "input_lean": {
+    "nums": "[0, 1, 2]"
+   }
+  }
+ ]
+}

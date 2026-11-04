@@ -1,0 +1,70 @@
+{
+ "family_id": "verina_basic_64",
+ "n_admissible": 6,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "88714e7c7fe82d9b971f363c536cf544a8080e918ed969ab3825413cc93dfa98",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "#['z', ' ', 'b']",
+   "input_lean": {
+    "atPos": "1",
+    "l": "2",
+    "nl": "#[' ']",
+    "oline": "#['z', 'b', '9', 'b', ' ', 'a']",
+    "p": "1"
+   }
+  },
+  {
+   "expected_lean": "#[' ', 'z', 'b']",
+   "input_lean": {
+    "atPos": "1",
+    "l": "2",
+    "nl": "#['z', '9']",
+    "oline": "#[' ', 'b']",
+    "p": "1"
+   }
+  },
+  {
+   "expected_lean": "#['Z', '0', 'A', 'Z', '9', 'A', 'A', 'z']",
+   "input_lean": {
+    "atPos": "4",
+    "l": "4",
+    "nl": "#['9', 'A', 'A', 'z', '9', 'a']",
+    "oline": "#['Z', '0', 'A', 'Z', 'A', 'a', 'a', 'Z']",
+    "p": "4"
+   }
+  },
+  {
+   "expected_lean": "#['a', 'Z', 'Z', 'Z']",
+   "input_lean": {
+    "atPos": "2",
+    "l": "3",
+    "nl": "#['Z', 'A', 'b']",
+    "oline": "#['a', 'Z', 'Z', ' ', ' ', '9']",
+    "p": "1"
+   }
+  },
+  {
+   "expected_lean": "#[' ', 'b', '9', 'a', 'b', 'b']",
+   "input_lean": {
+    "atPos": "2",
+    "l": "4",
+    "nl": "#['9', 'a', 'b']",
+    "oline": "#[' ', 'b', 'b', 'b', '0', 'z']",
+    "p": "2"
+   }
+  },
+  {
+   "expected_lean": "#['9', 'b', 'A', 'A']",
+   "input_lean": {
+    "atPos": "3",
+    "l": "4",
+    "nl": "#[]",
+    "oline": "#['9', 'b', 'A', 'A', '0', '9']",
+    "p": "0"
+   }
+  }
+ ]
+}

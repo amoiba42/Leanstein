@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_90",
+ "flags": [],
+ "hashes": {
+  "locked": "3e631693fa4210c79e3195a6d0cf5e055cbf1817ee51b9d2e404c9320a276b3a"
+ },
+ "instance_id": "verina_basic_90__mut__drop_succ__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "",
+  "before": " - 1",
+  "col": 24,
+  "line": 13,
+  "operator": "drop_succ",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rows := a.size\n  let cols := if rows > 0 then (a[0]!).size else 0\n\n  let rec aux (m n : Int) (fuel : Nat) : (Int × Int) :=\n    if fuel = 0 then (-1, -1)\n    else if m ≥ Int.ofNat rows || n < 0 then (-1, -1)\n    else if get2d a m n = key then (m, n)\n    else if get2d a m n < key then\n      aux (m + 1) n (fuel - 1)\n    else\n      aux m (n - 1) (fuel - 1)\n\n  aux 0 (Int.ofNat (cols)) (rows + cols)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "(-1, -1)",
+  "expected": "(1, 1)",
+  "index": 0,
+  "input_lean": {
+   "a": "#[#[1, 2, 3], #[4, 5, 6], #[7, 8, 9]]",
+   "key": "5"
+  },
+  "source": "visible"
+ }
+}

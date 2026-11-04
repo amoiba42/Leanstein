@@ -1,0 +1,88 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires developing a solution that sorts an array of integers in non-decreasing order. The solution must return an array that is a rearrangement of the input, containing exactly the same elements but ordered from smallest to largest.\n\n-----Input-----  \nThe input consists of:  \n• a: An array of integers. This array can be empty or non-empty.\n\n-----Output-----  \nThe output is an array of integers that:  \n• Is sorted in non-decreasing order (i.e., for any indices i and j with i < j, a[i]! ≤ a[j]!).  \n• Has the same size as the input array.  \n• Contains exactly the same elements as the input array, ensuring that the multiset of elements is preserved.\n\n-----Note-----  \nThe implementation uses helper functions for swapping elements and performing inner and outer loops of the bubble sort algorithm. No additional preconditions are required as the function should correctly handle empty and non-empty arrays.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_52",
+ "flags": [],
+ "header": "def BubbleSort (a : Array Int) (h_precond : BubbleSort_precond (a)) : Array Int :=",
+ "locked_hash": "7beee18f9d57a152aa21beabd78eaf6c2382c5b88b8497bba2baa70afa3f5872",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@bubbleInner": false,
+    "fun_ind_grind@bubbleOuter": false,
+    "fun_ind_simp@bubbleInner": false,
+    "fun_ind_simp@bubbleOuter": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 125.2,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "BubbleSort",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef BubbleSort_precond (a : Array Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef swap (a : Array Int) (i j : Nat) : Array Int :=\n  let temp := a[i]!\n  let a₁ := a.set! i (a[j]!)\n  a₁.set! j temp\n\ndef bubbleInner (j i : Nat) (a : Array Int) : Array Int :=\n  if j < i then\n    let a' := if a[j]! > a[j+1]! then swap a j (j+1) else a\n    bubbleInner (j+1) i a'\n  else\n    a\n\ndef bubbleOuter (i : Nat) (a : Array Int) : Array Int :=\n  if i > 0 then\n    let a' := bubbleInner 0 i a\n    bubbleOuter (i - 1) a'\n  else\n    a\n-- !benchmark @end code_aux\n\n\ndef BubbleSort (a : Array Int) (h_precond : BubbleSort_precond (a)) : Array Int :=\n  -- !benchmark @start code\n  if a.size = 0 then a else bubbleOuter (a.size - 1) a\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef BubbleSort_postcond (a : Array Int) (result: Array Int) (h_precond : BubbleSort_precond (a)) :=\n  -- !benchmark @start postcond\n  List.Pairwise (· ≤ ·) result.toList ∧ List.isPerm result.toList a.toList\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem BubbleSort_spec_satisfied (a: Array Int) (h_precond : BubbleSort_precond (a)) :\n    BubbleSort_postcond (a) (BubbleSort (a) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (h_precond : BubbleSort_precond (a)) :\n    BubbleSort_postcond (a) (BubbleSort (a) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[1, 2, 3, 4, 5]",
+   "input_lean": {
+    "a": "#[5, 4, 3, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4, 5]",
+   "input_lean": {
+    "a": "#[1, 2, 3, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 1, 2, 3, 5]",
+   "input_lean": {
+    "a": "#[3, 1, 2, 1, 5]"
+   }
+  },
+  {
+   "expected_lean": "#[10]",
+   "input_lean": {
+    "a": "#[10]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 2, 4, 4, 4, 8]",
+   "input_lean": {
+    "a": "#[4, 4, 4, 2, 2, 8]"
+   }
+  }
+ ]
+}

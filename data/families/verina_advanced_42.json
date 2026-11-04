@@ -1,0 +1,88 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 function that takes a list of stock prices and returns the maximum profit achievable by buying on one day and selling on a later day.\n\nIf no profit is possible, the function should return 0.\n\n-----Input-----\nThe input consists of:\nprices: A list of natural numbers representing stock prices on each day.\n\n-----Output-----\nThe output is a natural number:\nReturns the maximum profit achievable with one transaction (buy once, sell once), or 0 if no profitable transaction is possible.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_42",
+ "flags": [],
+ "header": "def maxProfit (prices : List Nat) (h_precond : maxProfit_precond (prices)) : Nat :=",
+ "locked_hash": "f4b0d36f9c9b3c4290388b816be6a24ff7744c32dabf3eb89ed8985f3abc75f9",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@maxProfitAux": false,
+    "fun_ind_simp@maxProfitAux": false,
+    "grind": false,
+    "ind_grind@prices": false,
+    "ind_simp_all@prices": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 24.0,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "maxProfit",
+  "params": [
+   [
+    "prices",
+    "List Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef maxProfit_precond (prices : List Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef updateMinAndProfit (price : Nat) (minSoFar : Nat) (maxProfit : Nat) : (Nat × Nat) :=\n  let newMin := Nat.min minSoFar price\n  let profit := if price > minSoFar then price - minSoFar else 0\n  let newMaxProfit := Nat.max maxProfit profit\n  (newMin, newMaxProfit)\n\ndef maxProfitAux (prices : List Nat) (minSoFar : Nat) (maxProfit : Nat) : Nat :=\n  match prices with\n  | [] => maxProfit\n  | p :: ps =>\n    let (newMin, newProfit) := updateMinAndProfit p minSoFar maxProfit\n    maxProfitAux ps newMin newProfit\n-- !benchmark @end code_aux\n\n\ndef maxProfit (prices : List Nat) (h_precond : maxProfit_precond (prices)) : Nat :=\n  -- !benchmark @start code\n  match prices with\n  | [] => 0\n  | p :: ps => maxProfitAux ps p 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef maxProfit_postcond (prices : List Nat) (result: Nat) (h_precond : maxProfit_precond (prices)) : Prop :=\n  -- !benchmark @start postcond\n  -- All valid transactions have profit ≤ result\n  List.Pairwise (fun ⟨pi, i⟩ ⟨pj, j⟩ => i < j → pj - pi ≤ result) prices.zipIdx ∧\n  -- result = 0 when no profitable transaction exists (empty, single element, or decreasing prices)\n  (result = 0 ↔\n    (prices.length ≤ 1 ∨\n     prices.zipIdx.all (fun ⟨pi, i⟩ =>\n       prices.zipIdx.all (fun ⟨pj, j⟩ => i ≥ j ∨ pj ≤ pi)))) ∧\n  -- If result > 0, there exists a transaction achieving it\n  (result > 0 → prices.zipIdx.any (fun ⟨pi, i⟩ =>\n    prices.zipIdx.any (fun ⟨pj, j⟩ => i < j ∧ pj - pi = result)))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem maxProfit_spec_satisfied (prices: List Nat) (h_precond : maxProfit_precond (prices)) :\n    maxProfit_postcond (prices) (maxProfit (prices) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(prices: List Nat) (h_precond : maxProfit_precond (prices)) :\n    maxProfit_postcond (prices) (maxProfit (prices) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "prices": "[7, 1, 5, 3, 6, 4]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "prices": "[7, 6, 4, 3, 1]"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "prices": "[2, 4, 1]"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "prices": "[1, 2]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "prices": "[]"
+   }
+  }
+ ]
+}

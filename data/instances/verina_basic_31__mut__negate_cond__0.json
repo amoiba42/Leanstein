@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_31",
+ "flags": [],
+ "hashes": {
+  "locked": "51396a671548a0a671ad667189d2d33e4e1427004957e91283c7304ca087f5b8"
+ },
+ "instance_id": "verina_basic_31__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(isLowerCase c)",
+  "before": "isLowerCase c",
+  "col": 32,
+  "line": 2,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let cs := s.toList\n  let cs' := cs.map (fun c => if ¬(isLowerCase c) then shiftMinus32 c else c)\n  String.mk cs'\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "\"(ello\\x0c\\x007orld\\x01\"",
+  "expected": "\"HELLO, WORLD!\"",
+  "index": 0,
+  "input_lean": {
+   "s": "\"Hello, World!\""
+  },
+  "source": "visible"
+ }
+}

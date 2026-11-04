@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_28",
+ "flags": [],
+ "hashes": {
+  "locked": "f8a4ed5a047a51aab52771e1e2c4b93e4328cba6e6f7ae3b5e7ba8d96e445c8d"
+ },
+ "instance_id": "verina_basic_28__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let bound := n\n  let rec check (i : Nat) (fuel : Nat) : Bool :=\n    if fuel = 0 then true\n    else if i * i > n then true\n    else if n % i = 0 then false\n    else check (i + 1) (fuel - 1)\n  check 2 bound\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

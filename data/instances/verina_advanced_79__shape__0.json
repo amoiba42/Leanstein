@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_79",
+ "flags": [],
+ "hashes": {
+  "locked": "74d4f1e5ee66bfcdc5a3ba313c9f3d72ffe45aed41f142469bfbcf5fbe08f4b6"
+ },
+ "instance_id": "verina_advanced_79__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec outer (lst : List Int) (i : Nat)\n            : Option (Nat × Nat) :=\n        match lst with\n        | [] =>\n            none\n        | x :: xs =>\n            let rec inner (lst' : List Int) (j : Nat)\n                    : Option Nat :=\n                match lst' with\n                | [] =>\n                    none\n                | y :: ys =>\n                    if x + y = target then\n                        some j\n                    else\n                        inner ys (j + 1)\n            match inner xs (i + 1) with\n            | some j =>\n                some (i, j)\n            | none =>\n                outer xs (i + 1)\n        outer nums 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

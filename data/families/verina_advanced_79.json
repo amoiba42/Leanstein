@@ -1,0 +1,99 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 method that implementing the \"Two Sum\" problem. Given a list of integers\nand a target integer, the function should return the indices of the two numbers that add up to\nthe target. If no valid pair exists, the function should return none. And the indices returned must\nbe within the bounds of the list. If multiple pairs exist, return the lexicographically first pair (i, j),\nmeaning the pair with the smallest i, and among those, the smallest j.\n\n-----Input-----\n- nums: A list of integers.\n- target: An integer representing the target sum.\n\n-----Output-----\n- An option type containing a pair of natural numbers (indices) such that\n  nums[i] + nums[j] = target with i < j, if such a pair exists. Otherwise, it returns none.\n  The pair returned must be lexicographically first among all valid pairs.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_79",
+ "flags": [],
+ "header": "def twoSum (nums : List Int) (target : Int) (h_precond : twoSum_precond (nums) (target)) : Option (Nat × Nat) :=",
+ "locked_hash": "74d4f1e5ee66bfcdc5a3ba313c9f3d72ffe45aed41f142469bfbcf5fbe08f4b6",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@twoSum.inner": false,
+    "fun_ind_grind@twoSum.outer": false,
+    "fun_ind_simp@twoSum.inner": false,
+    "fun_ind_simp@twoSum.outer": false,
+    "grind": false,
+    "ind_grind@nums": false,
+    "ind_simp_all@nums": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 15.9,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "twoSum",
+  "params": [
+   [
+    "nums",
+    "List Int"
+   ],
+   [
+    "target",
+    "Int"
+   ]
+  ],
+  "ret": "Option (Nat × Nat)"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef twoSum_precond (nums : List Int) (target : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef twoSum (nums : List Int) (target : Int) (h_precond : twoSum_precond (nums) (target)) : Option (Nat × Nat) :=\n  -- !benchmark @start code\n  let rec outer (lst : List Int) (i : Nat)\n            : Option (Nat × Nat) :=\n        match lst with\n        | [] =>\n            none\n        | x :: xs =>\n            let rec inner (lst' : List Int) (j : Nat)\n                    : Option Nat :=\n                match lst' with\n                | [] =>\n                    none\n                | y :: ys =>\n                    if x + y = target then\n                        some j\n                    else\n                        inner ys (j + 1)\n            match inner xs (i + 1) with\n            | some j =>\n                some (i, j)\n            | none =>\n                outer xs (i + 1)\n        outer nums 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef twoSum_postcond (nums : List Int) (target : Int) (result: Option (Nat × Nat)) (h_precond : twoSum_precond (nums) (target)) : Prop :=\n  -- !benchmark @start postcond\n    match result with\n    | none => List.Pairwise (· + · ≠ target) nums\n    | some (i, j) =>\n        i < j ∧\n        j < nums.length ∧\n        nums[i]! + nums[j]! = target ∧\n        -- Lexicographically first: no valid pair (i', j') with i' < i exists\n        (nums.take i).zipIdx.all (fun ⟨a, i'⟩ =>\n          (nums.drop (i' + 1)).all (fun b => a + b ≠ target)) ∧\n        -- For this i, j is the smallest valid partner\n        ((nums.drop (i + 1)).take (j - i - 1)).all (fun b => nums[i]! + b ≠ target)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem twoSum_spec_satisfied (nums: List Int) (target: Int) (h_precond : twoSum_precond (nums) (target)) :\n    twoSum_postcond (nums) (target) (twoSum (nums) (target) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(nums: List Int) (target: Int) (h_precond : twoSum_precond (nums) (target)) :\n    twoSum_postcond (nums) (target) (twoSum (nums) (target) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "some (0, 1)",
+   "input_lean": {
+    "nums": "[2, 7, 11, 15]",
+    "target": "9"
+   }
+  },
+  {
+   "expected_lean": "some (1, 2)",
+   "input_lean": {
+    "nums": "[3, 2, 4]",
+    "target": "6"
+   }
+  },
+  {
+   "expected_lean": "some (0, 1)",
+   "input_lean": {
+    "nums": "[3, 3]",
+    "target": "6"
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "nums": "[1, 2, 3]",
+    "target": "7"
+   }
+  },
+  {
+   "expected_lean": "some (0, 3)",
+   "input_lean": {
+    "nums": "[0, 4, 3, 0]",
+    "target": "0"
+   }
+  }
+ ]
+}

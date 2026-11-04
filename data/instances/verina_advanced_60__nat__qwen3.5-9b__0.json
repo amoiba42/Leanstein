@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_60",
+ "flags": [],
+ "hashes": {
+  "locked": "2dc15649c34f960252c4f2d755c5cf3a372f858f43230058d0b3e0c18cc6874d"
+ },
+ "instance_id": "verina_advanced_60__nat__qwen3.5-9b__0",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef partitionEvensOdds (nums : List Nat) (h_precond : partitionEvensOdds_precond (nums)) : (List Nat × List Nat) :=\n  nums.foldl (fun (acc : List Nat × List Nat) n =>\n    if n % 2 == 0 then (n :: acc.fst, acc.snd) else (acc.fst, n :: acc.snd))\n    (List.nil, List.nil) |>.swap\n```",
+  "seed": 5000
+ },
+ "split": "main",
+ "start": {
+  "code": "nums.foldl (fun (acc : List Nat × List Nat) n =>\n  if n % 2 == 0 then (n :: acc.fst, acc.snd) else (acc.fst, n :: acc.snd))\n  (List.nil, List.nil) |>.swap",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "([5, 3, 1], [6, 4, 2])",
+  "expected": "([2, 4, 6], [1, 3, 5])",
+  "index": 0,
+  "input_lean": {
+   "nums": "[1, 2, 3, 4, 5, 6]"
+  },
+  "source": "visible"
+ }
+}

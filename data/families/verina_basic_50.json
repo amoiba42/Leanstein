@@ -1,0 +1,84 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task is about calculating the absolute value of an integer. The goal is to determine the non-negative value of a given integer: if the integer is non-negative, it remains unchanged; if it is negative, its positive counterpart is returned.\n\n-----Input-----  \nThe input consists of:  \n• x: An integer.\n\n-----Output-----  \nThe output is an integer that represents the absolute value of the input. Specifically:  \n• If x is non-negative, the output is x.  \n• If x is negative, the output is the negation of x (that is, a value y such that x + y = 0).\n\n-----Note-----  \nThis function should correctly handle zero, positive, and negative integers.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_50",
+ "flags": [],
+ "header": "def Abs (x : Int) (h_precond : Abs_precond (x)) : Int :=",
+ "locked_hash": "2f47158007b92e172d3e9fd478d4b8082ded00734253c7b7776f02e826d565ec",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_all",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": true,
+    "split_simp_all": true,
+    "unfold_omega": true
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 3.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_broken",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "Abs",
+  "params": [
+   [
+    "x",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Mathlib\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef Abs_precond (x : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef Abs (x : Int) (h_precond : Abs_precond (x)) : Int :=\n  -- !benchmark @start code\n  if x < 0 then -x else x\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef Abs_postcond (x : Int) (result: Int) (h_precond : Abs_precond (x)) :=\n  -- !benchmark @start postcond\n  (x ≥ 0 → x = result) ∧ (x < 0 → x + result = 0)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem Abs_spec_satisfied (x: Int) (h_precond : Abs_precond (x)) :\n    Abs_postcond (x) (Abs (x) h_precond) h_precond := by\n  -- !benchmark @start proof\n    simp [Abs_postcond, Abs]\n    apply And.intro\n    . intro h\n      split\n      case isTrue ht =>\n        have h': ¬0 ≤ x := not_le.mpr ht\n        contradiction\n      case isFalse =>\n        rfl\n    . intro h\n      split\n      case isTrue =>\n        simp\n      case isFalse =>\n        contradiction\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(x: Int) (h_precond : Abs_precond (x)) :\n    Abs_postcond (x) (Abs (x) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "x": "5"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "x": "0"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "x": "(-5)"
+   }
+  },
+  {
+   "expected_lean": "10",
+   "input_lean": {
+    "x": "10"
+   }
+  },
+  {
+   "expected_lean": "10",
+   "input_lean": {
+    "x": "(-10)"
+   }
+  }
+ ]
+}

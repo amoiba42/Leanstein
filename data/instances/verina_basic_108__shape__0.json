@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_108",
+ "flags": [],
+ "hashes": {
+  "locked": "c7a6a1cc8b942b56e5d9737b75908adbe2546be7252e4f5ae4f10bffeee30520"
+ },
+ "instance_id": "verina_basic_108__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let s := buildS operations\n  let rec check_negative (lst : List Int) : Bool :=\n    match lst with\n    | []      => false\n    | x :: xs => if x < 0 then true else check_negative xs\n  let result := check_negative (s.toList)\n  (s, result)\n",
+  "code_aux": "def buildS (operations : List Int) : Array Int :=\n  let sList := operations.foldl\n    (fun (acc : List Int) (op : Int) =>\n      let last := acc.getLast? |>.getD 0\n      acc.append [last + op])\n    [0]\n  Array.mk sList\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

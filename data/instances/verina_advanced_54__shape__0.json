@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_54",
+ "flags": [],
+ "hashes": {
+  "locked": "dfa73053154c6703d196ac06bd46141cb5c25bde28d58d08c4cba8e8039d5512"
+ },
+ "instance_id": "verina_advanced_54__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  let n := nums.length\n  let expectedSum := (n * (n + 1)) / 2\n  let actualSum := nums.foldl (· + ·) 0\n  expectedSum - actualSum\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_basic_43",
+ "n_admissible": 75,
+ "n_candidates": 75,
+ "seed": 7,
+ "sha256": "6dc9a29d4de85cac72b87a1924096ede455644aea6dda31d4e42a7ed308f6c77",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "317338",
+   "input_lean": {
+    "n": "10"
+   }
+  },
+  {
+   "expected_lean": "253406230",
+   "input_lean": {
+    "n": "38"
+   }
+  },
+  {
+   "expected_lean": "1182285",
+   "input_lean": {
+    "n": "13"
+   }
+  },
+  {
+   "expected_lean": "52871",
+   "input_lean": {
+    "n": "7"
+   }
+  },
+  {
+   "expected_lean": "103496",
+   "input_lean": {
+    "n": "8"
+   }
+  },
+  {
+   "expected_lean": "10218676",
+   "input_lean": {
+    "n": "20"
+   }
+  },
+  {
+   "expected_lean": "6632791753",
+   "input_lean": {
+    "n": "73"
+   }
+  },
+  {
+   "expected_lean": "31208345",
+   "input_lean": {
+    "n": "25"
+   }
+  },
+  {
+   "expected_lean": "3344528",
+   "input_lean": {
+    "n": "16"
+   }
+  },
+  {
+   "expected_lean": "13044437",
+   "input_lean": {
+    "n": "21"
+   }
+  },
+  {
+   "expected_lean": "6031074",
+   "input_lean": {
+    "n": "18"
+   }
+  },
+  {
+   "expected_lean": "24310",
+   "input_lean": {
+    "n": "6"
+   }
+  },
+  {
+   "expected_lean": "11156292945",
+   "input_lean": {
+    "n": "81"
+   }
+  },
+  {
+   "expected_lean": "37973546",
+   "input_lean": {
+    "n": "26"
+   }
+  },
+  {
+   "expected_lean": "791660",
+   "input_lean": {
+    "n": "12"
+   }
+  },
+  {
+   "expected_lean": "221765605",
+   "input_lean": {
+    "n": "37"
+   }
+  },
+  {
+   "expected_lean": "3175130175",
+   "input_lean": {
+    "n": "63"
+   }
+  },
+  {
+   "expected_lean": "327509352",
+   "input_lean": {
+    "n": "40"
+   }
+  },
+  {
+   "expected_lean": "511819",
+   "input_lean": {
+    "n": "11"
+   }
+  },
+  {
+   "expected_lean": "2487744028",
+   "input_lean": {
+    "n": "60"
+   }
+  },
+  {
+   "expected_lean": "187017",
+   "input_lean": {
+    "n": "9"
+   }
+  },
+  {
+   "expected_lean": "1610066359",
+   "input_lean": {
+    "n": "55"
+   }
+  },
+  {
+   "expected_lean": "3435274816",
+   "input_lean": {
+    "n": "64"
+   }
+  },
+  {
+   "expected_lean": "2099821386",
+   "input_lean": {
+    "n": "58"
+   }
+  },
+  {
+   "expected_lean": "125137441",
+   "input_lean": {
+    "n": "33"
+   }
+  },
+  {
+   "expected_lean": "55014652",
+   "input_lean": {
+    "n": "28"
+   }
+  },
+  {
+   "expected_lean": "733627183",
+   "input_lean": {
+    "n": "47"
+   }
+  },
+  {
+   "expected_lean": "1713726",
+   "input_lean": {
+    "n": "14"
+   }
+  },
+  {
+   "expected_lean": "20563863",
+   "input_lean": {
+    "n": "23"
+   }
+  },
+  {
+   "expected_lean": "18893736042",
+   "input_lean": {
+    "n": "90"
+   }
+  }
+ ]
+}

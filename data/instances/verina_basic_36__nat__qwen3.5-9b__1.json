@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_basic_36",
+ "flags": [],
+ "hashes": {
+  "locked": "81592c356b6112c79a8bc9f2ea3ab871ab04515fba7db6f1570fb75e527333ba"
+ },
+ "instance_id": "verina_basic_36__nat__qwen3.5-9b__1",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef replaceWithColon (s : String) (h_precond : replaceWithColon_precond (s)) : String :=\n  s.toList.map (fun c => if isSpaceCommaDot c then ':' else c) |>.toString\n```",
+  "seed": 5001
+ },
+ "split": "main",
+ "start": {
+  "code": "s.toList.map (fun c => if isSpaceCommaDot c then ':' else c) |>.toString",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "\"[H, e, l, l, o, :, :, w, o, r, l, d, :, :, H, o, w, :, a, r, e, :, y, o, u, ?]\"",
+  "expected": "\"Hello::world::How:are:you?\"",
+  "index": 0,
+  "input_lean": {
+   "s": "\"Hello, world. How are you?\""
+  },
+  "source": "visible"
+ }
+}

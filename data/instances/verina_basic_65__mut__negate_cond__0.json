@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_65",
+ "flags": [],
+ "hashes": {
+  "locked": "943ab86ab3cc1b4b2cfdbbdf11cbcfb42495387e0c288924cdcbea21f0e41878"
+ },
+ "instance_id": "verina_basic_65__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬((r + 1) * (r + 1) ≤ N)",
+  "before": "(r + 1) * (r + 1) ≤ N",
+  "col": 10,
+  "line": 4,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  let rec boundedLoop : Nat → Nat → Nat\n    | 0, r => r\n    | bound+1, r =>\n        if ¬((r + 1) * (r + 1) ≤ N) then\n          boundedLoop bound (r + 1)\n        else\n          r\n  boundedLoop (N+1) 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "0",
+  "index": 0,
+  "input_lean": {
+   "N": "0"
+  },
+  "source": "visible"
+ }
+}

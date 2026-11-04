@@ -1,0 +1,90 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires writing a Lean 4 method that checks whether all characters in an input string are identical. The method should return true if every character in the string is the same, and false if at least one character differs. An empty string or a single-character string is considered to have all characters identical.\n\n-----Input-----  \nThe input consists of:  \ns: A string.\n\n-----Output-----  \nThe output is a Boolean value:  \nReturns true if every character in the string is identical.  \nReturns false if there is at least one differing character.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_38",
+ "flags": [],
+ "header": "def allCharactersSame (s : String) (h_precond : allCharactersSame_precond (s)) : Bool :=",
+ "locked_hash": "1671532ed2abcbbe34961dedb2b961f0e8d032e992f15d87763cb9610a3a001f",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 6.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "allCharactersSame",
+  "params": [
+   [
+    "s",
+    "String"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef allCharactersSame_precond (s : String) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef allCharactersSame (s : String) (h_precond : allCharactersSame_precond (s)) : Bool :=\n  -- !benchmark @start code\n  match s.toList with\n  | []      => true\n  | c :: cs => cs.all (fun x => x = c)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef allCharactersSame_postcond (s : String) (result: Bool) (h_precond : allCharactersSame_precond (s)) :=\n  -- !benchmark @start postcond\n  let cs := s.toList\n  (result → List.Pairwise (· = ·) cs) ∧\n  (¬ result → (cs ≠ [] ∧ cs.any (fun x => x ≠ cs[0]!)))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem allCharactersSame_spec_satisfied (s: String) (h_precond : allCharactersSame_precond (s)) :\n    allCharactersSame_postcond (s) (allCharactersSame (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: String) (h_precond : allCharactersSame_precond (s)) :\n    allCharactersSame_postcond (s) (allCharactersSame (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"aaa\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"aba\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"a\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"bbbb\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"bbab\""
+   }
+  }
+ ]
+}

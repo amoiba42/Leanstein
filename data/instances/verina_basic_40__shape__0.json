@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_40",
+ "flags": [],
+ "hashes": {
+  "locked": "193f05dc53c45202126bead07fc2dc8879308f78ff7e513b9fff989ba78f260f"
+ },
+ "instance_id": "verina_basic_40__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  secondSmallestAux s 1 0 none\n",
+  "code_aux": "def secondSmallestAux (s : Array Int) (i minIdx : Nat) (secondIdx : Option Nat) : Int :=\n  if i ≥ s.size then\n    match secondIdx with\n    | some si => s[si]!\n    | none => panic! \"no second smallest\"  -- unreachable given precondition\n  else\n    let x := s[i]!\n    let m := s[minIdx]!\n    match secondIdx with\n    | none =>\n      if x < m then\n        secondSmallestAux s (i + 1) i (some minIdx)\n      else if x > m then\n        secondSmallestAux s (i + 1) minIdx (some i)\n      else\n        secondSmallestAux s (i + 1) minIdx none\n    | some si =>\n      let smin := s[si]!\n      if x < m then\n        secondSmallestAux s (i + 1) i (some minIdx)\n      else if x < smin ∧ x > m then\n        secondSmallestAux s (i + 1) minIdx (some i)\n      else\n        secondSmallestAux s (i + 1) minIdx (some si)\ntermination_by s.size - i\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

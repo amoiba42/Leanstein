@@ -1,0 +1,102 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 method that finds the maximum among three given integers. The method should return the largest value, ensuring that the result is greater than or equal to each of the input numbers and that it is one of the provided integers.\n\n-----Input-----\nThe input consists of three integers:\na: The first integer.\nb: The second integer.\nc: The third integer.\n\n-----Output-----\nThe output is an integer:\nReturns the maximum of the three input numbers, assuring that the returned value is greater than or equal to a, b, and c, and that it matches one of these values.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_41",
+ "flags": [],
+ "header": "def maxOfThree (a : Int) (b : Int) (c : Int) (h_precond : maxOfThree_precond (a) (b) (c)) : Int :=",
+ "locked_hash": "44193c05dcb41feed9132841544b2c9128755c6ae980ff6ac2c4f63027bf2960",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": true,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 9.8,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "maxOfThree",
+  "params": [
+   [
+    "a",
+    "Int"
+   ],
+   [
+    "b",
+    "Int"
+   ],
+   [
+    "c",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef maxOfThree_precond (a : Int) (b : Int) (c : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef maxOfThree (a : Int) (b : Int) (c : Int) (h_precond : maxOfThree_precond (a) (b) (c)) : Int :=\n  -- !benchmark @start code\n  if a >= b && a >= c then a\n  else if b >= a && b >= c then b\n  else c\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef maxOfThree_postcond (a : Int) (b : Int) (c : Int) (result: Int) (h_precond : maxOfThree_precond (a) (b) (c)) : Prop :=\n  -- !benchmark @start postcond\n  (result >= a ∧ result >= b ∧ result >= c) ∧ (result = a ∨ result = b ∨ result = c)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem maxOfThree_spec_satisfied (a: Int) (b: Int) (c: Int) (h_precond : maxOfThree_precond (a) (b) (c)) :\n    maxOfThree_postcond (a) (b) (c) (maxOfThree (a) (b) (c) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(a: Int) (b: Int) (c: Int) (h_precond : maxOfThree_precond (a) (b) (c)) :\n    maxOfThree_postcond (a) (b) (c) (maxOfThree (a) (b) (c) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "a": "3",
+    "b": "2",
+    "c": "1"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "a": "5",
+    "b": "5",
+    "c": "5"
+   }
+  },
+  {
+   "expected_lean": "20",
+   "input_lean": {
+    "a": "10",
+    "b": "20",
+    "c": "15"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "a": "(-1)",
+    "b": "(-2)",
+    "c": "(-3)"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "0",
+    "b": "(-10)",
+    "c": "(-5)"
+   }
+  }
+ ]
+}

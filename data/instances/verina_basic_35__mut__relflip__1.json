@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_35",
+ "flags": [],
+ "hashes": {
+  "locked": "e7400d2960d91f96fe4d3d0f4d2d7611ba75982d07e78eec65ab7d1bea00e51e"
+ },
+ "instance_id": "verina_basic_35__mut__relflip__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "=",
+  "before": "≠",
+  "col": 39,
+  "line": 1,
+  "operator": "relflip",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let nonZeros := arr.toList.filter (· = 0)\n  let zeros := arr.toList.filter (· = 0)\n  Array.mk (nonZeros ++ zeros)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[0, 0, 0, 0]",
+  "expected": "#[1, 3, 12, 0, 0]",
+  "index": 0,
+  "input_lean": {
+   "arr": "#[0, 1, 0, 3, 12]"
+  },
+  "source": "visible"
+ }
+}

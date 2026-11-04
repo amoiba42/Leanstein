@@ -1,0 +1,108 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that determines whether a given string contains the character 'z' or 'Z'. The method should return true if the string includes either the lowercase or uppercase letter 'z', and false otherwise.\n\n-----Input-----\nThe input consists of:\ns: A string.\n\n-----Output-----\nThe output is a Boolean value:\nReturns true if the input string contains the character 'z' or 'Z'.\nReturns false if the input string does not contain the character 'z' or 'Z'.\n\n-----Note-----\nThere are no preconditions; the method will always work as strings and sequences are considered non-null.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_14",
+ "flags": [],
+ "header": "def containsZ (s : String) (h_precond : containsZ_precond (s)) : Bool :=",
+ "locked_hash": "cdfcaf53b7f7268987fb1adf8ac18596a32121cc4ed06552fe673927e77b1a56",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": true,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 1.9,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "containsZ",
+  "params": [
+   [
+    "s",
+    "String"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef containsZ_precond (s : String) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef containsZ (s : String) (h_precond : containsZ_precond (s)) : Bool :=\n  -- !benchmark @start code\n  s.toList.any fun c => c = 'z' || c = 'Z'\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef containsZ_postcond (s : String) (result: Bool) (h_precond : containsZ_precond (s)) :=\n  -- !benchmark @start postcond\n  let cs := s.toList\n  (∃ x, x ∈ cs ∧ (x = 'z' ∨ x = 'Z')) ↔ result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem containsZ_spec_satisfied (s: String) (h_precond : containsZ_precond (s)) :\n    containsZ_postcond (s) (containsZ (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold containsZ containsZ_postcond\n  simp_all\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: String) (h_precond : containsZ_precond (s)) :\n    containsZ_postcond (s) (containsZ (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"hello\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"zebra\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"Zebra\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"crazy\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"AZ\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"abc\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"Zz\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"no letter\""
+   }
+  }
+ ]
+}

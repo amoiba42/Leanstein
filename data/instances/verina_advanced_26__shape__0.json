@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_26",
+ "flags": [],
+ "hashes": {
+  "locked": "5014978276f31f062939e05038af820e3766721b7a82320a8a50a5cb2c3655e9"
+ },
+ "instance_id": "verina_advanced_26__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let chars := digits.toList\n  -- Return [] if any invalid digit exists\n  if chars.any (fun c => digitToLetters c == []) then []\n  else go chars\n  where\n    go : List Char → List String\n    | [] => []\n    | (d :: ds) =>\n      let restCombinations := go ds\n      let currentLetters := digitToLetters d\n      match restCombinations with\n      | [] => currentLetters.map (λ c => String.singleton c)\n      | _ => currentLetters.flatMap (λ c => restCombinations.map (λ s => String.singleton c ++ s))\n",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

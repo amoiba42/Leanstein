@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_34",
+ "flags": [],
+ "hashes": {
+  "locked": "68c06e987e2b13dbad94315acd4016c3c9c024aca03cf926b130c9fb94045447"
+ },
+ "instance_id": "verina_advanced_34__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  Id.run do\n    if nums.isEmpty then return 0\n    let mut sub : Array Int := Array.empty\n    sub := sub.push nums.head!\n    for num in nums.tail do\n      if num > sub[sub.size - 1]! then\n        sub := sub.push num\n      else\n        let left := binarySearchLeft sub num 0 (sub.size - 1)\n        sub := sub.set! left num\n    return Int.ofNat sub.size\n",
+  "code_aux": "def binarySearchLeft (sub : Array Int) (num : Int) (left right : Nat) : Nat :=\n  if h : left < right then\n    let mid := (left + right) / 2\n    if sub[mid]! == num then\n      binarySearchLeft sub num left mid\n    else if sub[mid]! < num then\n      binarySearchLeft sub num (mid + 1) right\n    else\n      binarySearchLeft sub num left mid\n  else\n    left\ntermination_by right - left\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

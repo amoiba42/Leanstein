@@ -1,0 +1,94 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 function that calculates how much water can be trapped between elevations after it rains. The input is a list of non-negative integers representing an elevation map. Each index traps water depending on the min of max heights to its left and right.\n\n-----Input-----\n- height: A list of natural numbers representing elevations.\n\n-----Output-----\n- A natural number: total units of water that can be trapped.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_77",
+ "flags": [],
+ "header": "def trapRainWater (height : List Nat) (h_precond : trapRainWater_precond (height)) : Nat :=",
+ "locked_hash": "7bf8bdd5001f4fa0621d928cbe37983ac2a3a623e5ddde109da4b960b0e95d0a",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": true,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@trapLoop": false,
+    "fun_ind_simp@trapLoop": false,
+    "grind": false,
+    "ind_grind@height": false,
+    "ind_simp_all@height": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 98.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "trapRainWater",
+  "params": [
+   [
+    "height",
+    "List Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef trapRainWater_precond (height : List Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef trapLoop (height : List Nat) (left right leftMax rightMax water : Nat) : Nat :=\n  if h : left < right then\n    let hLeft := height[left]!\n    let hRight := height[right]!\n    if hLeft < hRight then\n      let (leftMax, water) :=\n        if hLeft >= leftMax then (hLeft, water) else (leftMax, water + (leftMax - hLeft))\n      trapLoop height (left + 1) right leftMax rightMax water\n    else\n      let (rightMax, water) :=\n        if hRight >= rightMax then (hRight, water) else (rightMax, water + (rightMax - hRight))\n      trapLoop height left (right - 1) leftMax rightMax water\n  else\n    water\ntermination_by right - left\n-- !benchmark @end code_aux\n\n\ndef trapRainWater (height : List Nat) (h_precond : trapRainWater_precond (height)) : Nat :=\n  -- !benchmark @start code\n  trapLoop height 0 (height.length - 1) 0 0 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef trapRainWater_postcond (height : List Nat) (result: Nat) (h_precond : trapRainWater_precond (height)) : Prop :=\n  -- !benchmark @start postcond\n  let waterAt := List.range height.length |>.map (fun i =>\n    let lmax := List.take (i+1) height |>.foldl Nat.max 0\n    let rmax := List.drop i height |>.foldl Nat.max 0\n    Nat.min lmax rmax - height[i]!)\n\n  result - (waterAt.foldl (· + ·) 0) = 0 ∧ (waterAt.foldl (· + ·) 0) ≤ result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem trapRainWater_spec_satisfied (height: List Nat) (h_precond : trapRainWater_precond (height)) :\n    trapRainWater_postcond (height) (trapRainWater (height) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(height: List Nat) (h_precond : trapRainWater_precond (height)) :\n    trapRainWater_postcond (height) (trapRainWater (height) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "6",
+   "input_lean": {
+    "height": "[0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "9",
+   "input_lean": {
+    "height": "[4, 2, 0, 3, 2, 5]"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "height": "[1, 0, 2]"
+   }
+  },
+  {
+   "expected_lean": "8",
+   "input_lean": {
+    "height": "[3, 0, 1, 3, 0, 5]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "height": "[0, 1, 2, 3, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "height": "[]"
+   }
+  }
+ ]
+}

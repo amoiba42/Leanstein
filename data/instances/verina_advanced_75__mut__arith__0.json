@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_75",
+ "flags": [],
+ "hashes": {
+  "locked": "75c875a6dfcdb1d3aa0079089795be560b653d0eb01cfd0631c7b4d367aeb463"
+ },
+ "instance_id": "verina_advanced_75__mut__arith__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "-",
+  "before": "+",
+  "col": 31,
+  "line": 7,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  match sequence with\n  | []      => 0  -- If no elements are provided (should not happen according to the problem)\n  | x :: xs =>\n      let (_, maxSoFar) :=\n        xs.foldl (fun (acc : Int × Int) (x : Int) =>\n          let (cur, maxSoFar) := acc\n          let newCur := if cur - x >= x then cur + x else x\n          let newMax := if maxSoFar >= newCur then maxSoFar else newCur\n          (newCur, newMax)\n        ) (x, x)\n      maxSoFar\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "21",
+  "expected": "33",
+  "index": 0,
+  "input_lean": {
+   "sequence": "[10, -4, 3, 1, 5, 6, -35, 12, 21, -1]"
+  },
+  "source": "visible"
+ }
+}

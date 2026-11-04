@@ -1,0 +1,120 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires writing a Lean 4 method that determines whether one list is a sublist of another. In other words, the method should check if the first list appears as a contiguous sequence within the second list and return true if it does, and false otherwise.\n\n-----Input-----  \nThe input consists of two lists of integers:  \nsub: A list of integers representing the potential sublist.  \nmain: A list of integers in which to search for the sublist.\n\n-----Output-----  \nThe output is a Boolean value:  \nReturns true if the first list appears as a contiguous sequence within the second list.  \nReturns false if the first list does not appear as a contiguous sequence in the second list.\n\n-----Note-----  \nThere are no preconditions for this method; the sequences are always non-null.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_21",
+ "flags": [],
+ "header": "def isSublist (sub : List Int) (main : List Int) (h_precond : isSublist_precond (sub) (main)) : Bool :=",
+ "locked_hash": "35c0ea9c581a15027395317adde10473e169f47b460947795175ba61e013020d",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@isSublist.check": false,
+    "fun_ind_simp@isSublist.check": false,
+    "grind": false,
+    "ind_grind@main": false,
+    "ind_grind@sub": false,
+    "ind_simp_all@main": false,
+    "ind_simp_all@sub": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 73.6,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "isSublist",
+  "params": [
+   [
+    "sub",
+    "List Int"
+   ],
+   [
+    "main",
+    "List Int"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef isSublist_precond (sub : List Int) (main : List Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef isSublist (sub : List Int) (main : List Int) (h_precond : isSublist_precond (sub) (main)) : Bool :=\n  -- !benchmark @start code\n  let subLen := sub.length\n  let mainLen := main.length\n  if subLen > mainLen then\n    false\n  else\n    let rec check (i : Nat) : Bool :=\n      if i + subLen > mainLen then\n        false\n      else if sub = (main.drop i).take subLen then\n        true\n      else if i + 1 ≤ mainLen then\n        check (i + 1)\n      else\n        false\n    termination_by mainLen - i\n    check 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef isSublist_postcond (sub : List Int) (main : List Int) (result: Bool) (h_precond : isSublist_precond (sub) (main)) :=\n  -- !benchmark @start postcond\n  (∃ i, i + sub.length ≤ main.length ∧ sub = (main.drop i).take sub.length) ↔ result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem isSublist_spec_satisfied (sub: List Int) (main: List Int) (h_precond : isSublist_precond (sub) (main)) :\n    isSublist_postcond (sub) (main) (isSublist (sub) (main) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(sub: List Int) (main: List Int) (h_precond : isSublist_precond (sub) (main)) :\n    isSublist_postcond (sub) (main) (isSublist (sub) (main) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "main": "[3, 1, 2, 4]",
+    "sub": "[1, 2]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "main": "[3, 1, 2, 4]",
+    "sub": "[2, 3]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "main": "[3, 1, 2, 4]",
+    "sub": "[3, 1]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "main": "[3, 1, 2, 4]",
+    "sub": "[4]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "main": "[3, 1, 2, 4]",
+    "sub": "[5]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "main": "[3, 1, 2, 4]",
+    "sub": "[]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "main": "[]",
+    "sub": "[1, 2]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "main": "[]",
+    "sub": "[]"
+   }
+  }
+ ]
+}

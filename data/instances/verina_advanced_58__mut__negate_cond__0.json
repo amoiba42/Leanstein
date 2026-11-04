@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_58",
+ "flags": [],
+ "hashes": {
+  "locked": "3dd6836dc03504098aa5e1d354f26ec0a0f3595e2f82fbe457722f24aac3eaaf"
+ },
+ "instance_id": "verina_advanced_58__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(next = i3)",
+  "before": "next = i3",
+  "col": 15,
+  "line": 7,
+  "operator": "negate_cond",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec loop (i : Nat) (seq : List Nat) (c2 c3 c5 : Nat) : List Nat :=\n    match i with\n    | 0 => seq\n    | Nat.succ i' =>\n      let (next, c2', c3', c5') := nextUgly seq c2 c3 c5\n      loop i' (seq ++ [next]) c2' c3' c5'\n  (loop (n - 1) [1] 0 0 0)[(n - 1)]!\n",
+  "code_aux": "def nextUgly (seq : List Nat) (c2 c3 c5 : Nat) : (Nat × Nat × Nat × Nat) :=\n  let i2 := seq[c2]! * 2\n  let i3 := seq[c3]! * 3\n  let i5 := seq[c5]! * 5\n  let next := min i2 (min i3 i5)\n  let c2' := if next = i2 then c2 + 1 else c2\n  let c3' := if ¬(next = i3) then c3 + 1 else c3\n  let c5' := if next = i5 then c5 + 1 else c5\n  (next, c2', c3', c5')\n\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "32",
+  "expected": "12",
+  "index": 1,
+  "input_lean": {
+   "n": "10"
+  },
+  "source": "visible"
+ }
+}

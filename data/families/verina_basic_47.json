@@ -1,0 +1,80 @@
+{
+ "aux_names": [
+  "sumTo"
+ ],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that calculates the sum of all the elements in an array of integers. The method should process the entire array and return the total sum of its elements.\n\n-----Input-----\nThe input consists of:\na: An array of integers.\n\n-----Output-----\nThe output is an integer:\nReturns the sum of all elements in the input array.\n\n-----Note-----\n- The input array is assumed not to be null.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_47",
+ "flags": [],
+ "header": "def arraySum (a : Array Int) (h_precond : arraySum_precond (a)) : Int :=",
+ "locked_hash": "02a5242e2b8f09f874e0ed1dd21d4f289f60c009e7eb8e04a6c166dedf3164f6",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 59.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "arraySum",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef arraySum_precond (a : Array Int) : Prop :=\n  -- !benchmark @start precond\n  a.size > 0\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef arraySum (a : Array Int) (h_precond : arraySum_precond (a)) : Int :=\n  -- !benchmark @start code\n  a.toList.sum\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\ndef sumTo (a : Array Int) (n : Nat) : Int :=\n  if n = 0 then 0\n  else sumTo a (n - 1) + a[n - 1]!\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef arraySum_postcond (a : Array Int) (result: Int) (h_precond : arraySum_precond (a)) :=\n  -- !benchmark @start postcond\n  result - sumTo a a.size = 0 ∧\n  result ≥ sumTo a a.size\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\ntheorem eq_of_sub_zero_and_ge (a b : Int) : a = b → a - b = 0 ∧ a ≥ b := by\n  omega\n-- !benchmark @end proof_aux\n\n\ntheorem arraySum_spec_satisfied (a: Array Int) (h_precond : arraySum_precond (a)) :\n    arraySum_postcond (a) (arraySum (a) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold arraySum arraySum_postcond\n  apply eq_of_sub_zero_and_ge a.toList.sum (sumTo a a.size)\n  cases a with | mk d =>\n    induction d with\n    | nil => simp [sumTo]\n    | cons x xs ih =>\n      simp [ih]\n\n      have h1 : sumTo ⟨x::xs⟩ (xs.length + 1) = sumTo ⟨x::xs⟩ xs.length + (x::xs)[xs.length] := by\n        rw [sumTo]\n        simp\n\n      rw [h1]\n\n      have h2 : xs = List.nil → (x::xs)[xs.length] = x := by\n        intro h_nil\n        simp [h_nil]\n\n      have h3 (x' : Int) (xs' : List Int): xs'.length ≠ 0 → sumTo ⟨x'::xs'⟩ xs'.length = x' + sumTo ⟨xs'⟩ (xs'.length - 1) := by\n        induction xs'.length with\n        | zero => simp\n        | succ n ih_len =>\n          simp\n          cases n with\n          | zero => simp [sumTo]\n          | succ n' =>\n            simp at ih_len\n            unfold sumTo\n            simp_all\n            rw [Int.add_assoc]\n\n      cases xs with\n      | nil => simp [h2, sumTo]\n      | cons y ys =>\n        simp_all\n        have h4 : sumTo ⟨x::y::ys⟩ (ys.length + 1) = x + sumTo ⟨y::ys⟩ ys.length := by\n          apply h3 x (y::ys)\n          simp\n        rw [h4, sumTo]\n        simp\n        rw [Int.add_assoc]\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (h_precond : arraySum_precond (a)) :\n    arraySum_postcond (a) (arraySum (a) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "15",
+   "input_lean": {
+    "a": "#[1, 2, 3, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "75",
+   "input_lean": {
+    "a": "#[13, 14, 15, 16, 17]"
+   }
+  },
+  {
+   "expected_lean": "(-6)",
+   "input_lean": {
+    "a": "#[-1, -2, -3]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "#[10, -10]"
+   }
+  }
+ ]
+}

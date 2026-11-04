@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_basic_31",
+ "flags": [],
+ "hashes": {
+  "locked": "51396a671548a0a671ad667189d2d33e4e1427004957e91283c7304ca087f5b8"
+ },
+ "instance_id": "verina_basic_31__nat__qwen3.5-9b__2",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef toUppercase (s : String) (h_precond : toUppercase_precond (s)) : String :=\n  s.toList.map (fun c => if isLowerCase c then shiftMinus32 c else c) |>.toString\n```",
+  "seed": 5002
+ },
+ "split": "main",
+ "start": {
+  "code": "s.toList.map (fun c => if isLowerCase c then shiftMinus32 c else c) |>.toString",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "\"[H, E, L, L, O, ,,  , W, O, R, L, D, !]\"",
+  "expected": "\"HELLO, WORLD!\"",
+  "index": 0,
+  "input_lean": {
+   "s": "\"Hello, World!\""
+  },
+  "source": "visible"
+ }
+}

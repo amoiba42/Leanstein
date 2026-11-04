@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_advanced_44",
+ "flags": [],
+ "hashes": {
+  "locked": "ed63c1103a1dc76875947f7cc56f396d175a3eeed599b386f9deefcaf2083189"
+ },
+ "instance_id": "verina_advanced_44__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(len % k = 0 && len > 0)",
+  "before": "len % k = 0 && len > 0",
+  "col": 10,
+  "line": 14,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let n := arr.size\n  if n = 0 || k = 0 then 0\n  else\n    --compute prefix sums for efficient subarray sum calculation\n    let prefixSums := Id.run do\n      let mut prefixSums := Array.mkArray (n + 1) 0\n      for i in [0:n] do\n        prefixSums := prefixSums.set! (i+1) (prefixSums[i]! + arr[i]!)\n      prefixSums\n\n    let result := Id.run do\n      let mut best : Option Int := none\n      for len in List.range (n+1) do\n        if ¬(len % k = 0 && len > 0) then\n          for start in [0:(n - len + 1)] do\n            let endIdx := start + len\n            let subarraySum := prefixSums[endIdx]! - prefixSums[start]!\n            best := match best with\n              | none => some subarraySum\n              | some b => some (max b subarraySum)\n      best\n\n    match result with\n    | none => 0\n    | some s => s\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "15",
+  "expected": "14",
+  "index": 0,
+  "input_lean": {
+   "arr": "#[1, 2, 3, 4, 5]",
+   "k": "2"
+  },
+  "source": "visible"
+ }
+}

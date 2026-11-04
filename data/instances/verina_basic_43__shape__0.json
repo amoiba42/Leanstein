@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_43",
+ "flags": [],
+ "hashes": {
+  "locked": "ee25275ee39730860de3e00b3b42227e5b43f38d2267774e545dad2abd909081"
+ },
+ "instance_id": "verina_basic_43__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  match n with\n  | 0 => 0\n  | n + 1 =>\n    let prev := sumOfFourthPowerOfOddNumbers n h_precond\n    let nextOdd := 2 * n + 1\n    prev + nextOdd^4\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

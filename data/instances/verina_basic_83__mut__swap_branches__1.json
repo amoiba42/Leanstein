@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_83",
+ "flags": [],
+ "hashes": {
+  "locked": "10a81a489f21b84f184bacabebbc9b17b1e89dc132a1b9f31b2e034e9b218a71"
+ },
+ "instance_id": "verina_basic_83__mut__swap_branches__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "if i < a.size then b[i - a.size]! else a[i]!",
+  "before": "if i < a.size then a[i]! else b[i - a.size]!",
+  "col": 19,
+  "line": 4,
+  "operator": "swap_branches",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  let n := a.size + b.size\n  let rec loop (i : Nat) (c : Array Int) : Array Int :=\n    if i < n then\n      let value := if i < a.size then b[i - a.size]! else a[i]!\n      loop (i + 1) (c.set! i value)\n    else\n      c\n  loop 0 (Array.mkArray n 0)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[4, 4, 4, 0, 0]",
+  "expected": "#[1, 2, 3, 4, 5]",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 2, 3]",
+   "b": "#[4, 5]"
+  },
+  "source": "visible"
+ }
+}

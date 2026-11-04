@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_17",
+ "flags": [],
+ "hashes": {
+  "locked": "766894720c5ea3e746fa6c40e5c23d0560ed283f66eb79012e2e86fdf1b42717"
+ },
+ "instance_id": "verina_advanced_17__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(x <= y)",
+  "before": "x <= y",
+  "col": 8,
+  "line": 6,
+  "operator": "negate_cond",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let result := sortList l\n  result\n",
+  "code_aux": "-- Helper function to insert an integer into a sorted list\ndef insertElement (x : Int) (l : List Int) : List Int :=\n  match l with\n  | [] => [x]\n  | y :: ys =>\n      if ¬(x <= y) then\n        x :: y :: ys\n      else\n        y :: insertElement x ys\n\n-- Helper function to sort a list using insertion sort\ndef sortList (l : List Int) : List Int :=\n  match l with\n  | [] => []\n  | x :: xs =>\n      insertElement x (sortList xs)\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "[3, 2, 1]",
+  "expected": "[1, 2, 3]",
+  "index": 2,
+  "input_lean": {
+   "l": "[1, 2, 3]"
+  },
+  "source": "visible"
+ }
+}

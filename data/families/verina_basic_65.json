@@ -1,0 +1,88 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task involves computing the integer square root of a given natural number. The goal is to determine the largest natural number r that satisfies r * r ≤ N and N < (r + 1) * (r + 1).\n\n-----Input-----  \nThe input consists of:  \n• N: A natural number.\n\n-----Output-----  \nThe output is a natural number r that meets the following conditions:  \n• r * r ≤ N  \n• N < (r + 1) * (r + 1)\n\n-----Note-----  \nThe implementation relies on a recursive strategy to iteratively increment r until (r + 1)*(r + 1) exceeds N. Edge cases, such as N = 0, should be handled correctly.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_65",
+ "flags": [],
+ "header": "def SquareRoot (N : Nat) (h_precond : SquareRoot_precond (N)) : Nat :=",
+ "locked_hash": "943ab86ab3cc1b4b2cfdbbdf11cbcfb42495387e0c288924cdcbea21f0e41878",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@SquareRoot.boundedLoop": false,
+    "fun_ind_simp@SquareRoot.boundedLoop": false,
+    "grind": false,
+    "ind_grind@N": false,
+    "ind_simp_all@N": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 4.0,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "SquareRoot",
+  "params": [
+   [
+    "N",
+    "Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef SquareRoot_precond (N : Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef SquareRoot (N : Nat) (h_precond : SquareRoot_precond (N)) : Nat :=\n  -- !benchmark @start code\n  let rec boundedLoop : Nat → Nat → Nat\n    | 0, r => r\n    | bound+1, r =>\n        if (r + 1) * (r + 1) ≤ N then\n          boundedLoop bound (r + 1)\n        else\n          r\n  boundedLoop (N+1) 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef SquareRoot_postcond (N : Nat) (result: Nat) (h_precond : SquareRoot_precond (N)) :=\n  -- !benchmark @start postcond\n  result * result ≤ N ∧ N < (result + 1) * (result + 1)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem SquareRoot_spec_satisfied (N: Nat) (h_precond : SquareRoot_precond (N)) :\n    SquareRoot_postcond (N) (SquareRoot (N) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(N: Nat) (h_precond : SquareRoot_precond (N)) :\n    SquareRoot_postcond (N) (SquareRoot (N) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "N": "0"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "N": "1"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "N": "15"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "N": "16"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "N": "26"
+   }
+  }
+ ]
+}

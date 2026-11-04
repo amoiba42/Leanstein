@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_105",
+ "flags": [],
+ "hashes": {
+  "locked": "8de000c5421721753199673ef43d30ddfe056e0a426309a8e797abfa744dd29b"
+ },
+ "instance_id": "verina_basic_105__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  let len := a.size\n  let c := Array.mkArray len 0\n  loop a b len 0 c\n",
+  "code_aux": "def loop (a b : Array Int) (len : Nat) : Nat → Array Int → Array Int\n  | i, c =>\n    if i < len then\n      let a_val := if i < a.size then a[i]! else 0\n      let b_val := if i < b.size then b[i]! else 0\n      let new_c := Array.set! c i (a_val * b_val)\n      loop a b len (i+1) new_c\n    else c\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

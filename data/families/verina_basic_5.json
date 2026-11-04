@@ -1,0 +1,107 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that multiplies two integers. The method should return the product of the two input numbers.\n\n-----Input-----\nThe input consists of:\na: The first integer.\nb: The second integer.\n\n-----Output-----\nThe output is an integer:\nReturns the product of the two input integers (a * b).",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_5",
+ "flags": [],
+ "header": "def multiply (a : Int) (b : Int) (h_precond : multiply_precond (a) (b)) : Int :=",
+ "locked_hash": "be5f883bd6009da54a4cd99a79b8c6362c3c643b3dddbbeaceff2d3cdf224565",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": true,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": true
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 1.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "multiply",
+  "params": [
+   [
+    "a",
+    "Int"
+   ],
+   [
+    "b",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef multiply_precond (a : Int) (b : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef multiply (a : Int) (b : Int) (h_precond : multiply_precond (a) (b)) : Int :=\n  -- !benchmark @start code\n  a * b\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef multiply_postcond (a : Int) (b : Int) (result: Int) (h_precond : multiply_precond (a) (b)) :=\n  -- !benchmark @start postcond\n  result - a * b = 0 ∧ a * b - result = 0\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem multiply_spec_satisfied (a: Int) (b: Int) (h_precond : multiply_precond (a) (b)) :\n    multiply_postcond (a) (b) (multiply (a) (b) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold multiply multiply_postcond\n  simp\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Int) (b: Int) (h_precond : multiply_precond (a) (b)) :\n    multiply_postcond (a) (b) (multiply (a) (b) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "12",
+   "input_lean": {
+    "a": "3",
+    "b": "4"
+   }
+  },
+  {
+   "expected_lean": "(-12)",
+   "input_lean": {
+    "a": "3",
+    "b": "(-4)"
+   }
+  },
+  {
+   "expected_lean": "(-12)",
+   "input_lean": {
+    "a": "(-3)",
+    "b": "4"
+   }
+  },
+  {
+   "expected_lean": "12",
+   "input_lean": {
+    "a": "(-3)",
+    "b": "(-4)"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "0",
+    "b": "5"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "5",
+    "b": "0"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "0",
+    "b": "0"
+   }
+  }
+ ]
+}

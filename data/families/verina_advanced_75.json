@@ -1,0 +1,86 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nGiven a non-empty sequence of n integers, your task is to find the largest sum obtainable by choosing a contiguous subarray of the sequence. At least one number must be selected.\n\nThe algorithm uses dynamic programming (Kadane's Algorithm) to solve the problem:\n1. Initialize the current maximum (cur) and the overall maximum (maxSoFar) with the first element.\n2. For each subsequent element, update:\n     cur = max(element, cur + element)\n     maxSoFar = max(maxSoFar, cur)\n3. Return maxSoFar as the answer.\n\n-----Input-----\nThe input is provided as a list of integers:\n  sequence: A non-empty list of n integers (n >= 1).\n\n-----Output-----\nThe output is a single integer representing the maximum subarray sum.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_75",
+ "flags": [],
+ "header": "def task_code (sequence : List Int) (h_precond : task_code_precond (sequence)) : Int :=",
+ "locked_hash": "75c875a6dfcdb1d3aa0079089795be560b653d0eb01cfd0631c7b4d367aeb463",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@sequence": false,
+    "ind_simp_all@sequence": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 55.2,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "task_code",
+  "params": [
+   [
+    "sequence",
+    "List Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef task_code_precond (sequence : List Int) : Prop :=\n  -- !benchmark @start precond\n  sequence.length > 0  -- At least one element must be selected\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef task_code (sequence : List Int) (h_precond : task_code_precond (sequence)) : Int :=\n  -- !benchmark @start code\n  match sequence with\n  | []      => 0  -- If no elements are provided (should not happen according to the problem)\n  | x :: xs =>\n      let (_, maxSoFar) :=\n        xs.foldl (fun (acc : Int × Int) (x : Int) =>\n          let (cur, maxSoFar) := acc\n          let newCur := if cur + x >= x then cur + x else x\n          let newMax := if maxSoFar >= newCur then maxSoFar else newCur\n          (newCur, newMax)\n        ) (x, x)\n      maxSoFar\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef task_code_postcond (sequence : List Int) (result: Int) (h_precond : task_code_precond (sequence)) : Prop :=\n  -- !benchmark @start postcond\n  let subArrays :=\n    List.range (sequence.length + 1) |>.flatMap (fun start =>\n      List.range (sequence.length - start + 1) |>.map (fun len =>\n        sequence.drop start |>.take len))\n  let subArraySums := subArrays.filter (· ≠ []) |>.map (·.sum)\n  subArraySums.contains result ∧ subArraySums.all (· ≤ result)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem task_code_spec_satisfied (sequence: List Int) (h_precond : task_code_precond (sequence)) :\n    task_code_postcond (sequence) (task_code (sequence) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(sequence: List Int) (h_precond : task_code_precond (sequence)) :\n    task_code_postcond (sequence) (task_code (sequence) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "33",
+   "input_lean": {
+    "sequence": "[10, -4, 3, 1, 5, 6, -35, 12, 21, -1]"
+   }
+  },
+  {
+   "expected_lean": "14",
+   "input_lean": {
+    "sequence": "[2, 1, -4, 3, 4, -4, 6, 5, -5, 1]"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "sequence": "[-1, -2, -3, -4, -5]"
+   }
+  },
+  {
+   "expected_lean": "7",
+   "input_lean": {
+    "sequence": "[7]"
+   }
+  },
+  {
+   "expected_lean": "15",
+   "input_lean": {
+    "sequence": "[1, 2, 3, 4, 5]"
+   }
+  }
+ ]
+}

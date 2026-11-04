@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_68",
+ "flags": [],
+ "hashes": {
+  "locked": "73e151761b6d0346583e5f45640a55d5b0dffa7dcd6c43351ce89679d06707e8"
+ },
+ "instance_id": "verina_basic_68__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec loop (n : Nat) : Nat :=\n    if n < a.size then\n      if a[n]! = e then n\n      else loop (n + 1)\n    else n\n  loop 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

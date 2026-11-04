@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_31",
+ "flags": [],
+ "hashes": {
+  "locked": "7a802b92c00acb213239bf5eeb5c4f3959a3a52f859a061a38d0b5baad78182a"
+ },
+ "instance_id": "verina_advanced_31__nat__qwen3.5-9b__3",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef longestIncreasingSubseqLength (xs : List Int) (h_precond : longestIncreasingSubseqLength_precond xs) : Nat :=\n  xs.foldl (fun acc x => List.foldl (fun acc' y => max (acc' + 1) acc) acc (xs.filter (fun z => z < x))) 0\n```",
+  "seed": 5003
+ },
+ "split": "main",
+ "start": {
+  "code": "xs.foldl (fun acc x => List.foldl (fun acc' y => max (acc' + 1) acc) acc (xs.filter (fun z => z < x))) 0",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "6",
+  "expected": "4",
+  "index": 0,
+  "input_lean": {
+   "xs": "[1, 2, 3, 4]"
+  },
+  "source": "visible"
+ }
+}

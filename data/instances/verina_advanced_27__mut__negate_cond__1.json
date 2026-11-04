@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_advanced_27",
+ "flags": [],
+ "hashes": {
+  "locked": "b5cc9b3bab0f980ba5c77e9e634c23d8bbba45f5ec77a3e6d771ae3b95bb6bc0"
+ },
+ "instance_id": "verina_advanced_27__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(left.length >= right.length)",
+  "before": "left.length >= right.length",
+  "col": 8,
+  "line": 17,
+  "operator": "negate_cond",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let xs := toCharList s1\n  let ys := toCharList s2\n  let resultList := lcsAux xs ys\n  fromCharList resultList\n",
+  "code_aux": "def toCharList (s : String) : List Char :=\n  s.data\n\ndef fromCharList (cs : List Char) : String :=\n  cs.foldl (fun acc c => acc.push c) \"\"\n\ndef lcsAux (xs : List Char) (ys : List Char) : List Char :=\n  match xs, ys with\n  | [], _ => []\n  | _, [] => []\n  | x :: xs', y :: ys' =>\n    if x == y then\n      x :: lcsAux xs' ys'\n    else\n      let left  := lcsAux xs' (y :: ys')\n      let right := lcsAux (x :: xs') ys'\n      if ¬(left.length >= right.length) then left else right\ntermination_by xs.length + ys.length\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "\"a\"",
+  "expected": "\"ace\"",
+  "index": 0,
+  "input_lean": {
+   "s1": "\"abcde\"",
+   "s2": "\"ace\""
+  },
+  "source": "visible"
+ }
+}

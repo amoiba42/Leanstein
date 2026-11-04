@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_14",
+ "flags": [],
+ "hashes": {
+  "locked": "cdfcaf53b7f7268987fb1adf8ac18596a32121cc4ed06552fe673927e77b1a56"
+ },
+ "instance_id": "verina_basic_14__mut__boolop__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "&&",
+  "before": "||",
+  "col": 32,
+  "line": 1,
+  "operator": "boolop",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  s.toList.any fun c => c = 'z' && c = 'Z'\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 1,
+  "input_lean": {
+   "s": "\"zebra\""
+  },
+  "source": "visible"
+ }
+}

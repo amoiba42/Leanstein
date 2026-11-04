@@ -1,0 +1,88 @@
+{
+ "aux_names": [
+  "isDigit"
+ ],
+ "description": "-----Description-----  \nThis task involves determining whether every character in a provided string is a digit. The objective is to check if all characters fall within the standard digit range, returning true if they do and false otherwise.\n\n-----Input-----  \nThe input consists of:  \n• s: A string whose characters will be analyzed to determine if they are all digits.\n\n-----Output-----  \nThe output is a boolean value:  \n• true if every character in the string is a digit;  \n• false if at least one character is not a digit (note that the empty string returns true).\n\n-----Note-----  \nIt is assumed that the input is a well-formed string. The function uses an iterator to examine every character.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_61",
+ "flags": [],
+ "header": "def allDigits (s : String) (h_precond : allDigits_precond (s)) : Bool :=",
+ "locked_hash": "c521c2d67bd006fd37fc28ddc4725de5b957f3fd33308183d8c6231327f5818f",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@allDigits.loop": false,
+    "fun_ind_simp@allDigits.loop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 39.2,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "allDigits",
+  "params": [
+   [
+    "s",
+    "String"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\ndef isDigit (c : Char) : Bool :=\n  (c ≥ '0') && (c ≤ '9')\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef allDigits_precond (s : String) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef allDigits (s : String) (h_precond : allDigits_precond (s)) : Bool :=\n  -- !benchmark @start code\n  let rec loop (it : String.Iterator) : Bool :=\n    if it.atEnd then\n      true\n    else\n      if !isDigit it.curr then\n        false\n      else\n        loop it.next\n  loop s.iter\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef allDigits_postcond (s : String) (result: Bool) (h_precond : allDigits_precond (s)) :=\n  -- !benchmark @start postcond\n  (result = true ↔ ∀ c ∈ s.toList, isDigit c)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem allDigits_spec_satisfied (s: String) (h_precond : allDigits_precond (s)) :\n    allDigits_postcond (s) (allDigits (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: String) (h_precond : allDigits_precond (s)) :\n    allDigits_postcond (s) (allDigits (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"123456\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"123a56\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"007\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"98 76\""
+   }
+  }
+ ]
+}

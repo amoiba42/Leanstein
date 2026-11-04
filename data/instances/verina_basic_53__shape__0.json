@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_53",
+ "flags": [],
+ "hashes": {
+  "locked": "4caa596c9ad1f3dac4f2ec1612001ccdd64b5734052163e11430461d706e1785"
+ },
+ "instance_id": "verina_basic_53__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec loop (n : Nat) : Nat :=\n    if n = 0 then 0\n    else n + loop (n - 1)\n  loop N\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

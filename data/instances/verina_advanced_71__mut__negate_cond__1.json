@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_advanced_71",
+ "flags": [],
+ "hashes": {
+  "locked": "bc4846004cdd9d6c1ddceca91a4b05f3ca4c2eeae83c9b47bb6e296d37251efa"
+ },
+ "instance_id": "verina_advanced_71__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(compare cur best)",
+  "before": "compare cur best",
+  "col": 21,
+  "line": 10,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let chars := s.data\n  let candidates := allSubstrings chars |>.filter (fun sub => countOnes sub = k)\n\n  let compare (a b : List Char) : Bool :=\n    a.length < b.length ∨ (a.length = b.length ∧ isLexSmaller a b)\n\n  let best := candidates.foldl (fun acc cur =>\n    match acc with\n    | none => some cur\n    | some best => if ¬(compare cur best) then some cur else some best) none\n  match best with\n  | some b => listToString b\n  | none => \"\"\n",
+  "code_aux": "def listToString (lst : List Char) : String :=\n  String.mk lst\ndef isLexSmaller (a b : List Char) : Bool :=\n  listToString a < listToString b\ndef allSubstrings (s : List Char) : List (List Char) :=\n  let n := s.length\n  (List.range n).flatMap (fun i =>\n    (List.range (n - i)).map (fun j =>\n      s.drop i |>.take (j + 1)))\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "\"10001100\"",
+  "expected": "\"11001\"",
+  "index": 0,
+  "input_lean": {
+   "k": "3",
+   "s": "\"100011001\""
+  },
+  "source": "visible"
+ }
+}

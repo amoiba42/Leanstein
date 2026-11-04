@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_56",
+ "flags": [],
+ "hashes": {
+  "locked": "d68a2e122eea0fc9cf5ad749dbb46d2d6d5d2c3eec7afbb2bf5e1d175ffe9e75"
+ },
+ "instance_id": "verina_advanced_56__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let nonzeros := xs.filter (fun x => x ≠ 0)\n  let zeros := xs.filter (fun x => x = 0)\n  nonzeros ++ zeros\n",
+  "code_aux": "-- Count how many times a specific value appears in the list\n\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

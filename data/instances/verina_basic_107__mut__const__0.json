@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_107",
+ "flags": [],
+ "hashes": {
+  "locked": "57d07674b65bab4417f4a94028cd67ba7eee6bdffb90089fa78ffdb556a55b30"
+ },
+ "instance_id": "verina_basic_107__mut__const__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "1",
+  "before": "2",
+  "col": 12,
+  "line": 1,
+  "operator": "const",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  (a + b) / 1\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "10",
+  "expected": "5",
+  "index": 0,
+  "input_lean": {
+   "a": "4",
+   "b": "6"
+  },
+  "source": "visible"
+ }
+}

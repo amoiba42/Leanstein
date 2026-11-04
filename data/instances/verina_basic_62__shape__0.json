@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_62",
+ "flags": [],
+ "hashes": {
+  "locked": "3afd5797a57c02e05796c9fe5cab2a0a65d2140d3217c097fb9bcbfe7ba69558"
+ },
+ "instance_id": "verina_basic_62__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec search (index : Nat) : Int :=\n    if index < a.size then\n      if a[index]! = key then Int.ofNat index\n      else search (index + 1)\n    else -1\n  search 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

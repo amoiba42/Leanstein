@@ -1,0 +1,93 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task involves creating a function that swaps two integer values. Given two integers, the function should return a pair where the first element is the second input value and the second element is the first input value.\n\n-----Input-----  \nThe input consists of two integers:  \n• X: An integer representing the first value.  \n• Y: An integer representing the second value.\n\n-----Output-----  \nThe output is a pair (Int × Int) that:  \n• Contains the original Y as the first element.  \n• Contains the original X as the second element.\n\n-----Note-----  \nThere are no additional preconditions. The function simply swaps the two input values.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_91",
+ "flags": [],
+ "header": "def Swap (X : Int) (Y : Int) (h_precond : Swap_precond (X) (Y)) : Int × Int :=",
+ "locked_hash": "dafd9709a67a1e14082af4216beca79641fc472a7ab18faea09a5c4eb0111558",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 1.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "Swap",
+  "params": [
+   [
+    "X",
+    "Int"
+   ],
+   [
+    "Y",
+    "Int"
+   ]
+  ],
+  "ret": "Int × Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef Swap_precond (X : Int) (Y : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef Swap (X : Int) (Y : Int) (h_precond : Swap_precond (X) (Y)) : Int × Int :=\n  -- !benchmark @start code\n  let x := X\n  let y := Y\n  let tmp := x\n  let x := y\n  let y := tmp\n  (x, y)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef Swap_postcond (X : Int) (Y : Int) (result: Int × Int) (h_precond : Swap_precond (X) (Y)) :=\n  -- !benchmark @start postcond\n  result.fst = Y ∧ result.snd = X ∧\n  (X ≠ Y → result.fst ≠ X ∧ result.snd ≠ Y)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem Swap_spec_satisfied (X: Int) (Y: Int) (h_precond : Swap_precond (X) (Y)) :\n    Swap_postcond (X) (Y) (Swap (X) (Y) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold Swap_postcond Swap\n  simp_all\n  exact fun a a_1 => a (id (Eq.symm a_1))\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(X: Int) (Y: Int) (h_precond : Swap_precond (X) (Y)) :\n    Swap_postcond (X) (Y) (Swap (X) (Y) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "(2, 1)",
+   "input_lean": {
+    "X": "1",
+    "Y": "2"
+   }
+  },
+  {
+   "expected_lean": "(0, 0)",
+   "input_lean": {
+    "X": "0",
+    "Y": "0"
+   }
+  },
+  {
+   "expected_lean": "(5, -1)",
+   "input_lean": {
+    "X": "(-1)",
+    "Y": "5"
+   }
+  },
+  {
+   "expected_lean": "(-100, 100)",
+   "input_lean": {
+    "X": "100",
+    "Y": "(-100)"
+   }
+  },
+  {
+   "expected_lean": "(42, 42)",
+   "input_lean": {
+    "X": "42",
+    "Y": "42"
+   }
+  }
+ ]
+}

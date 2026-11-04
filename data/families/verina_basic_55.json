@@ -1,0 +1,72 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task involves determining whether two integer values are equal. The goal is simply to compare the two provided numbers and indicate with a Boolean result whether they are the same.\n\n-----Input-----\nThe input consists of two elements:\n• a: An element of type Int.\n• b: An element of type Int.\n\n-----Output-----\nThe output is a Boolean:\n• Returns true if a equals b.\n• Returns false if a does not equal b.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_55",
+ "flags": [],
+ "header": "def Compare (a : Int) (b : Int) (h_precond : Compare_precond (a) (b)) : Bool :=",
+ "locked_hash": "2f84b06121aa3f042297997d1c276c56cef566b6f20ec6473d0cb683080a2f3f",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": true,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": true,
+    "split_simp_all": true,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 0.7,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "Compare",
+  "params": [
+   [
+    "a",
+    "Int"
+   ],
+   [
+    "b",
+    "Int"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef Compare_precond (a : Int) (b : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef Compare (a : Int) (b : Int) (h_precond : Compare_precond (a) (b)) : Bool :=\n  -- !benchmark @start code\n  if a = b then true else false\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef Compare_postcond (a : Int) (b : Int) (result: Bool) (h_precond : Compare_precond (a) (b)) :=\n  -- !benchmark @start postcond\n  (a = b → result = true) ∧ (a ≠ b → result = false)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem Compare_spec_satisfied (a: Int) (b: Int) (h_precond : Compare_precond (a) (b)) :\n    Compare_postcond (a) (b) (Compare (a) (b) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold Compare_postcond Compare\n  simp\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Int) (b: Int) (h_precond : Compare_precond (a) (b)) :\n    Compare_postcond (a) (b) (Compare (a) (b) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "1",
+    "b": "1"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "a": "1",
+    "b": "2"
+   }
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_54",
+ "flags": [],
+ "hashes": {
+  "locked": "dfa73053154c6703d196ac06bd46141cb5c25bde28d58d08c4cba8e8039d5512"
+ },
+ "instance_id": "verina_advanced_54__nat__qwen3.5-9b__0",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef missingNumber (nums : List Nat) (h_precond : missingNumber_precond (nums)) : Nat :=\n  let n := nums.length\n  (List.sum nums + n + 1) / (n + 1)\n```",
+  "seed": 5000
+ },
+ "split": "pilot",
+ "start": {
+  "code": "let n := nums.length\n(List.sum nums + n + 1) / (n + 1)",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "2",
+  "index": 1,
+  "input_lean": {
+   "nums": "[0, 1]"
+  },
+  "source": "visible"
+ }
+}

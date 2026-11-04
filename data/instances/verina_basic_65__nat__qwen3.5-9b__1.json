@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_basic_65",
+ "flags": [],
+ "hashes": {
+  "locked": "943ab86ab3cc1b4b2cfdbbdf11cbcfb42495387e0c288924cdcbea21f0e41878"
+ },
+ "instance_id": "verina_basic_65__nat__qwen3.5-9b__1",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef SquareRoot (N : Nat) (h_precond : SquareRoot_precond (N)) : Nat :=\n  Nat.findGreatest (fun r => r * r ≤ N) 0\n```",
+  "seed": 5001
+ },
+ "split": "pilot",
+ "start": {
+  "code": "Nat.findGreatest (fun r => r * r ≤ N) 0",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "1",
+  "index": 1,
+  "input_lean": {
+   "N": "1"
+  },
+  "source": "visible"
+ }
+}

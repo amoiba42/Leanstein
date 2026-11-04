@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_74",
+ "flags": [],
+ "hashes": {
+  "locked": "fe26e00006270a668aaeae5cbd17ee65e39e34c7b334dda1978bbd4b3b49805b"
+ },
+ "instance_id": "verina_advanced_74__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let n := nums.length\n  let subarray := fun (i j : Nat) => (nums.drop i).take (j - i + 1)\n  let distinctCount := fun (l : List Nat) =>\n    let hashSet := l.foldl (fun (s : HashSet Nat) a => s.insert a) HashSet.emptyWithCapacity\n    hashSet.size\n  List.range n |>.foldl (fun acc i =>\n    acc +\n      (List.range (n - i) |>.foldl (fun acc' d =>\n        let subarr := subarray i (i + d)\n        let cnt := distinctCount subarr\n        acc' + cnt * cnt\n      ) 0)\n  ) 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

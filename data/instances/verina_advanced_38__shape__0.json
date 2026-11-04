@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_38",
+ "flags": [],
+ "hashes": {
+  "locked": "dd122cb266023a96b0572f3bb52f4d2737ec796ae7a361d047cb305d101139ad"
+ },
+ "instance_id": "verina_advanced_38__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let n := intervals.length\n  if n ≤ 1 then 0\n  else\n    (List.range n).foldl (fun acc i =>\n      let remaining := List.eraseIdx intervals i\n      let sorted := List.mergeSort remaining (fun (a b : Nat × Nat) => a.1 ≤ b.1)\n      let merged := sorted.foldl (fun acc curr =>\n        match acc with\n        | [] => [curr]\n        | (s, e) :: rest => if curr.1 ≤ e then (s, max e curr.2) :: rest else curr :: acc\n      ) []\n      let coverage := merged.reverse.foldl (fun acc (s, e) => acc + (e - s)) 0\n      max acc coverage\n    ) 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_66",
+ "flags": [],
+ "hashes": {
+  "locked": "32fff9736cc3c8b00a36151e043c14157f021fe1ca7866e60905a1e1cc6e5eee"
+ },
+ "instance_id": "verina_advanced_66__mut__relflip__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "≠",
+  "before": "=",
+  "col": 11,
+  "line": 6,
+  "operator": "relflip",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rawWords : List String := words_str.splitOn \" \"\n  let rec filterNonEmpty (words : List String) : List String :=\n    match words with\n    | [] => []\n    | h :: t =>\n      if h ≠ \"\" then\n        filterNonEmpty t\n      else\n        h :: filterNonEmpty t\n  let filteredWords : List String := filterNonEmpty rawWords\n  let revWords : List String := filteredWords.reverse\n  let rec joinWithSpace (words : List String) : String :=\n    match words with\n    | [] => \"\"\n    | [w] => w\n    | h :: t =>\n      -- Append the current word with a space and continue joining the rest.\n      h ++ \" \" ++ joinWithSpace t\n  let result : String := joinWithSpace revWords\n  result\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "\"\"",
+  "expected": "\"blue is sky the\"",
+  "index": 0,
+  "input_lean": {
+   "words_str": "\"the sky is blue\""
+  },
+  "source": "visible"
+ }
+}

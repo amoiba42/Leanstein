@@ -1,0 +1,126 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that determines whether a given integer is divisible by 11. The method should return true if the number is divisible by 11 and false otherwise.\n\n-----Input-----\nThe input consists of:\nn: An integer to check for divisibility by 11.\n\n-----Output-----\nThe output is a Boolean value:\nReturns true if the input number is divisible by 11.\nReturns false if the input number is not divisible by 11.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_3",
+ "flags": [],
+ "header": "def isDivisibleBy11 (n : Int) (h_precond : isDivisibleBy11_precond (n)) : Bool :=",
+ "locked_hash": "9561cabc268e7cfc7a721461d5ec4bd090de123f0d66741aa5408cf2b703924b",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "aesop",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 2.0,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "isDivisibleBy11",
+  "params": [
+   [
+    "n",
+    "Int"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Mathlib\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef isDivisibleBy11_precond (n : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef isDivisibleBy11 (n : Int) (h_precond : isDivisibleBy11_precond (n)) : Bool :=\n  -- !benchmark @start code\n  n % 11 == 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef isDivisibleBy11_postcond (n : Int) (result: Bool) (h_precond : isDivisibleBy11_precond (n)) :=\n  -- !benchmark @start postcond\n  (result → (∃ k : Int, n = 11 * k)) ∧ (¬ result → (∀ k : Int, ¬ n = 11 * k))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem isDivisibleBy11_spec_satisfied (n: Int) (h_precond : isDivisibleBy11_precond (n)) :\n    isDivisibleBy11_postcond (n) (isDivisibleBy11 (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold isDivisibleBy11 isDivisibleBy11_postcond\n  constructor\n  · simp_all\n    exact fun a => a\n  · apply Not.imp_symm\n    rw [not_forall_not]\n    intro h\n    rw [beq_iff_eq]\n    exact Int.emod_eq_zero_of_dvd h\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(n: Int) (h_precond : isDivisibleBy11_precond (n)) :\n    isDivisibleBy11_postcond (n) (isDivisibleBy11 (n) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "0"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "11"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "22"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "23"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "33"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "44"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "(-11)"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "(-22)"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "1"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "(-1)"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "121"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "123"
+   }
+  }
+ ]
+}

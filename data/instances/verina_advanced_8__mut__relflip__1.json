@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_advanced_8",
+ "flags": [],
+ "hashes": {
+  "locked": "2bcb4eea15fe2aab82cd85ed64bf47f5cd8d634b6230fb5cbab3b70dd34544bf"
+ },
+ "instance_id": "verina_advanced_8__mut__relflip__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "≤",
+  "before": "<",
+  "col": 19,
+  "line": 24,
+  "operator": "relflip",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let totalGas := gas.foldl (· + ·) 0\n  let totalCost := cost.foldl (· + ·) 0\n\n  if totalGas < totalCost then\n    -1\n  else\n    let rec loop (g c : List Int) (idx : Nat) (tank : Int) (start : Nat) : Int :=\n      match g, c with\n      | [], [] => start\n      | gi :: gs, ci :: cs =>\n        let tank' := tank + gi - ci\n        if tank' < 0 then\n          loop gs cs (idx + 1) 0 (idx + 1)\n        else\n          loop gs cs (idx + 1) tank' start\n      | _, _ => -1  -- lengths don’t match\n\n    let zipped := List.zip gas cost\n    let rec walk (pairs : List (Int × Int)) (i : Nat) (tank : Int) (start : Nat) : Int :=\n      match pairs with\n      | [] => start\n      | (g, c) :: rest =>\n        let newTank := tank + g - c\n        if newTank ≤ 0 then\n          walk rest (i + 1) 0 (i + 1)\n        else\n          walk rest (i + 1) newTank start\n\n    walk zipped 0 0 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "3",
+  "expected": "0",
+  "index": 4,
+  "input_lean": {
+   "cost": "[1, 2, 3]",
+   "gas": "[1, 2, 3]"
+  },
+  "source": "visible"
+ }
+}

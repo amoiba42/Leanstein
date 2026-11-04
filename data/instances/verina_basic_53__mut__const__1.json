@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_53",
+ "flags": [],
+ "hashes": {
+  "locked": "4caa596c9ad1f3dac4f2ec1612001ccdd64b5734052163e11430461d706e1785"
+ },
+ "instance_id": "verina_basic_53__mut__const__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "1",
+  "before": "0",
+  "col": 18,
+  "line": 2,
+  "operator": "const",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec loop (n : Nat) : Nat :=\n    if n = 0 then 1\n    else n + loop (n - 1)\n  loop N\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "0",
+  "index": 0,
+  "input_lean": {
+   "N": "0"
+  },
+  "source": "visible"
+ }
+}

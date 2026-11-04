@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_49",
+ "flags": [],
+ "hashes": {
+  "locked": "8845b99313e8dba0fe7fc85d96573b4553c5bb036912b6939338e78e860416c6"
+ },
+ "instance_id": "verina_advanced_49__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec merge (xs : List Int) (ys : List Int) : List Int :=\n    match xs, ys with\n    | [], _ => ys\n    | _, [] => xs\n    | x :: xt, y :: yt =>\n      if x <= y then\n        x :: merge xt (y :: yt)\n      else\n        y :: merge (x :: xt) yt\n\n  merge arr1 arr2\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

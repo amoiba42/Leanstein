@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_16",
+ "flags": [],
+ "hashes": {
+  "locked": "f32da2d8c0c65ed6e20d3dc469fb5f227a99ec719859fe353a02ea5c230065b8"
+ },
+ "instance_id": "verina_advanced_16__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "    let rec insert (x : Int) (ys : List Int) : List Int :=\n      match ys with\n      | []      => [x]\n      | y :: ys' =>\n        if x <= y then\n          x :: y :: ys'\n        else\n          y :: insert x ys'\n\n    let rec sort (arr : List Int) : List Int :=\n      match arr with\n      | []      => []\n      | x :: xs => insert x (sort xs)\n\n    sort xs\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

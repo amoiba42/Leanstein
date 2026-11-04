@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_14",
+ "flags": [],
+ "hashes": {
+  "locked": "33f8203806ffa4b3e381d91b75764d0c5763cdf575f4122a4f2f11a3c56a5854"
+ },
+ "instance_id": "verina_advanced_14__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬((l+2)%4=0)",
+  "before": "(l+2)%4=0",
+  "col": 10,
+  "line": 10,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec helper (n : Nat) : Bool :=\n    match n with\n    | 0 =>\n      false\n    | Nat.succ m =>\n      match m with\n      | 0 =>\n        true\n      | Nat.succ l =>\n        if ¬((l+2)%4=0) then\n          helper ((l+2)/4)\n        else\n          false\n  helper n\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 4,
+  "input_lean": {
+   "n": "4"
+  },
+  "source": "visible"
+ }
+}

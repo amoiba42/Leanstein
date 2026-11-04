@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_basic_41",
+ "flags": [],
+ "hashes": {
+  "locked": "4ccbac0ad984374a2bd107182819ebe59204cb1e160a159b44f14d90bd1329e0"
+ },
+ "instance_id": "verina_basic_41__nat__qwen3.5-0.8b__3",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-0.8b",
+  "raw": "```lean\nimport Mathlib.Data.Array.Basic\nimport Mathlib.Data.Array.Int\nimport Mathlib.Data.Array.Ordering.Basic\n\ndef hasOnlyOneDistinctElement (a : Array Int) (h_precond : hasOnlyOneDistinctElement_precond (a)) : Bool :=\n  a.size > 0 && (a.toList = [a[0]] || a.toList = [a[0], a[0]])\n```",
+  "seed": 5003
+ },
+ "split": "heldout",
+ "start": {
+  "code": "a.size > 0 && (a.toList = [a[0]] || a.toList = [a[0], a[0]])",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 1, 1]"
+  },
+  "source": "visible"
+ }
+}

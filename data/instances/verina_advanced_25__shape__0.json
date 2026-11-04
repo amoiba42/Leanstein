@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_25",
+ "flags": [],
+ "hashes": {
+  "locked": "4fd9d10e8189f8f30dc9e28c6b0355808a01b3fc06ada7d60f1b087fd80f8ac7"
+ },
+ "instance_id": "verina_advanced_25__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  if nums.isEmpty then 0\n  else\n    let n := nums.length\n    Id.run do\n      let mut dp : Array Nat := Array.mkArray n 1\n\n      for i in [1:n] do\n        for j in [0:i] do\n          if nums[j]! < nums[i]! && dp[j]! + 1 > dp[i]! then\n            dp := dp.set! i (dp[j]! + 1)\n\n      maxInArray dp\n",
+  "code_aux": "def maxInArray (arr : Array Nat) : Nat :=\n  arr.foldl (fun a b => if a ≥ b then a else b) 0\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

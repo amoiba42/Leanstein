@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_14",
+ "flags": [],
+ "hashes": {
+  "locked": "33f8203806ffa4b3e381d91b75764d0c5763cdf575f4122a4f2f11a3c56a5854"
+ },
+ "instance_id": "verina_advanced_14__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec helper (n : Nat) : Bool :=\n    match n with\n    | 0 =>\n      false\n    | Nat.succ m =>\n      match m with\n      | 0 =>\n        true\n      | Nat.succ l =>\n        if (l+2)%4=0 then\n          helper ((l+2)/4)\n        else\n          false\n  helper n\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

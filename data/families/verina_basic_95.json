@@ -1,0 +1,102 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis problem involves swapping two elements in an array of integers at specified positions. Given an array and two indices, the task is to exchange these elements so that the element from the first index moves to the second index and vice versa, while all other elements remain unchanged.\n\n-----Input-----  \nThe input consists of:  \n• arr: An array of integers.  \n• i: An integer representing the first index (0-indexed) whose element is to be swapped.  \n• j: An integer representing the second index (0-indexed) whose element is to be swapped.\n\n-----Output-----  \nThe output is an array of integers which:  \n• Has the same size as the input array.  \n• Contains the element originally at index i in position j and the element originally at index j in position i.  \n• Leaves all other elements unchanged.\n\n-----Note-----  \nIt is assumed that both indices i and j are non-negative and within the bounds of the array (i.e., Int.toNat i and Int.toNat j are less than arr.size).",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_95",
+ "flags": [],
+ "header": "def swap (arr : Array Int) (i : Int) (j : Int) (h_precond : swap_precond (arr) (i) (j)) : Array Int :=",
+ "locked_hash": "c8df85ce8482fc50c825a1a5a06c44d28f71c67d18a37bb8219a9cf22c7c2b12",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_grind",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": true,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 10.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_broken",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "swap",
+  "params": [
+   [
+    "arr",
+    "Array Int"
+   ],
+   [
+    "i",
+    "Int"
+   ],
+   [
+    "j",
+    "Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef swap_precond (arr : Array Int) (i : Int) (j : Int) : Prop :=\n  -- !benchmark @start precond\n  i ≥ 0 ∧\n  j ≥ 0 ∧\n  Int.toNat i < arr.size ∧\n  Int.toNat j < arr.size\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef swap (arr : Array Int) (i : Int) (j : Int) (h_precond : swap_precond (arr) (i) (j)) : Array Int :=\n  -- !benchmark @start code\n  let i_nat := Int.toNat i\n  let j_nat := Int.toNat j\n  let arr1 := arr.set! i_nat (arr[j_nat]!)\n  let arr2 := arr1.set! j_nat (arr[i_nat]!)\n  arr2\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef swap_postcond (arr : Array Int) (i : Int) (j : Int) (result: Array Int) (h_precond : swap_precond (arr) (i) (j)) :=\n  -- !benchmark @start postcond\n  result.size = arr.size ∧\n  (result[Int.toNat i]! = arr[Int.toNat j]!) ∧\n  (result[Int.toNat j]! = arr[Int.toNat i]!) ∧\n  (∀ (k : Nat), k < arr.size → k ≠ Int.toNat i → k ≠ Int.toNat j → result[k]! = arr[k]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem swap_spec_satisfied (arr: Array Int) (i: Int) (j: Int) (h_precond : swap_precond (arr) (i) (j)) :\n    swap_postcond (arr) (i) (j) (swap (arr) (i) (j) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold swap_postcond swap\n  unfold swap_precond at h_precond\n  obtain ⟨h₁, h₂, h₃, h₄⟩ := h_precond\n\n  apply And.intro\n  . simp [Array.size_setIfInBounds]\n  apply And.intro\n  . simp\n    by_cases h_eq : (i = j)\n    . rw [h_eq]\n      rw [Array.getElem!_eq_getD]\n      rw [Array.setIfInBounds]\n      simp [h₄]\n    . rw [Array.setIfInBounds_comm]\n      let arr₁ := arr.setIfInBounds j.toNat arr[i.toNat]!\n      have ha₁ : arr₁ = arr.setIfInBounds j.toNat arr[i.toNat]! := rfl\n      let arr_j := arr[j.toNat]!\n      have hi : arr_j = arr[j.toNat]! := rfl\n      rw [←ha₁, ←hi]\n      have h₃' : i.toNat < (arr₁.setIfInBounds i.toNat arr_j).size := by\n        rw [ha₁]\n        unfold Array.setIfInBounds\n        split\n        . simp\n          split\n          . simp\n            exact h₃\n          . simp\n            exact h₃\n        . split\n          . simp\n            exact h₃\n          . simp\n            exact h₃\n      rw [Array.getElem!_eq_getD]\n      unfold Array.getD\n      split\n      . simp\n      . simp\n      intro h\n      have h_contr : i = j := by\n        rw [← Int.toNat_of_nonneg h₁, ← Int.toNat_of_nonneg h₂]\n        rw [h]\n      contradiction\n  . apply And.intro\n    . simp\n      by_cases h_eq : (i = j)\n      . rw [h_eq]\n        rw [Array.getElem!_eq_getD]\n        rw [Array.setIfInBounds]\n        simp [h₄]\n      . let arr₁ := arr.setIfInBounds i.toNat arr[j.toNat]!\n        have ha₁ : arr₁ = arr.setIfInBounds i.toNat arr[j.toNat]! := rfl\n        let arr_i := arr[i.toNat]!\n        have hi : arr_i = arr[i.toNat]! := rfl\n        rw [←ha₁, ←hi]\n        have h₃' : j.toNat < (arr₁.setIfInBounds j.toNat arr_i).size := by\n          rw [ha₁]\n          unfold Array.setIfInBounds\n          split\n          . simp\n            split\n            . simp\n              exact h₄\n            . simp\n              exact h₄\n          . split\n            . simp\n              exact h₄\n            . simp\n              exact h₄\n        rw [Array.getElem!_eq_getD]\n        unfold Array.getD\n        split\n        . simp\n        . rename_i h\n          contradiction\n    . simp\n      intro k hk hki hkj\n      let arr₁ := (arr.setIfInBounds i.toNat arr[j.toNat]!)\n      let harr₁ : arr₁ = (arr.setIfInBounds i.toNat arr[j.toNat]!) := rfl\n      rw [←harr₁]\n      have h₁ : arr₁[k]! = arr[k]! := by\n        rw [Array.getElem!_eq_getD]\n        rw [Array.getD]\n        simp\n        split\n        . rw [Array.getElem_setIfInBounds_ne arr arr[j.toNat]! hk]\n          rw [Array.getElem!_eq_getD]\n          rw [Array.getD]\n          simp\n          split\n          . rfl\n          . rfl\n          apply ne_comm.mp\n          exact hki\n        . rename_i h_contr\n          rw [harr₁] at h_contr\n          simp only [Array.size_setIfInBounds] at h_contr\n          contradiction\n      rw [Array.getElem!_eq_getD]\n      rw [Array.getD]\n      simp\n      split\n      . rw [Array.getElem_setIfInBounds_ne arr₁ arr[i.toNat]!]\n        rw [←h₁]\n        rw [Array.getElem!_eq_getD]\n        rw [Array.getD]\n        simp\n        split\n        . simp\n        . simp\n        rename_i h\n        exact h\n        rw [ne_comm]\n        exact hkj\n      . rename_i h_contr\n        have h : arr.size = arr₁.size := by\n          rw [harr₁]\n          simp\n        rw [←h] at h_contr\n        contradiction\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(arr: Array Int) (i: Int) (j: Int) (h_precond : swap_precond (arr) (i) (j)) :\n    swap_postcond (arr) (i) (j) (swap (arr) (i) (j) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[1, 4, 3, 2, 5]",
+   "input_lean": {
+    "arr": "#[1, 2, 3, 4, 5]",
+    "i": "1",
+    "j": "3"
+   }
+  },
+  {
+   "expected_lean": "#[40, 20, 30, 10]",
+   "input_lean": {
+    "arr": "#[10, 20, 30, 40]",
+    "i": "0",
+    "j": "3"
+   }
+  },
+  {
+   "expected_lean": "#[7, 9, 8]",
+   "input_lean": {
+    "arr": "#[7, 8, 9]",
+    "i": "1",
+    "j": "2"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4]",
+   "input_lean": {
+    "arr": "#[1, 2, 3, 4]",
+    "i": "0",
+    "j": "0"
+   }
+  },
+  {
+   "expected_lean": "#[-3, -2, -1]",
+   "input_lean": {
+    "arr": "#[-1, -2, -3]",
+    "i": "0",
+    "j": "2"
+   }
+  }
+ ]
+}

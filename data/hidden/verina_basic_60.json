@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_basic_60",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "2668143983a698e59fb1f0aa2c2b0319bdf67cad9b94b9cb8ae1dc42983bbd87",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "#[10, 10]",
+   "input_lean": {
+    "arr": "#[10, 10]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 6, 8, 10]",
+   "input_lean": {
+    "arr": "#[2, 6, 8, 10]"
+   }
+  },
+  {
+   "expected_lean": "#[2]",
+   "input_lean": {
+    "arr": "#[2]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 4, 6]",
+   "input_lean": {
+    "arr": "#[2, 4, 5, 6]"
+   }
+  },
+  {
+   "expected_lean": "#[6, 4, 2]",
+   "input_lean": {
+    "arr": "#[6, 5, 3, 4, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "arr": "#[3]"
+   }
+  },
+  {
+   "expected_lean": "#[-2]",
+   "input_lean": {
+    "arr": "#[(-2)]"
+   }
+  },
+  {
+   "expected_lean": "#[0, -4, -2]",
+   "input_lean": {
+    "arr": "#[0, (-4), (-2), 3, 7]"
+   }
+  },
+  {
+   "expected_lean": "#[6, 4, 2]",
+   "input_lean": {
+    "arr": "#[6, 5, 4, 3, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 4, 6, 4]",
+   "input_lean": {
+    "arr": "#[1, 2, 3, 4, 5, 6, 4]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "arr": "#[1, 1]"
+   }
+  },
+  {
+   "expected_lean": "#[4, 2, 2, 6]",
+   "input_lean": {
+    "arr": "#[4, 2, 2, 6]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "arr": "#[1, 3, 5, 9]"
+   }
+  },
+  {
+   "expected_lean": "#[-2, 2]",
+   "input_lean": {
+    "arr": "#[(-2), 2]"
+   }
+  },
+  {
+   "expected_lean": "#[10]",
+   "input_lean": {
+    "arr": "#[10, 5]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 8, 2]",
+   "input_lean": {
+    "arr": "#[5, 2, 8, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "#[16, 0, -10, 42, -10]",
+   "input_lean": {
+    "arr": "#[16, 0, 1, (-10), 42, (-10)]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 4, 8, 10, 4]",
+   "input_lean": {
+    "arr": "#[2, 4, 8, 10, 4]"
+   }
+  },
+  {
+   "expected_lean": "#[0, -2, -4]",
+   "input_lean": {
+    "arr": "#[0, (-2), (-4), 7]"
+   }
+  },
+  {
+   "expected_lean": "#[10]",
+   "input_lean": {
+    "arr": "#[10]"
+   }
+  },
+  {
+   "expected_lean": "#[4, 0, 10, 52]",
+   "input_lean": {
+    "arr": "#[4, 0, 10, 5, (-7), 52]"
+   }
+  },
+  {
+   "expected_lean": "#[0, -2, -4]",
+   "input_lean": {
+    "arr": "#[0, (-2), 3, (-4)]"
+   }
+  },
+  {
+   "expected_lean": "#[4, 2, 6]",
+   "input_lean": {
+    "arr": "#[1, 4, 2, 6]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "arr": "#[7, 1, 3, 5]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 6]",
+   "input_lean": {
+    "arr": "#[1, 2, 3, 5, 6]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "arr": "#[7, 5, 3, 1]"
+   }
+  },
+  {
+   "expected_lean": "#[0]",
+   "input_lean": {
+    "arr": "#[0]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 4, 10, 8]",
+   "input_lean": {
+    "arr": "#[2, 4, 10, 8]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 2, 4, 6]",
+   "input_lean": {
+    "arr": "#[2, 2, 3, 4, 5, 6]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 8, 2]",
+   "input_lean": {
+    "arr": "#[1, 2, 8, 2, 7]"
+   }
+  }
+ ]
+}

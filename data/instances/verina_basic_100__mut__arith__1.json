@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_100",
+ "flags": [],
+ "hashes": {
+  "locked": "77ad54d8c1be0c3a7624bcfdb5e93c8b8806b8f48e7964c12ecd60669dc782b4"
+ },
+ "instance_id": "verina_basic_100__mut__arith__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "-",
+  "before": "+",
+  "col": 6,
+  "line": 3,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  if x = 0 then 0 else\n    let y := 2 * x\n    x - y\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "-1",
+  "expected": "3",
+  "index": 1,
+  "input_lean": {
+   "x": "1"
+  },
+  "source": "visible"
+ }
+}

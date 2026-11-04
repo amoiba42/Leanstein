@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_40",
+ "flags": [],
+ "hashes": {
+  "locked": "b63e54692d5006009b4ad31f0b93276718ee8595848edf8563c1832764182491"
+ },
+ "instance_id": "verina_advanced_40__mut__swap_branches__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "if x > maxTail then maxTail else x",
+  "before": "if x > maxTail then x else maxTail",
+  "col": 6,
+  "line": 7,
+  "operator": "swap_branches",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec helper (lst : List Nat) : Nat :=\n    match lst with\n    | [] => 0  -- technically shouldn't happen if input is always non-empty\n    | [x] => x\n    | x :: xs =>\n      let maxTail := helper xs\n      if x > maxTail then maxTail else x\n  helper lst\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "3",
+  "index": 0,
+  "input_lean": {
+   "lst": "[1, 2, 3]"
+  },
+  "source": "visible"
+ }
+}

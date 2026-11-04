@@ -1,0 +1,89 @@
+{
+ "aux_names": [
+  "isEven",
+  "isOdd"
+ ],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that finds the difference between the first even number and the first odd number in an array of integers. The method should process the array sequentially until it identifies the first even number and the first odd number, and then return the difference calculated as (first even number) minus (first odd number).\n\n-----Input-----\nThe input consists of:\na: An array of integers.\n\n-----Output-----\nThe output is an integer:\nReturns the difference computed as the first even number minus the first odd number found in the array.\n\n-----Note-----\nThe input array is assumed to be non-empty and to contain at least one even number and one odd number.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_24",
+ "flags": [],
+ "header": "def firstEvenOddDifference (a : Array Int) (h_precond : firstEvenOddDifference_precond (a)) : Int :=",
+ "locked_hash": "65395841ba838a9dd603212a2feb71530a6b0e14a7c90ee0737d3582fc398e11",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@firstEvenOddDifference.findFirstEvenOdd": false,
+    "fun_ind_simp@firstEvenOddDifference.findFirstEvenOdd": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 95.7,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "firstEvenOddDifference",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\ndef isEven (n : Int) : Bool :=\n  n % 2 == 0\n\ndef isOdd (n : Int) : Bool :=\n  n % 2 != 0\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef firstEvenOddDifference_precond (a : Array Int) : Prop :=\n  -- !benchmark @start precond\n  a.size > 1 ∧\n  (∃ x ∈ a, isEven x) ∧\n  (∃ x ∈ a, isOdd x)\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef firstEvenOddDifference (a : Array Int) (h_precond : firstEvenOddDifference_precond (a)) : Int :=\n  -- !benchmark @start code\n  let rec findFirstEvenOdd (i : Nat) (firstEven firstOdd : Option Nat) : Int :=\n    if i < a.size then\n      let x := a[i]!\n      let firstEven := if firstEven.isNone && isEven x then some i else firstEven\n      let firstOdd := if firstOdd.isNone && isOdd x then some i else firstOdd\n      match firstEven, firstOdd with\n      | some e, some o => a[e]! - a[o]!\n      | _, _ => findFirstEvenOdd (i + 1) firstEven firstOdd\n    else\n      -- This case is impossible due to h2, but we need a value\n      0\n  findFirstEvenOdd 0 none none\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef firstEvenOddDifference_postcond (a : Array Int) (result: Int) (h_precond : firstEvenOddDifference_precond (a)) :=\n  -- !benchmark @start postcond\n  ∃ i j, i < a.size ∧ j < a.size ∧ isEven (a[i]!) ∧ isOdd (a[j]!) ∧\n    result = a[i]! - a[j]! ∧\n    (∀ k, k < i → isOdd (a[k]!)) ∧ (∀ k, k < j → isEven (a[k]!))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem firstEvenOddDifference_spec_satisfied (a: Array Int) (h_precond : firstEvenOddDifference_precond (a)) :\n    firstEvenOddDifference_postcond (a) (firstEvenOddDifference (a) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (h_precond : firstEvenOddDifference_precond (a)) :\n    firstEvenOddDifference_postcond (a) (firstEvenOddDifference (a) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "a": "#[2, 3, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "a": "#[1, 4, 6, 8]"
+   }
+  },
+  {
+   "expected_lean": "(-5)",
+   "input_lean": {
+    "a": "#[7, 2, 9, 4]"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "a": "#[2, 2, 3, 3]"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "a": "#[1, 1, 2, 2]"
+   }
+  }
+ ]
+}

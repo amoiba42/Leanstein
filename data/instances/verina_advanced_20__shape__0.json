@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_20",
+ "flags": [],
+ "hashes": {
+  "locked": "592fd7ff25ac4eb8ca875081e469122eaaef645a106f0b6a90880f794feacb48"
+ },
+ "instance_id": "verina_advanced_20__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec hasDigitEight (m : Nat) : Bool :=\n    if m <= 0 then false\n    else if m % 10 == 8 then true\n    else hasDigitEight (m / 10)\n    termination_by m\n\n  let absN := Int.natAbs n\n  n % 8 == 0 || hasDigitEight absN\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

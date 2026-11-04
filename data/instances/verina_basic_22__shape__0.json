@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_22",
+ "flags": [],
+ "hashes": {
+  "locked": "1b2f727451c6ddbcbbfe4826f18f073230c925e05b9400275c0b317da6656f53"
+ },
+ "instance_id": "verina_basic_22__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let res := a.foldl (fun acc x => if !inArray b x then acc.insert x else acc) Std.HashSet.emptyWithCapacity\n  let res := b.foldl (fun acc x => if !inArray a x then acc.insert x else acc) res\n  (res.toList.mergeSort (· ≤ ·)).toArray\n",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

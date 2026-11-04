@@ -1,0 +1,134 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that finds the minimum among three given integers. The method should return the smallest value, ensuring that the result is less than or equal to each of the input numbers and that it is one of the provided integers.\n\n-----Input-----\nThe input consists of three integers:\na: The first integer.\nb: The second integer.\nc: The third integer.\n\n-----Output-----\nThe output is an integer:\nReturns the minimum of the three input numbers, assuring that the returned value is less than or equal to a, b, and c, and that it matches one of these values.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_6",
+ "flags": [],
+ "header": "def minOfThree (a : Int) (b : Int) (c : Int) (h_precond : minOfThree_precond (a) (b) (c)) : Int :=",
+ "locked_hash": "d021548d1ca1b5437efac4a4a659065bc2ea52079bfc928f09424b441df0eec3",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": true,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 6.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "minOfThree",
+  "params": [
+   [
+    "a",
+    "Int"
+   ],
+   [
+    "b",
+    "Int"
+   ],
+   [
+    "c",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Mathlib\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef minOfThree_precond (a : Int) (b : Int) (c : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef minOfThree (a : Int) (b : Int) (c : Int) (h_precond : minOfThree_precond (a) (b) (c)) : Int :=\n  -- !benchmark @start code\n  if a <= b && a <= c then a\n  else if b <= a && b <= c then b\n  else c\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef minOfThree_postcond (a : Int) (b : Int) (c : Int) (result: Int) (h_precond : minOfThree_precond (a) (b) (c)) :=\n  -- !benchmark @start postcond\n  (result <= a ∧ result <= b ∧ result <= c) ∧\n  (result = a ∨ result = b ∨ result = c)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem minOfThree_spec_satisfied (a: Int) (b: Int) (c: Int) (h_precond : minOfThree_precond (a) (b) (c)) :\n    minOfThree_postcond (a) (b) (c) (minOfThree (a) (b) (c) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold minOfThree minOfThree_postcond\n\n  split\n\n  -- Case 1: a is the minimum\n  · by_cases h1: a <= b && a <= c\n    · constructor\n      · simp_all\n      · simp\n    · contradiction\n\n  split\n\n  -- Case 2: b is the minimum\n  · by_cases h2: b <= a && b <= c\n    · constructor\n      · simp_all\n      · simp\n    · contradiction\n\n  -- Case 3: c is the minimum\n  · by_cases h3: c < a && c < b\n    · constructor\n      · simp_all\n        constructor\n        · exact le_of_lt h3.1\n        · exact le_of_lt h3.2\n      · simp\n    · constructor\n      · simp_all\n        by_cases h': a <= b\n        · simp_all\n          have h'': a <= c := by\n            exact le_trans h' h3\n          rw [← not_lt] at h''\n          contradiction\n        · simp_all\n          have _: b <= a := by exact le_of_lt h'\n          simp_all\n          have h'': c < b := by assumption\n          have h''': c < a := by exact lt_trans h'' h'\n          apply h3 at h'''\n          rw [← not_lt] at h'''\n          contradiction\n      · simp\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Int) (b: Int) (c: Int) (h_precond : minOfThree_precond (a) (b) (c)) :\n    minOfThree_postcond (a) (b) (c) (minOfThree (a) (b) (c) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "a": "3",
+    "b": "2",
+    "c": "1"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "a": "5",
+    "b": "5",
+    "c": "5"
+   }
+  },
+  {
+   "expected_lean": "10",
+   "input_lean": {
+    "a": "10",
+    "b": "20",
+    "c": "15"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "a": "(-1)",
+    "b": "2",
+    "c": "3"
+   }
+  },
+  {
+   "expected_lean": "(-3)",
+   "input_lean": {
+    "a": "2",
+    "b": "(-3)",
+    "c": "4"
+   }
+  },
+  {
+   "expected_lean": "(-5)",
+   "input_lean": {
+    "a": "2",
+    "b": "3",
+    "c": "(-5)"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "0",
+    "b": "0",
+    "c": "1"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "a": "0",
+    "b": "(-1)",
+    "c": "1"
+   }
+  },
+  {
+   "expected_lean": "(-5)",
+   "input_lean": {
+    "a": "(-5)",
+    "b": "(-2)",
+    "c": "(-3)"
+   }
+  }
+ ]
+}

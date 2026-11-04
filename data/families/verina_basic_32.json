@@ -1,0 +1,78 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires writing a Lean 4 method that swaps the first and last elements of an array of integers. The method should produce a new array where the first element of the output is the last element of the input, the last element of the output is the first element of the input, and all other elements remain in their original positions.\n\n-----Input-----  \nThe input consists of:  \na: An array of integers (assumed to be non-empty).\n\n-----Output-----  \nThe output is an array of integers:  \nReturns a new array where:  \n- The former last element becomes the first element.  \n- The former first element becomes the last element.  \n- All other elements remain unchanged.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_32",
+ "flags": [],
+ "header": "def swapFirstAndLast (a : Array Int) (h_precond: swapFirstAndLast_precond a) : Array Int :=",
+ "locked_hash": "505ecd9cf1f863c8b6a3b1e939cf253e3019bfa5a314adbcc01fe86dcec4ec82",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_grind",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": true,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 14.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_broken",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "swapFirstAndLast",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Mathlib\n-- !benchmark @end import\n\n-- !benchmark @start import type=llm\n-- !benchmark @end import\n\n-- !benchmark @start import type=test\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n-- !benchmark @end solution_aux\n-- !benchmark @start precond_aux\n-- !benchmark @end precond_aux\n\ndef swapFirstAndLast_precond (a : Array Int) : Prop :=\n  -- !benchmark @start precond\n  a.size > 0\n  -- !benchmark @end precond\n\n-- !benchmark @start code_aux\n-- !benchmark @end code_aux\n\n\ndef swapFirstAndLast (a : Array Int) (h_precond: swapFirstAndLast_precond a) : Array Int :=\n  -- !benchmark @start code\n  let first := a[0]!\n  let last := a[a.size - 1]!\n  a.set! 0 last |>.set! (a.size - 1) first\n  -- !benchmark @end code\n\n-- !benchmark @start postcond_aux\n-- !benchmark @end postcond_aux\n\n-- Theorem: The last element of the input array should be the first element of the modified array; The first element of the input array should be the last element of the modified array; All other elements remain unchanged\n@[reducible, simp]\ndef swapFirstAndLast_postcond (a : Array Int) (result : Array Int) (h_precond: swapFirstAndLast_precond a) : Prop :=\n  -- !benchmark @start postcond\n  result.size = a.size ∧\n  result[0]! = a[a.size - 1]! ∧\n  result[result.size - 1]! = a[0]! ∧\n  (List.range (result.size - 2)).all (fun i => result[i + 1]! = a[i + 1]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n-- !benchmark @end proof_aux\n\ntheorem swapFirstAndLast_spec_satisfied (a : Array Int) (h_precond: swapFirstAndLast_precond a) :\n    swapFirstAndLast_postcond a (swapFirstAndLast a h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold swapFirstAndLast swapFirstAndLast_postcond\n  unfold swapFirstAndLast_precond at h_precond\n  simp_all\n  -- have ha : 0 < a.toList.length := by simp [h_precond]\n  constructor\n  · simp [Array.getElem!_eq_getD]\n    rw [← Array.getElem?_toList, ← Array.getElem?_toList]\n    simp\n    rw [List.getElem?_set]\n    cases ha' : a.size with\n    | zero => simp_all\n    | succ n =>\n      cases hn : n with\n      | zero =>\n        simp [h_precond]\n      | succ n' => simp_all\n  · constructor\n    · simp_all [Array.getElem!_eq_getD]\n    · intro i hi\n      simp [Array.getElem!_eq_getD]\n      rw [← Array.getElem?_toList, ← Array.getElem?_toList]\n      simp\n      rw [List.getElem?_set, List.length_set]\n      simp_all\n      have : i + 2 < a.size := by\n        exact Nat.add_lt_of_lt_sub hi\n      have : a.size ≠ i + 2 := by\n        exact Ne.symm (Nat.ne_of_lt this)\n      simp [this]\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a : Array Int) (h_precond: swapFirstAndLast_precond a) :\n    swapFirstAndLast_postcond a (swapFirstAndLast a h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[5, 2, 3, 4, 1]",
+   "input_lean": {
+    "a": "#[1, 2, 3, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "#[10]",
+   "input_lean": {
+    "a": "#[10]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 1]",
+   "input_lean": {
+    "a": "#[1, 2]"
+   }
+  },
+  {
+   "expected_lean": "#[3, 2, 1]",
+   "input_lean": {
+    "a": "#[1, 2, 3]"
+   }
+  }
+ ]
+}

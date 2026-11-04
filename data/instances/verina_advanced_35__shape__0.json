@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_35",
+ "flags": [],
+ "hashes": {
+  "locked": "0367a2ac61292233f34821dbf5e92ef6c01e57a783adf964a4693e087c1d141e"
+ },
+ "instance_id": "verina_advanced_35__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  Id.run do\n    let mut counts : HashMap Int Nat := {}\n    let n := nums.length\n    for x in nums do\n      let count := counts.getD x 0\n      counts := counts.insert x (count + 1)\n    match counts.toList.find? (fun (_, c) => c > n / 2) with\n    | some (k, _) => k\n    | none      => 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

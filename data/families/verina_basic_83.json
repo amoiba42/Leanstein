@@ -1,0 +1,95 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task involves concatenating two arrays of integers by appending the second array to the end of the first array. The goal is to produce a new array that sequentially contains all elements from the first array followed by all elements from the second array.\n\n-----Input-----  \nThe input consists of two parameters:  \n• a: An Array of integers representing the first part of the concatenated array.  \n• b: An Array of integers representing the second part of the concatenated array.\n\n-----Output-----  \nThe output is an Array of integers that satisfies the following:  \n• The length of the output array is equal to the sum of the lengths of arrays a and b.  \n• The first part of the output array (indices 0 to a.size - 1) is identical to array a.  \n• The remaining part of the output array (indices a.size to a.size + b.size - 1) is identical to array b.\n\n-----Note-----  \nNo additional preconditions are required since the function uses the sizes of the input arrays to build the resulting array.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_83",
+ "flags": [],
+ "header": "def concat (a : Array Int) (b : Array Int) (h_precond : concat_precond (a) (b)) : Array Int :=",
+ "locked_hash": "10a81a489f21b84f184bacabebbc9b17b1e89dc132a1b9f31b2e034e9b218a71",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": true,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@concat.loop": false,
+    "fun_ind_simp@concat.loop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 95.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "concat",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ],
+   [
+    "b",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef concat_precond (a : Array Int) (b : Array Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef concat (a : Array Int) (b : Array Int) (h_precond : concat_precond (a) (b)) : Array Int :=\n  -- !benchmark @start code\n  let n := a.size + b.size\n  let rec loop (i : Nat) (c : Array Int) : Array Int :=\n    if i < n then\n      let value := if i < a.size then a[i]! else b[i - a.size]!\n      loop (i + 1) (c.set! i value)\n    else\n      c\n  loop 0 (Array.mkArray n 0)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef concat_postcond (a : Array Int) (b : Array Int) (result: Array Int) (h_precond : concat_precond (a) (b)) :=\n  -- !benchmark @start postcond\n  result.size = a.size + b.size\n    ∧ (∀ k, k < a.size → result[k]! = a[k]!)\n    ∧ (∀ k, k < b.size → result[k + a.size]! = b[k]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem concat_spec_satisfied (a: Array Int) (b: Array Int) (h_precond : concat_precond (a) (b)) :\n    concat_postcond (a) (b) (concat (a) (b) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (b: Array Int) (h_precond : concat_precond (a) (b)) :\n    concat_postcond (a) (b) (concat (a) (b) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[1, 2, 3, 4, 5]",
+   "input_lean": {
+    "a": "#[1, 2, 3]",
+    "b": "#[4, 5]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "a": "#[]",
+    "b": "#[]"
+   }
+  },
+  {
+   "expected_lean": "#[10, 20, 30, 40]",
+   "input_lean": {
+    "a": "#[10]",
+    "b": "#[20, 30, 40]"
+   }
+  },
+  {
+   "expected_lean": "#[-1, -2, 0]",
+   "input_lean": {
+    "a": "#[-1, -2]",
+    "b": "#[0]"
+   }
+  },
+  {
+   "expected_lean": "#[7, 8, 9]",
+   "input_lean": {
+    "a": "#[7, 8, 9]",
+    "b": "#[]"
+   }
+  }
+ ]
+}

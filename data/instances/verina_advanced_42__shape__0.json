@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_42",
+ "flags": [],
+ "hashes": {
+  "locked": "f4b0d36f9c9b3c4290388b816be6a24ff7744c32dabf3eb89ed8985f3abc75f9"
+ },
+ "instance_id": "verina_advanced_42__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  match prices with\n  | [] => 0\n  | p :: ps => maxProfitAux ps p 0\n",
+  "code_aux": "def updateMinAndProfit (price : Nat) (minSoFar : Nat) (maxProfit : Nat) : (Nat × Nat) :=\n  let newMin := Nat.min minSoFar price\n  let profit := if price > minSoFar then price - minSoFar else 0\n  let newMaxProfit := Nat.max maxProfit profit\n  (newMin, newMaxProfit)\n\ndef maxProfitAux (prices : List Nat) (minSoFar : Nat) (maxProfit : Nat) : Nat :=\n  match prices with\n  | [] => maxProfit\n  | p :: ps =>\n    let (newMin, newProfit) := updateMinAndProfit p minSoFar maxProfit\n    maxProfitAux ps newMin newProfit\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

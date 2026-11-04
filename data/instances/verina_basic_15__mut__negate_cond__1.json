@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_15",
+ "flags": [],
+ "hashes": {
+  "locked": "3c475e938a88c78b21dcf4e050d2d9b52bfd1054dfcc80281a3579229e5e708e"
+ },
+ "instance_id": "verina_basic_15__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(a.size ≤ 1)",
+  "before": "a.size ≤ 1",
+  "col": 4,
+  "line": 1,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  if ¬(a.size ≤ 1) then\n    false\n  else\n    let withIndices := a.mapIdx (fun i x => (i, x))\n    withIndices.any (fun (i, x) =>\n      i < a.size - 1 && x + 1 == a[i+1]!)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 2, 3, 5]"
+  },
+  "source": "visible"
+ }
+}

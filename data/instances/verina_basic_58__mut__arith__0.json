@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_58",
+ "flags": [],
+ "hashes": {
+  "locked": "9e9c8d99ca96c6c882c109959f20cc112d9851483af15365372aad14e6907246"
+ },
+ "instance_id": "verina_basic_58__mut__arith__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "+",
+  "before": "*",
+  "col": 29,
+  "line": 3,
+  "operator": "arith",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  double_array_elements_aux s s 0\n",
+  "code_aux": "def double_array_elements_aux (s_old s : Array Int) (i : Nat) : Array Int :=\n  if i < s.size then\n    let new_s := s.set! i (2 + (s_old[i]!))\n    double_array_elements_aux s_old new_s (i + 1)\n  else\n    s\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[3, 4, 5, 6, 7]",
+  "expected": "#[2, 4, 6, 8, 10]",
+  "index": 1,
+  "input_lean": {
+   "s": "#[1, 2, 3, 4, 5]"
+  },
+  "source": "visible"
+ }
+}

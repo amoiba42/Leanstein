@@ -1,0 +1,86 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 method that returns the integer that appears most frequently in the input list. If multiple integers have the same maximum frequency, return the one that appears first in the original list. You should implement a frequency counter using a fold over the list, extract the maximum frequency, and return the first element in the list that matches it.\n\n-----Input-----\nThe input consists of:\nxs: A list of integers (possibly with duplicates). The list is guaranteed to be non-empty.\n\n-----Output-----\nThe output is an integer:\nReturns the number that appears the most frequently in the list. If there is a tie, the element that occurs first in the original list should be returned.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_55",
+ "flags": [],
+ "header": "def mostFrequent (xs : List Int) (h_precond : mostFrequent_precond (xs)) : Int :=",
+ "locked_hash": "d2c93fcd978e3b2c0fc691c03d9700c3766f9e6d17591384608b748980dad83a",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@xs": false,
+    "ind_simp_all@xs": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 27.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "mostFrequent",
+  "params": [
+   [
+    "xs",
+    "List Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Std.Data.HashMap\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\nopen Std\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef mostFrequent_precond (xs : List Int) : Prop :=\n  -- !benchmark @start precond\n  xs ≠ []\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n-- Build a frequency map from the list\ndef countMap (xs : List Int) : HashMap Int Nat :=\n  let step := fun m x =>\n    let current := m.getD x 0\n    m.insert x (current + 1)\n  let init := (HashMap.emptyWithCapacity : HashMap Int Nat)\n  xs.foldl step init\n\n-- Compute the maximum frequency in the map\ndef getMaxFrequency (m : HashMap Int Nat) : Nat :=\n  let step := fun acc (_k, v) =>\n    if v > acc then v else acc\n  let init := 0\n  m.toList.foldl step init\n\n-- Extract all keys whose frequency == maxFreq\ndef getCandidates (m : HashMap Int Nat) (maxFreq : Nat) : List Int :=\n  let isTarget := fun (_k, v) => v = maxFreq\n  let extract := fun (k, _) => k\n  m.toList.filter isTarget |>.map extract\n\n-- Return the first candidate element from original list\ndef getFirstWithFreq (xs : List Int) (candidates : List Int) : Int :=\n  match xs.find? (fun x => candidates.contains x) with\n  | some x => x\n  | none => 0\n-- !benchmark @end code_aux\n\n\ndef mostFrequent (xs : List Int) (h_precond : mostFrequent_precond (xs)) : Int :=\n  -- !benchmark @start code\n  let freqMap := countMap xs\n  let maxF := getMaxFrequency freqMap\n  let candidates := getCandidates freqMap maxF\n  getFirstWithFreq xs candidates\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef mostFrequent_postcond (xs : List Int) (result: Int) (h_precond : mostFrequent_precond (xs)) : Prop :=\n  -- !benchmark @start postcond\n  let count := fun x => xs.countP (fun y => y = x)\n  result ∈ xs ∧\n  xs.all (fun x => count x ≤ count result) ∧\n  ((xs.filter (fun x => count x = count result)).head? = some result)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem mostFrequent_spec_satisfied (xs: List Int) (h_precond : mostFrequent_precond (xs)) :\n    mostFrequent_postcond (xs) (mostFrequent (xs) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(xs: List Int) (h_precond : mostFrequent_precond (xs)) :\n    mostFrequent_postcond (xs) (mostFrequent (xs) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "xs": "[1, 2, 2, 3]"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "xs": "[4, 4, 5, 5, 4]"
+   }
+  },
+  {
+   "expected_lean": "9",
+   "input_lean": {
+    "xs": "[9]"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "xs": "[1, 2, 3, 1, 2, 3, 2]"
+   }
+  },
+  {
+   "expected_lean": "7",
+   "input_lean": {
+    "xs": "[7, 7, 8, 8, 9, 9, 7]"
+   }
+  }
+ ]
+}

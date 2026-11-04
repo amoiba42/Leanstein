@@ -1,0 +1,34 @@
+{
+ "family_id": "verina_advanced_80",
+ "flags": [],
+ "hashes": {
+  "locked": "94ec429cec40bcf815eb81085541ec775bc6beaf4d33cbfcb9b5a9d5af83162d"
+ },
+ "instance_id": "verina_advanced_80__nat__qwen3.5-9b__3",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef twoSum (nums : Array Int) (target : Int) (h_precond : twoSum_precond (nums) (target)) : Array Nat :=\n  let result : Array Nat := #[0, 0]\n  result\n```",
+  "seed": 5003
+ },
+ "split": "main",
+ "start": {
+  "code": "let result : Array Nat := #[0, 0]\nresult",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[0, 0]",
+  "expected": "#[0, 1]",
+  "index": 0,
+  "input_lean": {
+   "nums": "#[2, 7, 11, 15]",
+   "target": "9"
+  },
+  "source": "visible"
+ }
+}

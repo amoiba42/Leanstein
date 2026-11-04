@@ -1,0 +1,103 @@
+{
+ "aux_names": [
+  "absDiff"
+ ],
+ "description": "-----Description-----  \nThe task is to determine whether there exists at least one pair of different floating-point numbers in a list such that the absolute difference between them is less than a given threshold. The focus is solely on deciding if such a pair is present in the list.\n\n-----Input-----  \nThe input consists of:  \n• numbers: A list of floating-point numbers.  \n• threshold: A floating-point number representing the maximum allowed difference between two numbers for them to be considered \"close.\"  \n\n-----Output-----  \nThe output is a boolean value:  \n• true – if there exists at least one pair of distinct elements in the list such that the absolute difference between them is less than the threshold.  \n• false – if for every possible pair of elements, the absolute difference is greater than or equal to the threshold.\n\n-----Note-----\nIt is assumed that:\n- The list of numbers contains only valid (non-NaN, non-infinite) floating-point values.\n- The threshold is a non-negative, valid floating-point number.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_63",
+ "flags": [
+  "hidden_unavailable"
+ ],
+ "header": "def has_close_elements (numbers : List Float) (threshold : Float) (h_precond : has_close_elements_precond (numbers) (threshold)) : Bool :=",
+ "locked_hash": "7504fcdb536161f4f63cb60ea8a498485eff4a9b155b3e558d731bb368e1a0a2",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@has_close_elements.inner": false,
+    "fun_ind_grind@has_close_elements.outer": false,
+    "fun_ind_simp@has_close_elements.inner": false,
+    "fun_ind_simp@has_close_elements.outer": false,
+    "grind": false,
+    "ind_grind@numbers": false,
+    "ind_simp_all@numbers": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": null,
+  "lean_s": 91.9,
+  "n_hidden": 0,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "has_close_elements",
+  "params": [
+   [
+    "numbers",
+    "List Float"
+   ],
+   [
+    "threshold",
+    "Float"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start task_aux\n-- Lean 4's Float is an opaque C FFI type with no kernel lemmas.\n-- These axioms capture IEEE 754-compliant behavior for non-NaN/non-Inf floats.\naxiom Float.not_isNaN_ofNat (n : Nat) : (n.toFloat).isNaN = false\naxiom Float.isFinite_ofNat (n : Nat) (h : n < 2 ^ 53) :\n    (n.toFloat).isNaN = false ∧ (n.toFloat).isInf = false\naxiom Float.ofNat_beq_zero_false (n : Nat) (h : 0 < n) :\n    (n.toFloat == (0 : Float)) = false\naxiom Float.beq_self_of_not_isNaN (x : Float) (h : x.isNaN = false) :\n    (x == x) = true\naxiom Float.not_isNaN_sub (x y : Float)\n    (hx : x.isNaN = false) (hy : y.isNaN = false)\n    (hx_inf : x.isInf = false) (hy_inf : y.isInf = false) :\n    (x - y).isNaN = false\naxiom Float.not_isNaN_div (x y : Float)\n    (hx : x.isNaN = false) (hy : y.isNaN = false)\n    (hy0 : (y == 0) = false) (hinf : x.isInf = false ∨ y.isInf = false) :\n    (x / y).isNaN = false\naxiom Float.le_total_of_not_isNaN (x y : Float)\n    (hx : x.isNaN = false) (hy : y.isNaN = false) :\n    x ≤ y ∨ y ≤ x\naxiom Float.lt_iff_le_not_le_of_not_isNaN (x y : Float)\n    (hx : x.isNaN = false) (hy : y.isNaN = false) :\n    x < y ↔ x ≤ y ∧ ¬ y ≤ x\n-- !benchmark @end task_aux\n\n-- !benchmark @start solution_aux\ndef absDiff (a b : Float) : Float :=\n  if a - b < 0.0 then b - a else a - b\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef has_close_elements_precond (numbers : List Float) (threshold : Float) : Prop :=\n  -- !benchmark @start precond\n  threshold ≥ 0.0 ∧\n  ¬threshold.isNaN ∧\n  numbers.all (fun x => ¬x.isNaN ∧ ¬x.isInf)  -- no NaN or Inf values\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n-- !benchmark @end code_aux\n\n\ndef has_close_elements (numbers : List Float) (threshold : Float) (h_precond : has_close_elements_precond (numbers) (threshold)) : Bool :=\n  -- !benchmark @start code\n  let len := numbers.length\n  let rec outer (idx : Nat) : Bool :=\n    if idx < len then\n      let rec inner (idx2 : Nat) : Bool :=\n        if idx2 < idx then\n          let a := numbers.getD idx2 0.0\n          let b := numbers.getD idx 0.0\n          let d := absDiff a b\n          if d < threshold then true else inner (idx2 + 1)\n        else\n          false\n      if inner 0 then true else outer (idx + 1)\n    else\n      false\n  outer 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef has_close_elements_postcond (numbers : List Float) (threshold : Float) (result: Bool) (h_precond : has_close_elements_precond (numbers) (threshold)) :=\n  -- !benchmark @start postcond\n  ¬ result ↔ (List.Pairwise (fun a b => absDiff a b ≥ threshold) numbers)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem has_close_elements_spec_satisfied (numbers: List Float) (threshold: Float) (h_precond : has_close_elements_precond (numbers) (threshold)) :\n    has_close_elements_postcond (numbers) (threshold) (has_close_elements (numbers) (threshold) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(numbers: List Float) (threshold: Float) (h_precond : has_close_elements_precond (numbers) (threshold)) :\n    has_close_elements_postcond (numbers) (threshold) (has_close_elements (numbers) (threshold) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "numbers": "[1.0, 2.0, 3.0]",
+    "threshold": "1.5"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "numbers": "[10.0, 12.0, 15.0]",
+    "threshold": "1.5"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "numbers": "[5.0, 5.0]",
+    "threshold": "0.1"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "numbers": "[]",
+    "threshold": "2.0"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "numbers": "[0.0, 0.5, 1.1, 2.2]",
+    "threshold": "0.6"
+   }
+  }
+ ]
+}

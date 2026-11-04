@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_103",
+ "flags": [],
+ "hashes": {
+  "locked": "dc8917f0eaf4e87d0d471c1733ada95f16c9dc8fee71c912a912886e4f3dcaad"
+ },
+ "instance_id": "verina_basic_103__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let a1 := a.set! 4 ((a[4]!) + 3)\n  let a2 := a1.set! 7 516\n  a2\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

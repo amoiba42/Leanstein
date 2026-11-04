@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_12",
+ "flags": [],
+ "hashes": {
+  "locked": "34d9b39b1a4d1fcf4c9bcda5a118983a56fd387e8a92c29408f04682a710d601"
+ },
+ "instance_id": "verina_advanced_12__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(seen.contains h)",
+  "before": "seen.contains h",
+  "col": 18,
+  "line": 4,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec helper (seen : List Int) (rem : List Int) : Option Int :=\n    match rem with\n    | [] => none\n    | h :: t => if ¬(seen.contains h) then some h else helper (h :: seen) t\n  helper [] lst\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "some 1",
+  "expected": "some 2",
+  "index": 0,
+  "input_lean": {
+   "lst": "[1, 2, 3, 2, 4]"
+  },
+  "source": "visible"
+ }
+}

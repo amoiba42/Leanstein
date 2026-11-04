@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_60",
+ "flags": [],
+ "hashes": {
+  "locked": "7239c581254ff759d89a16ba4b610d3b078c9281fb3459df06c46626406c5ea9"
+ },
+ "instance_id": "verina_basic_60__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(isEven (arr.getD i 0))",
+  "before": "isEven (arr.getD i 0)",
+  "col": 8,
+  "line": 3,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec loop (i : Nat) (acc : Array Int) : Array Int :=\n    if i < arr.size then\n      if ¬(isEven (arr.getD i 0)) then\n        loop (i + 1) (acc.push (arr.getD i 0))\n      else\n        loop (i + 1) acc\n    else\n      acc\n  loop 0 (Array.mkEmpty 0)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[1, 3, 5]",
+  "expected": "#[2, 4, 6]",
+  "index": 0,
+  "input_lean": {
+   "arr": "#[1, 2, 3, 4, 5, 6]"
+  },
+  "source": "visible"
+ }
+}

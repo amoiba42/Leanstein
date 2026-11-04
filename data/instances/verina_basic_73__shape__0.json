@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_73",
+ "flags": [],
+ "hashes": {
+  "locked": "dce43228c7539fdfd6607bc62c9e75262e2499b4744c25f95e5f141912fed717"
+ },
+ "instance_id": "verina_basic_73__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let sList := s.toList\n  let pList := p.toList\n  let rec loop (i : Nat) : Bool :=\n    if i < sList.length then\n      if (sList[i]! ≠ pList[i]!) ∧ (pList[i]! ≠ '?') then false\n      else loop (i + 1)\n    else true\n  loop 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

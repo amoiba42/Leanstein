@@ -1,0 +1,90 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires implementing the insertion sort algorithm to sort a list of integers in ascending order. The function should take a list of integers as input and return a new list containing the same elements sorted in non-decreasing order.\n\n-----Input----- \nThe input is:\n\nl: A list of integers to be sorted.\n\n-----Output----- \nThe output is:\n\nA list of integers that is sorted in non-decreasing order and is a permutation of the input list.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_17",
+ "flags": [],
+ "header": "def insertionSort (l : List Int) (h_precond : insertionSort_precond (l)) : List Int :=",
+ "locked_hash": "766894720c5ea3e746fa6c40e5c23d0560ed283f66eb79012e2e86fdf1b42717",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@insertElement": false,
+    "fun_ind_grind@sortList": false,
+    "fun_ind_simp@insertElement": false,
+    "fun_ind_simp@sortList": false,
+    "grind": false,
+    "ind_grind@l": false,
+    "ind_simp_all@l": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 3.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "insertionSort",
+  "params": [
+   [
+    "l",
+    "List Int"
+   ]
+  ],
+  "ret": "List Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef insertionSort_precond (l : List Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n-- Helper function to insert an integer into a sorted list\ndef insertElement (x : Int) (l : List Int) : List Int :=\n  match l with\n  | [] => [x]\n  | y :: ys =>\n      if x <= y then\n        x :: y :: ys\n      else\n        y :: insertElement x ys\n\n-- Helper function to sort a list using insertion sort\ndef sortList (l : List Int) : List Int :=\n  match l with\n  | [] => []\n  | x :: xs =>\n      insertElement x (sortList xs)\n-- !benchmark @end code_aux\n\n\ndef insertionSort (l : List Int) (h_precond : insertionSort_precond (l)) : List Int :=\n  -- !benchmark @start code\n  let result := sortList l\n  result\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef insertionSort_postcond (l : List Int) (result: List Int) (h_precond : insertionSort_precond (l)) : Prop :=\n  -- !benchmark @start postcond\n  List.Pairwise (· ≤ ·) result ∧ List.isPerm l result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem insertionSort_spec_satisfied (l: List Int) (h_precond : insertionSort_precond (l)) :\n    insertionSort_postcond (l) (insertionSort (l) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(l: List Int) (h_precond : insertionSort_precond (l)) :\n    insertionSort_postcond (l) (insertionSort (l) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "l": "[]"
+   }
+  },
+  {
+   "expected_lean": "[5]",
+   "input_lean": {
+    "l": "[5]"
+   }
+  },
+  {
+   "expected_lean": "[1, 2, 3]",
+   "input_lean": {
+    "l": "[1, 2, 3]"
+   }
+  },
+  {
+   "expected_lean": "[1, 2, 3]",
+   "input_lean": {
+    "l": "[3, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "[2, 2, 3, 4]",
+   "input_lean": {
+    "l": "[4, 2, 2, 3]"
+   }
+  }
+ ]
+}

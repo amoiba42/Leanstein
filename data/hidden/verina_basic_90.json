@@ -1,0 +1,80 @@
+{
+ "family_id": "verina_basic_90",
+ "n_admissible": 10,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "d609533ebd0599ddce96e36d6ff19c231b1dd45dc9df18b48738411c6dd0e8ec",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "(-1, -1)",
+   "input_lean": {
+    "a": "#[#[5]]",
+    "key": "10"
+   }
+  },
+  {
+   "expected_lean": "(-1, -1)",
+   "input_lean": {
+    "a": "#[#[(-1)]]",
+    "key": "(-10)"
+   }
+  },
+  {
+   "expected_lean": "(-1, -1)",
+   "input_lean": {
+    "a": "#[#[(-15), 3]]",
+    "key": "4"
+   }
+  },
+  {
+   "expected_lean": "(-1, -1)",
+   "input_lean": {
+    "a": "#[#[(-2)]]",
+    "key": "6"
+   }
+  },
+  {
+   "expected_lean": "(0, 1)",
+   "input_lean": {
+    "a": "#[#[(-1), 5]]",
+    "key": "5"
+   }
+  },
+  {
+   "expected_lean": "(-1, -1)",
+   "input_lean": {
+    "a": "#[#[3]]",
+    "key": "5"
+   }
+  },
+  {
+   "expected_lean": "(-1, -1)",
+   "input_lean": {
+    "a": "#[#[0, 0]]",
+    "key": "10"
+   }
+  },
+  {
+   "expected_lean": "(-1, -1)",
+   "input_lean": {
+    "a": "#[#[(-87), 13]]",
+    "key": "3"
+   }
+  },
+  {
+   "expected_lean": "(-1, -1)",
+   "input_lean": {
+    "a": "#[#[2]]",
+    "key": "(-2)"
+   }
+  },
+  {
+   "expected_lean": "(-1, -1)",
+   "input_lean": {
+    "a": "#[#[(-17), (-2), 1]]",
+    "key": "5"
+   }
+  }
+ ]
+}

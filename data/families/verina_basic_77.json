@@ -1,0 +1,117 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task involves updating an element within a 2-dimensional array. The goal is to modify only a specific inner array by changing one of its elements to a new value while keeping every other element and all other inner arrays unchanged.\n\n-----Input-----  \nThe input consists of:  \n• arr: An array of arrays of natural numbers.  \n• index1: A natural number representing the index in the outer array identifying which inner array to modify (0-indexed).  \n• index2: A natural number representing the index within the selected inner array that should be updated (0-indexed).  \n• val: A natural number which is the new value to set at the specified inner index.\n\n-----Output-----  \nThe output is an array of arrays of natural numbers that:  \n• Has the same overall structure as the input.  \n• Contains all original inner arrays unchanged except for the inner array at position index1.  \n• In the modified inner array, only the element at index2 is replaced with val, while all other elements remain the same.\n\n-----Note-----  \nIt is assumed that index1 is a valid index for the outer array and that index2 is a valid index within the corresponding inner array.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_77",
+ "flags": [],
+ "header": "def modify_array_element (arr : Array (Array Nat)) (index1 : Nat) (index2 : Nat) (val : Nat) (h_precond : modify_array_element_precond (arr) (index1) (index2) (val)) : Array (Array Nat) :=",
+ "locked_hash": "fec911d751cf4179a9908d317e440e267cbfcc94a8f6bf1d78a1dda2d4b8af94",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_grind",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@index1": false,
+    "ind_grind@index2": false,
+    "ind_grind@val": false,
+    "ind_simp_all@index1": false,
+    "ind_simp_all@index2": false,
+    "ind_simp_all@val": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": true,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 14.0,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "modify_array_element",
+  "params": [
+   [
+    "arr",
+    "Array (Array Nat)"
+   ],
+   [
+    "index1",
+    "Nat"
+   ],
+   [
+    "index2",
+    "Nat"
+   ],
+   [
+    "val",
+    "Nat"
+   ]
+  ],
+  "ret": "Array (Array Nat)"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef modify_array_element_precond (arr : Array (Array Nat)) (index1 : Nat) (index2 : Nat) (val : Nat) : Prop :=\n  -- !benchmark @start precond\n  index1 < arr.size ∧\n  index2 < (arr[index1]!).size\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef updateInner (a : Array Nat) (idx val : Nat) : Array Nat :=\n  a.set! idx val\n-- !benchmark @end code_aux\n\n\ndef modify_array_element (arr : Array (Array Nat)) (index1 : Nat) (index2 : Nat) (val : Nat) (h_precond : modify_array_element_precond (arr) (index1) (index2) (val)) : Array (Array Nat) :=\n  -- !benchmark @start code\n  let inner := arr[index1]!\n  let inner' := updateInner inner index2 val\n  arr.set! index1 inner'\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef modify_array_element_postcond (arr : Array (Array Nat)) (index1 : Nat) (index2 : Nat) (val : Nat) (result: Array (Array Nat)) (h_precond : modify_array_element_precond (arr) (index1) (index2) (val)) :=\n  -- !benchmark @start postcond\n  result.size = arr.size ∧\n  (result[index1]!).size = (arr[index1]!).size ∧\n  (∀ i, i < arr.size → i ≠ index1 → result[i]! = arr[i]!) ∧\n  (∀ j, j < (arr[index1]!).size → j ≠ index2 → (result[index1]!)[j]! = (arr[index1]!)[j]!) ∧\n  ((result[index1]!)[index2]! = val)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem modify_array_element_spec_satisfied (arr: Array (Array Nat)) (index1: Nat) (index2: Nat) (val: Nat) (h_precond : modify_array_element_precond (arr) (index1) (index2) (val)) :\n    modify_array_element_postcond (arr) (index1) (index2) (val) (modify_array_element (arr) (index1) (index2) (val) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(arr: Array (Array Nat)) (index1: Nat) (index2: Nat) (val: Nat) (h_precond : modify_array_element_precond (arr) (index1) (index2) (val)) :\n    modify_array_element_postcond (arr) (index1) (index2) (val) (modify_array_element (arr) (index1) (index2) (val) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[#[1, 99, 3], #[4, 5, 6]]",
+   "input_lean": {
+    "arr": "#[#[1, 2, 3], #[4, 5, 6]]",
+    "index1": "0",
+    "index2": "1",
+    "val": "99"
+   }
+  },
+  {
+   "expected_lean": "#[#[7, 8], #[0, 10]]",
+   "input_lean": {
+    "arr": "#[#[7, 8], #[9, 10]]",
+    "index1": "1",
+    "index2": "0",
+    "val": "0"
+   }
+  },
+  {
+   "expected_lean": "#[#[0, 0, 5]]",
+   "input_lean": {
+    "arr": "#[#[0, 0, 0]]",
+    "index1": "0",
+    "index2": "2",
+    "val": "5"
+   }
+  },
+  {
+   "expected_lean": "#[#[3, 4, 5], #[6, 7, 8], #[9, 100, 11]]",
+   "input_lean": {
+    "arr": "#[#[3, 4, 5], #[6, 7, 8], #[9, 10, 11]]",
+    "index1": "2",
+    "index2": "1",
+    "val": "100"
+   }
+  },
+  {
+   "expected_lean": "#[#[42]]",
+   "input_lean": {
+    "arr": "#[#[1]]",
+    "index1": "0",
+    "index2": "0",
+    "val": "42"
+   }
+  }
+ ]
+}

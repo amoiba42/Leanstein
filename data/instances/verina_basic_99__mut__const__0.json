@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_99",
+ "flags": [],
+ "hashes": {
+  "locked": "77ad54d8c1be0c3a7624bcfdb5e93c8b8806b8f48e7964c12ecd60669dc782b4"
+ },
+ "instance_id": "verina_basic_99__mut__const__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "5",
+  "before": "4",
+  "col": 13,
+  "line": 3,
+  "operator": "const",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  if x < 18 then\n    let a := 2 * x\n    let b := 5 * x\n    (a + b) / 2\n  else\n    let y := 2 * x\n    x + y\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "35",
+  "expected": "30",
+  "index": 0,
+  "input_lean": {
+   "x": "10"
+  },
+  "source": "visible"
+ }
+}

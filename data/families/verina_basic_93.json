@@ -1,0 +1,93 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires swapping two 8-bit unsigned integers. Given two unsigned integer inputs, the goal is to produce an output pair where the first element is the original second input and the second element is the original first input. The problem focuses solely on exchanging the values without specifying any particular method to achieve the swap.\n\n-----Input-----  \nThe input consists of:  \n• X: A UInt8 value.  \n• Y: A UInt8 value.\n\n-----Output-----  \nThe output is a pair of UInt8 values (newX, newY) where:  \n• newX is equal to the original Y.  \n• newY is equal to the original X.\n\n-----Note-----  \nThere are no additional preconditions; the function is meant to work correctly for any pair of UInt8 values by leveraging bitwise xor operations.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_93",
+ "flags": [],
+ "header": "def SwapBitvectors (X : UInt8) (Y : UInt8) (h_precond : SwapBitvectors_precond (X) (Y)) : UInt8 × UInt8 :=",
+ "locked_hash": "22ecfc47ae062302f07525f8d68fb44d2fc27281f30108ca463a1b5171678afe",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 1.5,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "SwapBitvectors",
+  "params": [
+   [
+    "X",
+    "UInt8"
+   ],
+   [
+    "Y",
+    "UInt8"
+   ]
+  ],
+  "ret": "UInt8 × UInt8"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef SwapBitvectors_precond (X : UInt8) (Y : UInt8) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef SwapBitvectors (X : UInt8) (Y : UInt8) (h_precond : SwapBitvectors_precond (X) (Y)) : UInt8 × UInt8 :=\n  -- !benchmark @start code\n  let temp := X.xor Y\n  let newY := temp.xor Y\n  let newX := temp.xor newY\n  (newX, newY)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef SwapBitvectors_postcond (X : UInt8) (Y : UInt8) (result: UInt8 × UInt8) (h_precond : SwapBitvectors_precond (X) (Y)) :=\n  -- !benchmark @start postcond\n  result.fst = Y ∧ result.snd = X ∧\n  (X ≠ Y → result.fst ≠ X ∧ result.snd ≠ Y)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem SwapBitvectors_spec_satisfied (X: UInt8) (Y: UInt8) (h_precond : SwapBitvectors_precond (X) (Y)) :\n    SwapBitvectors_postcond (X) (Y) (SwapBitvectors (X) (Y) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(X: UInt8) (Y: UInt8) (h_precond : SwapBitvectors_precond (X) (Y)) :\n    SwapBitvectors_postcond (X) (Y) (SwapBitvectors (X) (Y) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "(0, 0)",
+   "input_lean": {
+    "X": "0",
+    "Y": "0"
+   }
+  },
+  {
+   "expected_lean": "(10, 5)",
+   "input_lean": {
+    "X": "5",
+    "Y": "10"
+   }
+  },
+  {
+   "expected_lean": "(1, 255)",
+   "input_lean": {
+    "X": "255",
+    "Y": "1"
+   }
+  },
+  {
+   "expected_lean": "(64, 128)",
+   "input_lean": {
+    "X": "128",
+    "Y": "64"
+   }
+  },
+  {
+   "expected_lean": "(15, 15)",
+   "input_lean": {
+    "X": "15",
+    "Y": "15"
+   }
+  }
+ ]
+}

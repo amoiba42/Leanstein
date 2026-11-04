@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_89",
+ "flags": [],
+ "hashes": {
+  "locked": "a3827e7ffa23454821f0c77e8d5c151437d659941bc77c1d7bec06cbb90948e6"
+ },
+ "instance_id": "verina_basic_89__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  s.foldl (fun acc x => if acc.contains x then acc else acc ++ [x]) []\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

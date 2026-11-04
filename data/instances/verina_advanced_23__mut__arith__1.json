@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_23",
+ "flags": [],
+ "hashes": {
+  "locked": "2f4001e7384ffaf4aa76e35ffca8cf12f602a8e01ff9679cbf80745f017407ea"
+ },
+ "instance_id": "verina_advanced_23__mut__arith__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "/",
+  "before": "%",
+  "col": 16,
+  "line": 6,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  if n <= 0 then false\n  else\n    let rec aux (m : Int) (fuel : Nat) : Bool :=\n      if fuel = 0 then false\n      else if m = 1 then true\n      else if m / 2 ≠ 0 then false\n      else aux (m / 2) (fuel - 1)\n    aux n n.natAbs\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 1,
+  "input_lean": {
+   "n": "16"
+  },
+  "source": "visible"
+ }
+}

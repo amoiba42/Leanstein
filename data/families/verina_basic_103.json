@@ -1,0 +1,84 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis problem involves updating an array of integers by modifying two specific positions. Specifically, the element at index 4 should be increased by 3, and the element at index 7 should be changed to 516. The goal is to correctly update these positions while leaving the rest of the array unchanged. The description assumes that the array contains at least 8 elements.\n\n-----Input-----  \nThe input consists of:  \n• a: An array of integers. The array must contain at least 8 elements.\n\n-----Output-----  \nThe output is an array of integers that meets the following criteria:  \n• The element at index 4 is updated to its original value plus 3.  \n• The element at index 7 is set to 516.  \n• All other elements in the array remain the same as in the input array.\n\n-----Note-----  \nIt is assumed that the input array has a size of at least 8 elements. Indices are 0-indexed.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_103",
+ "flags": [],
+ "header": "def UpdateElements (a : Array Int) (h_precond : UpdateElements_precond (a)) : Array Int :=",
+ "locked_hash": "dc8917f0eaf4e87d0d471c1733ada95f16c9dc8fee71c912a912886e4f3dcaad",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 5.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "UpdateElements",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef UpdateElements_precond (a : Array Int) : Prop :=\n  -- !benchmark @start precond\n  a.size ≥ 8\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef UpdateElements (a : Array Int) (h_precond : UpdateElements_precond (a)) : Array Int :=\n  -- !benchmark @start code\n  let a1 := a.set! 4 ((a[4]!) + 3)\n  let a2 := a1.set! 7 516\n  a2\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef UpdateElements_postcond (a : Array Int) (result: Array Int) (h_precond : UpdateElements_precond (a)) :=\n  -- !benchmark @start postcond\n  result.size = a.size ∧\n  result[4]! = (a[4]!) + 3 ∧\n  result[7]! = 516 ∧\n  (∀ i, i < a.size → i ≠ 4 → i ≠ 7 → result[i]! = a[i]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem UpdateElements_spec_satisfied (a: Array Int) (h_precond : UpdateElements_precond (a)) :\n    UpdateElements_postcond (a) (UpdateElements (a) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (h_precond : UpdateElements_precond (a)) :\n    UpdateElements_postcond (a) (UpdateElements (a) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[0, 1, 2, 3, 7, 5, 6, 516, 8]",
+   "input_lean": {
+    "a": "#[0, 1, 2, 3, 4, 5, 6, 7, 8]"
+   }
+  },
+  {
+   "expected_lean": "#[10, 20, 30, 40, 53, 60, 70, 516]",
+   "input_lean": {
+    "a": "#[10, 20, 30, 40, 50, 60, 70, 80]"
+   }
+  },
+  {
+   "expected_lean": "#[-1, -2, -3, -4, -2, -6, -7, 516, -9, -10]",
+   "input_lean": {
+    "a": "#[-1, -2, -3, -4, -5, -6, -7, -8, -9, -10]"
+   }
+  },
+  {
+   "expected_lean": "#[0, 0, 0, 0, 3, 0, 0, 516]",
+   "input_lean": {
+    "a": "#[0, 0, 0, 0, 0, 0, 0, 0]"
+   }
+  },
+  {
+   "expected_lean": "#[5, 5, 5, 5, 8, 5, 5, 516]",
+   "input_lean": {
+    "a": "#[5, 5, 5, 5, 5, 5, 5, 5]"
+   }
+  }
+ ]
+}

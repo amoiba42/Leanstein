@@ -1,0 +1,88 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nImplement a Lean 4 function that checks if a given string is a palindrome. A string is considered a palindrome\nif it reads the same forward and backward.\n\n-----Input-----\nThe input consists of a single string:\ns: A string\n\n-----Output-----\nThe output is a boolean:\nReturns true if s is a palindrome, false otherwise.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_21",
+ "flags": [],
+ "header": "def isPalindrome (s : String) (h_precond : isPalindrome_precond (s)) : Bool :=",
+ "locked_hash": "45755115da860baca1926affaa3821dad7a0ae0f2b055595e1e4efa41d0061d6",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@isPalindrome.checkIndices": false,
+    "fun_ind_grind@isPalindrome.reverseList": false,
+    "fun_ind_simp@isPalindrome.checkIndices": false,
+    "fun_ind_simp@isPalindrome.reverseList": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 77.9,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "isPalindrome",
+  "params": [
+   [
+    "s",
+    "String"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef isPalindrome_precond (s : String) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef isPalindrome (s : String) (h_precond : isPalindrome_precond (s)) : Bool :=\n  -- !benchmark @start code\n  let length := s.length\n\nif length <= 1 then\n  true\nelse\n  let arr := s.toList\n\n  let rec checkIndices (left : Nat) (right : Nat) (chars : List Char) : Bool :=\n    if left >= right then\n      true\n    else\n      match chars[left]?, chars[right]? with\n      | some cLeft, some cRight =>\n        if cLeft == cRight then\n          checkIndices (left + 1) (right - 1) chars\n        else\n          false\n      | _, _ => false\n  let approach1 := checkIndices 0 (length - 1) arr\n\n  let rec reverseList (acc : List Char) (xs : List Char) : List Char :=\n    match xs with\n    | []      => acc\n    | h :: t  => reverseList (h :: acc) t\n  let reversed := reverseList [] arr\n  let approach2 := (arr == reversed)\n\n  approach1 && approach2\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef isPalindrome_postcond (s : String) (result: Bool) (h_precond : isPalindrome_precond (s)) : Prop :=\n  -- !benchmark @start postcond\n  (result → (s.toList == s.toList.reverse)) ∧\n  (¬ result → (s.toList ≠ [] ∧ s.toList != s.toList.reverse))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem isPalindrome_spec_satisfied (s: String) (h_precond : isPalindrome_precond (s)) :\n    isPalindrome_postcond (s) (isPalindrome (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: String) (h_precond : isPalindrome_precond (s)) :\n    isPalindrome_postcond (s) (isPalindrome (s) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"racecar\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"abba\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "s": "\"abc\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "s": "\"a\""
+   }
+  }
+ ]
+}

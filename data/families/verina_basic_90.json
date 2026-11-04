@@ -1,0 +1,97 @@
+{
+ "aux_names": [
+  "get2d"
+ ],
+ "description": "-----Description-----  \nThe task is to search for a specific integer in a 2D array where the rows and columns are sorted in non-decreasing order. The goal is to locate the key and return its position as row and column indices, or return (-1, -1) if the algorithm fails to find the key.\n\n-----Input-----\nThe input consists of:\n• a: A non-empty 2D array of integers (Array (Array Int)) where:\n  - The outer array contains at least one row\n  - Each row has the same non-zero length\n• key: An integer value (Int) to search for in the array.\n\n-----Output-----  \nThe output is a pair of integers (Int × Int):  \n• If the key is found, the first element represents the row index and the second element represents the column index such that get2d a row col = key.  \n• If the key is not found, the function returns (-1, -1).\n\n-----Note-----  \nIt is assumed that the input 2D array is sorted by rows and columns.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_90",
+ "flags": [],
+ "header": "def SlopeSearch (a : Array (Array Int)) (key : Int) (h_precond : SlopeSearch_precond (a) (key)) : (Int × Int) :=",
+ "locked_hash": "3e631693fa4210c79e3195a6d0cf5e055cbf1817ee51b9d2e404c9320a276b3a",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@SlopeSearch.aux": false,
+    "fun_ind_simp@SlopeSearch.aux": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 97.1,
+  "n_hidden": 10,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "SlopeSearch",
+  "params": [
+   [
+    "a",
+    "Array (Array Int)"
+   ],
+   [
+    "key",
+    "Int"
+   ]
+  ],
+  "ret": "(Int × Int)"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n@[reducible, simp]\ndef get2d (a : Array (Array Int)) (i j : Int) : Int :=\n  (a[Int.toNat i]!)[Int.toNat j]!\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef SlopeSearch_precond (a : Array (Array Int)) (key : Int) : Prop :=\n  -- !benchmark @start precond\n  a.size > 0 ∧\n  (a[0]!).size > 0 ∧  -- non-empty inner arrays\n  List.Pairwise (·.size = ·.size) a.toList ∧\n  a.all (fun x => List.Pairwise (· ≤ ·) x.toList) ∧\n  (List.range (a[0]!.size)).all (fun i =>\n    List.Pairwise (· ≤ ·) (a.map (fun x => x[i]!)).toList\n  )\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef SlopeSearch (a : Array (Array Int)) (key : Int) (h_precond : SlopeSearch_precond (a) (key)) : (Int × Int) :=\n  -- !benchmark @start code\n  let rows := a.size\n  let cols := if rows > 0 then (a[0]!).size else 0\n\n  let rec aux (m n : Int) (fuel : Nat) : (Int × Int) :=\n    if fuel = 0 then (-1, -1)\n    else if m ≥ Int.ofNat rows || n < 0 then (-1, -1)\n    else if get2d a m n = key then (m, n)\n    else if get2d a m n < key then\n      aux (m + 1) n (fuel - 1)\n    else\n      aux m (n - 1) (fuel - 1)\n\n  aux 0 (Int.ofNat (cols - 1)) (rows + cols)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef SlopeSearch_postcond (a : Array (Array Int)) (key : Int) (result: (Int × Int)) (h_precond : SlopeSearch_precond (a) (key)) :=\n  -- !benchmark @start postcond\n  let (m, n) := result;\n  (m ≥ 0 ∧ m < a.size ∧ n ≥ 0 ∧ n < (a[0]!).size ∧ get2d a m n = key) ∨\n  (m = -1 ∧ n = -1 ∧ a.all (fun x => x.all (fun e => e ≠ key)))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem SlopeSearch_spec_satisfied (a: Array (Array Int)) (key: Int) (h_precond : SlopeSearch_precond (a) (key)) :\n    SlopeSearch_postcond (a) (key) (SlopeSearch (a) (key) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array (Array Int)) (key: Int) (h_precond : SlopeSearch_precond (a) (key)) :\n    SlopeSearch_postcond (a) (key) (SlopeSearch (a) (key) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "(1, 1)",
+   "input_lean": {
+    "a": "#[#[1, 2, 3], #[4, 5, 6], #[7, 8, 9]]",
+    "key": "5"
+   }
+  },
+  {
+   "expected_lean": "(0, 2)",
+   "input_lean": {
+    "a": "#[#[1, 2, 3], #[4, 5, 6], #[7, 8, 9]]",
+    "key": "3"
+   }
+  },
+  {
+   "expected_lean": "(-1, -1)",
+   "input_lean": {
+    "a": "#[#[1, 2, 3], #[4, 5, 6], #[7, 8, 9]]",
+    "key": "10"
+   }
+  },
+  {
+   "expected_lean": "(0, 3)",
+   "input_lean": {
+    "a": "#[#[1, 2, 3, 4]]",
+    "key": "4"
+   }
+  },
+  {
+   "expected_lean": "(2, 0)",
+   "input_lean": {
+    "a": "#[#[1], #[2], #[3], #[4]]",
+    "key": "3"
+   }
+  }
+ ]
+}

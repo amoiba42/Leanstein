@@ -1,0 +1,116 @@
+{
+ "aux_names": [
+  "inArray"
+ ],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that identifies the dissimilar elements between two arrays of integers. In other words, the method should return an array containing all elements that appear in one input array but not in the other. The output array must contain sorted no duplicate elements.\n\n-----Input-----\nThe input consists of:\na: An array of integers.\nb: An array of integers.\n\n-----Output-----\nThe output is an array of integers:\nReturns an array containing all distinct elements from both input arrays that are not present in the other array and should be sorted",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_22",
+ "flags": [],
+ "header": "def dissimilarElements (a : Array Int) (b : Array Int) (h_precond : dissimilarElements_precond (a) (b)) : Array Int :=",
+ "locked_hash": "1b2f727451c6ddbcbbfe4826f18f073230c925e05b9400275c0b317da6656f53",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 43.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "dissimilarElements",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ],
+   [
+    "b",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Std.Data.HashSet\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\ndef inArray (a : Array Int) (x : Int) : Bool :=\n  a.any (fun y => y = x)\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef dissimilarElements_precond (a : Array Int) (b : Array Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n-- !benchmark @end code_aux\n\n\ndef dissimilarElements (a : Array Int) (b : Array Int) (h_precond : dissimilarElements_precond (a) (b)) : Array Int :=\n  -- !benchmark @start code\n  let res := a.foldl (fun acc x => if !inArray b x then acc.insert x else acc) Std.HashSet.emptyWithCapacity\n  let res := b.foldl (fun acc x => if !inArray a x then acc.insert x else acc) res\n  (res.toList.mergeSort (· ≤ ·)).toArray\n  -- !benchmark @end code\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef dissimilarElements_postcond (a : Array Int) (b : Array Int) (result: Array Int) (h_precond : dissimilarElements_precond (a) (b)) :=\n  -- !benchmark @start postcond\n  result.all (fun x => inArray a x ≠ inArray b x)∧\n  result.toList.Pairwise (· ≤ ·) ∧\n  List.Nodup result.toList ∧\n  a.all (fun x => if x ∈ b then x ∉ result else x ∈ result) ∧\n  b.all (fun x => if x ∈ a then x ∉ result else x ∈ result)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem dissimilarElements_spec_satisfied (a: Array Int) (b: Array Int) (h_precond : dissimilarElements_precond (a) (b)) :\n    dissimilarElements_postcond (a) (b) (dissimilarElements (a) (b) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (b: Array Int) (h_precond : dissimilarElements_precond (a) (b)) :\n    dissimilarElements_postcond (a) (b) (dissimilarElements (a) (b) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[1, 2, 5, 6]",
+   "input_lean": {
+    "a": "#[1, 2, 3, 4]",
+    "b": "#[3, 4, 5, 6]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 3]",
+   "input_lean": {
+    "a": "#[1, 1, 2]",
+    "b": "#[2, 3]"
+   }
+  },
+  {
+   "expected_lean": "#[4, 5]",
+   "input_lean": {
+    "a": "#[]",
+    "b": "#[4, 5]"
+   }
+  },
+  {
+   "expected_lean": "#[7, 8]",
+   "input_lean": {
+    "a": "#[7, 8]",
+    "b": "#[]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "a": "#[1, 2, 3]",
+    "b": "#[1, 2, 3]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4, 5, 6]",
+   "input_lean": {
+    "a": "#[1, 2, 3]",
+    "b": "#[4, 5, 6]"
+   }
+  },
+  {
+   "expected_lean": "#[-1, 1]",
+   "input_lean": {
+    "a": "#[-1, 0, 1]",
+    "b": "#[0]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3]",
+   "input_lean": {
+    "a": "#[1, 1, 2]",
+    "b": "#[3, 3]"
+   }
+  }
+ ]
+}

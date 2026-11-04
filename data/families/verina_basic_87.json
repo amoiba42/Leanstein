@@ -1,0 +1,84 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis problem requires sorting an array of integers into non-decreasing order, ensuring that the output contains exactly the same elements as the input (i.e., it is a permutation of the original array).\n\n-----Input-----  \nThe input consists of:  \n• a: An array of integers (Array Int).  \n\n-----Output-----  \nThe output is an array of integers that is:  \n• Sorted in non-decreasing order.  \n• A permutation of the input, meaning it contains exactly the same elements (with the same multiplicities) as the original array.  \n\n-----Note-----  \nIt is assumed that the input array is valid and that the swap operations, along with the helper functions, correctly implement the selection sort algorithm.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_87",
+ "flags": [],
+ "header": "def SelectionSort (a : Array Int) (h_precond : SelectionSort_precond (a)) : Array Int :=",
+ "locked_hash": "46b81d970ea6a535f8bf86aa59d2e110ea4f7efc4f10fd5f7a6e6fc80e619a82",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 7.9,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "SelectionSort",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef SelectionSort_precond (a : Array Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef findMinIndexInRange (arr : Array Int) (start finish : Nat) : Nat :=\n  let indices := List.range (finish - start)\n  indices.foldl (fun minIdx i =>\n    let currIdx := start + i\n    if arr[currIdx]! < arr[minIdx]! then currIdx else minIdx\n  ) start\n\ndef swap (a : Array Int) (i j : Nat) : Array Int :=\n  if i < a.size && j < a.size && i ≠ j then\n    let temp := a[i]!\n    let a' := a.set! i a[j]!\n    a'.set! j temp\n  else a\n-- !benchmark @end code_aux\n\n\ndef SelectionSort (a : Array Int) (h_precond : SelectionSort_precond (a)) : Array Int :=\n  -- !benchmark @start code\n  let indices := List.range a.size\n  indices.foldl (fun arr i =>\n    let minIdx := findMinIndexInRange arr i a.size\n    swap arr i minIdx\n  ) a\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef SelectionSort_postcond (a : Array Int) (result: Array Int) (h_precond : SelectionSort_precond (a)) :=\n  -- !benchmark @start postcond\n  List.Pairwise (· ≤ ·) result.toList ∧ List.isPerm a.toList result.toList\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem SelectionSort_spec_satisfied (a: Array Int) (h_precond : SelectionSort_precond (a)) :\n    SelectionSort_postcond (a) (SelectionSort (a) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (h_precond : SelectionSort_precond (a)) :\n    SelectionSort_postcond (a) (SelectionSort (a) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[1, 2, 3]",
+   "input_lean": {
+    "a": "#[3, 1, 2]"
+   }
+  },
+  {
+   "expected_lean": "#[0]",
+   "input_lean": {
+    "a": "#[0]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4, 5]",
+   "input_lean": {
+    "a": "#[5, 4, 3, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 2, 4]",
+   "input_lean": {
+    "a": "#[2, 2, 1, 4]"
+   }
+  },
+  {
+   "expected_lean": "#[-5, 0, 3, 10]",
+   "input_lean": {
+    "a": "#[10, -5, 0, 3]"
+   }
+  }
+ ]
+}

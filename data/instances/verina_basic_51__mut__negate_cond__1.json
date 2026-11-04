@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_51",
+ "flags": [],
+ "hashes": {
+  "locked": "efb6b6660199733f9e7bcab698d757c7884491aadc04186f20312ca1d885e78e"
+ },
+ "instance_id": "verina_basic_51__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬((a[mid]! < key))",
+  "before": "(a[mid]! < key)",
+  "col": 6,
+  "line": 4,
+  "operator": "negate_cond",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  binarySearchLoop a key 0 a.size\n",
+  "code_aux": "def binarySearchLoop (a : Array Int) (key : Int) (lo hi : Nat) : Nat :=\n  if lo < hi then\n    let mid := (lo + hi) / 2\n    if ¬((a[mid]! < key)) then binarySearchLoop a key (mid + 1) hi\n    else binarySearchLoop a key lo mid\n  else\n    lo\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "5",
+  "expected": "2",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 3, 5, 7, 9]",
+   "key": "5"
+  },
+  "source": "visible"
+ }
+}

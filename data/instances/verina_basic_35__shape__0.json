@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_35",
+ "flags": [],
+ "hashes": {
+  "locked": "e7400d2960d91f96fe4d3d0f4d2d7611ba75982d07e78eec65ab7d1bea00e51e"
+ },
+ "instance_id": "verina_basic_35__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let nonZeros := arr.toList.filter (· ≠ 0)\n  let zeros := arr.toList.filter (· = 0)\n  Array.mk (nonZeros ++ zeros)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

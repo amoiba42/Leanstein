@@ -1,0 +1,82 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that calculates both the sum and the average of the first n natural numbers. The method should compute the sum of numbers from 0 to n (which equals n * (n + 1) / 2) and then determine the average by dividing this sum by n. The specification assumes that the input n is a positive integer.\n\n-----Input-----\nThe input consists of:\nn: A natural number representing the count of the first natural numbers. The value of n is assumed to be positive.\n\n-----Output-----\nThe output is a pair consisting of:\n- An integer representing the sum of the first n natural numbers.\n- A floating-point number representing the average of the first n natural numbers.\n\n-----Note-----\nThe input n must be a positive integer and should be reasonably bounded (n < 2^53) to ensure floating-point precision in the average calculation.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_25",
+ "flags": [
+  "hidden_unavailable"
+ ],
+ "header": "def sumAndAverage (n : Nat) (h_precond : sumAndAverage_precond (n)) : Int × Float :=",
+ "locked_hash": "b6ecd8cfebb03bb0d9bd44297fc4ed5f18787d00c667731b934cf04e1dcfa499",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@n": false,
+    "ind_simp_all@n": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": null,
+  "lean_s": 14.0,
+  "n_hidden": 0,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "sumAndAverage",
+  "params": [
+   [
+    "n",
+    "Nat"
+   ]
+  ],
+  "ret": "Int × Float"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start task_aux\n-- Lean 4's Float is an opaque C FFI type with no kernel lemmas.\n-- These axioms capture IEEE 754-compliant behavior for non-NaN/non-Inf floats.\naxiom Float.not_isNaN_ofNat (n : Nat) : (n.toFloat).isNaN = false\naxiom Float.isFinite_ofNat (n : Nat) (h : n < 2 ^ 53) :\n    (n.toFloat).isNaN = false ∧ (n.toFloat).isInf = false\naxiom Float.ofNat_beq_zero_false (n : Nat) (h : 0 < n) :\n    (n.toFloat == (0 : Float)) = false\naxiom Float.beq_self_of_not_isNaN (x : Float) (h : x.isNaN = false) :\n    (x == x) = true\naxiom Float.not_isNaN_sub (x y : Float)\n    (hx : x.isNaN = false) (hy : y.isNaN = false)\n    (hx_inf : x.isInf = false) (hy_inf : y.isInf = false) :\n    (x - y).isNaN = false\naxiom Float.not_isNaN_div (x y : Float)\n    (hx : x.isNaN = false) (hy : y.isNaN = false)\n    (hy0 : (y == 0) = false) (hinf : x.isInf = false ∨ y.isInf = false) :\n    (x / y).isNaN = false\naxiom Float.le_total_of_not_isNaN (x y : Float)\n    (hx : x.isNaN = false) (hy : y.isNaN = false) :\n    x ≤ y ∨ y ≤ x\naxiom Float.lt_iff_le_not_le_of_not_isNaN (x y : Float)\n    (hx : x.isNaN = false) (hy : y.isNaN = false) :\n    x < y ↔ x ≤ y ∧ ¬ y ≤ x\n-- !benchmark @end task_aux\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef sumAndAverage_precond (n : Nat) : Prop :=\n  -- !benchmark @start precond\n  n > 0 ∧ n < 9007199254740992  -- n must be positive and bounded for Float precision\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef sumAndAverage (n : Nat) (h_precond : sumAndAverage_precond (n)) : Int × Float :=\n  -- !benchmark @start code\n  if n ≤ 0 then (0, 0.0)\n  else\n    let sum := (List.range (n + 1)).sum\n    let average : Float := sum.toFloat / (n.toFloat)\n    (sum, average)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef sumAndAverage_postcond (n : Nat) (result: Int × Float) (h_precond : sumAndAverage_precond (n)) :=\n  -- !benchmark @start postcond\n  (n = 0 → result == (0, 0.0)) ∧\n  (n > 0 →\n    result.1 == n * (n + 1) / 2 ∧\n    result.2 == ((n * (n + 1) / 2).toFloat) / (n.toFloat))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem sumAndAverage_spec_satisfied (n: Nat) (h_precond : sumAndAverage_precond (n)) :\n    sumAndAverage_postcond (n) (sumAndAverage (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(n: Nat) (h_precond : sumAndAverage_precond (n)) :\n    sumAndAverage_postcond (n) (sumAndAverage (n) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "(15, 3.0)",
+   "input_lean": {
+    "n": "5"
+   }
+  },
+  {
+   "expected_lean": "(1, 1.0)",
+   "input_lean": {
+    "n": "1"
+   }
+  },
+  {
+   "expected_lean": "(55, 5.5)",
+   "input_lean": {
+    "n": "10"
+   }
+  },
+  {
+   "expected_lean": "(3, 1.5)",
+   "input_lean": {
+    "n": "2"
+   }
+  }
+ ]
+}

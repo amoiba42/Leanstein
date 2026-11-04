@@ -1,0 +1,128 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThe problem is to update a destination array by replacing a specific segment with values taken from a source array. Given two arrays, starting positions, and a length, the task is to construct a new array where the segment in the destination from the specified starting index for the given length is replaced by the corresponding segment from the source, while all other elements remain unchanged.\n\n-----Input-----  \nThe input consists of:  \n• src: An array of integers representing the source array.  \n• sStart: A natural number indicating the starting index in src from where to begin copying.  \n• dest: An array of integers representing the destination array.  \n• dStart: A natural number indicating the starting index in dest where the segment will be replaced.  \n• len: A natural number specifying the number of elements to copy.\n\n-----Output-----  \nThe output is an array of integers that:  \n• Has the same size as the destination array (dest).  \n• Preserves the original elements of dest except for the segment starting at index dStart of length len, which is replaced by the corresponding segment from src.  \n• Under the preconditions that src.size ≥ sStart + len and dest.size ≥ dStart + len, guarantees that:  \n  - All elements with indices less than dStart remain as in dest.  \n  - All elements with indices greater than or equal to dStart + len remain as in dest.  \n  - For each index i with 0 ≤ i < len, the element at index dStart + i in the output equals the element at index sStart + i in src.\n\n-----Note-----  \nIt is assumed that the input arrays satisfy the preconditions: the source array has enough elements starting from sStart and the destination array has enough space starting from dStart to accommodate the copied segment.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_56",
+ "flags": [],
+ "header": "def copy (src : Array Int) (sStart : Nat) (dest : Array Int) (dStart : Nat) (len : Nat) (h_precond : copy_precond (src) (sStart) (dest) (dStart) (len)) : Array Int :=",
+ "locked_hash": "f1daae402504c9c887d2afbd204c65aeab775b3255e6f1e28294b7c5156cfbb1",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@updateSegment": false,
+    "fun_ind_simp@updateSegment": false,
+    "grind": false,
+    "ind_grind@dStart": false,
+    "ind_grind@len": false,
+    "ind_grind@sStart": false,
+    "ind_simp_all@dStart": false,
+    "ind_simp_all@len": false,
+    "ind_simp_all@sStart": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 15.6,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "copy",
+  "params": [
+   [
+    "src",
+    "Array Int"
+   ],
+   [
+    "sStart",
+    "Nat"
+   ],
+   [
+    "dest",
+    "Array Int"
+   ],
+   [
+    "dStart",
+    "Nat"
+   ],
+   [
+    "len",
+    "Nat"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef copy_precond (src : Array Int) (sStart : Nat) (dest : Array Int) (dStart : Nat) (len : Nat) : Prop :=\n  -- !benchmark @start precond\n  src.size ≥ sStart + len ∧\n  dest.size ≥ dStart + len\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef updateSegment : Array Int → Array Int → Nat → Nat → Nat → Array Int\n  | r, src, sStart, dStart, 0 => r\n  | r, src, sStart, dStart, n+1 =>\n      let rNew := r.set! (dStart + n) (src[sStart + n]!)\n      updateSegment rNew src sStart dStart n\n-- !benchmark @end code_aux\n\n\ndef copy (src : Array Int) (sStart : Nat) (dest : Array Int) (dStart : Nat) (len : Nat) (h_precond : copy_precond (src) (sStart) (dest) (dStart) (len)) : Array Int :=\n  -- !benchmark @start code\n  if len = 0 then dest\n  else\n    let r := dest\n    updateSegment r src sStart dStart len\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef copy_postcond (src : Array Int) (sStart : Nat) (dest : Array Int) (dStart : Nat) (len : Nat) (result: Array Int) (h_precond : copy_precond (src) (sStart) (dest) (dStart) (len)) :=\n  -- !benchmark @start postcond\n  result.size = dest.size ∧\n  (∀ i, i < dStart → result[i]! = dest[i]!) ∧\n  (∀ i, dStart + len ≤ i → i < result.size → result[i]! = dest[i]!) ∧\n  (∀ i, i < len → result[dStart + i]! = src[sStart + i]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem copy_spec_satisfied (src: Array Int) (sStart: Nat) (dest: Array Int) (dStart: Nat) (len: Nat) (h_precond : copy_precond (src) (sStart) (dest) (dStart) (len)) :\n    copy_postcond (src) (sStart) (dest) (dStart) (len) (copy (src) (sStart) (dest) (dStart) (len) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(src: Array Int) (sStart: Nat) (dest: Array Int) (dStart: Nat) (len: Nat) (h_precond : copy_precond (src) (sStart) (dest) (dStart) (len)) :\n    copy_postcond (src) (sStart) (dest) (dStart) (len) (copy (src) (sStart) (dest) (dStart) (len) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[1, 2, 3, 20, 30, 6]",
+   "input_lean": {
+    "dStart": "3",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "1",
+    "src": "#[10, 20, 30, 40, 50]"
+   }
+  },
+  {
+   "expected_lean": "#[9, 5, 6, 7, 9]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[9, 9, 9, 9, 9]",
+    "len": "3",
+    "sStart": "0",
+    "src": "#[5, 6, 7, 8]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[1, 2, 3]",
+    "len": "0",
+    "sStart": "0",
+    "src": "#[100, 200]"
+   }
+  },
+  {
+   "expected_lean": "#[10, 20, 30, 40, 50]",
+   "input_lean": {
+    "dStart": "0",
+    "dest": "#[0, 0, 0, 0, 0]",
+    "len": "5",
+    "sStart": "0",
+    "src": "#[10, 20, 30, 40, 50]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4, 9, 10]",
+   "input_lean": {
+    "dStart": "4",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "2",
+    "src": "#[7, 8, 9, 10]"
+   }
+  }
+ ]
+}

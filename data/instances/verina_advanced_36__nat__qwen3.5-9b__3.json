@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_36",
+ "flags": [],
+ "hashes": {
+  "locked": "a411ae6715f5b865e37bb9f05ebea98c99bfaacdd1745c68a33850221f99d726"
+ },
+ "instance_id": "verina_advanced_36__nat__qwen3.5-9b__3",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef majorityElement (xs : List Nat) (h_precond : majorityElement_precond (xs)) : Nat :=\n  xs.foldl (fun acc x => if acc = xs.count x then acc else x) 0\n```",
+  "seed": 5003
+ },
+ "split": "main",
+ "start": {
+  "code": "xs.foldl (fun acc x => if acc = xs.count x then acc else x) 0",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "9",
+  "index": 3,
+  "input_lean": {
+   "xs": "[9, 9, 9, 9, 1, 2, 3]"
+  },
+  "source": "visible"
+ }
+}

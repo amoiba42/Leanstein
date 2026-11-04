@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_68",
+ "flags": [],
+ "hashes": {
+  "locked": "73e151761b6d0346583e5f45640a55d5b0dffa7dcd6c43351ce89679d06707e8"
+ },
+ "instance_id": "verina_basic_68__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(a[n]! = e)",
+  "before": "a[n]! = e",
+  "col": 8,
+  "line": 3,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec loop (n : Nat) : Nat :=\n    if n < a.size then\n      if ¬(a[n]! = e) then n\n      else loop (n + 1)\n    else n\n  loop 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "2",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 3, 5, 7, 9]",
+   "e": "5"
+  },
+  "source": "visible"
+ }
+}

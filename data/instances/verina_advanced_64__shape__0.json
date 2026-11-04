@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_64",
+ "flags": [],
+ "hashes": {
+  "locked": "e4e393242602d44eba761b47882adb30e914b6061f4df52db18ca15fbce74fd6"
+ },
+ "instance_id": "verina_advanced_64__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec helper (lst : List Nat) (target : Nat) : List Nat :=\n    match lst with\n    | [] => []\n    | x :: xs =>\n      let rest := helper xs target\n      if x = target then rest else x :: rest\n  helper lst target\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

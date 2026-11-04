@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_34",
+ "flags": [],
+ "hashes": {
+  "locked": "6bc64de4862e0668df9cf11ce9406e17c5112a76b59b7cf2f712ebbc9bd29d46"
+ },
+ "instance_id": "verina_basic_34__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(isEven x)",
+  "before": "isEven x",
+  "col": 28,
+  "line": 1,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  arr.foldl (fun acc x => if ¬(isEven x) then acc.push x else acc) #[]\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[1, 3, 5]",
+  "expected": "#[2, 4, 6]",
+  "index": 0,
+  "input_lean": {
+   "arr": "#[1, 2, 3, 4, 5, 6]"
+  },
+  "source": "visible"
+ }
+}

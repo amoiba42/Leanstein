@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_33",
+ "flags": [],
+ "hashes": {
+  "locked": "a5a9238a901e490c66cbeab977735fe797fe2e245e71351d15e72bb7e81f691b"
+ },
+ "instance_id": "verina_advanced_33__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let max2 (a : Nat) (b : Nat) : Nat :=\n    if a > b then a else b\n\n  let rec listLength (l : List Int) : Nat :=\n    match l with\n    | []      => 0\n    | _ :: xs => 1 + listLength xs\n\n  let rec helper (lst : List Int) (prev : Option Int) : Nat :=\n    match lst with\n    | [] => 0\n    | h :: t =>\n        let canTake : Bool :=\n          if prev = none then true\n          else if prev.get! < h then true else false\n        let withTake : Nat :=\n          if canTake then 1 + helper t (some h) else 0\n        let withoutTake : Nat := helper t prev\n        max2 withTake withoutTake\n\n  let result := helper nums none\n  result\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

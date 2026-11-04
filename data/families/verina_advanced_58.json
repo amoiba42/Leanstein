@@ -1,0 +1,91 @@
+{
+ "aux_names": [
+  "divideOut",
+  "isUgly"
+ ],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 function that returns the nth \"ugly number\". Ugly numbers are positive integers whose only prime factors are 2, 3, or 5.\n\nThe function should generate ugly numbers in ascending order and return the nth one. The first ugly number is 1.\n\n-----Input-----\nThe input is a natural number:\n\nn: The index (1-based) of the ugly number to return.\n\n-----Output-----\nThe output is a natural number:\nThe nth smallest ugly number.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_58",
+ "flags": [],
+ "header": "def nthUglyNumber (n : Nat) (h_precond : nthUglyNumber_precond (n)) : Nat :=",
+ "locked_hash": "3dd6836dc03504098aa5e1d354f26ec0a0f3595e2f82fbe457722f24aac3eaaf",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@nthUglyNumber.loop": false,
+    "fun_ind_simp@nthUglyNumber.loop": false,
+    "grind": false,
+    "ind_grind@n": false,
+    "ind_simp_all@n": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 61.0,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "nthUglyNumber",
+  "params": [
+   [
+    "n",
+    "Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef nthUglyNumber_precond (n : Nat) : Prop :=\n  -- !benchmark @start precond\n  n > 0\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef nextUgly (seq : List Nat) (c2 c3 c5 : Nat) : (Nat × Nat × Nat × Nat) :=\n  let i2 := seq[c2]! * 2\n  let i3 := seq[c3]! * 3\n  let i5 := seq[c5]! * 5\n  let next := min i2 (min i3 i5)\n  let c2' := if next = i2 then c2 + 1 else c2\n  let c3' := if next = i3 then c3 + 1 else c3\n  let c5' := if next = i5 then c5 + 1 else c5\n  (next, c2', c3', c5')\n\n-- !benchmark @end code_aux\n\n\ndef nthUglyNumber (n : Nat) (h_precond : nthUglyNumber_precond (n)) : Nat :=\n  -- !benchmark @start code\n  let rec loop (i : Nat) (seq : List Nat) (c2 c3 c5 : Nat) : List Nat :=\n    match i with\n    | 0 => seq\n    | Nat.succ i' =>\n      let (next, c2', c3', c5') := nextUgly seq c2 c3 c5\n      loop i' (seq ++ [next]) c2' c3' c5'\n  (loop (n - 1) [1] 0 0 0)[(n - 1)]!\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\ndef divideOut : Nat → Nat → Nat\n  | n, p =>\n    if h : p > 1 ∧ n > 0 ∧ n % p = 0 then\n      have : n / p < n := by\n        apply Nat.div_lt_self\n        · exact h.2.1  -- n > 0\n        · exact Nat.lt_of_succ_le (Nat.succ_le_of_lt h.1)  -- 1 < p, so 2 ≤ p\n      divideOut (n / p) p\n    else n\ntermination_by n p => n\n\ndef isUgly (x : Nat) : Bool :=\n  if x = 0 then\n    false\n  else\n    let n1 := divideOut x 2\n    let n2 := divideOut n1 3\n    let n3 := divideOut n2 5\n    n3 = 1\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef nthUglyNumber_postcond (n : Nat) (result: Nat) (h_precond : nthUglyNumber_precond (n)) : Prop :=\n  -- !benchmark @start postcond\n  isUgly result = true ∧\n  ((List.range (result)).filter (fun i => isUgly i)).length = n - 1\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem nthUglyNumber_spec_satisfied (n: Nat) (h_precond : nthUglyNumber_precond (n)) :\n    nthUglyNumber_postcond (n) (nthUglyNumber (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(n: Nat) (h_precond : nthUglyNumber_precond (n)) :\n    nthUglyNumber_postcond (n) (nthUglyNumber (n) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "n": "1"
+   }
+  },
+  {
+   "expected_lean": "12",
+   "input_lean": {
+    "n": "10"
+   }
+  },
+  {
+   "expected_lean": "24",
+   "input_lean": {
+    "n": "15"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "n": "5"
+   }
+  },
+  {
+   "expected_lean": "8",
+   "input_lean": {
+    "n": "7"
+   }
+  }
+ ]
+}

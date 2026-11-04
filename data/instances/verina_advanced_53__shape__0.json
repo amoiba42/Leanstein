@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_53",
+ "flags": [],
+ "hashes": {
+  "locked": "037a5fb5b785126148042ec07939d59220d3626d280f023de215ae3c4edb7dcf"
+ },
+ "instance_id": "verina_advanced_53__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let n := nums.length\n  -- base cases: empty or single element list is already sorted\n  if n <= 1 then 0 else\n\n  -- local helper function to check if a list is sorted in ascending order\n  let rec isSortedAux (l : List Int) : Bool :=\n    match l with\n    | [] => true       -- empty list is sorted\n    | [_] => true      -- single element list is sorted\n    | x :: y :: xs => if x <= y then isSortedAux (y :: xs) else false -- check pairwise\n\n  -- check if the input list is already sorted\n  if isSortedAux nums then 0 else\n\n  -- local helper function to perform a single right shift\n  -- assume the list `l` is non-empty based on the initial n > 1 check\n  let rightShiftOnce (l : List Int) : List Int :=\n     match l.reverse with\n     | [] => [] -- should not happen for n > 1\n     | last :: revInit => last :: revInit.reverse -- `last` is the original last element\n\n  -- recursive function to check subsequent shifts\n  -- `shifts_count` is the number of shifts already performed to get `current_list`\n  -- we are checking if `current_list` is sorted\n  let rec checkShifts (shifts_count : Nat) (current_list : List Int) : Int :=\n    -- base case: stop recursion if we've checked n-1 shifts (count goes from 1 to n)\n    -- the original list (0 shifts) has already been checked\n    if shifts_count >= n then -1\n    else\n      -- check if the current state is sorted\n      if isSortedAux current_list then\n        (shifts_count : Int) -- found it after 'shifts_count' shifts\n      else\n        -- recursion: increment shift count, apply next shift\n        checkShifts (shifts_count + 1) (rightShiftOnce current_list)\n  -- specify the decreasing measure for the termination checker: n - shifts_count\n  termination_by n - shifts_count\n\n  -- start the checking process by performing the first shift and checking subsequent states\n  -- the initial list (0 shifts) hass already been checked and is not sorted\n  checkShifts 1 (rightShiftOnce nums) -- start checking from the state after 1 shift\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

@@ -1,0 +1,94 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that calculates how much rainwater would be trapped by a terrain represented as an array of heights. Imagine rainwater falls onto a terrain with varying elevation levels. The water can only be trapped between higher elevation points.\n\nGiven an array of non-negative integers representing the elevation map where the width of each bar is 1 unit, calculate how much water can be trapped after it rains.\n\n-----Input-----\nThe input consists of one array:\nheights: An array of non-negative integers representing elevation levels.\n\n-----Output-----\nThe output is an integer:\nReturns the total amount of rainwater that can be trapped.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_62",
+ "flags": [],
+ "header": "def rain (heights : List (Int)) (h_precond : rain_precond (heights)) : Int :=",
+ "locked_hash": "49d646cf5ab9f0735ba9f0d5bd23b1f7c6104508bd2774f2ffba6818e409b222",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@rain.aux": false,
+    "fun_ind_simp@rain.aux": false,
+    "grind": false,
+    "ind_grind@heights": false,
+    "ind_simp_all@heights": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 118.0,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "rain",
+  "params": [
+   [
+    "heights",
+    "List (Int)"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef rain_precond (heights : List (Int)) : Prop :=\n  -- !benchmark @start precond\n  heights.all (fun h => h >= 0)\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef rain (heights : List (Int)) (h_precond : rain_precond (heights)) : Int :=\n  -- !benchmark @start code\n  -- Handle edge cases: need at least 3 elements to trap water\n  if heights.length < 3 then 0 else\n    let n := heights.length\n\n    -- Use two pointers approach for O(n) time with O(1) space\n    let rec aux (left : Nat) (right : Nat) (leftMax : Int) (rightMax : Int) (water : Int) : Int :=\n      if left >= right then\n        water  -- Base case: all elements processed\n      else if heights[left]! <= heights[right]! then\n        -- Process from the left\n        let newLeftMax := max leftMax (heights[left]!)\n        let newWater := water + max 0 (leftMax - heights[left]!)\n        aux (left+1) right newLeftMax rightMax newWater\n      else\n        -- Process from the right\n        let newRightMax := max rightMax (heights[right]!)\n        let newWater := water + max 0 (rightMax - heights[right]!)\n        aux left (right-1) leftMax newRightMax newWater\n      termination_by right - left\n    -- Initialize with two pointers at the ends\n    aux 0 (n-1) (heights[0]!) (heights[n-1]!) 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef rain_postcond (heights : List (Int)) (result: Int) (h_precond : rain_precond (heights)) : Prop :=\n  -- !benchmark @start postcond\n  -- The result is the total amount of rainwater trapped by the given terrain\n  -- If there are fewer than 3 elements, no water can be trapped\n  result >= 0 ∧\n  -- The result is non-negative\n  if heights.length < 3 then result = 0 else\n    -- Water trapped at each position is min(maxLeft, maxRight) - height\n    result =\n      let max_left_at := λ i =>\n        let rec ml (j : Nat) (max_so_far : Int) : Int :=\n          if j > i then max_so_far\n          else ml (j+1) (max max_so_far (heights[j]!))\n          termination_by i + 1 - j\n        ml 0 0\n\n      let max_right_at := λ i =>\n        let rec mr (j : Nat) (max_so_far : Int) : Int :=\n          if j >= heights.length then max_so_far\n          else mr (j+1) (max max_so_far (heights[j]!))\n          termination_by heights.length - j\n        mr i 0\n\n      let water_at := λ i =>\n        max 0 (min (max_left_at i) (max_right_at i) - heights[i]!)\n\n      let rec sum_water (i : Nat) (acc : Int) : Int :=\n        if i >= heights.length then acc\n        else sum_water (i+1) (acc + water_at i)\n        termination_by heights.length - i\n\n      sum_water 0 0\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem rain_spec_satisfied (heights: List (Int)) (h_precond : rain_precond (heights)) :\n    rain_postcond (heights) (rain (heights) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(heights: List (Int)) (h_precond : rain_precond (heights)) :\n    rain_postcond (heights) (rain (heights) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "6",
+   "input_lean": {
+    "heights": "[0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "9",
+   "input_lean": {
+    "heights": "[4, 2, 0, 3, 2, 5]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "heights": "[1, 1, 1]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "heights": "[10, 5]"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "heights": "[1, 10, 9, 11]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "heights": "[]"
+   }
+  }
+ ]
+}

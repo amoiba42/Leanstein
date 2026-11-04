@@ -1,0 +1,97 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task involves performing integer division with remainder on natural numbers. Given two natural numbers, x (the dividend) and y (the divisor), the objective is to determine the quotient and remainder. When y is non-zero, the quotient and remainder should satisfy the condition that the dividend equals the divisor multiplied by the quotient plus the remainder, with the remainder being nonnegative and strictly less than y. In the case where y is zero, the result should indicate that no division is performed by returning x as the quotient and 0 as the remainder.\n\n-----Input-----  \nThe input consists of two natural numbers:  \n• x: A natural number representing the dividend.  \n• y: A natural number representing the divisor.\n\n-----Output-----  \nThe output is a pair of integers (r, q) where:  \n• If y ≠ 0, then q is the quotient and r is the remainder such that:  \n   - q * Int.ofNat y + r = Int.ofNat x  \n   - 0 ≤ r < Int.ofNat y  \n   - 0 ≤ q  \n• If y = 0, then the output is (Int.ofNat x, 0).\n\n-----Note-----  \nThe specification regarding the division properties applies only when y is non-zero. When y = 0, the function safely returns (x, 0) in its integer form.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_81",
+ "flags": [],
+ "header": "def DivisionFunction (x : Nat) (y : Nat) (h_precond : DivisionFunction_precond (x) (y)) : Int × Int :=",
+ "locked_hash": "2ac724985afb4a2b968e6d57f8092fc92a1fdc7b9ecb77934f1f4ffc8796eaf8",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@x": false,
+    "ind_grind@y": false,
+    "ind_simp_all@x": false,
+    "ind_simp_all@y": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 10.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "DivisionFunction",
+  "params": [
+   [
+    "x",
+    "Nat"
+   ],
+   [
+    "y",
+    "Nat"
+   ]
+  ],
+  "ret": "Int × Int"
+ },
+ "template": "-- !benchmark @start import type=solution\nimport Mathlib\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef DivisionFunction_precond (x : Nat) (y : Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef divMod (x y : Nat) : Int × Int :=\n  let q : Int := Int.ofNat (x / y)\n  let r : Int := Int.ofNat (x % y)\n  (r, q)\n-- !benchmark @end code_aux\n\n\ndef DivisionFunction (x : Nat) (y : Nat) (h_precond : DivisionFunction_precond (x) (y)) : Int × Int :=\n  -- !benchmark @start code\n  if y = 0 then (Int.ofNat x, 0) else divMod x y\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef DivisionFunction_postcond (x : Nat) (y : Nat) (result: Int × Int) (h_precond : DivisionFunction_precond (x) (y)) :=\n  -- !benchmark @start postcond\n  let (r, q) := result;\n  (y = 0 → r = Int.ofNat x ∧ q = 0) ∧\n  (y ≠ 0 → (q * Int.ofNat y + r = Int.ofNat x) ∧ (0 ≤ r ∧ r < Int.ofNat y) ∧ (0 ≤ q))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem DivisionFunction_spec_satisfied (x: Nat) (y: Nat) (h_precond : DivisionFunction_precond (x) (y)) :\n    DivisionFunction_postcond (x) (y) (DivisionFunction (x) (y) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold DivisionFunction_postcond DivisionFunction\n  simp\n  split\n  {\n    simp\n    intro h₁\n    contradiction\n  }\n  {\n\n    have h_left : (¬y = 0 →\n    (divMod x y).snd * ↑y + (divMod x y).fst = ↑x ∧\n      (0 ≤ (divMod x y).fst ∧ (divMod x y).fst < ↑y) ∧ 0 ≤ (divMod x y).snd) := by\n      intro h₁\n      have h₁_left : (divMod x y).snd * ↑y + (divMod x y).fst = ↑x := by\n        unfold divMod\n        simp\n        have h₁ := Int.ediv_add_emod' x y\n        apply h₁\n      have h₁_right : (0 ≤ (divMod x y).1 ∧ (divMod x y).1 < ↑y) ∧ 0 ≤ (divMod x y).2 := by\n        have h₂_left : (0 ≤ (divMod x y).1 ∧ (divMod x y).1 < ↑y) := by\n          have h₃_left : 0 ≤ (divMod x y).1 := by\n            unfold divMod\n            simp\n            rw [←Int.natCast_mod, ←Int.ofNat_eq_natCast]\n            have ha := Int.zero_le_ofNat (x % y)\n            apply ha\n          have h₃_right : (divMod x y).1 < ↑y := by\n            unfold divMod\n            simp\n            rw [←Int.natCast_mod]\n            have ha := @Int.natMod_lt x y h₁\n            rw [Int.natMod, ←Int.natCast_mod, Int.toNat_ofNat] at ha\n            rw [←Mathlib.Tactic.Zify.natCast_lt]\n            apply ha\n          exact ⟨h₃_left, h₃_right⟩\n\n        have h₂_right : 0 ≤ (divMod x y).2 := by\n          unfold divMod\n          simp\n          rw [←Int.natCast_div]\n          have ha := Int.natCast_nonneg (x / y)\n          apply ha\n        exact ⟨h₂_left, h₂_right⟩\n      exact ⟨h₁_left, h₁_right⟩\n    have h_right : (y = 0 → (divMod x y).fst = ↑x ∧ (divMod x y).snd = 0) := by\n      intro h₀\n      have h₁_left : (divMod x y).1 = ↑x := by\n        unfold divMod\n        simp\n        rw [←Int.natCast_mod, h₀, Nat.mod_zero]\n      have h₁_right : (divMod x y).snd = 0 := by\n        unfold divMod\n        simp\n        rw [←Int.natCast_div, h₀, Nat.div_zero, ←@Int.cast_id 0]\n        rfl\n      exact ⟨h₁_left, h₁_right⟩\n    constructor\n    · simp_all [h_left]\n    · simp_all [h_right]\n  }\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(x: Nat) (y: Nat) (h_precond : DivisionFunction_precond (x) (y)) :\n    DivisionFunction_postcond (x) (y) (DivisionFunction (x) (y) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "(1, 3)",
+   "input_lean": {
+    "x": "10",
+    "y": "3"
+   }
+  },
+  {
+   "expected_lean": "(0, 3)",
+   "input_lean": {
+    "x": "15",
+    "y": "5"
+   }
+  },
+  {
+   "expected_lean": "(1, 3)",
+   "input_lean": {
+    "x": "7",
+    "y": "2"
+   }
+  },
+  {
+   "expected_lean": "(0, 0)",
+   "input_lean": {
+    "x": "0",
+    "y": "4"
+   }
+  },
+  {
+   "expected_lean": "(10, 0)",
+   "input_lean": {
+    "x": "10",
+    "y": "0"
+   }
+  }
+ ]
+}

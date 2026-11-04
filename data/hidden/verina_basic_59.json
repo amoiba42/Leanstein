@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_basic_59",
+ "n_admissible": 98,
+ "n_candidates": 98,
+ "seed": 7,
+ "sha256": "e58cd795b08d56222eac367f5494af7c5021e04f19605a6bd7f73250f73ad667",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "(10, 20)",
+   "input_lean": {
+    "x": "5"
+   }
+  },
+  {
+   "expected_lean": "(6, 12)",
+   "input_lean": {
+    "x": "3"
+   }
+  },
+  {
+   "expected_lean": "(24, 48)",
+   "input_lean": {
+    "x": "12"
+   }
+  },
+  {
+   "expected_lean": "(8, 16)",
+   "input_lean": {
+    "x": "4"
+   }
+  },
+  {
+   "expected_lean": "(-14, -28)",
+   "input_lean": {
+    "x": "(-7)"
+   }
+  },
+  {
+   "expected_lean": "(16, 32)",
+   "input_lean": {
+    "x": "8"
+   }
+  },
+  {
+   "expected_lean": "(-6, -12)",
+   "input_lean": {
+    "x": "(-3)"
+   }
+  },
+  {
+   "expected_lean": "(18, 36)",
+   "input_lean": {
+    "x": "9"
+   }
+  },
+  {
+   "expected_lean": "(-50, -100)",
+   "input_lean": {
+    "x": "(-25)"
+   }
+  },
+  {
+   "expected_lean": "(22, 44)",
+   "input_lean": {
+    "x": "11"
+   }
+  },
+  {
+   "expected_lean": "(56, 112)",
+   "input_lean": {
+    "x": "28"
+   }
+  },
+  {
+   "expected_lean": "(-4, -8)",
+   "input_lean": {
+    "x": "(-2)"
+   }
+  },
+  {
+   "expected_lean": "(4, 8)",
+   "input_lean": {
+    "x": "2"
+   }
+  },
+  {
+   "expected_lean": "(-12, -24)",
+   "input_lean": {
+    "x": "(-6)"
+   }
+  },
+  {
+   "expected_lean": "(-8, -16)",
+   "input_lean": {
+    "x": "(-4)"
+   }
+  },
+  {
+   "expected_lean": "(26, 52)",
+   "input_lean": {
+    "x": "13"
+   }
+  },
+  {
+   "expected_lean": "(-116, -232)",
+   "input_lean": {
+    "x": "(-58)"
+   }
+  },
+  {
+   "expected_lean": "(-140, -280)",
+   "input_lean": {
+    "x": "(-70)"
+   }
+  },
+  {
+   "expected_lean": "(-146, -292)",
+   "input_lean": {
+    "x": "(-73)"
+   }
+  },
+  {
+   "expected_lean": "(-20, -40)",
+   "input_lean": {
+    "x": "(-10)"
+   }
+  },
+  {
+   "expected_lean": "(50, 100)",
+   "input_lean": {
+    "x": "25"
+   }
+  },
+  {
+   "expected_lean": "(-60, -120)",
+   "input_lean": {
+    "x": "(-30)"
+   }
+  },
+  {
+   "expected_lean": "(44, 88)",
+   "input_lean": {
+    "x": "22"
+   }
+  },
+  {
+   "expected_lean": "(-82, -164)",
+   "input_lean": {
+    "x": "(-41)"
+   }
+  },
+  {
+   "expected_lean": "(118, 236)",
+   "input_lean": {
+    "x": "59"
+   }
+  },
+  {
+   "expected_lean": "(116, 232)",
+   "input_lean": {
+    "x": "58"
+   }
+  },
+  {
+   "expected_lean": "(-44, -88)",
+   "input_lean": {
+    "x": "(-22)"
+   }
+  },
+  {
+   "expected_lean": "(-184, -368)",
+   "input_lean": {
+    "x": "(-92)"
+   }
+  },
+  {
+   "expected_lean": "(-42, -84)",
+   "input_lean": {
+    "x": "(-21)"
+   }
+  },
+  {
+   "expected_lean": "(-100, -200)",
+   "input_lean": {
+    "x": "(-50)"
+   }
+  }
+ ]
+}

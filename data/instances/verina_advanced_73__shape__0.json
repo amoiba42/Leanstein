@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_73",
+ "flags": [],
+ "hashes": {
+  "locked": "2a1d1776580ad335f35fd2747bdecf279fc1847ffa56af9144a515e723ff4712"
+ },
+ "instance_id": "verina_advanced_73__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let sortedList := l\n  let rec search (lst : List Nat) (n : Nat) : Nat :=\n    match lst with\n    | [] => n\n    | x :: xs =>\n      let isEqual := x = n\n      let isGreater := x > n\n      let nextCand := n + 1\n      if isEqual then\n        search xs nextCand\n      else if isGreater then\n        n\n      else\n        search xs n\n  let result := search sortedList 0\n  result\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

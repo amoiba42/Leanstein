@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_78",
+ "flags": [],
+ "hashes": {
+  "locked": "6e772d19f5e5ce7e25271ba07335cd10dfea5b88bb6aa0235170b7286c3f1f1d"
+ },
+ "instance_id": "verina_basic_78__mut__arith__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "-",
+  "before": "+",
+  "col": 16,
+  "line": 1,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  let more := x - y\n  let less := x - y\n  (more, less)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "(1, 1)",
+  "expected": "(5, 1)",
+  "index": 0,
+  "input_lean": {
+   "x": "3",
+   "y": "2"
+  },
+  "source": "visible"
+ }
+}

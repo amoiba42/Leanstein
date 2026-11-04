@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_74",
+ "flags": [],
+ "hashes": {
+  "locked": "a8818e336b39f714bd435c28ad27097868756b1e6700202c2a1f008f9f14be82"
+ },
+ "instance_id": "verina_basic_74__mut__swap_branches__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "if current > a[index]! then a[index]! else current",
+  "before": "if current > a[index]! then current else a[index]!",
+  "col": 23,
+  "line": 3,
+  "operator": "swap_branches",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  maxArray_aux a 1 a[0]!\n",
+  "code_aux": "def maxArray_aux (a : Array Int) (index : Nat) (current : Int) : Int :=\n  if index < a.size then\n    let new_current := if current > a[index]! then a[index]! else current\n    maxArray_aux a (index + 1) new_current\n  else\n    current\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "5",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 2, 3, 4, 5]"
+  },
+  "source": "visible"
+ }
+}

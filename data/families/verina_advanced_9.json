@@ -1,0 +1,101 @@
+{
+ "aux_names": [
+  "sumOfDigits"
+ ],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method of which given a number n and divisor d, it counts all the number that is smaller than\nn whose sum of digits is divisible by d. \n-----Input-----\nThe input consists of three Nat:\nn: Nat\nd:Nat where d > 0\n\n-----Output-----\nThe output is an Natural number:\nEnsure this match the count that satisfy the property.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_9",
+ "flags": [],
+ "header": "def countSumDivisibleBy (n : Nat) (d : Nat) (h_precond : countSumDivisibleBy_precond (n) (d)) : Nat :=",
+ "locked_hash": "d4ee9f06fe0e5084e17379b525a8fe60ab516a99b961f83be81b9176b9bfb8d5",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@countSumDivisibleBy.go": false,
+    "fun_ind_simp@countSumDivisibleBy.go": false,
+    "grind": false,
+    "ind_grind@d": false,
+    "ind_grind@n": false,
+    "ind_simp_all@d": false,
+    "ind_simp_all@n": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 16.8,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "countSumDivisibleBy",
+  "params": [
+   [
+    "n",
+    "Nat"
+   ],
+   [
+    "d",
+    "Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\ndef sumOfDigits (x : Nat) : Nat :=\n  let rec go (n acc : Nat) : Nat :=\n    if n = 0 then acc\n    else go (n / 10) (acc + (n % 10))\n  go x 0\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef countSumDivisibleBy_precond (n : Nat) (d : Nat) : Prop :=\n  -- !benchmark @start precond\n  d > 0\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef isSumDivisibleBy (x : Nat) (d:Nat) : Bool :=\n  (sumOfDigits x) % d = 0\n-- !benchmark @end code_aux\n\n\ndef countSumDivisibleBy (n : Nat) (d : Nat) (h_precond : countSumDivisibleBy_precond (n) (d)) : Nat :=\n  -- !benchmark @start code\n  let rec go (i acc : Nat) : Nat :=\n    match i with\n    | 0 => acc\n    | i'+1 =>\n      let acc' := if isSumDivisibleBy i' d then acc + 1 else acc\n      go i' acc'\n  go n 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef countSumDivisibleBy_postcond (n : Nat) (d : Nat) (result: Nat) (h_precond : countSumDivisibleBy_precond (n) (d)) : Prop :=\n  -- !benchmark @start postcond\n  (List.length (List.filter (fun x => x < n ∧ (sumOfDigits x) % d = 0) (List.range n))) - result = 0 ∧\n  result ≤ (List.length (List.filter (fun x => x < n ∧ (sumOfDigits x) % d = 0) (List.range n)))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem countSumDivisibleBy_spec_satisfied (n: Nat) (d: Nat) (h_precond : countSumDivisibleBy_precond (n) (d)) :\n    countSumDivisibleBy_postcond (n) (d) (countSumDivisibleBy (n) (d) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(n: Nat) (d: Nat) (h_precond : countSumDivisibleBy_precond (n) (d)) :\n    countSumDivisibleBy_postcond (n) (d) (countSumDivisibleBy (n) (d) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "d": "2",
+    "n": "0"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "d": "2",
+    "n": "1"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "d": "3",
+    "n": "10"
+   }
+  },
+  {
+   "expected_lean": "6",
+   "input_lean": {
+    "d": "2",
+    "n": "12"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "d": "5",
+    "n": "20"
+   }
+  }
+ ]
+}

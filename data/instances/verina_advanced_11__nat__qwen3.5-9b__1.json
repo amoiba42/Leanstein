@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_11",
+ "flags": [],
+ "hashes": {
+  "locked": "b04c436496bdc54b02993fcef6a1d4cd8f5232eae70af137914cb638553a990a"
+ },
+ "instance_id": "verina_advanced_11__nat__qwen3.5-9b__1",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef findMajorityElement (lst : List Int) (h_precond : findMajorityElement_precond (lst)) : Int :=\n  let n := lst.length\n  let majorityCandidate := lst.foldl (fun acc x => if acc = -1 ∨ acc = x then acc else x) (-1)\n  let count := fun x => (lst.filter (fun y => y = x)).length\n  let isMajority x := count x > n / 2\n  if isMajority majorityCandidate then majorityCandidate\n  else -1\n```",
+  "seed": 5001
+ },
+ "split": "main",
+ "start": {
+  "code": "let n := lst.length\nlet majorityCandidate := lst.foldl (fun acc x => if acc = -1 ∨ acc = x then acc else x) (-1)\nlet count := fun x => (lst.filter (fun y => y = x)).length\nlet isMajority x := count x > n / 2\nif isMajority majorityCandidate then majorityCandidate\nelse -1",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "-1",
+  "expected": "1",
+  "index": 0,
+  "input_lean": {
+   "lst": "[1, 2, 1, 1]"
+  },
+  "source": "visible"
+ }
+}

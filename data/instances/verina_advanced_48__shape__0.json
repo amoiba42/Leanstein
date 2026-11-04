@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_48",
+ "flags": [],
+ "hashes": {
+  "locked": "9ed7e8c81f90aadfcd5c8a18aa5cde5530b71537061e535f8b0c9aa47bf049c9"
+ },
+ "instance_id": "verina_advanced_48__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  -- Implementation using insertion sort instead of merge sort\n  -- for simplicity and to avoid termination issues\n\n  -- Helper to insert an element into a sorted list\n  let rec insert (x : Int) (sorted : List Int) : List Int :=\n    match sorted with\n    | [] => [x]\n    | y :: ys =>\n        if x ≤ y then\n          x :: sorted\n        else\n          y :: insert x ys\n  termination_by sorted.length\n\n  -- Main insertion sort function\n  let rec sort (l : List Int) : List Int :=\n    match l with\n    | [] => []\n    | x :: xs =>\n        let sortedRest := sort xs\n        insert x sortedRest\n  termination_by l.length\n\n  sort list\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

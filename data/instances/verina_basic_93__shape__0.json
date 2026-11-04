@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_93",
+ "flags": [],
+ "hashes": {
+  "locked": "22ecfc47ae062302f07525f8d68fb44d2fc27281f30108ca463a1b5171678afe"
+ },
+ "instance_id": "verina_basic_93__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let temp := X.xor Y\n  let newY := temp.xor Y\n  let newX := temp.xor newY\n  (newX, newY)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

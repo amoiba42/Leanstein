@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_47",
+ "flags": [],
+ "hashes": {
+  "locked": "02a5242e2b8f09f874e0ed1dd21d4f289f60c009e7eb8e04a6c166dedf3164f6"
+ },
+ "instance_id": "verina_basic_47__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  a.toList.sum\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

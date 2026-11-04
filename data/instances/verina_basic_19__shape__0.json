@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_19",
+ "flags": [],
+ "hashes": {
+  "locked": "87c1b0f5bd14ba9769f879c129042228c1ea3ddf05a2a7a6d84d5ab1b6b03203"
+ },
+ "instance_id": "verina_basic_19__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  if a.size ≤ 1 then\n    true\n  else\n    a.mapIdx (fun i x =>\n      if h : i + 1 < a.size then\n        decide (x ≤ a[i + 1])\n      else\n        true) |>.all id\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

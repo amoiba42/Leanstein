@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_30",
+ "flags": [],
+ "hashes": {
+  "locked": "052f7eae1496d15772ffb08e3e623d5ec4fd626e57ca4da121bee9310013d4b5"
+ },
+ "instance_id": "verina_advanced_30__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  let rec aux (lst : List Int) (prev : Option Int) (currLen : Nat) (maxLen : Nat) : Nat :=\n    match lst with\n    | [] => max currLen maxLen\n    | x :: xs =>\n      match prev with\n      | none => aux xs (some x) 1 (max 1 maxLen)\n      | some p =>\n        if x > p then aux xs (some x) (currLen + 1) (max (currLen + 1) maxLen)\n        else aux xs (some x) 1 (max currLen maxLen)\n  aux nums none 0 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

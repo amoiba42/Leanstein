@@ -1,0 +1,84 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that transforms an array of integers by replacing every element with its cube. In other words, for each element in the input array, the output array should contain the result of multiplying that element by itself three times.\n\n-----Input-----\nThe input consists of:\na: An array of integers (which may be empty or non-empty).\n\n-----Output-----\nThe output is an array of integers:\nReturns an array with the same length as the input, where each element is the cube of the corresponding element in the input array.\n\n-----Note-----\nThere are no additional preconditions; the method should work correctly for any array of integers.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_13",
+ "flags": [],
+ "header": "def cubeElements (a : Array Int) (h_precond : cubeElements_precond (a)) : Array Int :=",
+ "locked_hash": "5f4bc7e9c4471fa1b44f8df673279a08285066d330408163835234c5ca2a260e",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_all",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 2.6,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_broken",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "cubeElements",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef cubeElements_precond (a : Array Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef cubeElements (a : Array Int) (h_precond : cubeElements_precond (a)) : Array Int :=\n  -- !benchmark @start code\n  a.map (fun x => x * x * x)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef cubeElements_postcond (a : Array Int) (result: Array Int) (h_precond : cubeElements_precond (a)) :=\n  -- !benchmark @start postcond\n  (result.size = a.size) ∧\n  (∀ i, i < a.size → result[i]! = a[i]! * a[i]! * a[i]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem cubeElements_spec_satisfied (a: Array Int) (h_precond : cubeElements_precond (a)) :\n    cubeElements_postcond (a) (cubeElements (a) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold cubeElements cubeElements_postcond\n  simp_all\n  intro i hi\n  have h_maplen : (Array.map (fun x => x * x * x) a).size = a.size := by\n    apply Array.size_map\n  have h1 : (Array.map (fun x => x * x * x) a)[i] = (fun x => x * x * x) a[i] := by\n    apply Array.getElem_map\n  have h_eq : (Array.map (fun x => x * x * x) a)[i] = (Array.map (fun x => x * x * x) a)[i]! := by\n    have hi' : i < (Array.map (fun x => x * x * x) a).size := by\n      simp only [hi, h_maplen]\n    rw [Array.getElem!_eq_getD]\n    simp [hi', hi]\n  rw [← h_eq]\n  simp only [h1]\n  have h_eq' : a[i] = a[i]! := by\n    have hi_a : i < a.size := by\n      simp only [hi]\n    rw [Array.getElem!_eq_getD]\n    simp [hi_a]\n  simp only [h_eq']\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (h_precond : cubeElements_precond (a)) :\n    cubeElements_postcond (a) (cubeElements (a) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[1, 8, 27, 64]",
+   "input_lean": {
+    "a": "#[1, 2, 3, 4]"
+   }
+  },
+  {
+   "expected_lean": "#[0, -1, -8, 27]",
+   "input_lean": {
+    "a": "#[0, -1, -2, 3]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "a": "#[]"
+   }
+  },
+  {
+   "expected_lean": "#[125]",
+   "input_lean": {
+    "a": "#[5]"
+   }
+  },
+  {
+   "expected_lean": "#[-27, -27]",
+   "input_lean": {
+    "a": "#[-3, -3]"
+   }
+  }
+ ]
+}

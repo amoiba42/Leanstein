@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_86",
+ "flags": [],
+ "hashes": {
+  "locked": "a75a885d7875095cc48575e24940784c9552e8ac42f9b8db3266fb16dca1c297"
+ },
+ "instance_id": "verina_basic_86__mut__swap_branches__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "if idx_int < 0 then idx_int else idx_int + Int.ofNat len",
+  "before": "if idx_int < 0 then idx_int + Int.ofNat len else idx_int",
+  "col": 28,
+  "line": 4,
+  "operator": "swap_branches",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let len := a.size\n  let default_val : Int := if len > 0 then a[0]! else 0\n  let b0 := Array.mkArray len default_val\n  rotateAux a offset 0 len b0\n",
+  "code_aux": "def rotateAux (a : Array Int) (offset : Int) (i : Nat) (len : Nat) (b : Array Int) : Array Int :=\n  if i < len then\n    let idx_int : Int := (Int.ofNat i + offset) % (Int.ofNat len)\n    let idx_int_adjusted := if idx_int < 0 then idx_int else idx_int + Int.ofNat len\n    let idx_nat : Nat := Int.toNat idx_int_adjusted\n    let new_b := b.set! i (a[idx_nat]!)\n    rotateAux a offset (i + 1) len new_b\n  else b\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[0, 0, 0, 0, 0]",
+  "expected": "#[3, 4, 5, 1, 2]",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 2, 3, 4, 5]",
+   "offset": "2"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,109 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that finds the last occurrence of a specified element in a sorted array of integers. The method should return the index corresponding to the last occurrence of the element if it is present; if the element is absent, it should return -1. Additionally, the array must remain unchanged after the method is executed.\n\n-----Input-----\nThe input consists of:\narr: A sorted array of integers in non-decreasing order.\nelem: An integer whose last occurrence position is to be determined.\n\n-----Output-----\nThe output is an integer:\nReturns the index of the last occurrence of the specified integer in the array if it exists.\nReturns -1 if the integer is not found in the array.\n\n-----Note-----\nThe input array is assumed to be sorted in non-decreasing order and remains unchanged by the method.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_46",
+ "flags": [],
+ "header": "def lastPosition (arr : Array Int) (elem : Int) (h_precond : lastPosition_precond (arr) (elem)) : Int :=",
+ "locked_hash": "999d4aed3a9867889be8e93ab0fa8e88c9fddf78e5b65092af59a391b860e016",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@lastPosition.loop": false,
+    "fun_ind_simp@lastPosition.loop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 54.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "lastPosition",
+  "params": [
+   [
+    "arr",
+    "Array Int"
+   ],
+   [
+    "elem",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef lastPosition_precond (arr : Array Int) (elem : Int) : Prop :=\n  -- !benchmark @start precond\n  List.Pairwise (· ≤ ·) arr.toList\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef lastPosition (arr : Array Int) (elem : Int) (h_precond : lastPosition_precond (arr) (elem)) : Int :=\n  -- !benchmark @start code\n  let rec loop (i : Nat) (pos : Int) : Int :=\n    if i < arr.size then\n      let a := arr[i]!\n      if a = elem then loop (i + 1) i\n      else loop (i + 1) pos\n    else pos\n  loop 0 (-1)\n  -- !benchmark @end code\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef lastPosition_postcond (arr : Array Int) (elem : Int) (result: Int) (h_precond : lastPosition_precond (arr) (elem)) :=\n  -- !benchmark @start postcond\n  (result = -1 ∨ result ≥ 0) ∧\n  (result ≥ 0 →\n    result.toNat < arr.size ∧\n    arr[result.toNat]! = elem ∧ (arr.toList.drop (result.toNat + 1)).all (· ≠ elem)) ∧\n  (result = -1 → arr.toList.all (· ≠ elem))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem lastPosition_spec_satisfied (arr: Array Int) (elem: Int) (h_precond : lastPosition_precond (arr) (elem)) :\n    lastPosition_postcond (arr) (elem) (lastPosition (arr) (elem) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(arr: Array Int) (elem: Int) (h_precond : lastPosition_precond (arr) (elem)) :\n    lastPosition_postcond (arr) (elem) (lastPosition (arr) (elem) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "arr": "#[1, 2, 2, 3, 4, 5]",
+    "elem": "2"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "arr": "#[1, 2, 2, 3, 4, 5]",
+    "elem": "6"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "arr": "#[1, 2, 2, 3, 4, 5]",
+    "elem": "5"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "arr": "#[1]",
+    "elem": "1"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "arr": "#[1, 1, 1, 1]",
+    "elem": "1"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "arr": "#[2, 2, 3, 3, 3]",
+    "elem": "3"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "arr": "#[]",
+    "elem": "0"
+   }
+  }
+ ]
+}

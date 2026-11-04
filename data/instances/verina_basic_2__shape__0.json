@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_2",
+ "flags": [],
+ "hashes": {
+  "locked": "dc9037e02ace0844579ea7843bc2421424e1c1f16c7f1bc01435ced16b4acf1c"
+ },
+ "instance_id": "verina_basic_2__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  s.toList.min?\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

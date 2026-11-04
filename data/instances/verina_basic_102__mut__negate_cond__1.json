@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_102",
+ "flags": [],
+ "hashes": {
+  "locked": "6ddc30cdcea70d5268a1be01c3db1fd4f01a111432bb26f089f0925ecaad5cc5"
+ },
+ "instance_id": "verina_basic_102__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(nums[i]! + nums[j]! = target)",
+  "before": "nums[i]! + nums[j]! = target",
+  "col": 12,
+  "line": 6,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let n := nums.size\n  let rec outer (i : Nat) : Option (Nat × Nat) :=\n    if i < n - 1 then\n      let rec inner (j : Nat) : Option (Nat × Nat) :=\n        if j < n then\n          if ¬(nums[i]! + nums[j]! = target) then\n            some (i, j)\n          else\n            inner (j + 1)\n        else\n          none\n      match inner (i + 1) with\n      | some pair => some pair\n      | none      => outer (i + 1)\n    else\n      none\n  match outer 0 with\n  | some pair => pair\n  | none      => panic \"twoSum: no solution found\"\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "(0, 2)",
+  "expected": "(0, 1)",
+  "index": 0,
+  "input_lean": {
+   "nums": "#[2, 7, 11, 15]",
+   "target": "9"
+  },
+  "source": "visible"
+ }
+}

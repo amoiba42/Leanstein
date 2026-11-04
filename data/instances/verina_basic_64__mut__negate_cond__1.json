@@ -1,0 +1,41 @@
+{
+ "family_id": "verina_basic_64",
+ "flags": [],
+ "hashes": {
+  "locked": "b240e19a6cd3065ef00498bf75361ff5f3fd456734d873e4289ab8ddeff9845d"
+ },
+ "instance_id": "verina_basic_64__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(i >= atPos)",
+  "before": "i >= atPos",
+  "col": 8,
+  "line": 17,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  let result := Array.mkArray (l + p) ' '\n\n  let result := Array.foldl\n    (fun acc i =>\n      if i < atPos then acc.set! i (oline[i]!) else acc)\n    result\n    (Array.range l)\n\n  let result := Array.foldl\n    (fun acc i =>\n      acc.set! (atPos + i) (nl[i]!))\n    result\n    (Array.range p)\n\n  let result := Array.foldl\n    (fun acc i =>\n      if ¬(i >= atPos) then acc.set! (i + p) (oline[i]!) else acc)\n    result\n    (Array.range l)\n\n  result\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#['a', 'b', 'a', 'b', ' ', ' ', ' ']",
+  "expected": "#['a','b','X','Y','c','d','e']",
+  "index": 0,
+  "input_lean": {
+   "atPos": "2",
+   "l": "5",
+   "nl": "#['X','Y']",
+   "oline": "#['a','b','c','d','e']",
+   "p": "2"
+  },
+  "source": "visible"
+ }
+}

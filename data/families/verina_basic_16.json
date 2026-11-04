@@ -1,0 +1,118 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that replaces every occurrence of a specified character within a string with a new character. The output should be a new string that maintains the same length as the input string, with all instances of the designated character replaced by the given substitute, and all other characters preserved unchanged.\n\n-----Input-----\nThe input consists of:\ns: A string in which the replacement will occur.\noldChar: The character within the string that needs to be replaced.\nnewChar: The character that will substitute for every occurrence of oldChar.\n\n-----Output-----\nThe output is a string that meets the following:\n- It has the same length as the input string.\n- All occurrences of oldChar in the input string are replaced with newChar.\n- All characters other than oldChar remain unchanged.\n\n-----Note-----\nThere are no preconditions; the method will always work. It is assumed that the input string is valid and non-null.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_16",
+ "flags": [],
+ "header": "def replaceChars (s : String) (oldChar : Char) (newChar : Char) (h_precond : replaceChars_precond (s) (oldChar) (newChar)) : String :=",
+ "locked_hash": "6148ef551b49be530cc8a8e7cac7cd43e05fcfc681695fa7115a0d3a5b67ff97",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_all",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 3.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_broken",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "replaceChars",
+  "params": [
+   [
+    "s",
+    "String"
+   ],
+   [
+    "oldChar",
+    "Char"
+   ],
+   [
+    "newChar",
+    "Char"
+   ]
+  ],
+  "ret": "String"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef replaceChars_precond (s : String) (oldChar : Char) (newChar : Char) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef replaceChars (s : String) (oldChar : Char) (newChar : Char) (h_precond : replaceChars_precond (s) (oldChar) (newChar)) : String :=\n  -- !benchmark @start code\n  let cs := s.toList\n  let cs' := cs.map (fun c => if c = oldChar then newChar else c)\n  String.mk cs'\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef replaceChars_postcond (s : String) (oldChar : Char) (newChar : Char) (result: String) (h_precond : replaceChars_precond (s) (oldChar) (newChar)) :=\n  -- !benchmark @start postcond\n  let cs := s.toList\n  let cs' := result.toList\n  result.length = s.length ∧\n  (∀ i, i < cs.length →\n    (cs[i]! = oldChar → cs'[i]! = newChar) ∧\n    (cs[i]! ≠ oldChar → cs'[i]! = cs[i]!))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem replaceChars_spec_satisfied (s: String) (oldChar: Char) (newChar: Char) (h_precond : replaceChars_precond (s) (oldChar) (newChar)) :\n    replaceChars_postcond (s) (oldChar) (newChar) (replaceChars (s) (oldChar) (newChar) h_precond) h_precond := by\n  -- !benchmark @start proof\n  -- Unfold the definitions of replaceChars and replaceChars_postcond\n  unfold replaceChars replaceChars_postcond\n  -- Split the goal into two parts\n  constructor\n  · -- First part: length is preserved\n    simp [String.length]\n  · -- Second part: character replacement specification\n    simp_all\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: String) (oldChar: Char) (newChar: Char) (h_precond : replaceChars_precond (s) (oldChar) (newChar)) :\n    replaceChars_postcond (s) (oldChar) (newChar) (replaceChars (s) (oldChar) (newChar) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "\"hello; world!\"",
+   "input_lean": {
+    "newChar": "';'",
+    "oldChar": "','",
+    "s": "\"hello, world!\""
+   }
+  },
+  {
+   "expected_lean": "\"a:b.c\"",
+   "input_lean": {
+    "newChar": "':'",
+    "oldChar": "','",
+    "s": "\"a,b.c\""
+   }
+  },
+  {
+   "expected_lean": "\"hellO, wOrld!\"",
+   "input_lean": {
+    "newChar": "'O'",
+    "oldChar": "'o'",
+    "s": "\"hello, world!\""
+   }
+  },
+  {
+   "expected_lean": "\"\"",
+   "input_lean": {
+    "newChar": "'y'",
+    "oldChar": "'x'",
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "\"test\"",
+   "input_lean": {
+    "newChar": "'y'",
+    "oldChar": "'x'",
+    "s": "\"test\""
+   }
+  },
+  {
+   "expected_lean": "\"unchanged\"",
+   "input_lean": {
+    "newChar": "'u'",
+    "oldChar": "'u'",
+    "s": "\"unchanged\""
+   }
+  },
+  {
+   "expected_lean": "\"bbb\"",
+   "input_lean": {
+    "newChar": "'b'",
+    "oldChar": "'a'",
+    "s": "\"aaa\""
+   }
+  }
+ ]
+}

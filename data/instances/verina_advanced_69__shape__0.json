@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_69",
+ "flags": [],
+ "hashes": {
+  "locked": "84bd3274e7c7200a4403b4263b513b5b687b2d7ecb79159b89683dbd4ed0ee6c"
+ },
+ "instance_id": "verina_advanced_69__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  match xs with\n  | [] =>\n      0\n  | _ :: _ =>\n      let rec helper : List Int → Nat → Nat :=\n        fun ys idx =>\n          match ys with\n          | [] =>\n              idx\n          | y :: ys' =>\n              let isCurrent := y\n              let currentIndex := idx\n              let targetValue := target\n              let condition := targetValue ≤ isCurrent\n              if condition then\n                currentIndex\n              else\n                let incrementedIndex := currentIndex + 1\n                let rest := ys'\n                helper rest incrementedIndex\n      let startingIndex := 0\n      let result := helper xs startingIndex\n      result\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

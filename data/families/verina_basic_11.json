@@ -1,0 +1,104 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires writing a Lean 4 method that extracts the last digit of a given non-negative integer. The method should return the last digit, which is obtained by computing the remainder when the number is divided by 10. The result must always be between 0 and 9.\n\n-----Input-----  \nThe input consists of a single value:  \nn: A non-negative integer.\n\n-----Output-----  \nThe output is an integer:  \nReturns the last digit of the input number, ensuring that the digit lies within the range 0 to 9.\n\n-----Note-----  \nIt is assumed that the input number n is non-negative.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_11",
+ "flags": [],
+ "header": "def lastDigit (n : Nat) (h_precond : lastDigit_precond (n)) : Nat :=",
+ "locked_hash": "d576c85eeae126e96587d8ba08c9afa6d25cdeec36000e4e15eacb965ebd5562",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "unfold_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@n": false,
+    "ind_simp_all@n": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": true
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 3.0,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "lastDigit",
+  "params": [
+   [
+    "n",
+    "Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef lastDigit_precond (n : Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef lastDigit (n : Nat) (h_precond : lastDigit_precond (n)) : Nat :=\n  -- !benchmark @start code\n  n % 10\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef lastDigit_postcond (n : Nat) (result: Nat) (h_precond : lastDigit_precond (n)) :=\n  -- !benchmark @start postcond\n  (0 ≤ result ∧ result < 10) ∧\n  (n % 10 - result = 0 ∧ result - n % 10 = 0)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem lastDigit_spec_satisfied (n: Nat) (h_precond : lastDigit_precond (n)) :\n    lastDigit_postcond (n) (lastDigit (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold lastDigit lastDigit_postcond\n  constructor\n  · constructor\n    · simp\n    · exact Nat.mod_lt n (by decide)\n  · simp\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(n: Nat) (h_precond : lastDigit_precond (n)) :\n    lastDigit_postcond (n) (lastDigit (n) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "n": "123"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "n": "0"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "n": "987654321"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "n": "10"
+   }
+  },
+  {
+   "expected_lean": "9",
+   "input_lean": {
+    "n": "999"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "n": "45"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "n": "100"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "n": "5"
+   }
+  }
+ ]
+}

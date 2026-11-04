@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_48",
+ "flags": [],
+ "hashes": {
+  "locked": "1465160a6386bec1b219c089c9232da3df7789d47345bf232f5083eb9c54c490"
+ },
+ "instance_id": "verina_basic_48__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(n = 0)",
+  "before": "n = 0",
+  "col": 4,
+  "line": 1,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  if ¬(n = 0) then true\n  else\n    let rec check (x : Nat) (fuel : Nat) : Bool :=\n      match fuel with\n      | 0 => false\n      | fuel + 1 =>\n        if x * x > n then false\n        else if x * x = n then true\n        else check (x + 1) fuel\n    check 1 n\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 0,
+  "input_lean": {
+   "n": "0"
+  },
+  "source": "visible"
+ }
+}

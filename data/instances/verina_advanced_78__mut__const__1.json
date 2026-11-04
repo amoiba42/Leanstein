@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_advanced_78",
+ "flags": [],
+ "hashes": {
+  "locked": "98105fbdf9f03c9d619e0ec91ec94b7930d6268e34850c2acdedc3558d2e684c"
+ },
+ "instance_id": "verina_advanced_78__mut__const__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "2",
+  "before": "1",
+  "col": 41,
+  "line": 14,
+  "operator": "const",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  twoSumAux nums target 0\n",
+  "code_aux": "def findComplement (nums : List Int) (target : Int) (i : Nat) (x : Int) : Option Nat :=\n  let rec aux (nums : List Int) (j : Nat) : Option Nat :=\n    match nums with\n    | []      => none\n    | y :: ys => if x + y = target then some (i + j + 1) else aux ys (j + 1)\n  aux nums 0\n\ndef twoSumAux (nums : List Int) (target : Int) (i : Nat) : Prod Nat Nat :=\n  match nums with\n  | []      => panic! \"No solution exists\"\n  | x :: xs =>\n    match findComplement xs target i x with\n    | some j => (i, j)\n    | none   => twoSumAux xs target (i + 2)\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "(2, 3)",
+  "expected": "(1, 2)",
+  "index": 1,
+  "input_lean": {
+   "nums": "[3, 2, 4]",
+   "target": "6"
+  },
+  "source": "visible"
+ }
+}

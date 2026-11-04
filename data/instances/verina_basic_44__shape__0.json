@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_44",
+ "flags": [],
+ "hashes": {
+  "locked": "c5eaa749916045e37f8a0a40a5314af4e3f217500c5c852e7306569a48fdf6aa"
+ },
+ "instance_id": "verina_basic_44__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  -- First create pairs of (index, value) for all elements in the array\n  let indexedArray := a.mapIdx fun i x => (i, x)\n\n  -- Check if all elements at odd indices are odd numbers\n  indexedArray.all fun (i, x) => !(isOdd i) || isOdd x\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

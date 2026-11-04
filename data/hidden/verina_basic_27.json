@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_basic_27",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "89dee795f55873966bda236f81f666edfe8c7c78362a23aa6da61edd0268fa11",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "some 'a'",
+   "input_lean": {
+    "s": "\"ayza\""
+   }
+  },
+  {
+   "expected_lean": "some 'a'",
+   "input_lean": {
+    "s": "\"aabcc\""
+   }
+  },
+  {
+   "expected_lean": "some 'a'",
+   "input_lean": {
+    "s": "\"abcab\""
+   }
+  },
+  {
+   "expected_lean": "some 'b'",
+   "input_lean": {
+    "s": "\"abbcc\""
+   }
+  },
+  {
+   "expected_lean": "some 'a'",
+   "input_lean": {
+    "s": "\"aba\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\" 0\""
+   }
+  },
+  {
+   "expected_lean": "some 'b'",
+   "input_lean": {
+    "s": "\"abcdefb\""
+   }
+  },
+  {
+   "expected_lean": "some 'y'",
+   "input_lean": {
+    "s": "\"AyyAB0\""
+   }
+  },
+  {
+   "expected_lean": "some 'a'",
+   "input_lean": {
+    "s": "\"aca\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"Aac\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"abc\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"xyzb\""
+   }
+  },
+  {
+   "expected_lean": "some 'A'",
+   "input_lean": {
+    "s": "\"AAx\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"y\""
+   }
+  },
+  {
+   "expected_lean": "some '0'",
+   "input_lean": {
+    "s": "\"y00\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"x\""
+   }
+  },
+  {
+   "expected_lean": "some ' '",
+   "input_lean": {
+    "s": "\"c0  y \""
+   }
+  },
+  {
+   "expected_lean": "some 'a'",
+   "input_lean": {
+    "s": "\"abcaa\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"y0Bz\""
+   }
+  },
+  {
+   "expected_lean": "some 'a'",
+   "input_lean": {
+    "s": "\"Aaa\""
+   }
+  },
+  {
+   "expected_lean": "some 'a'",
+   "input_lean": {
+    "s": "\"aabbc\""
+   }
+  },
+  {
+   "expected_lean": "some 'a'",
+   "input_lean": {
+    "s": "\"aabbccb\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"0xc\""
+   }
+  },
+  {
+   "expected_lean": "some 'B'",
+   "input_lean": {
+    "s": "\"zABBxB\""
+   }
+  },
+  {
+   "expected_lean": "some 'a'",
+   "input_lean": {
+    "s": "\"abcdefa\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"b\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"A\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"abcdf\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"acdef\""
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "\"yx b\""
+   }
+  }
+ ]
+}

@@ -1,0 +1,34 @@
+{
+ "family_id": "verina_basic_39",
+ "flags": [],
+ "hashes": {
+  "locked": "2c46641b4298d4b9d3f5b75c21eece954a66267ba3adf015a81e7b0752e86ef5"
+ },
+ "instance_id": "verina_basic_39__nat__qwen3.5-9b__0",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef rotateRight (l : List Int) (n : Nat) (h_precond : rotateRight_precond (l) (n)) : List Int :=\n  let len := l.length\n  let k := n % len\n  if len = 0 then l\n  else\n    let rotated := l.drop k ++ l.take k\n    rotated\n```",
+  "seed": 5000
+ },
+ "split": "heldout",
+ "start": {
+  "code": "let len := l.length\nlet k := n % len\nif len = 0 then l\nelse\n  let rotated := l.drop k ++ l.take k\n  rotated",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "[3, 4, 5, 1, 2]",
+  "expected": "[4, 5, 1, 2, 3]",
+  "index": 0,
+  "input_lean": {
+   "l": "[1, 2, 3, 4, 5]",
+   "n": "2"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_26",
+ "flags": [],
+ "hashes": {
+  "locked": "342a946641aac53cb9c7f9eee49e515dc57aaa42f3ebe655d153b2340f19b191"
+ },
+ "instance_id": "verina_basic_26__mut__relflip__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "!=",
+  "before": "==",
+  "col": 8,
+  "line": 1,
+  "operator": "relflip",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  n % 2 != 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 0,
+  "input_lean": {
+   "n": "4"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_basic_33",
+ "flags": [],
+ "hashes": {
+  "locked": "b60dedf4f19eb8015f06d67c73e079e089f923d932fa59a8af2d8e97f06a00f1"
+ },
+ "instance_id": "verina_basic_33__nat__qwen3.5-9b__0",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef smallestMissingNumber (s : List Nat) (h_precond : smallestMissingNumber_precond (s)) : Nat :=\n  s.foldl (fun acc x => if acc < x then acc + 1 else x) 0\n```",
+  "seed": 5000
+ },
+ "split": "heldout",
+ "start": {
+  "code": "s.foldl (fun acc x => if acc < x then acc + 1 else x) 0",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "4",
+  "expected": "3",
+  "index": 0,
+  "input_lean": {
+   "s": "[0, 1, 2, 6, 9]"
+  },
+  "source": "visible"
+ }
+}

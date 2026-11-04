@@ -1,0 +1,86 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis problem asks you to design a solution that transforms a list with possible duplicate entries into a new list where each element appears only once, maintaining the order of its first occurrence.\n\n-----Input-----  \nThe input consists of:  \n• s: A list of integers (or any type supporting decidable equality) that may contain duplicate elements.\n\n-----Output-----  \nThe output is a list of integers (or the original type) in which every duplicate element is removed. The order of elements is preserved based on their first appearance in the input list, ensuring that the set of elements in the output is identical to the set in the input.\n\n-----Note-----  \nNo additional preconditions are required. The method should correctly handle any list, including an empty list.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_89",
+ "flags": [],
+ "header": "def SetToSeq (s : List Int) (h_precond : SetToSeq_precond (s)) : List Int :=",
+ "locked_hash": "a3827e7ffa23454821f0c77e8d5c151437d659941bc77c1d7bec06cbb90948e6",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@s": false,
+    "ind_simp_all@s": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 5.5,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "SetToSeq",
+  "params": [
+   [
+    "s",
+    "List Int"
+   ]
+  ],
+  "ret": "List Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef SetToSeq_precond (s : List Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef SetToSeq (s : List Int) (h_precond : SetToSeq_precond (s)) : List Int :=\n  -- !benchmark @start code\n  s.foldl (fun acc x => if acc.contains x then acc else acc ++ [x]) []\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef SetToSeq_postcond (s : List Int) (result: List Int) (h_precond : SetToSeq_precond (s)) :=\n  -- !benchmark @start postcond\n  -- Contains exactly the elements of the set\n  result.all (fun a => a ∈ s) ∧ s.all (fun a => a ∈ result) ∧\n  -- All elements are unique in the result\n  result.all (fun a => result.count a = 1) ∧\n  -- The order of elements in the result is preserved\n  List.Pairwise (fun a b => (result.idxOf a < result.idxOf b) → (s.idxOf a < s.idxOf b)) result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem SetToSeq_spec_satisfied (s: List Int) (h_precond : SetToSeq_precond (s)) :\n    SetToSeq_postcond (s) (SetToSeq (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: List Int) (h_precond : SetToSeq_precond (s)) :\n    SetToSeq_postcond (s) (SetToSeq (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "[1, 2, 3]",
+   "input_lean": {
+    "s": "[1, 2, 2, 3, 1]"
+   }
+  },
+  {
+   "expected_lean": "[5]",
+   "input_lean": {
+    "s": "[5, 5, 5, 5]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "s": "[]"
+   }
+  },
+  {
+   "expected_lean": "[11, 22, 33]",
+   "input_lean": {
+    "s": "[11, 22, 33]"
+   }
+  },
+  {
+   "expected_lean": "[3, 1, 4, 5, 9, 2, 6]",
+   "input_lean": {
+    "s": "[3, 1, 4, 1, 5, 9, 2, 6, 5]"
+   }
+  }
+ ]
+}

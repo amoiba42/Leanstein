@@ -1,0 +1,88 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis problem asks for a method to determine the sum of the first N natural numbers. The task focuses on computing the total when given an input N, ensuring that the value is 0 when N is 0 and correctly calculated for positive values of N.\n\n-----Input-----\nThe input consists of:\n• N: A natural number (Nat) representing the count of the first natural numbers to sum.\n\n-----Output-----\nThe output is a natural number (Nat), which is the sum of the first N natural numbers computed as: N * (N + 1) / 2.\n\n-----Note-----\nThe computation leverages a recursive implementation. There are no additional preconditions beyond providing a valid natural number.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_53",
+ "flags": [],
+ "header": "def CalSum (N : Nat) (h_precond : CalSum_precond (N)) : Nat :=",
+ "locked_hash": "4caa596c9ad1f3dac4f2ec1612001ccdd64b5734052163e11430461d706e1785",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@CalSum.loop": false,
+    "fun_ind_simp@CalSum.loop": false,
+    "grind": false,
+    "ind_grind@N": false,
+    "ind_simp_all@N": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 107.2,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "CalSum",
+  "params": [
+   [
+    "N",
+    "Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef CalSum_precond (N : Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef CalSum (N : Nat) (h_precond : CalSum_precond (N)) : Nat :=\n  -- !benchmark @start code\n  let rec loop (n : Nat) : Nat :=\n    if n = 0 then 0\n    else n + loop (n - 1)\n  loop N\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef CalSum_postcond (N : Nat) (result: Nat) (h_precond : CalSum_precond (N)) :=\n  -- !benchmark @start postcond\n  2 * result = N * (N + 1)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem CalSum_spec_satisfied (N: Nat) (h_precond : CalSum_precond (N)) :\n    CalSum_postcond (N) (CalSum (N) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold CalSum_postcond CalSum\n  induction N with\n  | zero =>\n    unfold CalSum.loop\n    simp\n  | succ n ih =>\n    unfold CalSum_precond at ih\n    simp at ih\n    unfold CalSum.loop\n    simp\n    rw [Nat.mul_add]\n    rw [ih]\n    rw [← Nat.add_mul]\n    rw [Nat.add_comm, Nat.mul_comm]\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(N: Nat) (h_precond : CalSum_precond (N)) :\n    CalSum_postcond (N) (CalSum (N) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "N": "0"
+   }
+  },
+  {
+   "expected_lean": "1",
+   "input_lean": {
+    "N": "1"
+   }
+  },
+  {
+   "expected_lean": "15",
+   "input_lean": {
+    "N": "5"
+   }
+  },
+  {
+   "expected_lean": "55",
+   "input_lean": {
+    "N": "10"
+   }
+  },
+  {
+   "expected_lean": "210",
+   "input_lean": {
+    "N": "20"
+   }
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_45",
+ "flags": [],
+ "hashes": {
+  "locked": "f6f1fcad37433110e62fdfb523e8259d6d304b303046b8a6cd235e8a7cb54a7e"
+ },
+ "instance_id": "verina_advanced_45__nat__qwen3.5-9b__0",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef maxSubarraySum (xs : List Int) (h_precond : maxSubarraySum_precond (xs)) : Int :=\n  xs.foldl (fun acc x => max acc (x + acc)) 0\n```",
+  "seed": 5000
+ },
+ "split": "main",
+ "start": {
+  "code": "xs.foldl (fun acc x => max acc (x + acc)) 0",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "8",
+  "expected": "7",
+  "index": 0,
+  "input_lean": {
+   "xs": "[1, -2, 3, 4, -1]"
+  },
+  "source": "visible"
+ }
+}

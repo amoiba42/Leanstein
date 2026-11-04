@@ -1,0 +1,88 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that finds the first missing natural number in an increasingly sorted list. The method should return the smallest natural number that is not in the list, ensuring that all natural numbers that are smaller is inside the list.\n\n-----Input-----\nThe input consists of a list of natural numbers sorted in increasing order:\nl: The sorted list\n\n-----Output-----\nThe output is a natural number:\nReturns the smallest natural number that is not in the list, which means all natural numbers that are smaller than the returned value should be inside the input list.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_73",
+ "flags": [],
+ "header": "def smallestMissing (l : List Nat) (h_precond : smallestMissing_precond (l)) : Nat :=",
+ "locked_hash": "2a1d1776580ad335f35fd2747bdecf279fc1847ffa56af9144a515e723ff4712",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@smallestMissing.search": false,
+    "fun_ind_simp@smallestMissing.search": false,
+    "grind": false,
+    "ind_grind@l": false,
+    "ind_simp_all@l": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 3.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "smallestMissing",
+  "params": [
+   [
+    "l",
+    "List Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef smallestMissing_precond (l : List Nat) : Prop :=\n  -- !benchmark @start precond\n  List.Pairwise (· < ·) l\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef smallestMissing (l : List Nat) (h_precond : smallestMissing_precond (l)) : Nat :=\n  -- !benchmark @start code\n  let sortedList := l\n  let rec search (lst : List Nat) (n : Nat) : Nat :=\n    match lst with\n    | [] => n\n    | x :: xs =>\n      let isEqual := x = n\n      let isGreater := x > n\n      let nextCand := n + 1\n      if isEqual then\n        search xs nextCand\n      else if isGreater then\n        n\n      else\n        search xs n\n  let result := search sortedList 0\n  result\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef smallestMissing_postcond (l : List Nat) (result: Nat) (h_precond : smallestMissing_precond (l)) : Prop :=\n  -- !benchmark @start postcond\n  result ∉ l ∧ ∀ candidate : Nat, candidate < result → candidate ∈ l\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem smallestMissing_spec_satisfied (l: List Nat) (h_precond : smallestMissing_precond (l)) :\n    smallestMissing_postcond (l) (smallestMissing (l) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(l: List Nat) (h_precond : smallestMissing_precond (l)) :\n    smallestMissing_postcond (l) (smallestMissing (l) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "l": "[0, 1, 2, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "l": "[]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "l": "[1, 2, 3, 4]"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "l": "[0, 1, 2, 3, 4]"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "l": "[2, 3, 4, 5, 6]"
+   }
+  }
+ ]
+}

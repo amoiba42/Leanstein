@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_62",
+ "flags": [],
+ "hashes": {
+  "locked": "49d646cf5ab9f0735ba9f0d5bd23b1f7c6104508bd2774f2ffba6818e409b222"
+ },
+ "instance_id": "verina_advanced_62__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  -- Handle edge cases: need at least 3 elements to trap water\n  if heights.length < 3 then 0 else\n    let n := heights.length\n\n    -- Use two pointers approach for O(n) time with O(1) space\n    let rec aux (left : Nat) (right : Nat) (leftMax : Int) (rightMax : Int) (water : Int) : Int :=\n      if left >= right then\n        water  -- Base case: all elements processed\n      else if heights[left]! <= heights[right]! then\n        -- Process from the left\n        let newLeftMax := max leftMax (heights[left]!)\n        let newWater := water + max 0 (leftMax - heights[left]!)\n        aux (left+1) right newLeftMax rightMax newWater\n      else\n        -- Process from the right\n        let newRightMax := max rightMax (heights[right]!)\n        let newWater := water + max 0 (rightMax - heights[right]!)\n        aux left (right-1) leftMax newRightMax newWater\n      termination_by right - left\n    -- Initialize with two pointers at the ends\n    aux 0 (n-1) (heights[0]!) (heights[n-1]!) 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

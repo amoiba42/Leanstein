@@ -1,0 +1,88 @@
+{
+ "aux_names": [
+  "decodeRLE"
+ ],
+ "description": "-----Description-----\nThis task requires writing a Lean 4 method that performs run-length encoding on a given string. The method should scan the string from left to right and group consecutive identical characters into pairs. Each pair consists of the character itself and the number of times it appears consecutively. For example, \"aaabbc\" becomes [(’a’, 3), (’b’, 2), (’c’, 1)].\n\nThe resulting encoded list must satisfy the following properties:\n1. No pair has a zero or negative run-length.\n2. Consecutive pairs in the encoding list must not have the same character.\n3. Decoding the output should return the original string.\n\n-----Input-----\nThe input is a single string, `s`.\n\n-----Output-----\nThe output is a list of pairs `(Char, Nat)`, which represents the run-length-encoded form of the input string.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_67",
+ "flags": [],
+ "header": "def runLengthEncode (s : String) (h_precond : runLengthEncode_precond (s)) : List (Char × Nat) :=",
+ "locked_hash": "0333803c6aa4f61e3c2b56e6ea9d09e8d12010c59fb2bad2d78db2de2f2bb667",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@runLengthEncode.encodeAux": false,
+    "fun_ind_simp@runLengthEncode.encodeAux": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 6.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "runLengthEncode",
+  "params": [
+   [
+    "s",
+    "String"
+   ]
+  ],
+  "ret": "List (Char × Nat)"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef runLengthEncode_precond (s : String) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef runLengthEncode (s : String) (h_precond : runLengthEncode_precond (s)) : List (Char × Nat) :=\n  -- !benchmark @start code\n  let chars := s.data\n\n  let rec encodeAux (acc : List (Char × Nat)) (rest : List Char) : List (Char × Nat) :=\n    match rest with\n    | [] => acc.reverse\n    | h :: t =>\n      match acc with\n      | (ch, count) :: accTail =>\n        if ch = h then\n          encodeAux ((ch, count + 1) :: accTail) t\n        else\n          encodeAux ((h, 1) :: (ch, count) :: accTail) t\n      | [] =>\n        encodeAux ([(h, 1)]) t\n\n  let encoded := encodeAux [] chars\n  encoded\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\ndef decodeRLE (lst : List (Char × Nat)) : String :=\n  match lst with\n  | [] => \"\"\n  | (ch, cnt) :: tail =>\n    let repeated := String.mk (List.replicate cnt ch)\n    repeated ++ decodeRLE tail\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef runLengthEncode_postcond (s : String) (result: List (Char × Nat)) (h_precond : runLengthEncode_precond (s)) : Prop :=\n  -- !benchmark @start postcond\n  (∀ pair ∈ result, pair.snd > 0) ∧\n  (∀ i : Nat, i < result.length - 1 → (result[i]!).fst ≠ (result[i+1]!).fst) ∧\n  decodeRLE result = s\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem runLengthEncode_spec_satisfied (s: String) (h_precond : runLengthEncode_precond (s)) :\n    runLengthEncode_postcond (s) (runLengthEncode (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(s: String) (h_precond : runLengthEncode_precond (s)) :\n    runLengthEncode_postcond (s) (runLengthEncode (s) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "[('a', 3)]",
+   "input_lean": {
+    "s": "\"aaa\""
+   }
+  },
+  {
+   "expected_lean": "[('a', 1), ('b', 3), ('c', 3), ('a', 2)]",
+   "input_lean": {
+    "s": "\"abbbcccaa\""
+   }
+  },
+  {
+   "expected_lean": "[('x', 1), ('y', 1), ('z', 1)]",
+   "input_lean": {
+    "s": "\"xyz\""
+   }
+  },
+  {
+   "expected_lean": "[('a', 2), ('b', 2), ('a', 2)]",
+   "input_lean": {
+    "s": "\"aabbaa\""
+   }
+  }
+ ]
+}

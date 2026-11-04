@@ -1,0 +1,310 @@
+{
+ "family_id": "verina_basic_56",
+ "n_admissible": 45,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "b93825d5930c70ea867132d7008da471d841b79ccd095c2381d6519c10f48dba",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "#[1, 2, 3, 4, 8, 9]",
+   "input_lean": {
+    "dStart": "4",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "1",
+    "src": "#[7, 8, 9, 10]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 100, 200]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[1, 2, 3]",
+    "len": "2",
+    "sStart": "0",
+    "src": "#[100, 200]"
+   }
+  },
+  {
+   "expected_lean": "#[10, 20, 30, 43, 50]",
+   "input_lean": {
+    "dStart": "0",
+    "dest": "#[0, 0, 0, 0, 0]",
+    "len": "5",
+    "sStart": "0",
+    "src": "#[10, 20, 30, 43, 50]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4, 9, 10]",
+   "input_lean": {
+    "dStart": "4",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "2",
+    "src": "#[7, 10, 9, 10]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "dStart": "0",
+    "dest": "#[]",
+    "len": "0",
+    "sStart": "0",
+    "src": "#[10, (-2), 50]"
+   }
+  },
+  {
+   "expected_lean": "#[5, 6, 7, 9, 9]",
+   "input_lean": {
+    "dStart": "0",
+    "dest": "#[9, 9, 9, 9, 9]",
+    "len": "3",
+    "sStart": "0",
+    "src": "#[5, 6, 7, 8]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[1, 2, 3]",
+    "len": "0",
+    "sStart": "0",
+    "src": "#[200, 100]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 50, 10, 6]",
+   "input_lean": {
+    "dStart": "3",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "1",
+    "src": "#[30, 50, 10, 40, 20]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 3, 4, 20, 30]",
+   "input_lean": {
+    "dStart": "3",
+    "dest": "#[2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "1",
+    "src": "#[10, 20, 30, 40, 50]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4, 9, 10]",
+   "input_lean": {
+    "dStart": "4",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "2",
+    "src": "#[7, 8, 9, 10, 7]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 20, 30, 6]",
+   "input_lean": {
+    "dStart": "3",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "1",
+    "src": "#[10, 20, 30, 40, 50, 30]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 20, 30, 40]",
+   "input_lean": {
+    "dStart": "3",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "3",
+    "sStart": "1",
+    "src": "#[10, 20, 30, 40, 50]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4, 5, 6]",
+   "input_lean": {
+    "dStart": "4",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "0",
+    "sStart": "2",
+    "src": "#[7, 8, 9, 10]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3]",
+   "input_lean": {
+    "dStart": "0",
+    "dest": "#[1, 2, 3]",
+    "len": "0",
+    "sStart": "0",
+    "src": "#[100, 200]"
+   }
+  },
+  {
+   "expected_lean": "#[9, 5, 7, 7, 9]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[9, 9, 9, 9, 9]",
+    "len": "3",
+    "sStart": "0",
+    "src": "#[5, 7, 7, 8]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 2, 20, 30, 6]",
+   "input_lean": {
+    "dStart": "3",
+    "dest": "#[1, 2, 2, 4, 5, 6]",
+    "len": "2",
+    "sStart": "1",
+    "src": "#[10, 20, 30, 40, 50]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 3]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[1, 2, 3, 3]",
+    "len": "0",
+    "sStart": "0",
+    "src": "#[100, 200]"
+   }
+  },
+  {
+   "expected_lean": "#[9, 5, 6, 7, 9]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[9, 9, 9, 9, 9]",
+    "len": "3",
+    "sStart": "0",
+    "src": "#[5, 6, 7, 8, 7]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4, 20, 30]",
+   "input_lean": {
+    "dStart": "4",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "1",
+    "src": "#[10, 20, 30, 40, 50]"
+   }
+  },
+  {
+   "expected_lean": "#[9, 5, 6, 7, 9]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[9, 9, 9, 9, 9]",
+    "len": "3",
+    "sStart": "0",
+    "src": "#[5, 6, 7, 8, 6]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4, 7, 8]",
+   "input_lean": {
+    "dStart": "4",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "0",
+    "src": "#[7, 8, 9, 10]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 4, 8, 7]",
+   "input_lean": {
+    "dStart": "4",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "2",
+    "src": "#[10, 9, 8, 7]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[1, 2, 3]",
+    "len": "0",
+    "sStart": "2",
+    "src": "#[100, 200]"
+   }
+  },
+  {
+   "expected_lean": "#[9, 5, 4, 7, 9]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[9, 9, 9, 9, 9]",
+    "len": "3",
+    "sStart": "0",
+    "src": "#[5, 4, 7, 8]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3, 10, 20, 6]",
+   "input_lean": {
+    "dStart": "3",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "0",
+    "src": "#[10, 20, 30, 40, 50]"
+   }
+  },
+  {
+   "expected_lean": "#[9, 5, 6, 7]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[9, 9, 9, 9]",
+    "len": "3",
+    "sStart": "0",
+    "src": "#[5, 6, 7, 8]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[1, 2, 3]",
+    "len": "0",
+    "sStart": "0",
+    "src": "#[100, 199]"
+   }
+  },
+  {
+   "expected_lean": "#[9, 6, 7, 8, 9]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[9, 9, 9, 9, 9]",
+    "len": "3",
+    "sStart": "0",
+    "src": "#[6, 7, 8]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 20, 30, 4, 5, 6]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[1, 2, 3, 4, 5, 6]",
+    "len": "2",
+    "sStart": "1",
+    "src": "#[10, 20, 30, 40, 50]"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3]",
+   "input_lean": {
+    "dStart": "1",
+    "dest": "#[1, 2, 3]",
+    "len": "0",
+    "sStart": "0",
+    "src": "#[100, 200, 100]"
+   }
+  }
+ ]
+}

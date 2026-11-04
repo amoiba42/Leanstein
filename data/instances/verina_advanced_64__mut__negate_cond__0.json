@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_advanced_64",
+ "flags": [],
+ "hashes": {
+  "locked": "e4e393242602d44eba761b47882adb30e914b6061f4df52db18ca15fbce74fd6"
+ },
+ "instance_id": "verina_advanced_64__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(x = target)",
+  "before": "x = target",
+  "col": 8,
+  "line": 6,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec helper (lst : List Nat) (target : Nat) : List Nat :=\n    match lst with\n    | [] => []\n    | x :: xs =>\n      let rest := helper xs target\n      if ¬(x = target) then rest else x :: rest\n  helper lst target\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "[2, 2]",
+  "expected": "[1, 3, 4]",
+  "index": 0,
+  "input_lean": {
+   "lst": "[1, 2, 3, 2, 4]",
+   "target": "2"
+  },
+  "source": "visible"
+ }
+}

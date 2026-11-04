@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_60",
+ "flags": [],
+ "hashes": {
+  "locked": "2dc15649c34f960252c4f2d755c5cf3a372f858f43230058d0b3e0c18cc6874d"
+ },
+ "instance_id": "verina_advanced_60__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec helper (nums : List Nat) : (List Nat × List Nat) :=\n    match nums with\n    | [] => ([], [])\n    | x :: xs =>\n      let (evens, odds) := helper xs\n      if x % 2 == 0 then (x :: evens, odds)\n      else (evens, x :: odds)\n  helper nums\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

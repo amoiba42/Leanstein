@@ -1,0 +1,93 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nGiven two integers, the task is to compute two output values: one being the sum of the integers and the other being their difference.\n\n-----Input-----  \nThe input consists of two integers:  \n• x: An integer.  \n• y: An integer.\n\n-----Output-----  \nThe output is a tuple of two integers:  \n• The first element is x + y.  \n• The second element is x - y.\n\n-----Note-----  \nIt is assumed that x and y are valid integers. There are no additional constraints on the inputs.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_78",
+ "flags": [],
+ "header": "def MultipleReturns (x : Int) (y : Int) (h_precond : MultipleReturns_precond (x) (y)) : (Int × Int) :=",
+ "locked_hash": "6e772d19f5e5ce7e25271ba07335cd10dfea5b88bb6aa0235170b7286c3f1f1d",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": true,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 1.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "MultipleReturns",
+  "params": [
+   [
+    "x",
+    "Int"
+   ],
+   [
+    "y",
+    "Int"
+   ]
+  ],
+  "ret": "(Int × Int)"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef MultipleReturns_precond (x : Int) (y : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef MultipleReturns (x : Int) (y : Int) (h_precond : MultipleReturns_precond (x) (y)) : (Int × Int) :=\n  -- !benchmark @start code\n  let more := x + y\n  let less := x - y\n  (more, less)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef MultipleReturns_postcond (x : Int) (y : Int) (result: (Int × Int)) (h_precond : MultipleReturns_precond (x) (y)) :=\n  -- !benchmark @start postcond\n  result.1 = x + y ∧ result.2 + y = x\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem MultipleReturns_spec_satisfied (x: Int) (y: Int) (h_precond : MultipleReturns_precond (x) (y)) :\n    MultipleReturns_postcond (x) (y) (MultipleReturns (x) (y) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold MultipleReturns_postcond MultipleReturns\n  simp\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(x: Int) (y: Int) (h_precond : MultipleReturns_precond (x) (y)) :\n    MultipleReturns_postcond (x) (y) (MultipleReturns (x) (y) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "(5, 1)",
+   "input_lean": {
+    "x": "3",
+    "y": "2"
+   }
+  },
+  {
+   "expected_lean": "(1, -5)",
+   "input_lean": {
+    "x": "(-2)",
+    "y": "3"
+   }
+  },
+  {
+   "expected_lean": "(0, 0)",
+   "input_lean": {
+    "x": "0",
+    "y": "0"
+   }
+  },
+  {
+   "expected_lean": "(15, 5)",
+   "input_lean": {
+    "x": "10",
+    "y": "5"
+   }
+  },
+  {
+   "expected_lean": "(-15, 5)",
+   "input_lean": {
+    "x": "(-5)",
+    "y": "(-10)"
+   }
+  }
+ ]
+}

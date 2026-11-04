@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_46",
+ "flags": [],
+ "hashes": {
+  "locked": "625f2df62286a838fada48cd2cc16d3ed5e4c60d567f7259b4845ebf75497502"
+ },
+ "instance_id": "verina_advanced_46__mut__const__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "1",
+  "before": "0",
+  "col": 34,
+  "line": 23,
+  "operator": "const",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec isAllNegative : List Int → Bool\n    | [] => true\n    | x :: xs => if x >= 0 then false else isAllNegative xs\n\n  let rec findMaxProduct : List Int → Int → Int → Int\n    | [], currMax, _ => currMax\n    | [x], currMax, _ => max currMax x\n    | x :: y :: rest, currMax, currSum =>\n        let newSum := max y (currSum + y)\n        let newMax := max currMax newSum\n        findMaxProduct (y :: rest) newMax newSum\n\n  let handleList : List Int → Nat\n    | [] => 0\n    | xs =>\n        if isAllNegative xs then\n          0\n        else\n          match xs with\n          | [] => 0\n          | x :: rest =>\n              let initialMax := max 0 x\n              let startSum := max 1 x\n              let result := findMaxProduct (x :: rest) initialMax startSum\n              result.toNat\n\n  handleList numbers\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "1",
+  "expected": "0",
+  "index": 4,
+  "input_lean": {
+   "numbers": "[0, 0, 0, 0]"
+  },
+  "source": "visible"
+ }
+}

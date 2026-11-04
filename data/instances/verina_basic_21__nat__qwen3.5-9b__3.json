@@ -1,0 +1,34 @@
+{
+ "family_id": "verina_basic_21",
+ "flags": [],
+ "hashes": {
+  "locked": "35c0ea9c581a15027395317adde10473e169f47b460947795175ba61e013020d"
+ },
+ "instance_id": "verina_basic_21__nat__qwen3.5-9b__3",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef isSublist (sub : List Int) (main : List Int) (h_precond : isSublist_precond (sub) (main)) : Bool :=\n  let rec isSublistHelper (sub : List Int) (main : List Int) : Bool :=\n    match sub with\n    | [] => true\n    | x :: xs =>\n      match main with\n      | [] => false\n      | y :: ys =>\n        if x = y then isSublistHelper xs ys else isSublistHelper xs main\n  isSublistHelper sub main\n```",
+  "seed": 5003
+ },
+ "split": "main",
+ "start": {
+  "code": "let rec isSublistHelper (sub : List Int) (main : List Int) : Bool :=\n  match sub with\n  | [] => true\n  | x :: xs =>\n    match main with\n    | [] => false\n    | y :: ys =>\n      if x = y then isSublistHelper xs ys else isSublistHelper xs main\nisSublistHelper sub main",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "true",
+  "expected": "false",
+  "index": 1,
+  "input_lean": {
+   "main": "[3, 1, 2, 4]",
+   "sub": "[2, 3]"
+  },
+  "source": "visible"
+ }
+}

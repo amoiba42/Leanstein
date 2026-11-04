@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_65",
+ "flags": [],
+ "hashes": {
+  "locked": "e1f5ced8048a6c7cf8a04536a9f86022acaba19b17892c5c1b5ef46bbe94d58c"
+ },
+ "instance_id": "verina_advanced_65__nat__qwen3.5-9b__0",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef reverseString (s : String) (h_precond : reverseString_precond (s)) : String :=\n  s.toList.reverse |>.toString\n```",
+  "seed": 5000
+ },
+ "split": "heldout",
+ "start": {
+  "code": "s.toList.reverse |>.toString",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "\"[o, l, l, e, h]\"",
+  "expected": "\"olleh\"",
+  "index": 0,
+  "input_lean": {
+   "s": "\"hello\""
+  },
+  "source": "visible"
+ }
+}

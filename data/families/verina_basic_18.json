@@ -1,0 +1,94 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that computes the sum of the digits of a non-negative integer. The method should process each digit of the input number and return the total sum. The output is guaranteed to be a non-negative natural number.\n\n-----Input-----\nThe input consists of:\nn: A non-negative integer.\n\n-----Output-----\nThe output is a natural number:\nReturns the sum of the digits of the input integer.\n\n-----Note-----\nThe input is assumed to be a valid non-negative integer.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_18",
+ "flags": [],
+ "header": "def sumOfDigits (n : Nat) (h_precond : sumOfDigits_precond (n)) : Nat :=",
+ "locked_hash": "4a9c50cccf5bd5d95357e373a649036d0d727173d18a74185a8172a6d55c2fb6",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@sumOfDigits.loop": false,
+    "fun_ind_simp@sumOfDigits.loop": false,
+    "grind": false,
+    "ind_grind@n": false,
+    "ind_simp_all@n": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 76.5,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "sumOfDigits",
+  "params": [
+   [
+    "n",
+    "Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef sumOfDigits_precond (n : Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef sumOfDigits (n : Nat) (h_precond : sumOfDigits_precond (n)) : Nat :=\n  -- !benchmark @start code\n  let rec loop (n : Nat) (acc : Nat) : Nat :=\n    if n = 0 then acc\n    else loop (n / 10) (acc + n % 10)\n  loop n 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef sumOfDigits_postcond (n : Nat) (result: Nat) (h_precond : sumOfDigits_precond (n)) :=\n  -- !benchmark @start postcond\n  result - List.sum (List.map (fun c => Char.toNat c - Char.toNat '0') (String.toList (Nat.repr n))) = 0 ∧\n  List.sum (List.map (fun c => Char.toNat c - Char.toNat '0') (String.toList (Nat.repr n))) - result = 0\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem sumOfDigits_spec_satisfied (n: Nat) (h_precond : sumOfDigits_precond (n)) :\n    sumOfDigits_postcond (n) (sumOfDigits (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(n: Nat) (h_precond : sumOfDigits_precond (n)) :\n    sumOfDigits_postcond (n) (sumOfDigits (n) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "15",
+   "input_lean": {
+    "n": "12345"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "n": "0"
+   }
+  },
+  {
+   "expected_lean": "45",
+   "input_lean": {
+    "n": "987654321"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "n": "11111"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "n": "1001"
+   }
+  },
+  {
+   "expected_lean": "36",
+   "input_lean": {
+    "n": "9999"
+   }
+  }
+ ]
+}

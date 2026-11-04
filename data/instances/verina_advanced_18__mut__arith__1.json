@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_18",
+ "flags": [],
+ "hashes": {
+  "locked": "071797060d8b6e84fefe7b2b4462a49702583b832c087763c39b5dc17097f310"
+ },
+ "instance_id": "verina_advanced_18__mut__arith__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "/",
+  "before": "%",
+  "col": 21,
+  "line": 5,
+  "operator": "arith",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let k := countDigits n\n  sumPowers n k = n\n",
+  "code_aux": "def sumPowers (n : Nat) (k : Nat) : Nat :=\n  let rec go (n acc : Nat) : Nat :=\n    if n = 0 then acc\n    else\n      let digit := n / 10\n      go (n / 10) (acc + digit ^ k)\n  go n 0\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 1,
+  "input_lean": {
+   "n": "1"
+  },
+  "source": "visible"
+ }
+}

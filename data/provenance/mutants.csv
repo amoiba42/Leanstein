@@ -1,0 +1,317 @@
+instance_id,family_id,kind,operator_or_generator,line,before,after,witness_source,weak_spec
+verina_advanced_11__mut__arith__1,verina_advanced_11,mutant,arith,2,+,-,visible,False
+verina_advanced_11__mut__const__0,verina_advanced_11,mutant,const,2,1,0,visible,False
+verina_advanced_12__mut__negate_cond__1,verina_advanced_12,mutant,negate_cond,4,seen.contains h,¬(seen.contains h),visible,False
+verina_advanced_12__mut__swap_branches__0,verina_advanced_12,mutant,swap_branches,4,if seen.contains h then some h else helper (h :: seen) t,if seen.contains h then helper (h :: seen) t else some h,visible,False
+verina_advanced_13__mut__const__1,verina_advanced_13,mutant,const,25,0,1,visible,False
+verina_advanced_13__mut__negate_cond__0,verina_advanced_13,mutant,negate_cond,25,x[0]! < y[0]!,¬(x[0]! < y[0]!),visible,False
+verina_advanced_14__mut__const__0,verina_advanced_14,mutant,const,10,2,3,visible,False
+verina_advanced_14__mut__negate_cond__1,verina_advanced_14,mutant,negate_cond,10,(l+2)%4=0,¬((l+2)%4=0),visible,False
+verina_advanced_15__mut__negate_cond__0,verina_advanced_15,mutant,negate_cond,11,x ≤ f,¬(x ≤ f),visible,False
+verina_advanced_15__mut__relflip__1,verina_advanced_15,mutant,relflip,1,<,≤,visible,False
+verina_advanced_16__mut__negate_cond__0,verina_advanced_16,mutant,negate_cond,5,x <= y,¬(x <= y),visible,False
+verina_advanced_17__mut__negate_cond__0,verina_advanced_17,mutant,negate_cond,6,x <= y,¬(x <= y),visible,False
+verina_advanced_18__mut__arith__1,verina_advanced_18,mutant,arith,5,%,/,visible,False
+verina_advanced_18__mut__const__0,verina_advanced_18,mutant,const,6,10,9,visible,False
+verina_advanced_1__mut__negate_cond__1,verina_advanced_1,mutant,negate_cond,10,count = 1,¬(count = 1),visible,False
+verina_advanced_1__mut__relflip__0,verina_advanced_1,mutant,relflip,10,=,≠,visible,False
+verina_advanced_20__mut__arith__0,verina_advanced_20,mutant,arith,3,%,/,visible,False
+verina_advanced_20__mut__boolop__1,verina_advanced_20,mutant,boolop,8,||,&&,visible,False
+verina_advanced_21__mut__arith__1,verina_advanced_21,mutant,arith,15,+,-,visible,False
+verina_advanced_21__mut__negate_cond__0,verina_advanced_21,mutant,negate_cond,3,length <= 1,¬(length <= 1),visible,False
+verina_advanced_22__mut__boolop__1,verina_advanced_22,mutant,boolop,11,&&,||,visible,False
+verina_advanced_22__mut__negate_cond__0,verina_advanced_22,mutant,negate_cond,4,x < y,¬(x < y),visible,False
+verina_advanced_23__mut__arith__1,verina_advanced_23,mutant,arith,6,%,/,visible,False
+verina_advanced_23__mut__relflip__0,verina_advanced_23,mutant,relflip,6,≠,=,visible,False
+verina_advanced_24__mut__negate_cond__1,verina_advanced_24,mutant,negate_cond,5,x ≤ y,¬(x ≤ y),visible,False
+verina_advanced_24__mut__swap_branches__0,verina_advanced_24,mutant,swap_branches,5,if x ≤ y then acc.reverse ++ (x :: ys) else replace ys (y :: acc),if x ≤ y then replace ys (y :: acc) else acc.reverse ++ (x :: ys),visible,False
+verina_advanced_25__mut__boolop__0,verina_advanced_25,mutant,boolop,9,&&,||,visible,False
+verina_advanced_25__mut__const__1,verina_advanced_25,mutant,const,9,1,0,visible,False
+verina_advanced_26__mut__negate_cond__1,verina_advanced_26,mutant,negate_cond,3,chars.any (fun c => digitToLetters c == []),¬(chars.any (fun c => digitToLetters c == [])),visible,False
+verina_advanced_26__mut__relflip__0,verina_advanced_26,mutant,relflip,3,==,!=,visible,False
+verina_advanced_27__mut__negate_cond__1,verina_advanced_27,mutant,negate_cond,17,left.length >= right.length,¬(left.length >= right.length),visible,False
+verina_advanced_27__mut__relflip__0,verina_advanced_27,mutant,relflip,12,==,!=,visible,False
+verina_advanced_28__mut__arith__1,verina_advanced_28,mutant,arith,13,+,-,visible,False
+verina_advanced_28__mut__drop_succ__0,verina_advanced_28,mutant,drop_succ,14, + 1,,visible,False
+verina_advanced_29__mut__drop_succ__0,verina_advanced_29,mutant,drop_succ,10, + 1,,visible,False
+verina_advanced_29__mut__swap_args__1,verina_advanced_29,mutant,swap_args,24,max maxLen (right,min maxLen (right,visible,False
+verina_advanced_2__mut__arith__0,verina_advanced_2,mutant,arith,10,-,+,visible,False
+verina_advanced_2__mut__swap_branches__1,verina_advanced_2,mutant,swap_branches,2,if x < y then y else x,if x < y then x else y,visible,False
+verina_advanced_30__mut__drop_succ__0,verina_advanced_30,mutant,drop_succ,8, + 1,,visible,False
+verina_advanced_30__mut__relflip__1,verina_advanced_30,mutant,relflip,8,>,≥,visible,False
+verina_advanced_31__mut__swap_args__1,verina_advanced_31,mutant,swap_args,3,max acc s.length),min acc s.length),visible,False
+verina_advanced_31__mut__swap_branches__0,verina_advanced_31,mutant,swap_branches,12,if x < y then isStrictlyIncreasing (y :: rest) else false,if x < y then false else isStrictlyIncreasing (y :: rest),visible,False
+verina_advanced_32__mut__swap_args__0,verina_advanced_32,mutant,swap_args,14,max best prevLen),min best prevLen),visible,False
+verina_advanced_32__mut__swap_branches__1,verina_advanced_32,mutant,swap_branches,7,if x > maxRest then x else maxRest,if x > maxRest then maxRest else x,visible,False
+verina_advanced_33__mut__negate_cond__0,verina_advanced_33,mutant,negate_cond,2,a > b,¬(a > b),visible,False
+verina_advanced_33__mut__relflip__1,verina_advanced_33,mutant,relflip,15,<,≤,visible,False
+verina_advanced_34__mut__arith__0,verina_advanced_34,mutant,arith,6,-,+,visible,False
+verina_advanced_34__mut__relflip__1,verina_advanced_34,mutant,relflip,4,==,!=,visible,False
+verina_advanced_35__mut__arith__0,verina_advanced_35,mutant,arith,7,/,*,visible,False
+verina_advanced_35__mut__relflip__1,verina_advanced_35,mutant,relflip,7,>,≥,visible,False
+verina_advanced_36__mut__const__1,verina_advanced_36,mutant,const,18,1,2,hidden,False
+verina_advanced_36__mut__relflip__0,verina_advanced_36,mutant,relflip,17,=,≠,hidden,False
+verina_advanced_37__mut__arith__0,verina_advanced_37,mutant,arith,26,/,*,visible,False
+verina_advanced_37__mut__const__1,verina_advanced_37,mutant,const,26,2,3,visible,False
+verina_advanced_38__mut__swap_args__0,verina_advanced_38,mutant,swap_args,10,max e curr.2),min e curr.2),visible,False
+verina_advanced_38__mut__swap_branches__1,verina_advanced_38,mutant,swap_branches,10,"if curr.1 ≤ e then (s, max e curr.2) :: rest else curr :: acc","if curr.1 ≤ e then curr :: acc else (s, max e curr.2) :: rest",visible,False
+verina_advanced_39__mut__negate_cond__0,verina_advanced_39,mutant,negate_cond,7,x > maxTail,¬(x > maxTail),visible,False
+verina_advanced_39__mut__swap_branches__1,verina_advanced_39,mutant,swap_branches,7,if x > maxTail then x else maxTail,if x > maxTail then maxTail else x,visible,False
+verina_advanced_3__mut__boolop__0,verina_advanced_3,mutant,boolop,8,∨,∧,hidden,False
+verina_advanced_3__mut__relflip__1,verina_advanced_3,mutant,relflip,8,=,≠,visible,False
+verina_advanced_40__mut__negate_cond__1,verina_advanced_40,mutant,negate_cond,7,x > maxTail,¬(x > maxTail),visible,False
+verina_advanced_40__mut__swap_branches__0,verina_advanced_40,mutant,swap_branches,7,if x > maxTail then x else maxTail,if x > maxTail then maxTail else x,visible,False
+verina_advanced_41__mut__boolop__1,verina_advanced_41,mutant,boolop,2,&&,||,hidden,False
+verina_advanced_41__mut__negate_cond__0,verina_advanced_41,mutant,negate_cond,1,a >= b && a >= c,¬(a >= b && a >= c),visible,False
+verina_advanced_42__mut__negate_cond__1,verina_advanced_42,mutant,negate_cond,3,price > minSoFar,¬(price > minSoFar),visible,False
+verina_advanced_42__mut__swap_branches__0,verina_advanced_42,mutant,swap_branches,3,if price > minSoFar then price - minSoFar else 0,if price > minSoFar then 0 else price - minSoFar,visible,False
+verina_advanced_43__mut__arith__0,verina_advanced_43,mutant,arith,13,*,+,visible,False
+verina_advanced_43__mut__const__1,verina_advanced_43,mutant,const,6,1,2,visible,False
+verina_advanced_44__mut__negate_cond__0,verina_advanced_44,mutant,negate_cond,14,len % k = 0 && len > 0,¬(len % k = 0 && len > 0),visible,False
+verina_advanced_44__mut__swap_args__1,verina_advanced_44,mutant,swap_args,20,max b subarraySum),min b subarraySum),visible,False
+verina_advanced_45__mut__arith__1,verina_advanced_45,mutant,arith,5,+,-,visible,False
+verina_advanced_45__mut__swap_args__0,verina_advanced_45,mutant,swap_args,5,max x (curMax,min x (curMax,visible,False
+verina_advanced_46__mut__arith__0,verina_advanced_46,mutant,arith,9,+,-,visible,False
+verina_advanced_46__mut__const__1,verina_advanced_46,mutant,const,23,0,1,visible,False
+verina_advanced_47__mut__negate_cond__1,verina_advanced_47,mutant,negate_cond,20,s ≤ pe,¬(s ≤ pe),visible,False
+verina_advanced_47__mut__relflip__0,verina_advanced_47,mutant,relflip,20,≤,<,visible,False
+verina_advanced_48__mut__negate_cond__0,verina_advanced_48,mutant,negate_cond,9,x ≤ y,¬(x ≤ y),visible,False
+verina_advanced_49__mut__negate_cond__0,verina_advanced_49,mutant,negate_cond,6,x <= y,¬(x <= y),visible,False
+verina_advanced_4__mut__negate_cond__0,verina_advanced_4,mutant,negate_cond,6,a[j]! < a[i]!,¬(a[j]! < a[i]!),visible,False
+verina_advanced_4__mut__swap_branches__1,verina_advanced_4,mutant,swap_branches,2,if x < y then y else x,if x < y then x else y,visible,False
+verina_advanced_50__mut__const__0,verina_advanced_50,mutant,const,1,0,1,visible,False
+verina_advanced_50__mut__const__1,verina_advanced_50,mutant,const,1,0,1,visible,False
+verina_advanced_51__mut__negate_cond__0,verina_advanced_51,mutant,negate_cond,5,x ≤ y,¬(x ≤ y),visible,False
+verina_advanced_52__mut__arith__1,verina_advanced_52,mutant,arith,8,+,-,visible,False
+verina_advanced_52__mut__negate_cond__0,verina_advanced_52,mutant,negate_cond,14,collected_count' == k,¬(collected_count' == k),visible,False
+verina_advanced_53__mut__const__0,verina_advanced_53,mutant,const,13,0,1,visible,False
+verina_advanced_53__mut__negate_cond__1,verina_advanced_53,mutant,negate_cond,13,isSortedAux nums,¬(isSortedAux nums),visible,False
+verina_advanced_54__mut__arith__1,verina_advanced_54,mutant,arith,2,*,+,visible,False
+verina_advanced_54__mut__drop_succ__0,verina_advanced_54,mutant,drop_succ,2, + 1,,visible,False
+verina_advanced_55__mut__arith__1,verina_advanced_55,mutant,arith,5,+,-,visible,False
+verina_advanced_55__mut__negate_cond__0,verina_advanced_55,mutant,negate_cond,12,v > acc,¬(v > acc),visible,False
+verina_advanced_56__mut__const__0,verina_advanced_56,mutant,const,2,0,1,visible,False
+verina_advanced_56__mut__relflip__1,verina_advanced_56,mutant,relflip,1,≠,=,visible,False
+verina_advanced_57__mut__const__0,verina_advanced_57,mutant,const,45,0,1,visible,False
+verina_advanced_57__mut__relflip__1,verina_advanced_57,mutant,relflip,38,==,!=,visible,False
+verina_advanced_58__mut__negate_cond__0,verina_advanced_58,mutant,negate_cond,7,next = i3,¬(next = i3),visible,False
+verina_advanced_58__mut__relflip__1,verina_advanced_58,mutant,relflip,7,=,≠,visible,False
+verina_advanced_59__mut__arith__1,verina_advanced_59,mutant,arith,13,+,-,visible,False
+verina_advanced_59__mut__boolop__0,verina_advanced_59,mutant,boolop,2,||,&&,visible,False
+verina_advanced_5__mut__relflip__1,verina_advanced_5,mutant,relflip,4,=,≠,visible,False
+verina_advanced_5__mut__swap_branches__0,verina_advanced_5,mutant,swap_branches,4,if carry = 0 then [] else [carry],if carry = 0 then [carry] else [],visible,False
+verina_advanced_60__mut__arith__1,verina_advanced_60,mutant,arith,6,%,/,visible,False
+verina_advanced_60__mut__const__0,verina_advanced_60,mutant,const,6,2,1,visible,False
+verina_advanced_62__mut__negate_cond__0,verina_advanced_62,mutant,negate_cond,2,heights.length < 3,¬(heights.length < 3),visible,False
+verina_advanced_62__mut__swap_args__1,verina_advanced_62,mutant,swap_args,16,max rightMax (heights,min rightMax (heights,visible,False
+verina_advanced_63__mut__const__0,verina_advanced_63,mutant,const,6,1,2,visible,False
+verina_advanced_63__mut__negate_cond__1,verina_advanced_63,mutant,negate_cond,13,isDuplicate,¬(isDuplicate),visible,False
+verina_advanced_64__mut__negate_cond__0,verina_advanced_64,mutant,negate_cond,6,x = target,¬(x = target),visible,False
+verina_advanced_64__mut__relflip__1,verina_advanced_64,mutant,relflip,6,=,≠,visible,False
+verina_advanced_66__mut__negate_cond__1,verina_advanced_66,mutant,negate_cond,6,"h = """"","¬(h = """")",visible,False
+verina_advanced_66__mut__relflip__0,verina_advanced_66,mutant,relflip,6,=,≠,visible,False
+verina_advanced_67__mut__drop_succ__0,verina_advanced_67,mutant,drop_succ,10, + 1,,visible,False
+verina_advanced_67__mut__relflip__1,verina_advanced_67,mutant,relflip,9,=,≠,visible,False
+verina_advanced_68__mut__arith__1,verina_advanced_68,mutant,arith,30,+,-,visible,False
+verina_advanced_68__mut__relflip__0,verina_advanced_68,mutant,relflip,5,==,!=,visible,False
+verina_advanced_69__mut__drop_succ__1,verina_advanced_69,mutant,drop_succ,18, + 1,,visible,False
+verina_advanced_69__mut__negate_cond__0,verina_advanced_69,mutant,negate_cond,15,condition,¬(condition),visible,False
+verina_advanced_70__mut__arith__1,verina_advanced_70,mutant,arith,15,-,+,visible,False
+verina_advanced_70__mut__negate_cond__0,verina_advanced_70,mutant,negate_cond,19,needAdjustment,¬(needAdjustment),visible,False
+verina_advanced_71__mut__arith__0,verina_advanced_71,mutant,arith,9,+,-,visible,False
+verina_advanced_71__mut__negate_cond__1,verina_advanced_71,mutant,negate_cond,10,compare cur best,¬(compare cur best),visible,False
+verina_advanced_72__mut__arith__1,verina_advanced_72,mutant,arith,4,%,/,hidden,False
+verina_advanced_72__mut__negate_cond__0,verina_advanced_72,mutant,negate_cond,4,n % 5 == 0,¬(n % 5 == 0),visible,False
+verina_advanced_73__mut__arith__0,verina_advanced_73,mutant,arith,8,+,-,visible,False
+verina_advanced_73__mut__negate_cond__1,verina_advanced_73,mutant,negate_cond,9,isEqual,¬(isEqual),visible,False
+verina_advanced_74__mut__const__0,verina_advanced_74,mutant,const,2,1,2,visible,False
+verina_advanced_74__mut__drop_succ__1,verina_advanced_74,mutant,drop_succ,2, + 1,,visible,False
+verina_advanced_75__mut__arith__0,verina_advanced_75,mutant,arith,7,+,-,visible,False
+verina_advanced_75__mut__negate_cond__1,verina_advanced_75,mutant,negate_cond,7,cur + x >= x,¬(cur + x >= x),visible,False
+verina_advanced_76__mut__negate_cond__1,verina_advanced_76,mutant,negate_cond,5,key == n,¬(key == n),visible,False
+verina_advanced_76__mut__relflip__0,verina_advanced_76,mutant,relflip,5,==,!=,visible,False
+verina_advanced_77__mut__arith__0,verina_advanced_77,mutant,arith,7,+,-,visible,False
+verina_advanced_77__mut__const__1,verina_advanced_77,mutant,const,1,0,1,hidden,False
+verina_advanced_78__mut__const__1,verina_advanced_78,mutant,const,14,1,2,visible,False
+verina_advanced_78__mut__swap_branches__0,verina_advanced_78,mutant,swap_branches,5,if x + y = target then some (i + j + 1) else aux ys (j + 1),if x + y = target then aux ys (j + 1) else some (i + j + 1),visible,False
+verina_advanced_79__mut__negate_cond__0,verina_advanced_79,mutant,negate_cond,13,x + y = target,¬(x + y = target),visible,False
+verina_advanced_79__mut__relflip__1,verina_advanced_79,mutant,relflip,13,=,≠,visible,False
+verina_advanced_7__mut__arith__1,verina_advanced_7,mutant,arith,4,*,+,visible,False
+verina_advanced_7__mut__const__0,verina_advanced_7,mutant,const,4,2,3,visible,False
+verina_advanced_80__mut__drop_succ__0,verina_advanced_80,mutant,drop_succ,8, + 1,,visible,False
+verina_advanced_80__mut__negate_cond__1,verina_advanced_80,mutant,negate_cond,10,nums[i]! + nums[j]! == target,¬(nums[i]! + nums[j]! == target),visible,False
+verina_advanced_81__mut__negate_cond__0,verina_advanced_81,mutant,negate_cond,6,x <= head,¬(x <= head),visible,False
+verina_advanced_81__mut__negate_cond__1,verina_advanced_81,mutant,negate_cond,26,h ∈ seen,¬(h ∈ seen),visible,False
+verina_advanced_8__mut__const__0,verina_advanced_8,mutant,const,5,1,2,visible,False
+verina_advanced_8__mut__relflip__1,verina_advanced_8,mutant,relflip,24,<,≤,visible,False
+verina_advanced_9__mut__drop_succ__0,verina_advanced_9,mutant,drop_succ,5, + 1,,visible,False
+verina_advanced_9__mut__negate_cond__1,verina_advanced_9,mutant,negate_cond,5,isSumDivisibleBy i' d,¬(isSumDivisibleBy i' d),visible,False
+verina_basic_100__mut__arith__1,verina_basic_100,mutant,arith,3,+,-,visible,False
+verina_basic_100__mut__relflip__0,verina_basic_100,mutant,relflip,1,=,≠,visible,False
+verina_basic_101__mut__arith__0,verina_basic_101,mutant,arith,2,+,-,visible,False
+verina_basic_101__mut__const__1,verina_basic_101,mutant,const,1,2,1,visible,False
+verina_basic_102__mut__const__0,verina_basic_102,mutant,const,12,1,2,visible,False
+verina_basic_102__mut__negate_cond__1,verina_basic_102,mutant,negate_cond,6,nums[i]! + nums[j]! = target,¬(nums[i]! + nums[j]! = target),visible,False
+verina_basic_103__mut__arith__1,verina_basic_103,mutant,arith,1,+,-,visible,False
+verina_basic_103__mut__const__0,verina_basic_103,mutant,const,1,4,3,visible,False
+verina_basic_105__mut__arith__0,verina_basic_105,mutant,arith,6,*,+,visible,False
+verina_basic_105__mut__const__1,verina_basic_105,mutant,const,7,1,2,visible,False
+verina_basic_106__mut__arith__0,verina_basic_106,mutant,arith,8,+,-,visible,False
+verina_basic_106__mut__relflip__1,verina_basic_106,mutant,relflip,1,≠,=,visible,False
+verina_basic_107__mut__arith__1,verina_basic_107,mutant,arith,1,+,-,visible,False
+verina_basic_107__mut__const__0,verina_basic_107,mutant,const,1,2,1,visible,False
+verina_basic_108__mut__negate_cond__0,verina_basic_108,mutant,negate_cond,5,x < 0,¬(x < 0),visible,False
+verina_basic_108__mut__relflip__1,verina_basic_108,mutant,relflip,5,<,≤,visible,False
+verina_basic_10__mut__relflip__0,verina_basic_10,mutant,relflip,1,>,≥,visible,False
+verina_basic_11__mut__arith__0,verina_basic_11,mutant,arith,1,%,/,visible,False
+verina_basic_11__mut__const__1,verina_basic_11,mutant,const,1,10,11,visible,False
+verina_basic_12__mut__arith__0,verina_basic_12,mutant,arith,1,*,+,visible,False
+verina_basic_12__mut__const__1,verina_basic_12,mutant,const,1,6,5,visible,False
+verina_basic_13__mut__arith__0,verina_basic_13,mutant,arith,1,*,+,visible,False
+verina_basic_13__mut__arith__1,verina_basic_13,mutant,arith,1,*,+,visible,False
+verina_basic_14__mut__boolop__0,verina_basic_14,mutant,boolop,1,||,&&,visible,False
+verina_basic_15__mut__boolop__0,verina_basic_15,mutant,boolop,6,&&,||,visible,False
+verina_basic_15__mut__negate_cond__1,verina_basic_15,mutant,negate_cond,1,a.size ≤ 1,¬(a.size ≤ 1),visible,False
+verina_basic_16__mut__negate_cond__0,verina_basic_16,mutant,negate_cond,2,c = oldChar,¬(c = oldChar),visible,False
+verina_basic_16__mut__relflip__1,verina_basic_16,mutant,relflip,2,=,≠,visible,False
+verina_basic_17__mut__negate_cond__0,verina_basic_17,mutant,negate_cond,2,isUpperCase c,¬(isUpperCase c),visible,False
+verina_basic_18__mut__arith__1,verina_basic_18,mutant,arith,3,%,/,visible,False
+verina_basic_18__mut__const__0,verina_basic_18,mutant,const,3,10,11,visible,False
+verina_basic_19__mut__arith__0,verina_basic_19,mutant,arith,6,+,-,visible,False
+verina_basic_19__mut__negate_cond__1,verina_basic_19,mutant,negate_cond,1,a.size ≤ 1,¬(a.size ≤ 1),visible,False
+verina_basic_1__mut__const__1,verina_basic_1,mutant,const,1,0,1,visible,False
+verina_basic_1__mut__relflip__0,verina_basic_1,mutant,relflip,1,<,≤,visible,False
+verina_basic_20__mut__const__1,verina_basic_20,mutant,const,10,1,0,visible,False
+verina_basic_20__mut__negate_cond__0,verina_basic_20,mutant,negate_cond,4,seen.contains x,¬(seen.contains x),visible,False
+verina_basic_21__mut__negate_cond__1,verina_basic_21,mutant,negate_cond,7,i + subLen > mainLen,¬(i + subLen > mainLen),visible,False
+verina_basic_21__mut__relflip__0,verina_basic_21,mutant,relflip,3,>,≥,visible,False
+verina_basic_22__mut__negate_cond__0,verina_basic_22,mutant,negate_cond,2,!inArray a x,¬(!inArray a x),visible,False
+verina_basic_22__mut__negate_cond__1,verina_basic_22,mutant,negate_cond,1,!inArray b x,¬(!inArray b x),visible,False
+verina_basic_23__mut__arith__0,verina_basic_23,mutant,arith,8,-,+,visible,False
+verina_basic_23__mut__swap_branches__1,verina_basic_23,mutant,swap_branches,5,if x > maxVal then x else maxVal,if x > maxVal then maxVal else x,visible,False
+verina_basic_24__mut__boolop__1,verina_basic_24,mutant,boolop,5,&&,||,visible,False
+verina_basic_24__mut__negate_cond__0,verina_basic_24,mutant,negate_cond,4,firstEven.isNone && isEven x,¬(firstEven.isNone && isEven x),visible,False
+verina_basic_25__mut__arith__1,verina_basic_25,mutant,arith,3,+,-,visible,False
+verina_basic_25__mut__drop_succ__0,verina_basic_25,mutant,drop_succ,3, + 1,,visible,False
+verina_basic_26__mut__const__0,verina_basic_26,mutant,const,1,0,1,visible,False
+verina_basic_26__mut__relflip__1,verina_basic_26,mutant,relflip,1,==,!=,visible,False
+verina_basic_27__mut__const__0,verina_basic_27,mutant,const,12,0,1,visible,False
+verina_basic_27__mut__negate_cond__1,verina_basic_27,mutant,negate_cond,5,seen.contains c,¬(seen.contains c),visible,False
+verina_basic_28__mut__const__0,verina_basic_28,mutant,const,6,1,0,visible,False
+verina_basic_28__mut__drop_succ__1,verina_basic_28,mutant,drop_succ,6, + 1,,visible,False
+verina_basic_30__mut__arith__0,verina_basic_30,mutant,arith,1,%,/,visible,False
+verina_basic_31__mut__negate_cond__0,verina_basic_31,mutant,negate_cond,2,isLowerCase c,¬(isLowerCase c),visible,False
+verina_basic_32__mut__const__0,verina_basic_32,mutant,const,2,1,0,visible,False
+verina_basic_32__mut__drop_succ__1,verina_basic_32,mutant,drop_succ,2, - 1,,visible,False
+verina_basic_33__mut__drop_succ__0,verina_basic_33,mutant,drop_succ,6, + 1,,visible,False
+verina_basic_33__mut__relflip__1,verina_basic_33,mutant,relflip,6,=,≠,visible,False
+verina_basic_34__mut__negate_cond__0,verina_basic_34,mutant,negate_cond,1,isEven x,¬(isEven x),visible,False
+verina_basic_35__mut__const__0,verina_basic_35,mutant,const,1,0,1,visible,False
+verina_basic_35__mut__relflip__1,verina_basic_35,mutant,relflip,1,≠,=,visible,False
+verina_basic_36__mut__negate_cond__0,verina_basic_36,mutant,negate_cond,2,isSpaceCommaDot c,¬(isSpaceCommaDot c),visible,False
+verina_basic_37__mut__const__0,verina_basic_37,mutant,const,6,1,2,visible,False
+verina_basic_37__mut__negate_cond__1,verina_basic_37,mutant,negate_cond,4,a = target,¬(a = target),visible,False
+verina_basic_39__mut__negate_cond__0,verina_basic_39,mutant,negate_cond,2,len = 0,¬(len = 0),visible,False
+verina_basic_39__mut__relflip__1,verina_basic_39,mutant,relflip,2,=,≠,visible,False
+verina_basic_3__mut__arith__1,verina_basic_3,mutant,arith,1,%,/,visible,False
+verina_basic_3__mut__const__0,verina_basic_3,mutant,const,1,11,12,visible,False
+verina_basic_40__mut__negate_cond__0,verina_basic_40,mutant,negate_cond,11,x < m,¬(x < m),visible,False
+verina_basic_40__mut__negate_cond__1,verina_basic_40,mutant,negate_cond,19,x < m,¬(x < m),visible,False
+verina_basic_41__mut__negate_cond__0,verina_basic_41,mutant,negate_cond,7,a[i]! = firstElement,¬(a[i]! = firstElement),visible,False
+verina_basic_41__mut__relflip__1,verina_basic_41,mutant,relflip,1,=,≠,visible,False
+verina_basic_43__mut__arith__0,verina_basic_43,mutant,arith,5,*,+,visible,False
+verina_basic_43__mut__drop_succ__1,verina_basic_43,mutant,drop_succ,5, + 1,,visible,False
+verina_basic_44__mut__boolop__0,verina_basic_44,mutant,boolop,5,||,&&,visible,False
+verina_basic_45__mut__arith__0,verina_basic_45,mutant,arith,2,*,+,visible,False
+verina_basic_46__mut__negate_cond__1,verina_basic_46,mutant,negate_cond,4,a = elem,¬(a = elem),visible,False
+verina_basic_46__mut__relflip__0,verina_basic_46,mutant,relflip,4,=,≠,visible,False
+verina_basic_48__mut__arith__1,verina_basic_48,mutant,arith,9,+,-,visible,False
+verina_basic_48__mut__negate_cond__0,verina_basic_48,mutant,negate_cond,1,n = 0,¬(n = 0),visible,False
+verina_basic_4__mut__arith__1,verina_basic_4,mutant,arith,1,-,+,visible,False
+verina_basic_4__mut__drop_succ__0,verina_basic_4,mutant,drop_succ,1, - 1,,visible,False
+verina_basic_50__mut__negate_cond__0,verina_basic_50,mutant,negate_cond,1,x < 0,¬(x < 0),visible,False
+verina_basic_50__mut__swap_branches__1,verina_basic_50,mutant,swap_branches,1,if x < 0 then -x else x,if x < 0 then x else -x,visible,False
+verina_basic_51__mut__const__0,verina_basic_51,mutant,const,1,0,1,visible,False
+verina_basic_51__mut__negate_cond__1,verina_basic_51,mutant,negate_cond,4,(a[mid]! < key),¬((a[mid]! < key)),visible,False
+verina_basic_52__mut__negate_cond__0,verina_basic_52,mutant,negate_cond,1,a.size = 0,¬(a.size = 0),visible,False
+verina_basic_52__mut__swap_branches__1,verina_basic_52,mutant,swap_branches,8,if a[j]! > a[j+1]! then swap a j (j+1) else a,if a[j]! > a[j+1]! then a else swap a j (j+1),visible,False
+verina_basic_53__mut__arith__0,verina_basic_53,mutant,arith,3,+,-,visible,False
+verina_basic_53__mut__const__1,verina_basic_53,mutant,const,2,0,1,visible,False
+verina_basic_54__mut__const__0,verina_basic_54,mutant,const,6,1,2,hidden,False
+verina_basic_54__mut__negate_cond__1,verina_basic_54,mutant,negate_cond,4,diff < d,¬(diff < d),visible,False
+verina_basic_55__mut__negate_cond__0,verina_basic_55,mutant,negate_cond,1,a = b,¬(a = b),visible,False
+verina_basic_55__mut__swap_branches__1,verina_basic_55,mutant,swap_branches,1,if a = b then true else false,if a = b then false else true,visible,False
+verina_basic_56__mut__negate_cond__1,verina_basic_56,mutant,negate_cond,1,len = 0,¬(len = 0),visible,False
+verina_basic_56__mut__relflip__0,verina_basic_56,mutant,relflip,1,=,≠,visible,False
+verina_basic_57__mut__arith__1,verina_basic_57,mutant,arith,4,+,-,visible,False
+verina_basic_57__mut__negate_cond__0,verina_basic_57,mutant,negate_cond,4,numbers[i]! < threshold,¬(numbers[i]! < threshold),visible,False
+verina_basic_58__mut__arith__0,verina_basic_58,mutant,arith,3,*,+,visible,False
+verina_basic_58__mut__const__1,verina_basic_58,mutant,const,4,1,2,visible,False
+verina_basic_59__mut__arith__1,verina_basic_59,mutant,arith,1,*,+,visible,False
+verina_basic_59__mut__const__0,verina_basic_59,mutant,const,1,2,1,visible,False
+verina_basic_5__mut__arith__0,verina_basic_5,mutant,arith,1,*,+,visible,False
+verina_basic_60__mut__const__0,verina_basic_60,mutant,const,9,0,1,visible,False
+verina_basic_60__mut__negate_cond__1,verina_basic_60,mutant,negate_cond,3,isEven (arr.getD i 0),¬(isEven (arr.getD i 0)),visible,False
+verina_basic_61__mut__negate_cond__0,verina_basic_61,mutant,negate_cond,5,!isDigit it.curr,¬(!isDigit it.curr),visible,False
+verina_basic_62__mut__const__1,verina_basic_62,mutant,const,6,0,1,visible,False
+verina_basic_62__mut__negate_cond__0,verina_basic_62,mutant,negate_cond,3,a[index]! = key,¬(a[index]! = key),visible,False
+verina_basic_63__mut__negate_cond__0,verina_basic_63,mutant,negate_cond,12,inner 0,¬(inner 0),visible,False
+verina_basic_63__mut__swap_branches__1,verina_basic_63,mutant,swap_branches,12,if inner 0 then true else outer (idx + 1),if inner 0 then outer (idx + 1) else true,visible,False
+verina_basic_64__mut__arith__0,verina_basic_64,mutant,arith,11,+,-,visible,False
+verina_basic_64__mut__negate_cond__1,verina_basic_64,mutant,negate_cond,17,i >= atPos,¬(i >= atPos),visible,False
+verina_basic_65__mut__const__1,verina_basic_65,mutant,const,5,1,0,visible,False
+verina_basic_65__mut__negate_cond__0,verina_basic_65,mutant,negate_cond,4,(r + 1) * (r + 1) ≤ N,¬((r + 1) * (r + 1) ≤ N),visible,False
+verina_basic_66__mut__arith__1,verina_basic_66,mutant,arith,1,%,/,visible,False
+verina_basic_66__mut__relflip__0,verina_basic_66,mutant,relflip,1,=,≠,visible,False
+verina_basic_68__mut__negate_cond__1,verina_basic_68,mutant,negate_cond,3,a[n]! = e,¬(a[n]! = e),visible,False
+verina_basic_68__mut__relflip__0,verina_basic_68,mutant,relflip,3,=,≠,visible,False
+verina_basic_69__mut__negate_cond__1,verina_basic_69,mutant,negate_cond,3,a[n]! = e,¬(a[n]! = e),visible,False
+verina_basic_69__mut__swap_branches__0,verina_basic_69,mutant,swap_branches,3,if a[n]! = e then n else linearSearchAux a e (n + 1),if a[n]! = e then linearSearchAux a e (n + 1) else n,visible,False
+verina_basic_6__mut__boolop__1,verina_basic_6,mutant,boolop,2,&&,||,visible,False
+verina_basic_6__mut__negate_cond__0,verina_basic_6,mutant,negate_cond,1,a <= b && a <= c,¬(a <= b && a <= c),visible,False
+verina_basic_71__mut__negate_cond__1,verina_basic_71,mutant,negate_cond,6,c1 ≠ c2,¬(c1 ≠ c2),visible,False
+verina_basic_71__mut__relflip__0,verina_basic_71,mutant,relflip,6,≠,=,visible,False
+verina_basic_72__mut__const__0,verina_basic_72,mutant,const,1,0,1,visible,False
+verina_basic_72__mut__const__1,verina_basic_72,mutant,const,3,1,2,visible,False
+verina_basic_73__mut__boolop__0,verina_basic_73,mutant,boolop,5,∧,∨,visible,False
+verina_basic_73__mut__relflip__1,verina_basic_73,mutant,relflip,5,≠,=,visible,False
+verina_basic_74__mut__const__0,verina_basic_74,mutant,const,1,1,2,hidden,False
+verina_basic_74__mut__swap_branches__1,verina_basic_74,mutant,swap_branches,3,if current > a[index]! then current else a[index]!,if current > a[index]! then a[index]! else current,visible,False
+verina_basic_75__mut__const__1,verina_basic_75,mutant,const,1,0,1,visible,False
+verina_basic_75__mut__swap_branches__0,verina_basic_75,mutant,swap_branches,3,if currentMin > a[i]! then a[i]! else currentMin,if currentMin > a[i]! then currentMin else a[i]!,visible,False
+verina_basic_76__mut__negate_cond__0,verina_basic_76,mutant,negate_cond,1,x < y,¬(x < y),visible,False
+verina_basic_76__mut__swap_branches__1,verina_basic_76,mutant,swap_branches,1,if x < y then x else y,if x < y then y else x,visible,False
+verina_basic_78__mut__arith__0,verina_basic_78,mutant,arith,1,+,-,visible,False
+verina_basic_78__mut__arith__1,verina_basic_78,mutant,arith,2,-,+,visible,False
+verina_basic_79__mut__const__0,verina_basic_79,mutant,const,10,1,2,visible,False
+verina_basic_79__mut__swap_branches__1,verina_basic_79,mutant,swap_branches,3,if a[i]! > best then a[i]! else best,if a[i]! > best then best else a[i]!,visible,False
+verina_basic_7__mut__arith__1,verina_basic_7,mutant,arith,5,*,+,visible,False
+verina_basic_7__mut__const__0,verina_basic_7,mutant,const,5,1,2,visible,False
+verina_basic_81__mut__arith__1,verina_basic_81,mutant,arith,3,%,/,visible,False
+verina_basic_81__mut__swap_branches__0,verina_basic_81,mutant,swap_branches,1,"if y = 0 then (Int.ofNat x, 0) else divMod x y","if y = 0 then divMod x y else (Int.ofNat x, 0)",visible,False
+verina_basic_82__mut__negate_cond__0,verina_basic_82,mutant,negate_cond,1,a.size > 0,¬(a.size > 0),visible,False
+verina_basic_83__mut__relflip__0,verina_basic_83,mutant,relflip,4,<,≤,visible,False
+verina_basic_83__mut__swap_branches__1,verina_basic_83,mutant,swap_branches,4,if i < a.size then a[i]! else b[i - a.size]!,if i < a.size then b[i - a.size]! else a[i]!,visible,False
+verina_basic_84__mut__negate_cond__0,verina_basic_84,mutant,negate_cond,4,(oldArr[i]!) > k,¬((oldArr[i]!) > k),visible,False
+verina_basic_84__mut__relflip__1,verina_basic_84,mutant,relflip,4,>,≥,visible,False
+verina_basic_85__mut__const__0,verina_basic_85,mutant,const,3,1,2,visible,False
+verina_basic_85__mut__drop_succ__1,verina_basic_85,mutant,drop_succ,3, - 1,,visible,False
+verina_basic_86__mut__const__0,verina_basic_86,mutant,const,7,1,2,visible,False
+verina_basic_86__mut__swap_branches__1,verina_basic_86,mutant,swap_branches,4,if idx_int < 0 then idx_int + Int.ofNat len else idx_int,if idx_int < 0 then idx_int else idx_int + Int.ofNat len,visible,False
+verina_basic_87__mut__negate_cond__0,verina_basic_87,mutant,negate_cond,9,i < a.size && j < a.size && i ≠ j,¬(i < a.size && j < a.size && i ≠ j),visible,False
+verina_basic_87__mut__swap_branches__1,verina_basic_87,mutant,swap_branches,5,if arr[currIdx]! < arr[minIdx]! then currIdx else minIdx,if arr[currIdx]! < arr[minIdx]! then minIdx else currIdx,visible,False
+verina_basic_89__mut__negate_cond__0,verina_basic_89,mutant,negate_cond,1,acc.contains x,¬(acc.contains x),visible,False
+verina_basic_8__mut__negate_cond__1,verina_basic_8,mutant,negate_cond,1,a <= b,¬(a <= b),visible,False
+verina_basic_8__mut__swap_branches__0,verina_basic_8,mutant,swap_branches,1,if a <= b then a else b,if a <= b then b else a,visible,False
+verina_basic_90__mut__const__1,verina_basic_90,mutant,const,9,1,2,visible,False
+verina_basic_90__mut__drop_succ__0,verina_basic_90,mutant,drop_succ,13, - 1,,visible,False
+verina_basic_92__mut__arith__0,verina_basic_92,mutant,arith,4,-,+,visible,False
+verina_basic_92__mut__arith__1,verina_basic_92,mutant,arith,5,+,-,visible,False
+verina_basic_94__mut__const__0,verina_basic_94,mutant,const,8,0,1,visible,False
+verina_basic_94__mut__const__1,verina_basic_94,mutant,const,4,1,2,visible,False
+verina_basic_97__mut__const__0,verina_basic_97,mutant,const,1,60,61,visible,False
+verina_basic_97__mut__const__1,verina_basic_97,mutant,const,1,60,59,visible,False
+verina_basic_98__mut__arith__1,verina_basic_98,mutant,arith,1,*,+,visible,False
+verina_basic_98__mut__const__0,verina_basic_98,mutant,const,1,3,4,visible,False
+verina_basic_99__mut__arith__1,verina_basic_99,mutant,arith,4,/,*,visible,False
+verina_basic_99__mut__const__0,verina_basic_99,mutant,const,3,4,5,visible,False

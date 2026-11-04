@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_71",
+ "flags": [],
+ "hashes": {
+  "locked": "48724ff6ed8e78b764d7358a335490a5339ce1f85ab9da3a84c8ed29b8f17b8c"
+ },
+ "instance_id": "verina_basic_71__mut__relflip__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "=",
+  "before": "≠",
+  "col": 16,
+  "line": 6,
+  "operator": "relflip",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let minLength := Nat.min str1.length str2.length\n  let rec aux (idx : Nat) (acc : List Char) : List Char :=\n    if idx < minLength then\n      match str1[idx]?, str2[idx]? with\n      | some c1, some c2 =>\n          if c1 = c2 then acc\n          else aux (idx + 1) (acc ++ [c1])\n      | _, _ => acc\n    else acc\n  aux 0 []\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "[]",
+  "expected": "['a', 'b']",
+  "index": 0,
+  "input_lean": {
+   "str1": "['a', 'b', 'c']",
+   "str2": "['a', 'b', 'd']"
+  },
+  "source": "visible"
+ }
+}

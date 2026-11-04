@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_20",
+ "flags": [],
+ "hashes": {
+  "locked": "7c5b5f502aa4b58d27e3e1bc00fb34a6966a95d441f395d11032a6a0d2941d14"
+ },
+ "instance_id": "verina_basic_20__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  let rec loop (i : Nat) (seen : Std.HashSet Int) (product : Int) : Int :=\n    if i < arr.size then\n      let x := arr[i]!\n      if seen.contains x then\n        loop (i + 1) seen product\n      else\n        loop (i + 1) (seen.insert x) (product * x)\n    else\n      product\n  loop 0 Std.HashSet.empty 1\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

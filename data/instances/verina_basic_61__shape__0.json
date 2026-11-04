@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_61",
+ "flags": [],
+ "hashes": {
+  "locked": "c521c2d67bd006fd37fc28ddc4725de5b957f3fd33308183d8c6231327f5818f"
+ },
+ "instance_id": "verina_basic_61__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec loop (it : String.Iterator) : Bool :=\n    if it.atEnd then\n      true\n    else\n      if !isDigit it.curr then\n        false\n      else\n        loop it.next\n  loop s.iter\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

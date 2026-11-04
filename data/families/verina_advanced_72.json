@@ -1,0 +1,98 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that given an natural number n, returns the smallest prime factor that is less than 10. If none exist, return 0\n\n-----Input-----\nThe input consists of one natural number:\nn: The main natural number.\n\n-----Output-----\nThe output is an natural number:\nReturns the smallest prime factor that is less than 10 or, if none exist, 0",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_72",
+ "flags": [],
+ "header": "def singleDigitPrimeFactor (n : Nat) (h_precond : singleDigitPrimeFactor_precond (n)) : Nat :=",
+ "locked_hash": "341550680aad0036f7dfeb360ed22c2b9cc1d284cf8e60d5c6af7a4c73f872f7",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_grind",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@n": false,
+    "ind_simp_all@n": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": true,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 75.7,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "singleDigitPrimeFactor",
+  "params": [
+   [
+    "n",
+    "Nat"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef singleDigitPrimeFactor_precond (n : Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef singleDigitPrimeFactor (n : Nat) (h_precond : singleDigitPrimeFactor_precond (n)) : Nat :=\n  -- !benchmark @start code\n  if n == 0 then 0\n  else if n % 2 == 0 then 2\n  else if n % 3 == 0 then 3\n  else if n % 5 == 0 then 5\n  else if n % 7 == 0 then 7\n  else 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef singleDigitPrimeFactor_postcond (n : Nat) (result: Nat) (h_precond : singleDigitPrimeFactor_precond (n)) : Prop :=\n  -- !benchmark @start postcond\n  result ∈ [0, 2, 3, 5, 7] ∧\n  (result = 0 → (n = 0 ∨ [2, 3, 5, 7].all (n % · ≠ 0))) ∧\n  (result ≠ 0 → n ≠ 0 ∧ n % result == 0 ∧ (List.range result).all (fun x => x ∈ [2, 3, 5, 7] → n % x ≠ 0))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem singleDigitPrimeFactor_spec_satisfied (n: Nat) (h_precond : singleDigitPrimeFactor_precond (n)) :\n    singleDigitPrimeFactor_postcond (n) (singleDigitPrimeFactor (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(n: Nat) (h_precond : singleDigitPrimeFactor_precond (n)) :\n    singleDigitPrimeFactor_postcond (n) (singleDigitPrimeFactor (n) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "n": "0"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "n": "98"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "n": "9"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "n": "73"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "n": "529"
+   }
+  },
+  {
+   "expected_lean": "7",
+   "input_lean": {
+    "n": "161"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "n": "0"
+   }
+  }
+ ]
+}

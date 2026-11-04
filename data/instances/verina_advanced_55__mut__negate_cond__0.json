@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_55",
+ "flags": [],
+ "hashes": {
+  "locked": "d2c93fcd978e3b2c0fc691c03d9700c3766f9e6d17591384608b748980dad83a"
+ },
+ "instance_id": "verina_advanced_55__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(v > acc)",
+  "before": "v > acc",
+  "col": 6,
+  "line": 12,
+  "operator": "negate_cond",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let freqMap := countMap xs\n  let maxF := getMaxFrequency freqMap\n  let candidates := getCandidates freqMap maxF\n  getFirstWithFreq xs candidates\n",
+  "code_aux": "-- Build a frequency map from the list\ndef countMap (xs : List Int) : HashMap Int Nat :=\n  let step := fun m x =>\n    let current := m.getD x 0\n    m.insert x (current + 1)\n  let init := (HashMap.emptyWithCapacity : HashMap Int Nat)\n  xs.foldl step init\n\n-- Compute the maximum frequency in the map\ndef getMaxFrequency (m : HashMap Int Nat) : Nat :=\n  let step := fun acc (_k, v) =>\n    if ¬(v > acc) then v else acc\n  let init := 0\n  m.toList.foldl step init\n\n-- Extract all keys whose frequency == maxFreq\ndef getCandidates (m : HashMap Int Nat) (maxFreq : Nat) : List Int :=\n  let isTarget := fun (_k, v) => v = maxFreq\n  let extract := fun (k, _) => k\n  m.toList.filter isTarget |>.map extract\n\n-- Return the first candidate element from original list\ndef getFirstWithFreq (xs : List Int) (candidates : List Int) : Int :=\n  match xs.find? (fun x => candidates.contains x) with\n  | some x => x\n  | none => 0\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "2",
+  "index": 0,
+  "input_lean": {
+   "xs": "[1, 2, 2, 3]"
+  },
+  "source": "visible"
+ }
+}

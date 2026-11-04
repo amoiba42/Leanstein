@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_39",
+ "flags": [],
+ "hashes": {
+  "locked": "a0898f6f35f83e00fcbb0524d4b8d29e68d88d9fc65b712b2062e4a942069816"
+ },
+ "instance_id": "verina_advanced_39__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec helper (lst : List Nat) : Nat :=\n    match lst with\n    | [] => 0  -- technically shouldn't happen if input is always non-empty\n    | [x] => x\n    | x :: xs =>\n      let maxTail := helper xs\n      if x > maxTail then x else maxTail\n\n  helper lst\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

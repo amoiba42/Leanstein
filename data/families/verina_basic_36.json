@@ -1,0 +1,80 @@
+{
+ "aux_names": [
+  "isSpaceCommaDot"
+ ],
+ "description": "-----Description-----  \nThis task requires writing a Lean 4 method that takes a given string and returns a new string where every occurrence of a space, comma, or dot is replaced with a colon. The transformation must preserve the original string’s length and leave all other characters unmodified.\n\n-----Input-----  \nThe input consists of:  \ns: A string.\n\n-----Output-----  \nThe output is a string:  \n- The returned string must have the same length as the input string.  \n- Every space, comma, or dot in the input string is replaced with a colon.  \n- All other characters remain unchanged.\n\n-----Note-----  \nThere are no preconditions; the input string is assumed to be non-null.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_36",
+ "flags": [],
+ "header": "def replaceWithColon (s : String) (h_precond : replaceWithColon_precond (s)) : String :=",
+ "locked_hash": "81592c356b6112c79a8bc9f2ea3ab871ab04515fba7db6f1570fb75e527333ba",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_all",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 5.9,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_broken",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "replaceWithColon",
+  "params": [
+   [
+    "s",
+    "String"
+   ]
+  ],
+  "ret": "String"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\ndef isSpaceCommaDot (c : Char) : Bool :=\n  if c = ' ' then true\n  else if c = ',' then true\n  else if c = '.' then true\n  else false\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef replaceWithColon_precond (s : String) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef replaceWithColon (s : String) (h_precond : replaceWithColon_precond (s)) : String :=\n  -- !benchmark @start code\n  let cs := s.toList\n  let cs' := cs.map (fun c => if isSpaceCommaDot c then ':' else c)\n  String.mk cs'\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef replaceWithColon_postcond (s : String) (result: String) (h_precond : replaceWithColon_precond (s)) :=\n  -- !benchmark @start postcond\n  let cs := s.toList\n  let cs' := result.toList\n  result.length = s.length ∧\n  (∀ i, i < s.length →\n    (isSpaceCommaDot cs[i]! → cs'[i]! = ':') ∧\n    (¬isSpaceCommaDot cs[i]! → cs'[i]! = cs[i]!))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem replaceWithColon_spec_satisfied (s: String) (h_precond : replaceWithColon_precond (s)) :\n    replaceWithColon_postcond (s) (replaceWithColon (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold replaceWithColon replaceWithColon_postcond\n  simp\n  constructor\n  · unfold String.length\n    simp\n  · intro i hi\n    have hi' : i < s.data.length := by\n      unfold String.length at hi\n      simp at hi\n      exact hi\n    constructor <;> simp_all\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: String) (h_precond : replaceWithColon_precond (s)) :\n    replaceWithColon_postcond (s) (replaceWithColon (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "\"Hello::world::How:are:you?\"",
+   "input_lean": {
+    "s": "\"Hello, world. How are you?\""
+   }
+  },
+  {
+   "expected_lean": "\"No-changes!\"",
+   "input_lean": {
+    "s": "\"No-changes!\""
+   }
+  },
+  {
+   "expected_lean": "\":::\"",
+   "input_lean": {
+    "s": "\",. \""
+   }
+  },
+  {
+   "expected_lean": "\"\"",
+   "input_lean": {
+    "s": "\"\""
+   }
+  }
+ ]
+}

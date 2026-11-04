@@ -1,0 +1,86 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task involves taking an array as input and producing a new array that has the same size and identical elements in the same order as the input.\n\n-----Input-----\nThe input consists of:\n• s: An array of elements (for testing purposes, assume an array of integers, i.e., Array Int).\n\n-----Output-----\nThe output is an array of the same type as the input:\n• The output array has the same size as the input array.\n• Each element in the output array is identical to the corresponding element in the input array.\n\n-----Note-----\nThere are no special preconditions for the input array (it can be empty or non-empty); the function simply performs a straightforward copy operation on the array.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_94",
+ "flags": [],
+ "header": "def iter_copy (s : Array Int) (h_precond : iter_copy_precond (s)) : Array Int :=",
+ "locked_hash": "aa94bbdba32c6b154d840166cdda5967f63c4e13af983922822b70c0a498288f",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@iter_copy.loop": false,
+    "fun_ind_simp@iter_copy.loop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 67.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "iter_copy",
+  "params": [
+   [
+    "s",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef iter_copy_precond (s : Array Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef iter_copy (s : Array Int) (h_precond : iter_copy_precond (s)) : Array Int :=\n  -- !benchmark @start code\n  let rec loop (i : Nat) (acc : Array Int) : Array Int :=\n    if i < s.size then\n      match s[i]? with\n      | some val => loop (i + 1) (acc.push val)\n      | none => acc  -- This case shouldn't happen when i < s.size\n    else\n      acc\n  loop 0 Array.empty\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef iter_copy_postcond (s : Array Int) (result: Array Int) (h_precond : iter_copy_precond (s)) :=\n  -- !benchmark @start postcond\n  (s.size = result.size) ∧ (∀ i : Nat, i < s.size → s[i]! = result[i]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem iter_copy_spec_satisfied (s: Array Int) (h_precond : iter_copy_precond (s)) :\n    iter_copy_postcond (s) (iter_copy (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: Array Int) (h_precond : iter_copy_precond (s)) :\n    iter_copy_postcond (s) (iter_copy (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[1, 2, 3]",
+   "input_lean": {
+    "s": "#[1, 2, 3]"
+   }
+  },
+  {
+   "expected_lean": "#[10, 20, 30, 40]",
+   "input_lean": {
+    "s": "#[10, 20, 30, 40]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "s": "#[]"
+   }
+  },
+  {
+   "expected_lean": "#[-1, -2, -3]",
+   "input_lean": {
+    "s": "#[-1, -2, -3]"
+   }
+  },
+  {
+   "expected_lean": "#[5, 5, 5, 5]",
+   "input_lean": {
+    "s": "#[5, 5, 5, 5]"
+   }
+  }
+ ]
+}

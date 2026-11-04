@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_69",
+ "flags": [],
+ "hashes": {
+  "locked": "956210e3061cdd92474edf208c3f9415fbf39fbdbd767470329ae79dacb2d6ea"
+ },
+ "instance_id": "verina_basic_69__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(a[n]! = e)",
+  "before": "a[n]! = e",
+  "col": 6,
+  "line": 3,
+  "operator": "negate_cond",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  linearSearchAux a e 0\n",
+  "code_aux": "def linearSearchAux (a : Array Int) (e : Int) (n : Nat) : Nat :=\n  if n < a.size then\n    if ¬(a[n]! = e) then n else linearSearchAux a e (n + 1)\n  else\n    0\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "2",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 2, 3, 4, 5]",
+   "e": "3"
+  },
+  "source": "visible"
+ }
+}

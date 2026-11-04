@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_59",
+ "flags": [],
+ "hashes": {
+  "locked": "938c9a8a3c9489b1c5ebcbea2562e788236432480ebb88e26b2e526639847538"
+ },
+ "instance_id": "verina_advanced_59__mut__arith__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "-",
+  "before": "+",
+  "col": 15,
+  "line": 13,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let cleaned : List Char :=\n    s.data.filter (fun c => c.isAlpha || c.isDigit)\n      |>.map Char.toLower\n\n  let n := cleaned.length\n  let startIndex := 0\n  let endIndex := if n = 0 then 0 else n - 1\n\n  let rec check (l r : Nat) : Bool :=\n    if l >= r then\n      true\n    else if cleaned[l]? = cleaned[r]? then\n      check (l - 1) (r - 1)\n    else\n      false\n\n  check startIndex endIndex\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 1,
+  "input_lean": {
+   "s": "\"A man, a plan, a canal: Panama\""
+  },
+  "source": "visible"
+ }
+}

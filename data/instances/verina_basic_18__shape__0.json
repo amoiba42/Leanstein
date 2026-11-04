@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_18",
+ "flags": [],
+ "hashes": {
+  "locked": "4a9c50cccf5bd5d95357e373a649036d0d727173d18a74185a8172a6d55c2fb6"
+ },
+ "instance_id": "verina_basic_18__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  let rec loop (n : Nat) (acc : Nat) : Nat :=\n    if n = 0 then acc\n    else loop (n / 10) (acc + n % 10)\n  loop n 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_80",
+ "flags": [],
+ "hashes": {
+  "locked": "94ec429cec40bcf815eb81085541ec775bc6beaf4d33cbfcb9b5a9d5af83162d"
+ },
+ "instance_id": "verina_advanced_80__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec findIndices (i : Nat) (j : Nat) (fuel : Nat) : Array Nat :=\n    match fuel with\n    | 0 => #[] -- Fuel exhausted, return empty array\n    | fuel+1 =>\n      if i >= nums.size then\n        #[] -- No solution found\n      else if j >= nums.size then\n        findIndices (i + 1) (i + 2) fuel -- Move to next i and reset j\n      else\n        if nums[i]! + nums[j]! == target then\n          #[i, j] -- Found solution\n        else\n          findIndices i (j + 1) fuel -- Try next j\n\n  findIndices 0 1 (nums.size * nums.size)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

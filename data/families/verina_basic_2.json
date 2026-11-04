@@ -1,0 +1,102 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that finds the smallest number in an array of integers.\n\n-----Input-----\nThe input consists of:\ns: An array of integers.\n\n-----Output-----\nThe output is an option integer:\nReturns the smallest number found in the input array or none if the array is empty.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_2",
+ "flags": [],
+ "header": "def findSmallest (s : Array Nat) (h_precond : findSmallest_precond (s)) : Option Nat :=",
+ "locked_hash": "dc9037e02ace0844579ea7843bc2421424e1c1f16c7f1bc01435ced16b4acf1c",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 2.6,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "findSmallest",
+  "params": [
+   [
+    "s",
+    "Array Nat"
+   ]
+  ],
+  "ret": "Option Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef findSmallest_precond (s : Array Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef findSmallest (s : Array Nat) (h_precond : findSmallest_precond (s)) : Option Nat :=\n  -- !benchmark @start code\n  s.toList.min?\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef findSmallest_postcond (s : Array Nat) (result: Option Nat) (h_precond : findSmallest_precond (s)) :=\n  -- !benchmark @start postcond\n  let xs := s.toList\n  match result with\n  | none => xs = []\n  | some r => r ∈ xs ∧ (∀ x, x ∈ xs → r ≤ x)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem findSmallest_spec_satisfied (s: Array Nat) (h_precond : findSmallest_precond (s)) :\n    findSmallest_postcond (s) (findSmallest (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold findSmallest_postcond findSmallest\n  cases res : s.toList.min? with\n  | none =>\n    simp only [res]\n    rw [List.min?_eq_none_iff] at res\n    exact res\n  | some r =>\n    simp only [res]\n    rw [List.min?_eq_some_iff'] at res\n    exact res\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: Array Nat) (h_precond : findSmallest_precond (s)) :\n    findSmallest_postcond (s) (findSmallest (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "some (1)",
+   "input_lean": {
+    "s": "#[3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]"
+   }
+  },
+  {
+   "expected_lean": "some (0)",
+   "input_lean": {
+    "s": "#[0, 1, 2, 3, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "some (1)",
+   "input_lean": {
+    "s": "#[1]"
+   }
+  },
+  {
+   "expected_lean": "some (10)",
+   "input_lean": {
+    "s": "#[10, 10, 10]"
+   }
+  },
+  {
+   "expected_lean": "some (1)",
+   "input_lean": {
+    "s": "#[3, 2, 2, 2, 2, 2, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "some (0)",
+   "input_lean": {
+    "s": "#[0]"
+   }
+  },
+  {
+   "expected_lean": "some (98)",
+   "input_lean": {
+    "s": "#[100, 99, 98]"
+   }
+  },
+  {
+   "expected_lean": "none",
+   "input_lean": {
+    "s": "#[]"
+   }
+  }
+ ]
+}

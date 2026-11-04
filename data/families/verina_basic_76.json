@@ -1,0 +1,93 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires determining the smaller of two integers. Given two input numbers, the goal is to compare them and return the one that is less than or equal to the other.\n\n-----Input-----  \nThe input consists of two integers:  \n• x: The first integer.  \n• y: The second integer.\n\n-----Output-----  \nThe output is an integer representing the minimum of the two input integers:  \n• Returns x if x is less than or equal to y.  \n• Returns y if x is greater than y.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_76",
+ "flags": [],
+ "header": "def myMin (x : Int) (y : Int) (h_precond : myMin_precond (x) (y)) : Int :=",
+ "locked_hash": "b07d11b4e18bd6a71a8538c8d30bf73219a28b54a2f45f83fa63de8ad231fc53",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "unfold_omega",
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": true,
+    "split_omega": true,
+    "split_simp_all": false,
+    "unfold_omega": true
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 3.7,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "myMin",
+  "params": [
+   [
+    "x",
+    "Int"
+   ],
+   [
+    "y",
+    "Int"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef myMin_precond (x : Int) (y : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef myMin (x : Int) (y : Int) (h_precond : myMin_precond (x) (y)) : Int :=\n  -- !benchmark @start code\n  if x < y then x else y\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef myMin_postcond (x : Int) (y : Int) (result: Int) (h_precond : myMin_precond (x) (y)) :=\n  -- !benchmark @start postcond\n  (x ≤ y → result = x) ∧ (x > y → result = y)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem myMin_spec_satisfied (x: Int) (y: Int) (h_precond : myMin_precond (x) (y)) :\n    myMin_postcond (x) (y) (myMin (x) (y) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold myMin_postcond myMin\n  simp\n  have h_left : (x ≤ y → y ≤ x → y = x) := by\n    intro h₁ h₂\n    exact Int.le_antisymm h₂ h₁\n  have h_right : (y < x → x < y → x = y) := by\n    intro h₁ h₂\n    have h_contr : False := Int.lt_irrefl x (Int.lt_trans h₂ h₁)\n    contradiction\n  exact ⟨h_left, h_right⟩\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(x: Int) (y: Int) (h_precond : myMin_precond (x) (y)) :\n    myMin_postcond (x) (y) (myMin (x) (y) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "x": "3",
+    "y": "5"
+   }
+  },
+  {
+   "expected_lean": "7",
+   "input_lean": {
+    "x": "10",
+    "y": "7"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "x": "4",
+    "y": "4"
+   }
+  },
+  {
+   "expected_lean": "(-5)",
+   "input_lean": {
+    "x": "(-5)",
+    "y": "0"
+   }
+  },
+  {
+   "expected_lean": "(-10)",
+   "input_lean": {
+    "x": "0",
+    "y": "(-10)"
+   }
+  }
+ ]
+}

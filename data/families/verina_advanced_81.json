@@ -1,0 +1,92 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nImplement a Lean 4 function that, given a list of integers, removes all duplicates and returns the resulting list in ascending order.\n\n-----Input-----\nThe input consists of a single list of integers:\narr: A list of integers.\n\n-----Output-----\nThe output is a list of integers:\nReturns a list containing the unique elements of the input, sorted in ascending order. The returned list must not contain any duplicates, and every element in the output must appear in the original input list.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_81",
+ "flags": [],
+ "header": "def uniqueSorted (arr : List Int) (h_precond : uniqueSorted_precond (arr)) : List Int :=",
+ "locked_hash": "0d952295b0968ff488337f18484e5e81fa67efdefe5976cbbc53d14c1cac94ce",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@uniqueSorted.aux": false,
+    "fun_ind_grind@uniqueSorted.insert": false,
+    "fun_ind_grind@uniqueSorted.insertionSort": false,
+    "fun_ind_simp@uniqueSorted.aux": false,
+    "fun_ind_simp@uniqueSorted.insert": false,
+    "fun_ind_simp@uniqueSorted.insertionSort": false,
+    "grind": false,
+    "ind_grind@arr": false,
+    "ind_simp_all@arr": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 3.6,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "uniqueSorted",
+  "params": [
+   [
+    "arr",
+    "List Int"
+   ]
+  ],
+  "ret": "List Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef uniqueSorted_precond (arr : List Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef uniqueSorted (arr : List Int) (h_precond : uniqueSorted_precond (arr)) : List Int :=\n  -- !benchmark @start code\n  let rec insert (x : Int) (sorted : List Int) : List Int :=\n  match sorted with\n  | [] =>\n    [x]\n  | head :: tail =>\n    if x <= head then\n      x :: head :: tail\n    else\n      head :: insert x tail\n\nlet rec insertionSort (xs : List Int) : List Int :=\n  match xs with\n  | [] =>\n    []\n  | h :: t =>\n    let sortedTail := insertionSort t\n    insert h sortedTail\n\nlet removeDups : List Int → List Int\n| xs =>\n  let rec aux (remaining : List Int) (seen : List Int) (acc : List Int) : List Int :=\n    match remaining with\n    | [] =>\n      acc.reverse\n    | h :: t =>\n      if h ∈ seen then\n        aux t seen acc\n      else\n        aux t (h :: seen) (h :: acc)\n  aux xs [] []\n\ninsertionSort (removeDups arr)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef uniqueSorted_postcond (arr : List Int) (result: List Int) (h_precond : uniqueSorted_precond (arr)) : Prop :=\n  -- !benchmark @start postcond\n  List.isPerm arr.eraseDups result ∧ List.Pairwise (· ≤ ·) result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem uniqueSorted_spec_satisfied (arr: List Int) (h_precond : uniqueSorted_precond (arr)) :\n    uniqueSorted_postcond (arr) (uniqueSorted (arr) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(arr: List Int) (h_precond : uniqueSorted_precond (arr)) :\n    uniqueSorted_postcond (arr) (uniqueSorted (arr) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "[1, 2, 3]",
+   "input_lean": {
+    "arr": "[1, 1, 2, 3]"
+   }
+  },
+  {
+   "expected_lean": "[3]",
+   "input_lean": {
+    "arr": "[3, 3, 3]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "arr": "[]"
+   }
+  },
+  {
+   "expected_lean": "[2, 5]",
+   "input_lean": {
+    "arr": "[5, 2, 2, 5]"
+   }
+  },
+  {
+   "expected_lean": "[1, 2, 3, 4, 5]",
+   "input_lean": {
+    "arr": "[1, 2, 3, 4, 5]"
+   }
+  }
+ ]
+}

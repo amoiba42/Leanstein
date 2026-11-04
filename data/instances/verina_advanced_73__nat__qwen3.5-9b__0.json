@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_73",
+ "flags": [],
+ "hashes": {
+  "locked": "2a1d1776580ad335f35fd2747bdecf279fc1847ffa56af9144a515e723ff4712"
+ },
+ "instance_id": "verina_advanced_73__nat__qwen3.5-9b__0",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef smallestMissing (l : List Nat) (h_precond : smallestMissing_precond (l)) : Nat :=\n  l.foldl (fun acc x => if acc < x then acc + 1 else x) 0\n```",
+  "seed": 5000
+ },
+ "split": "main",
+ "start": {
+  "code": "l.foldl (fun acc x => if acc < x then acc + 1 else x) 0",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "4",
+  "expected": "3",
+  "index": 0,
+  "input_lean": {
+   "l": "[0, 1, 2, 4, 5]"
+  },
+  "source": "visible"
+ }
+}

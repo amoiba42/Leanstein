@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_67",
+ "flags": [],
+ "hashes": {
+  "locked": "0333803c6aa4f61e3c2b56e6ea9d09e8d12010c59fb2bad2d78db2de2f2bb667"
+ },
+ "instance_id": "verina_advanced_67__nat__qwen3.5-9b__2",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef runLengthEncode (s : String) (h_precond : runLengthEncode_precond (s)) : List (Char × Nat) :=\n  s.foldl (fun acc c =>\n    match acc with\n    | [] => [(c, 1)]\n    | (ch, cnt) :: tail =>\n      if ch == c then\n        (c, cnt + 1) :: tail\n      else\n        (ch, cnt) :: acc ++ [(c, 1)]\n  ) []\n```",
+  "seed": 5002
+ },
+ "split": "heldout",
+ "start": {
+  "code": "s.foldl (fun acc c =>\n  match acc with\n  | [] => [(c, 1)]\n  | (ch, cnt) :: tail =>\n    if ch == c then\n      (c, cnt + 1) :: tail\n    else\n      (ch, cnt) :: acc ++ [(c, 1)]\n) []",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "[('a', 3),\n ('a', 1),\n ('a', 1),\n ('a', 1),\n ('a', 1),\n ('a', 1),\n ('a', 1),\n ('b', 1),\n ('b', 1),\n ('b', 1),\n ('c', 1),\n ('c', 1),\n ('c', 1)]",
+  "expected": "[('a', 1), ('b', 3), ('c', 3), ('a', 2)]",
+  "index": 2,
+  "input_lean": {
+   "s": "\"abbbcccaa\""
+  },
+  "source": "visible"
+ }
+}

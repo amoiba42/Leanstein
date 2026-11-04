@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_advanced_29",
+ "flags": [],
+ "hashes": {
+  "locked": "77cdab4a7e927e82be0b3c1d542cf8091167a0fba6840dec86ec27d5fa1278d7"
+ },
+ "instance_id": "verina_advanced_29__mut__swap_args__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "min maxLen (right",
+  "before": "max maxLen (right",
+  "col": 16,
+  "line": 24,
+  "operator": "swap_args",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  Id.run do\n    let arr := nums.toArray\n    let mut left := 0\n    let mut maxLen := 0\n    let mut freq : HashMap Nat Nat := {}\n\n    for right in [0:arr.size] do\n      let num := arr[right]!\n      let count := freq.getD num 0\n      freq := freq.insert num (count + 1)\n\n      for _ in List.range arr.size do\n        if freq.toList.any (fun (_, v) => v > k) then\n          let lnum := arr[left]!\n          let lcount := freq.getD lnum 0\n          if lcount = 1 then\n            freq := freq.erase lnum\n          else\n            freq := freq.insert lnum (lcount - 1)\n          left := left + 1\n        else\n          break\n\n      maxLen := min maxLen (right - left + 1)\n\n    return maxLen\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "6",
+  "index": 0,
+  "input_lean": {
+   "k": "2",
+   "nums": "[1, 2, 3, 1, 2, 3, 1, 2]"
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_57",
+ "flags": [],
+ "hashes": {
+  "locked": "d615f414265f61c407a9dcab17ceb12ed3e2fca295ffa087a0ed1aa2eff27f71"
+ },
+ "instance_id": "verina_basic_57__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(numbers[i]! < threshold)",
+  "before": "numbers[i]! < threshold",
+  "col": 23,
+  "line": 4,
+  "operator": "negate_cond",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  countLessThan numbers threshold\n",
+  "code_aux": "def countLessThan (numbers : Array Int) (threshold : Int) : Nat :=\n  let rec count (i : Nat) (acc : Nat) : Nat :=\n    if i < numbers.size then\n      let new_acc := if ¬(numbers[i]! < threshold) then acc + 1 else acc\n      count (i + 1) new_acc\n    else\n      acc\n  count 0 0\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "3",
+  "expected": "2",
+  "index": 0,
+  "input_lean": {
+   "numbers": "#[1, 2, 3, 4, 5]",
+   "threshold": "3"
+  },
+  "source": "visible"
+ }
+}

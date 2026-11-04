@@ -1,0 +1,220 @@
+{
+ "family_id": "verina_basic_71",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "1fd183bc2ff09e270bbbf10b76da6134fa353431e9d9f7d22fb8978bba2e22bf",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['z', '0', 'Z']",
+    "str2": "['Z', 'b', 'z']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['z', 'a', 'Z']",
+    "str2": "[]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['9', 'a']",
+    "str2": "['b', '9']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['9', ' ']",
+    "str2": "['z', 'A', 'A', 'b']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['0', '0', 'z', 'A', '0', '9']",
+    "str2": "['a', 'z']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['Z', '9', 'Z']",
+    "str2": "[]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['A', 'b', ' ', 'z', '0', 'z']",
+    "str2": "[]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['9']",
+    "str2": "[]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "[]",
+    "str2": "['Z', 'A']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['Z', '9', '0']",
+    "str2": "[]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['A']",
+    "str2": "['0', 'A']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "[]",
+    "str2": "['a', 'Z']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['z']",
+    "str2": "['b', ' ', 'b']"
+   }
+  },
+  {
+   "expected_lean": "['0']",
+   "input_lean": {
+    "str1": "['0', 'A', ' ']",
+    "str2": "['0', ' ', 'b', 'a', '0', 'a']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['0', 'b']",
+    "str2": "[' ', '9']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['z']",
+    "str2": "[' ', 'Z', '0', 'a', 'a', '9']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "[]",
+    "str2": "[]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "[' ']",
+    "str2": "[]"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "[]",
+    "str2": "['a']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['a', '0']",
+    "str2": "['Z', 'a']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "[]",
+    "str2": "['9']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "[]",
+    "str2": "['Z', 'z', 'b', '0', 'a', 'A']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['9', 'A', 'a']",
+    "str2": "['z']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['Z', '0']",
+    "str2": "['A', 'a', 'a']"
+   }
+  },
+  {
+   "expected_lean": "['Z']",
+   "input_lean": {
+    "str1": "['Z', ' ', ' ', 'b', 'Z', '9']",
+    "str2": "['Z', 'z', 'a', 'a', 'A', 'Z']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['9', ' ']",
+    "str2": "[' ', 'Z']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['A']",
+    "str2": "['z', 'a', '0']"
+   }
+  },
+  {
+   "expected_lean": "['0']",
+   "input_lean": {
+    "str1": "['0', 'Z', 'z', 'A', ' ', '0']",
+    "str2": "['0', ' ', 'Z', ' ', 'z', ' ']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['9', '9', 'z', 'b']",
+    "str2": "['b', 'b']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['0', 'a', 'z', ' ', 'Z', 'A']",
+    "str2": "['Z', 'b']"
+   }
+  }
+ ]
+}

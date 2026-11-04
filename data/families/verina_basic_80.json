@@ -1,0 +1,96 @@
+{
+ "aux_names": [
+  "count_occurrences"
+ ],
+ "description": "-----Description-----  \nThis task involves determining whether a specified key appears exactly once in an array. The goal is to verify the uniqueness of the key's occurrence without prescribing any specific approach or implementation method.\n\n-----Input-----  \nThe input consists of:  \n• a: An array of integers.  \n• key: An integer representing the element whose occurrence is to be checked.\n\n-----Output-----  \nThe output is a Boolean value that:  \n• Is true if the key appears exactly once in the array.  \n• Is false otherwise.\n\n-----Note-----  \nThe function should correctly handle arrays with no occurrences of the key, multiple occurrences, and exactly one occurrence.",
+ "eligible": false,
+ "exclusion_reason": "known_defect:test_contradicts_spec,ref_visible_fail",
+ "family_id": "verina_basic_80",
+ "flags": [],
+ "header": "def only_once (a : Array Int) (key : Int) (h_precond : only_once_precond (a) (key)) : Bool :=",
+ "locked_hash": "f5f7e30629d3943208b817e1b9547d6c8a88754c50c197d5a74b40212406992e",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@only_once_loop": false,
+    "fun_ind_simp@only_once_loop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": null,
+  "lean_s": 65.6,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 3,
+  "proof": "absent",
+  "visible_pass": false
+ },
+ "signature": {
+  "name": "only_once",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ],
+   [
+    "key",
+    "Int"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef only_once_precond (a : Array Int) (key : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef only_once_loop {T : Type} [DecidableEq T] (a : Array T) (key : T) (i keyCount : Nat) : Bool :=\n  if i < a.size then\n    match a[i]? with\n    | some val =>\n        let newCount := if val = key then keyCount + 1 else keyCount\n        only_once_loop a key (i + 1) newCount\n    | none => keyCount == 1\n  else\n    keyCount == 1\n-- !benchmark @end code_aux\n\n\ndef only_once (a : Array Int) (key : Int) (h_precond : only_once_precond (a) (key)) : Bool :=\n  -- !benchmark @start code\n  only_once_loop a key 0 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\ndef count_occurrences {T : Type} [DecidableEq T] (a : Array T) (key : T) : Nat :=\n  a.foldl (fun cnt x => if x = key then cnt + 1 else cnt) 0\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef only_once_postcond (a : Array Int) (key : Int) (result: Bool) (h_precond : only_once_precond (a) (key)) :=\n  -- !benchmark @start postcond\n  ((count_occurrences a key = 1) → result) ∧\n  ((count_occurrences a key ≠ 1) → ¬ result)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem only_once_spec_satisfied (a: Array Int) (key: Int) (h_precond : only_once_precond (a) (key)) :\n    only_once_postcond (a) (key) (only_once (a) (key) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (key: Int) (h_precond : only_once_precond (a) (key)) :\n    only_once_postcond (a) (key) (only_once (a) (key) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "#[1, 2, 3, 4]",
+    "key": "2"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "#[1, 2, 2, 3, 4]",
+    "key": "2"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "#[1, 1, 1, 1]",
+    "key": "1"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "#[10]",
+    "key": "10"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "#[]",
+    "key": "5"
+   }
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_79",
+ "flags": [],
+ "hashes": {
+  "locked": "4c80bc2cdf79ffb909894ecb91b4e9ffc2f5bd37656c8c169bf85625ab3e3159"
+ },
+ "instance_id": "verina_basic_79__mut__swap_branches__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "if a[i]! > best then best else a[i]!",
+  "before": "if a[i]! > best then a[i]! else best",
+  "col": 19,
+  "line": 3,
+  "operator": "swap_branches",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let best := a[0]!\n  let m := findBest a x 1 best;\n  let p := findP a x m x;\n  (m, p)\n",
+  "code_aux": "def findBest (a : Array Int) (x : Nat) (i : Nat) (best : Int) : Int :=\n  if i < x then\n    let newBest := if a[i]! > best then best else a[i]!\n    findBest a x (i + 1) newBest\n  else best\n\ndef findP (a : Array Int) (x : Nat) (m : Int) (i : Nat) : Nat :=\n  if i < a.size then\n    if a[i]! > m then i else findP a x m (i + 1)\n  else a.size - 1\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "(3, 4)",
+  "expected": "(7, 4)",
+  "index": 0,
+  "input_lean": {
+   "a": "#[3, 7, 5, 2, 9]",
+   "x": "3"
+  },
+  "source": "visible"
+ }
+}

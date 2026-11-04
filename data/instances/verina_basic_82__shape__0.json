@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_82",
+ "flags": [],
+ "hashes": {
+  "locked": "33ea0a4d71c38d89a4d34e2a84630be43ce2be085958933064887135f5e092db"
+ },
+ "instance_id": "verina_basic_82__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  if a.size > 0 then\n    let c := copyFrom a 1 (Array.mkEmpty (a.size - 1))\n    c\n  else\n    panic \"Precondition violation: array is empty\"\n",
+  "code_aux": "def copyFrom (a : Array Int) (i : Nat) (acc : Array Int) : Array Int :=\n  if i < a.size then\n    copyFrom a (i + 1) (acc.push (a[i]!))\n  else\n    acc\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

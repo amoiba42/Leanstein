@@ -1,0 +1,38 @@
+{
+ "family_id": "verina_basic_21",
+ "flags": [],
+ "hashes": {
+  "locked": "35c0ea9c581a15027395317adde10473e169f47b460947795175ba61e013020d"
+ },
+ "instance_id": "verina_basic_21__mut__negate_cond__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(i + subLen > mainLen)",
+  "before": "i + subLen > mainLen",
+  "col": 8,
+  "line": 7,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let subLen := sub.length\n  let mainLen := main.length\n  if subLen > mainLen then\n    false\n  else\n    let rec check (i : Nat) : Bool :=\n      if ¬(i + subLen > mainLen) then\n        false\n      else if sub = (main.drop i).take subLen then\n        true\n      else if i + 1 ≤ mainLen then\n        check (i + 1)\n      else\n        false\n    termination_by mainLen - i\n    check 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 0,
+  "input_lean": {
+   "main": "[3, 1, 2, 4]",
+   "sub": "[1, 2]"
+  },
+  "source": "visible"
+ }
+}

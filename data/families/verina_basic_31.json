@@ -1,0 +1,87 @@
+{
+ "aux_names": [
+  "isLowerCase",
+  "shiftMinus32"
+ ],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that converts a given string to uppercase. The method should replace every lowercase letter in the input string with its corresponding uppercase character while leaving all other characters unchanged. The output string must have the same length as the input string.\n\n-----Input-----\nThe input consists of:\ns: A string.\n\n-----Output-----\nThe output is a string:\nReturns a new string in which every lowercase letter from the input string is converted to uppercase, and all other characters are exactly the same as in the input string, ensuring the output string has the same length as the input.\n\n-----Note-----\nThere are no preconditions since the method assumes that the input string is always valid (i.e., non-null).",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_31",
+ "flags": [],
+ "header": "def toUppercase (s : String) (h_precond : toUppercase_precond (s)) : String :=",
+ "locked_hash": "51396a671548a0a671ad667189d2d33e4e1427004957e91283c7304ca087f5b8",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_all",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 7.5,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_broken",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "toUppercase",
+  "params": [
+   [
+    "s",
+    "String"
+   ]
+  ],
+  "ret": "String"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\ndef isLowerCase (c : Char) : Bool :=\n  'a' ≤ c ∧ c ≤ 'z'\n\ndef shiftMinus32 (c : Char) : Char :=\n  Char.ofNat ((c.toNat - 32) % 128)\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef toUppercase_precond (s : String) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef toUppercase (s : String) (h_precond : toUppercase_precond (s)) : String :=\n  -- !benchmark @start code\n  let cs := s.toList\n  let cs' := cs.map (fun c => if isLowerCase c then shiftMinus32 c else c)\n  String.mk cs'\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef toUppercase_postcond (s : String) (result: String) (h_precond : toUppercase_precond (s)) :=\n  -- !benchmark @start postcond\n  let cs := s.toList\n  let cs' := result.toList\n  (result.length = s.length) ∧\n  (∀ i, i < s.length →\n    (isLowerCase cs[i]! → cs'[i]! = shiftMinus32 cs[i]!) ∧\n    (¬isLowerCase cs[i]! → cs'[i]! = cs[i]!))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem toUppercase_spec_satisfied (s: String) (h_precond : toUppercase_precond (s)) :\n    toUppercase_postcond (s) (toUppercase (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold toUppercase toUppercase_postcond\n  simp_all\n  constructor\n  · unfold String.length\n    simp\n  · intro i hi\n    have hi' : i < s.data.length := by\n      unfold String.length at hi\n      simp at hi\n      exact hi\n    constructor <;> simp_all\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: String) (h_precond : toUppercase_precond (s)) :\n    toUppercase_postcond (s) (toUppercase (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "\"HELLO, WORLD!\"",
+   "input_lean": {
+    "s": "\"Hello, World!\""
+   }
+  },
+  {
+   "expected_lean": "\"ABC\"",
+   "input_lean": {
+    "s": "\"abc\""
+   }
+  },
+  {
+   "expected_lean": "\"ABC\"",
+   "input_lean": {
+    "s": "\"ABC\""
+   }
+  },
+  {
+   "expected_lean": "\"123!?@\"",
+   "input_lean": {
+    "s": "\"123!?@\""
+   }
+  },
+  {
+   "expected_lean": "\"\"",
+   "input_lean": {
+    "s": "\"\""
+   }
+  }
+ ]
+}

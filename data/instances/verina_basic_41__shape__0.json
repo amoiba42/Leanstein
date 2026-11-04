@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_41",
+ "flags": [],
+ "hashes": {
+  "locked": "4ccbac0ad984374a2bd107182819ebe59204cb1e160a159b44f14d90bd1329e0"
+ },
+ "instance_id": "verina_basic_41__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  if a.size = 0 then\n    true\n  else\n    let firstElement := a[0]!\n    let rec loop (i : Nat) : Bool :=\n      if h : i < a.size then\n        if a[i]! = firstElement then loop (i + 1) else false\n      else\n        true\n    loop 1\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

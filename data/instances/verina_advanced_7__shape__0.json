@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_7",
+ "flags": [],
+ "hashes": {
+  "locked": "0008cd5f74a9f38a581370f3f4954cbc19aad81703301122928daa0d7373f421"
+ },
+ "instance_id": "verina_advanced_7__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec helper (digits : List Nat) : Nat :=\n    match digits with\n    | [] => 0\n    | first :: rest => first * Nat.pow 2 rest.length + helper rest\n  helper digits\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

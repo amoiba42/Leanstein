@@ -1,0 +1,87 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task requires determining whether a given list of characters is a palindrome; that is, whether the sequence reads the same forward and backward.\n\n-----Input-----  \nThe input consists of:  \n• x: A list of characters (List Char). The list can be empty or non-empty.\n\n-----Output-----  \nThe output is a Boolean value (Bool):  \n• Returns true if the input list is a palindrome.  \n• Returns false otherwise.\n\n-----Note-----  \nAn empty list is considered a palindrome. The function does not impose any additional preconditions.",
+ "eligible": false,
+ "exclusion_reason": "known_defect:test_contradicts_description,ref_visible_fail",
+ "family_id": "verina_basic_67",
+ "flags": [],
+ "header": "def IsPalindrome (x : List Char) (h_precond : IsPalindrome_precond (x)) : Bool :=",
+ "locked_hash": "57e93e09d203192ef653ea9b701dcf2efca8e12194b59388b113b005847a8ac5",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": true,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@isPalindromeHelper": false,
+    "fun_ind_simp@isPalindromeHelper": false,
+    "grind": false,
+    "ind_grind@x": false,
+    "ind_simp_all@x": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": null,
+  "lean_s": 111.3,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 1,
+  "proof": "absent",
+  "visible_pass": false
+ },
+ "signature": {
+  "name": "IsPalindrome",
+  "params": [
+   [
+    "x",
+    "List Char"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef IsPalindrome_precond (x : List Char) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef isPalindromeHelper (x : List Char) (i j : Nat) : Bool :=\n  if i < j then\n    match x[i]?, x[j]? with\n    | some ci, some cj =>\n      if ci ≠ cj then false else isPalindromeHelper x (i + 1) (j - 1)\n    | _, _ => false  -- This case should not occur due to valid indices\n  else true\n-- !benchmark @end code_aux\n\n\ndef IsPalindrome (x : List Char) (h_precond : IsPalindrome_precond (x)) : Bool :=\n  -- !benchmark @start code\n  if x.length = 0 then true else isPalindromeHelper x 0 (x.length - 1)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef IsPalindrome_postcond (x : List Char) (result: Bool) (h_precond : IsPalindrome_precond (x)) :=\n  -- !benchmark @start postcond\n  result ↔ ∀ i : Nat, i < x.length → (x[i]! = x[x.length - i - 1]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem IsPalindrome_spec_satisfied (x: List Char) (h_precond : IsPalindrome_precond (x)) :\n    IsPalindrome_postcond (x) (IsPalindrome (x) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(x: List Char) (h_precond : IsPalindrome_precond (x)) :\n    IsPalindrome_postcond (x) (IsPalindrome (x) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "x": "[]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "x": "['a']"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "x": "['a', 'b', 'a']"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "x": "['a', 'b', 'c']"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "x": "['r', 'a', 'c', 'e', 'c', 'a', 'r']"
+   }
+  }
+ ]
+}

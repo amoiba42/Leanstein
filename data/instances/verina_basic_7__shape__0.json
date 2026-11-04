@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_7",
+ "flags": [],
+ "hashes": {
+  "locked": "739de8e6be93df7da637cfed4906a72f5164709304182af18e322c7464984e5f"
+ },
+ "instance_id": "verina_basic_7__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec loop (k : Nat) (sum : Nat) : Nat :=\n    if k = 0 then\n      sum\n    else\n      loop (k - 1) (sum + (2 * k - 1) * (2 * k - 1))\n  loop n 0\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

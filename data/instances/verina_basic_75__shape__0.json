@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_basic_75",
+ "flags": [],
+ "hashes": {
+  "locked": "4e34dd42a2fc9d1272e172e6e13806c94674a0e02f47e7c1d603f97e8a5bb876"
+ },
+ "instance_id": "verina_basic_75__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  loop a 1 (a[0]!)\n",
+  "code_aux": "def loop (a : Array Int) (i : Nat) (currentMin : Int) : Int :=\n  if i < a.size then\n    let newMin := if currentMin > a[i]! then a[i]! else currentMin\n    loop a (i + 1) newMin\n  else\n    currentMin\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

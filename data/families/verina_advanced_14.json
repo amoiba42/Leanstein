@@ -1,0 +1,136 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that determines whether a natural number is a power of four. The method should return a boolean value that indicates whether the given natural number is a power of four. An integer n is a power of four, if there exists an natural number x such that n = 4^x. \n\n-----Input-----\nThe input consists of one natural number:\nn: A natural number.\n\n-----Output-----\nThe output is a boolean value:\nReturn a boolean value that indicates whether the given natural number is a power of four. Return \"true\" if it is a power of four. Otherwise, return \"false\".",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_14",
+ "flags": [],
+ "header": "def ifPowerOfFour (n : Nat) (h_precond : ifPowerOfFour_precond (n)) : Bool :=",
+ "locked_hash": "33f8203806ffa4b3e381d91b75764d0c5763cdf575f4122a4f2f11a3c56a5854",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@ifPowerOfFour.helper": false,
+    "fun_ind_simp@ifPowerOfFour.helper": false,
+    "grind": false,
+    "ind_grind@n": false,
+    "ind_simp_all@n": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 9.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "ifPowerOfFour",
+  "params": [
+   [
+    "n",
+    "Nat"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef ifPowerOfFour_precond (n : Nat) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef ifPowerOfFour (n : Nat) (h_precond : ifPowerOfFour_precond (n)) : Bool :=\n  -- !benchmark @start code\n  let rec helper (n : Nat) : Bool :=\n    match n with\n    | 0 =>\n      false\n    | Nat.succ m =>\n      match m with\n      | 0 =>\n        true\n      | Nat.succ l =>\n        if (l+2)%4=0 then\n          helper ((l+2)/4)\n        else\n          false\n  helper n\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef ifPowerOfFour_postcond (n : Nat) (result: Bool) (h_precond : ifPowerOfFour_precond (n)) : Prop :=\n  -- !benchmark @start postcond\n  result ↔ (∃ m:Nat, n=4^m)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem ifPowerOfFour_spec_satisfied (n: Nat) (h_precond : ifPowerOfFour_precond (n)) :\n    ifPowerOfFour_postcond (n) (ifPowerOfFour (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(n: Nat) (h_precond : ifPowerOfFour_precond (n)) :\n    ifPowerOfFour_postcond (n) (ifPowerOfFour (n) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "0"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "1"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "2"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "3"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "4"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "8"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "16"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "64"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "95"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "100"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "256"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "520"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "1024"
+   }
+  }
+ ]
+}

@@ -1,0 +1,114 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that checks whether two arrays of integers have any elements in common. In other words, the method should return true if there is at least one element that appears in both arrays, and false if no such element exists.\n\n-----Input-----\nThe input consists of:\na: An array of integers.\nb: An array of integers.\n\n-----Output-----\nThe output is a Boolean value:\nReturns true if there is at least one common element between the two arrays.\nReturns false if there are no common elements shared by the arrays.\n\n-----Note-----\nBoth arrays are assumed to be non-null.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_9",
+ "flags": [],
+ "header": "def hasCommonElement (a : Array Int) (b : Array Int) (h_precond : hasCommonElement_precond (a) (b)) : Bool :=",
+ "locked_hash": "db68d02b6568d03899732613f2ed1ae87d0dce719ff2c2f8860d5f8563822cca",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "aesop",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 9.4,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_broken",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "hasCommonElement",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ],
+   [
+    "b",
+    "Array Int"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef hasCommonElement_precond (a : Array Int) (b : Array Int) : Prop :=\n  -- !benchmark @start precond\n  a.size > 0 ∧ b.size > 0\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef hasCommonElement (a : Array Int) (b : Array Int) (h_precond : hasCommonElement_precond (a) (b)) : Bool :=\n  -- !benchmark @start code\n  a.any fun x => b.any fun y => x = y\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef hasCommonElement_postcond (a : Array Int) (b : Array Int) (result: Bool) (h_precond : hasCommonElement_precond (a) (b)) :=\n  -- !benchmark @start postcond\n  (∃ i j, i < a.size ∧ j < b.size ∧ a[i]! = b[j]!) ↔ result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem hasCommonElement_spec_satisfied (a: Array Int) (b: Array Int) (h_precond : hasCommonElement_precond (a) (b)) :\n    hasCommonElement_postcond (a) (b) (hasCommonElement (a) (b) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold hasCommonElement hasCommonElement_postcond\n  constructor\n  · intro h\n    rcases h with ⟨i, j, hi, hj, heq⟩\n    simp [Array.any_eq]\n    exists i\n    exists hi\n    exists j\n    exists hj\n    have heqa : a[i]! = a[i] := by\n      exact getElem!_pos a i hi\n    have heqb : b[j]! = b[j] := by\n      exact getElem!_pos b j hj\n    rw [heqa, heqb] at heq\n    exact heq\n  · intro h\n    simp [Array.any_eq] at h\n    rcases h with ⟨i, hi, j, hj, heq⟩\n    exists i\n    exists j\n    simp [hi, hj]\n    have heqa : a[i]! = a[i] := by\n      exact getElem!_pos a i hi\n    have heqb : b[j]! = b[j] := by\n      exact getElem!_pos b j hj\n    rw [heqa, heqb]\n    exact heq\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (b: Array Int) (h_precond : hasCommonElement_precond (a) (b)) :\n    hasCommonElement_postcond (a) (b) (hasCommonElement (a) (b) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "a": "#[1, 2, 3]",
+    "b": "#[4, 5, 6]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "#[1, 2, 3]",
+    "b": "#[3, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "#[7, 8, 9]",
+    "b": "#[10, 11, 7]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "a": "#[1, 2, 3, 4]",
+    "b": "#[5, 6, 7, 8]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "#[1, 2, 3, 4]",
+    "b": "#[4, 5, 6]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "#[1, 1, 1]",
+    "b": "#[1, 2, 1]"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "a": "#[0]",
+    "b": "#[0]"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "a": "#[0]",
+    "b": "#[-1, 1]"
+   }
+  }
+ ]
+}

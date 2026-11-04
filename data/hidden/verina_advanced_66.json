@@ -1,0 +1,190 @@
+{
+ "family_id": "verina_advanced_66",
+ "n_admissible": 120,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "340d1c310fc11608d765b981582a5477574eef200baba5e7dc3a2a1a684645cd",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "\"exampleb good a\"",
+   "input_lean": {
+    "words_str": "\"a good   exampleb\""
+   }
+  },
+  {
+   "expected_lean": "\"interestinga is lab this\"",
+   "input_lean": {
+    "words_str": "\"this lab is interestinga\""
+   }
+  },
+  {
+   "expected_lean": "\"b\"",
+   "input_lean": {
+    "words_str": "\"b\""
+   }
+  },
+  {
+   "expected_lean": "\"interesting is thislab\"",
+   "input_lean": {
+    "words_str": "\"thislab is interesting\""
+   }
+  },
+  {
+   "expected_lean": "\"AyAzy0\"",
+   "input_lean": {
+    "words_str": "\"AyAzy0\""
+   }
+  },
+  {
+   "expected_lean": "\"yBaa\"",
+   "input_lean": {
+    "words_str": "\"yBaa\""
+   }
+  },
+  {
+   "expected_lean": "\"examplea good a\"",
+   "input_lean": {
+    "words_str": "\"a good   examplea\""
+   }
+  },
+  {
+   "expected_lean": "\"interestingc is lab this\"",
+   "input_lean": {
+    "words_str": "\"this lab is interestingc\""
+   }
+  },
+  {
+   "expected_lean": "\"0Bac\"",
+   "input_lean": {
+    "words_str": "\"0Bac\""
+   }
+  },
+  {
+   "expected_lean": "\"zaaxbz\"",
+   "input_lean": {
+    "words_str": "\"zaaxbz\""
+   }
+  },
+  {
+   "expected_lean": "\"x BBcz\"",
+   "input_lean": {
+    "words_str": "\"BBcz x\""
+   }
+  },
+  {
+   "expected_lean": "\"byb\"",
+   "input_lean": {
+    "words_str": "\"byb \""
+   }
+  },
+  {
+   "expected_lean": "\"c Alice Loves Bob\"",
+   "input_lean": {
+    "words_str": "\"  Bob    Loves  Alice   c\""
+   }
+  },
+  {
+   "expected_lean": "\"xAx\"",
+   "input_lean": {
+    "words_str": "\"xAx\""
+   }
+  },
+  {
+   "expected_lean": "\"blue is thesky\"",
+   "input_lean": {
+    "words_str": "\"thesky is blue\""
+   }
+  },
+  {
+   "expected_lean": "\"world hello\"",
+   "input_lean": {
+    "words_str": "\" hello world  \""
+   }
+  },
+  {
+   "expected_lean": "\"\"",
+   "input_lean": {
+    "words_str": "\"\""
+   }
+  },
+  {
+   "expected_lean": "\"zz\"",
+   "input_lean": {
+    "words_str": "\"zz\""
+   }
+  },
+  {
+   "expected_lean": "\"a Alice Loves Bob\"",
+   "input_lean": {
+    "words_str": "\"  Bob    Loves  Alice   a\""
+   }
+  },
+  {
+   "expected_lean": "\"a bA\"",
+   "input_lean": {
+    "words_str": "\"bA a\""
+   }
+  },
+  {
+   "expected_lean": "\"interestingb is lab this\"",
+   "input_lean": {
+    "words_str": "\"this lab is interestingb\""
+   }
+  },
+  {
+   "expected_lean": "\"blueb is sky the\"",
+   "input_lean": {
+    "words_str": "\"the sky is blueb\""
+   }
+  },
+  {
+   "expected_lean": "\"cbB\"",
+   "input_lean": {
+    "words_str": "\"cbB\""
+   }
+  },
+  {
+   "expected_lean": "\"b world hello\"",
+   "input_lean": {
+    "words_str": "\"  hello world  b\""
+   }
+  },
+  {
+   "expected_lean": "\"examplec good a\"",
+   "input_lean": {
+    "words_str": "\"a good   examplec\""
+   }
+  },
+  {
+   "expected_lean": "\"x\"",
+   "input_lean": {
+    "words_str": "\"x\""
+   }
+  },
+  {
+   "expected_lean": "\"yza\"",
+   "input_lean": {
+    "words_str": "\"yza\""
+   }
+  },
+  {
+   "expected_lean": "\"B000\"",
+   "input_lean": {
+    "words_str": "\"B000\""
+   }
+  },
+  {
+   "expected_lean": "\"interesting is lab tis\"",
+   "input_lean": {
+    "words_str": "\"tis lab is interesting\""
+   }
+  },
+  {
+   "expected_lean": "\"xaB\"",
+   "input_lean": {
+    "words_str": "\"xaB\""
+   }
+  }
+ ]
+}

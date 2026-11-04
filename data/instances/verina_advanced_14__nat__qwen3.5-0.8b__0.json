@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_14",
+ "flags": [],
+ "hashes": {
+  "locked": "33f8203806ffa4b3e381d91b75764d0c5763cdf575f4122a4f2f11a3c56a5854"
+ },
+ "instance_id": "verina_advanced_14__nat__qwen3.5-0.8b__0",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-0.8b",
+  "raw": "```lean\nimport Mathlib.Data.Nat.Basic\nimport Mathlib.Data.Nat.Power\nimport Mathlib.Tactic.elim\n\ndef ifPowerOfFour (n : Nat) : Bool :=\n  if n = 4 ^ 0 then True else False\n\ntheorem ifPowerOfFour_spec_satisfied (n : Nat) (h_precond : ifPowerOfFour_precond (n)) :\n  ifPowerOfFour (n) (h_precond) h_precond :=\n  by_contra\n    | -- ifPowerOfFour (n) (h_precond) h_precond\n      h_precond\n    | -- ifPowerOfFour (n) (h_precond) h_precond\n      not (ifPowerOfFour (n) h_precond)\n```",
+  "seed": 5000
+ },
+ "split": "main",
+ "start": {
+  "code": "if n = 4 ^ 0 then True else False",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 4,
+  "input_lean": {
+   "n": "4"
+  },
+  "source": "visible"
+ }
+}

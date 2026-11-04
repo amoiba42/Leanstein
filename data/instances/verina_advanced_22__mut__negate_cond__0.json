@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_22",
+ "flags": [],
+ "hashes": {
+  "locked": "d2d9b2cc63e9e6aaca830c565cd9c8f05e1008652a59a31726dc64decb327c94"
+ },
+ "instance_id": "verina_advanced_22__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(x < y)",
+  "before": "x < y",
+  "col": 8,
+  "line": 4,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  let rec aux (l : List Int) (increasing : Bool) (startedDecreasing : Bool) : Bool :=\n    match l with\n    | x :: y :: rest =>\n      if ¬(x < y) then\n        if startedDecreasing then false\n        else aux (y :: rest) true startedDecreasing\n      else if x > y then\n        if increasing then aux (y :: rest) increasing true\n        else false\n      else false\n    | _ => increasing && startedDecreasing\n  aux lst false false\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 0,
+  "input_lean": {
+   "lst": "[1, 3, 5, 2, 1]"
+  },
+  "source": "visible"
+ }
+}

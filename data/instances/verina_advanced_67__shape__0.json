@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_67",
+ "flags": [],
+ "hashes": {
+  "locked": "0333803c6aa4f61e3c2b56e6ea9d09e8d12010c59fb2bad2d78db2de2f2bb667"
+ },
+ "instance_id": "verina_advanced_67__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let chars := s.data\n\n  let rec encodeAux (acc : List (Char × Nat)) (rest : List Char) : List (Char × Nat) :=\n    match rest with\n    | [] => acc.reverse\n    | h :: t =>\n      match acc with\n      | (ch, count) :: accTail =>\n        if ch = h then\n          encodeAux ((ch, count + 1) :: accTail) t\n        else\n          encodeAux ((h, 1) :: (ch, count) :: accTail) t\n      | [] =>\n        encodeAux ([(h, 1)]) t\n\n  let encoded := encodeAux [] chars\n  encoded\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

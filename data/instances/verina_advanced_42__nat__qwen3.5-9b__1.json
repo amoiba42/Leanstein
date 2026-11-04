@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_42",
+ "flags": [],
+ "hashes": {
+  "locked": "f4b0d36f9c9b3c4290388b816be6a24ff7744c32dabf3eb89ed8985f3abc75f9"
+ },
+ "instance_id": "verina_advanced_42__nat__qwen3.5-9b__1",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef maxProfit (prices : List Nat) (h_precond : maxProfit_precond (prices)) : Nat :=\n  prices.zipIdx.foldl (fun acc ⟨pi, i⟩ =>\n    acc.max (prices.zipIdx.foldl (fun acc' _ => acc') 0)) 0\n```",
+  "seed": 5001
+ },
+ "split": "main",
+ "start": {
+  "code": "prices.zipIdx.foldl (fun acc ⟨pi, i⟩ =>\n  acc.max (prices.zipIdx.foldl (fun acc' _ => acc') 0)) 0",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "5",
+  "index": 0,
+  "input_lean": {
+   "prices": "[7, 1, 5, 3, 6, 4]"
+  },
+  "source": "visible"
+ }
+}

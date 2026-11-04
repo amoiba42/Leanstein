@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_81",
+ "flags": [],
+ "hashes": {
+  "locked": "0d952295b0968ff488337f18484e5e81fa67efdefe5976cbbc53d14c1cac94ce"
+ },
+ "instance_id": "verina_advanced_81__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec insert (x : Int) (sorted : List Int) : List Int :=\n  match sorted with\n  | [] =>\n    [x]\n  | head :: tail =>\n    if x <= head then\n      x :: head :: tail\n    else\n      head :: insert x tail\n\nlet rec insertionSort (xs : List Int) : List Int :=\n  match xs with\n  | [] =>\n    []\n  | h :: t =>\n    let sortedTail := insertionSort t\n    insert h sortedTail\n\nlet removeDups : List Int → List Int\n| xs =>\n  let rec aux (remaining : List Int) (seen : List Int) (acc : List Int) : List Int :=\n    match remaining with\n    | [] =>\n      acc.reverse\n    | h :: t =>\n      if h ∈ seen then\n        aux t seen acc\n      else\n        aux t (h :: seen) (h :: acc)\n  aux xs [] []\n\ninsertionSort (removeDups arr)\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

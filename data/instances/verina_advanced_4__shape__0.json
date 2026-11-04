@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_4",
+ "flags": [],
+ "hashes": {
+  "locked": "e356495281abe46f37a8ce324b803f49e093f42faf04d73dd19477a0160cdffc"
+ },
+ "instance_id": "verina_advanced_4__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "main",
+ "start": {
+  "code": "  let n := a.size\n  let dp := Id.run do\n    let mut dp := Array.mkArray n 1\n    for i in [1:n] do\n      for j in [0:i] do\n        if a[j]! < a[i]! then\n          let newVal := intMax (dp[i]!) (dp[j]! + 1)\n          dp := dp.set! i newVal\n    return dp\n  match dp with\n  | #[] => 0\n  | _   => dp.foldl intMax 0\n",
+  "code_aux": "def intMax (x y : Int) : Int :=\n  if x < y then y else x\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

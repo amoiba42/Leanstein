@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_61",
+ "flags": [],
+ "hashes": {
+  "locked": "c521c2d67bd006fd37fc28ddc4725de5b957f3fd33308183d8c6231327f5818f"
+ },
+ "instance_id": "verina_basic_61__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(!isDigit it.curr)",
+  "before": "!isDigit it.curr",
+  "col": 8,
+  "line": 5,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  let rec loop (it : String.Iterator) : Bool :=\n    if it.atEnd then\n      true\n    else\n      if ¬(!isDigit it.curr) then\n        false\n      else\n        loop it.next\n  loop s.iter\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "false",
+  "expected": "true",
+  "index": 0,
+  "input_lean": {
+   "s": "\"123456\""
+  },
+  "source": "visible"
+ }
+}

@@ -1,0 +1,100 @@
+{
+ "aux_names": [
+  "isEven"
+ ],
+ "description": "-----Description-----  \nThis task requires writing a function that processes an array of integers and produces a new array containing only the even numbers from the input. The order of these even numbers should remain the same as in the original array, ensuring that every even number from the input appears in the output and that every element in the output is even.\n\n-----Input-----  \nThe input consists of one parameter:  \n• arr: An array of integers.\n\n-----Output-----  \nThe output is an array of integers that:  \n• Contains exactly all even numbers from the input array, preserving their original order.  \n• Meets the specified conditions that ensure no extraneous (odd or non-existing) elements are returned.\n\n-----Note-----  \nThere are no additional preconditions. The function must adhere to the provided specification which enforces evenness and order preservation for the elements in the output array.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_60",
+ "flags": [],
+ "header": "def FindEvenNumbers (arr : Array Int) (h_precond : FindEvenNumbers_precond (arr)) : Array Int :=",
+ "locked_hash": "7239c581254ff759d89a16ba4b610d3b078c9281fb3459df06c46626406c5ea9",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@FindEvenNumbers.loop": false,
+    "fun_ind_simp@FindEvenNumbers.loop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 70.5,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "FindEvenNumbers",
+  "params": [
+   [
+    "arr",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\ndef isEven (n : Int) : Bool :=\n  n % 2 = 0\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef FindEvenNumbers_precond (arr : Array Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef FindEvenNumbers (arr : Array Int) (h_precond : FindEvenNumbers_precond (arr)) : Array Int :=\n  -- !benchmark @start code\n  let rec loop (i : Nat) (acc : Array Int) : Array Int :=\n    if i < arr.size then\n      if isEven (arr.getD i 0) then\n        loop (i + 1) (acc.push (arr.getD i 0))\n      else\n        loop (i + 1) acc\n    else\n      acc\n  loop 0 (Array.mkEmpty 0)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef FindEvenNumbers_postcond (arr : Array Int) (result: Array Int) (h_precond : FindEvenNumbers_precond (arr)) :=\n  -- !benchmark @start postcond\n  result.all (fun x => isEven x) ∧\n  result.toList.Sublist arr.toList ∧\n  result.size = arr.toList.countP isEven\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem FindEvenNumbers_spec_satisfied (arr: Array Int) (h_precond : FindEvenNumbers_precond (arr)) :\n    FindEvenNumbers_postcond (arr) (FindEvenNumbers (arr) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(arr: Array Int) (h_precond : FindEvenNumbers_precond (arr)) :\n    FindEvenNumbers_postcond (arr) (FindEvenNumbers (arr) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[2, 4, 6]",
+   "input_lean": {
+    "arr": "#[1, 2, 3, 4, 5, 6]"
+   }
+  },
+  {
+   "expected_lean": "#[0, -2, -4]",
+   "input_lean": {
+    "arr": "#[0, -2, 3, -4, 7]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "arr": "#[1, 3, 5, 7]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 4, 8, 10]",
+   "input_lean": {
+    "arr": "#[2, 4, 8, 10]"
+   }
+  },
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "arr": "#[]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 4, 2, 6]",
+   "input_lean": {
+    "arr": "#[2, 4, 2, 6]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 8, 2]",
+   "input_lean": {
+    "arr": "#[1, 2, 8, 2, 5]"
+   }
+  }
+ ]
+}

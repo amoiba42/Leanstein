@@ -1,0 +1,22 @@
+{
+ "qwen3.5-2b": {
+  "compile": 0.15,
+  "extract": 0.9,
+  "mean_gen_s": 2.26,
+  "mean_tok_per_s": 114.5,
+  "model_proof": 0.05,
+  "n": 20,
+  "portfolio": 0.15,
+  "tests": 0.15
+ },
+ "qwen3.5-4b": {
+  "compile": 0.35,
+  "extract": 1.0,
+  "mean_gen_s": 7.88,
+  "mean_tok_per_s": 60.2,
+  "model_proof": 0.0,
+  "n": 20,
+  "portfolio": 0.2,
+  "tests": 0.3
+ }
+}

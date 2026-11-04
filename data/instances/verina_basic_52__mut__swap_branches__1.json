@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_basic_52",
+ "flags": [],
+ "hashes": {
+  "locked": "7beee18f9d57a152aa21beabd78eaf6c2382c5b88b8497bba2baa70afa3f5872"
+ },
+ "instance_id": "verina_basic_52__mut__swap_branches__1",
+ "kind": "mutant",
+ "provenance": {
+  "after": "if a[j]! > a[j+1]! then a else swap a j (j+1)",
+  "before": "if a[j]! > a[j+1]! then swap a j (j+1) else a",
+  "col": 14,
+  "line": 8,
+  "operator": "swap_branches",
+  "region": "code_aux",
+  "seed": 2026
+ },
+ "split": "main",
+ "start": {
+  "code": "  if a.size = 0 then a else bubbleOuter (a.size - 1) a\n",
+  "code_aux": "def swap (a : Array Int) (i j : Nat) : Array Int :=\n  let temp := a[i]!\n  let a₁ := a.set! i (a[j]!)\n  a₁.set! j temp\n\ndef bubbleInner (j i : Nat) (a : Array Int) : Array Int :=\n  if j < i then\n    let a' := if a[j]! > a[j+1]! then a else swap a j (j+1)\n    bubbleInner (j+1) i a'\n  else\n    a\n\ndef bubbleOuter (i : Nat) (a : Array Int) : Array Int :=\n  if i > 0 then\n    let a' := bubbleInner 0 i a\n    bubbleOuter (i - 1) a'\n  else\n    a\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[5, 4, 3, 2, 1]",
+  "expected": "#[1, 2, 3, 4, 5]",
+  "index": 0,
+  "input_lean": {
+   "a": "#[5, 4, 3, 2, 1]"
+  },
+  "source": "visible"
+ }
+}

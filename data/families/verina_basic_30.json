@@ -1,0 +1,79 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that computes the element-wise modulo between two arrays of integers. The method should produce a new array where each element is the remainder after dividing the corresponding element from the first array by the element from the second array.\n\n-----Input----- \nThe input consists of:\na: An array of integers.\nb: An array of integers.\n\n-----Output----- \nThe output is an array of integers:\nReturns a new array in which each element is the result of taking the modulo of the corresponding elements from the two input arrays.\n\n-----Note----- \nPreconditions:\n- Both arrays must be non-null.\n- Both arrays must have the same length.\n- All elements in the second array should be non-zero.\n\nPostconditions:\n- The length of the resulting array is the same as the length of the input arrays.\n- Each element in the resulting array is the modulo of the corresponding elements in the input arrays.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_30",
+ "flags": [],
+ "header": "def elementWiseModulo (a : Array Int) (b : Array Int) (h_precond : elementWiseModulo_precond (a) (b)) : Array Int :=",
+ "locked_hash": "8e58f86821a81239b21fede4d7da857e3b1c341c4428be0a5006fa460f8ee144",
+ "ref": {
+  "T": {
+   "closed": true,
+   "entry": "simp_all",
+   "timeout": false,
+   "vector": {
+    "aesop": true,
+    "decide": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": true,
+    "simp_all_omega": true,
+    "simp_grind": true,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 2.3,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_broken",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "elementWiseModulo",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ],
+   [
+    "b",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef elementWiseModulo_precond (a : Array Int) (b : Array Int) : Prop :=\n  -- !benchmark @start precond\n  a.size = b.size ∧ a.size > 0 ∧\n  (∀ i, i < b.size → b[i]! ≠ 0)\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef elementWiseModulo (a : Array Int) (b : Array Int) (h_precond : elementWiseModulo_precond (a) (b)) : Array Int :=\n  -- !benchmark @start code\n  a.mapIdx (fun i x => x % b[i]!)\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef elementWiseModulo_postcond (a : Array Int) (b : Array Int) (result: Array Int) (h_precond : elementWiseModulo_precond (a) (b)) :=\n  -- !benchmark @start postcond\n  result.size = a.size ∧\n  (∀ i, i < result.size → result[i]! = a[i]! % b[i]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem elementWiseModulo_spec_satisfied (a: Array Int) (b: Array Int) (h_precond : elementWiseModulo_precond (a) (b)) :\n    elementWiseModulo_postcond (a) (b) (elementWiseModulo (a) (b) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold elementWiseModulo elementWiseModulo_postcond\n  unfold elementWiseModulo_precond at h_precond\n  simp_all\n  intro i hi\n  have h_maplen : (Array.mapIdx (fun i x => x % b[i]!) a).size = a.size := by\n    apply Array.size_mapIdx\n  have h1 : (Array.mapIdx (fun i x => x % b[i]!) a)[i] = (fun i x => x % b[i]!) i a[i] := by\n    apply Array.getElem_mapIdx\n  have h_eq : (Array.mapIdx (fun i x => x % b[i]!) a)[i] = (Array.mapIdx (fun i x => x % b[i]!) a)[i]! := by\n    have hi' : i < (Array.mapIdx (fun i x => x % b[i]!) a).size := by\n      simp only [h_precond, hi, h_maplen]\n    rw [Array.getElem!_eq_getD]\n    unfold Array.getD\n    simp [hi', hi, h_precond]\n  rw [← h_eq]\n  simp only [h1]\n  have h_eq' : a[i] = a[i]! := by\n    have hi_a : i < a.size := by\n      simp only [h_precond, hi]\n    simp_all [Array.getElem!_eq_getD]\n  simp only [h_eq']\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (b: Array Int) (h_precond : elementWiseModulo_precond (a) (b)) :\n    elementWiseModulo_postcond (a) (b) (elementWiseModulo (a) (b) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[1, 6, 0]",
+   "input_lean": {
+    "a": "#[10, 20, 30]",
+    "b": "#[3, 7, 5]"
+   }
+  },
+  {
+   "expected_lean": "#[0, 0, 0, 0]",
+   "input_lean": {
+    "a": "#[100, 200, 300, 400]",
+    "b": "#[10, 20, 30, 50]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 1, 0]",
+   "input_lean": {
+    "a": "#[-10, -20, 30]",
+    "b": "#[3, -7, 5]"
+   }
+  }
+ ]
+}

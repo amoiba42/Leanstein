@@ -1,0 +1,90 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nImplement the insertion sort algorithm in Lean 4. The function takes a single list of integers\nas input and returns a new list that contains the same integers in ascending order.\n\nImplementation must follow a standard insertion sort approach, placing each element into its correct position.\nThe resulting list must be sorted in ascending order.\nThe returned list must be a permutation of the input list (i.e., contain exactly the same elements).\n\n-----Input-----\nA single list of integers, denoted as xs.\n\n-----Output-----\nA list of integers, sorted in ascending order.\n\nExample:\nInput:  [3, 1, 4, 2]\nOutput: [1, 2, 3, 4]",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_16",
+ "flags": [],
+ "header": "def insertionSort (xs : List Int) (h_precond : insertionSort_precond (xs)) : List Int :=",
+ "locked_hash": "f32da2d8c0c65ed6e20d3dc469fb5f227a99ec719859fe353a02ea5c230065b8",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@insertionSort.insert": false,
+    "fun_ind_grind@insertionSort.sort": false,
+    "fun_ind_simp@insertionSort.insert": false,
+    "fun_ind_simp@insertionSort.sort": false,
+    "grind": false,
+    "ind_grind@xs": false,
+    "ind_simp_all@xs": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 2.7,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "insertionSort",
+  "params": [
+   [
+    "xs",
+    "List Int"
+   ]
+  ],
+  "ret": "List Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef insertionSort_precond (xs : List Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef insertionSort (xs : List Int) (h_precond : insertionSort_precond (xs)) : List Int :=\n  -- !benchmark @start code\n    let rec insert (x : Int) (ys : List Int) : List Int :=\n      match ys with\n      | []      => [x]\n      | y :: ys' =>\n        if x <= y then\n          x :: y :: ys'\n        else\n          y :: insert x ys'\n\n    let rec sort (arr : List Int) : List Int :=\n      match arr with\n      | []      => []\n      | x :: xs => insert x (sort xs)\n\n    sort xs\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef insertionSort_postcond (xs : List Int) (result: List Int) (h_precond : insertionSort_precond (xs)) : Prop :=\n  -- !benchmark @start postcond\n  List.Pairwise (· ≤ ·) result ∧ List.isPerm xs result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem insertionSort_spec_satisfied (xs: List Int) (h_precond : insertionSort_precond (xs)) :\n    insertionSort_postcond (xs) (insertionSort (xs) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(xs: List Int) (h_precond : insertionSort_precond (xs)) :\n    insertionSort_postcond (xs) (insertionSort (xs) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "xs": "[]"
+   }
+  },
+  {
+   "expected_lean": "[42]",
+   "input_lean": {
+    "xs": "[42]"
+   }
+  },
+  {
+   "expected_lean": "[1, 2, 3, 4]",
+   "input_lean": {
+    "xs": "[3, 1, 4, 2]"
+   }
+  },
+  {
+   "expected_lean": "[-1, -1, 0, 5, 10]",
+   "input_lean": {
+    "xs": "[5, -1, 0, 10, -1]"
+   }
+  },
+  {
+   "expected_lean": "[2, 2, 2, 2, 2]",
+   "input_lean": {
+    "xs": "[2, 2, 2, 2, 2]"
+   }
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that finds the kth element in a given array using 1-based indexing. The method should return the element at the specified position, where the first element is at position 1.\n\n-----Input-----\nThe input consists of:\narr: An array of integers.\nk: An integer representing the position (1-based index) of the element to find.\n\n-----Output-----\nThe output is an integer:\nReturns the element at the kth position in the array.\n\n-----Note-----\nThe input k is assumed to be valid (between 1 and array length inclusive).\nThe array is assumed to be non-empty.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_4",
+ "flags": [],
+ "header": "def kthElement (arr : Array Int) (k : Nat) (h_precond : kthElement_precond (arr) (k)) : Int :=",
+ "locked_hash": "4abaac71f577548edae87679e21cb8a7ba37d19dfbebc6fcae2f2ed243282775",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "grind": false,
+    "ind_grind@k": false,
+    "ind_simp_all@k": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 7.2,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "human_ok",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "kthElement",
+  "params": [
+   [
+    "arr",
+    "Array Int"
+   ],
+   [
+    "k",
+    "Nat"
+   ]
+  ],
+  "ret": "Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n\n@[reducible, simp]\ndef kthElement_precond (arr : Array Int) (k : Nat) : Prop :=\n  -- !benchmark @start precond\n  k ≥ 1 ∧ k ≤ arr.size\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef kthElement (arr : Array Int) (k : Nat) (h_precond : kthElement_precond (arr) (k)) : Int :=\n  -- !benchmark @start code\n  arr[k - 1]!\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef kthElement_postcond (arr : Array Int) (k : Nat) (result: Int) (h_precond : kthElement_precond (arr) (k)) :=\n  -- !benchmark @start postcond\n  arr.any (fun x => x = result ∧ x = arr[k - 1]!)\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem kthElement_spec_satisfied (arr: Array Int) (k: Nat) (h_precond : kthElement_precond (arr) (k)) :\n    kthElement_postcond (arr) (k) (kthElement (arr) (k) h_precond) h_precond := by\n  -- !benchmark @start proof\n  unfold kthElement kthElement_postcond\n  unfold kthElement_precond at h_precond\n  have ⟨hp1, hp2⟩ := h_precond\n  simp_all\n  have h': k - 1 < arr.size := by\n    exact Nat.sub_one_lt_of_le hp1 hp2\n  exists k - 1\n  exists h'\n  exact Eq.symm (getElem!_pos arr (k - 1) ((Iff.of_eq (Eq.refl (k - 1 < arr.size))).mpr h'))\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(arr: Array Int) (k: Nat) (h_precond : kthElement_precond (arr) (k)) :\n    kthElement_postcond (arr) (k) (kthElement (arr) (k) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "10",
+   "input_lean": {
+    "arr": "#[10, 20, 30, 40, 50]",
+    "k": "1"
+   }
+  },
+  {
+   "expected_lean": "30",
+   "input_lean": {
+    "arr": "#[10, 20, 30, 40, 50]",
+    "k": "3"
+   }
+  },
+  {
+   "expected_lean": "50",
+   "input_lean": {
+    "arr": "#[10, 20, 30, 40, 50]",
+    "k": "5"
+   }
+  },
+  {
+   "expected_lean": "5",
+   "input_lean": {
+    "arr": "#[5]",
+    "k": "1"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "arr": "#[1, 2, 3]",
+    "k": "3"
+   }
+  },
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "arr": "#[1, 2, 3]",
+    "k": "2"
+   }
+  },
+  {
+   "expected_lean": "9",
+   "input_lean": {
+    "arr": "#[9, 9, 9]",
+    "k": "2"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "arr": "#[0, -1, -2]",
+    "k": "1"
+   }
+  },
+  {
+   "expected_lean": "(-1)",
+   "input_lean": {
+    "arr": "#[0, -1, -2]",
+    "k": "2"
+   }
+  },
+  {
+   "expected_lean": "(-2)",
+   "input_lean": {
+    "arr": "#[0, -1, -2]",
+    "k": "3"
+   }
+  }
+ ]
+}

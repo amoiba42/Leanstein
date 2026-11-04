@@ -1,0 +1,37 @@
+{
+ "family_id": "verina_advanced_37",
+ "flags": [],
+ "hashes": {
+  "locked": "8e4711baa3ada4292e536fba0f977f97f2a5d890a9782e1a4c73c49286cb9719"
+ },
+ "instance_id": "verina_advanced_37__mut__arith__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "*",
+  "before": "/",
+  "col": 17,
+  "line": 26,
+  "operator": "arith",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec insert (x : Int) (xs : List Int) : List Int :=\n    match xs with\n    | [] => [x]\n    | h :: t =>\n      if x ≤ h then\n        x :: h :: t\n      else\n        h :: insert x t\n\n  let rec insertionSort (xs : List Int) : List Int :=\n    match xs with\n    | [] => []\n    | h :: t =>\n      let sortedTail := insertionSort t\n      let sorted := insert h sortedTail\n      sorted\n\n  let getAt := fun (xs : List Int) (i : Nat) =>\n    match xs.drop i with\n    | [] => 0\n    | h :: _ => h\n\n  let sorted := insertionSort nums\n\n  let len := sorted.length\n  let mid := len * 2\n  getAt sorted mid\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "3",
+  "index": 0,
+  "input_lean": {
+   "nums": "[3, 2, 3]"
+  },
+  "source": "visible"
+ }
+}

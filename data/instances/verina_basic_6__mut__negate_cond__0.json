@@ -1,0 +1,39 @@
+{
+ "family_id": "verina_basic_6",
+ "flags": [],
+ "hashes": {
+  "locked": "d021548d1ca1b5437efac4a4a659065bc2ea52079bfc928f09424b441df0eec3"
+ },
+ "instance_id": "verina_basic_6__mut__negate_cond__0",
+ "kind": "mutant",
+ "provenance": {
+  "after": "¬(a <= b && a <= c)",
+  "before": "a <= b && a <= c",
+  "col": 4,
+  "line": 1,
+  "operator": "negate_cond",
+  "region": "code",
+  "seed": 2026
+ },
+ "split": "pilot",
+ "start": {
+  "code": "  if ¬(a <= b && a <= c) then a\n  else if b <= a && b <= c then b\n  else c\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "3",
+  "expected": "1",
+  "index": 0,
+  "input_lean": {
+   "a": "3",
+   "b": "2",
+   "c": "1"
+  },
+  "source": "visible"
+ }
+}

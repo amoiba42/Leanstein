@@ -1,0 +1,86 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis task involves transforming an array of integers by doubling each element.\n\n-----Input-----  \nThe input consists of:  \n• s: An array of integers.\n\n-----Output-----  \nThe output is an array of integers where for each valid index i, the element at position i is equal to twice the corresponding element in the input array.\n\n-----Note-----  \nThe implementation makes use of a recursive helper function to update the array in place. It is assumed that the input array is valid and that the doubling operation does not lead to any overflow issues.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_58",
+ "flags": [],
+ "header": "def double_array_elements (s : Array Int) (h_precond : double_array_elements_precond (s)) : Array Int :=",
+ "locked_hash": "9e9c8d99ca96c6c882c109959f20cc112d9851483af15365372aad14e6907246",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@double_array_elements_aux": false,
+    "fun_ind_simp@double_array_elements_aux": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 87.7,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "double_array_elements",
+  "params": [
+   [
+    "s",
+    "Array Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef double_array_elements_precond (s : Array Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef double_array_elements_aux (s_old s : Array Int) (i : Nat) : Array Int :=\n  if i < s.size then\n    let new_s := s.set! i (2 * (s_old[i]!))\n    double_array_elements_aux s_old new_s (i + 1)\n  else\n    s\n-- !benchmark @end code_aux\n\n\ndef double_array_elements (s : Array Int) (h_precond : double_array_elements_precond (s)) : Array Int :=\n  -- !benchmark @start code\n  double_array_elements_aux s s 0\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef double_array_elements_postcond (s : Array Int) (result: Array Int) (h_precond : double_array_elements_precond (s)) :=\n  -- !benchmark @start postcond\n  result.size = s.size ∧ ∀ i, i < s.size → result[i]! = 2 * s[i]!\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem double_array_elements_spec_satisfied (s: Array Int) (h_precond : double_array_elements_precond (s)) :\n    double_array_elements_postcond (s) (double_array_elements (s) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(s: Array Int) (h_precond : double_array_elements_precond (s)) :\n    double_array_elements_postcond (s) (double_array_elements (s) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[]",
+   "input_lean": {
+    "s": "#[]"
+   }
+  },
+  {
+   "expected_lean": "#[2, 4, 6, 8, 10]",
+   "input_lean": {
+    "s": "#[1, 2, 3, 4, 5]"
+   }
+  },
+  {
+   "expected_lean": "#[0, -2, 10]",
+   "input_lean": {
+    "s": "#[0, -1, 5]"
+   }
+  },
+  {
+   "expected_lean": "#[200]",
+   "input_lean": {
+    "s": "#[100]"
+   }
+  },
+  {
+   "expected_lean": "#[-6, -8]",
+   "input_lean": {
+    "s": "#[-3, -4]"
+   }
+  }
+ ]
+}

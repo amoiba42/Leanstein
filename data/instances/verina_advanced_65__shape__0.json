@@ -1,0 +1,21 @@
+{
+ "family_id": "verina_advanced_65",
+ "flags": [],
+ "hashes": {
+  "locked": "e1f5ced8048a6c7cf8a04536a9f86022acaba19b17892c5c1b5ef46bbe94d58c"
+ },
+ "instance_id": "verina_advanced_65__shape__0",
+ "kind": "shaping",
+ "provenance": {
+  "source": "reference"
+ },
+ "split": "heldout",
+ "start": {
+  "code": "  let rec reverseAux (chars : List Char) (acc : List Char) : List Char :=\n    match chars with\n    | [] => acc\n    | h::t => reverseAux t (h::acc)\n  String.mk (reverseAux (s.toList) [])\n",
+  "code_aux": "\n"
+ },
+ "start_T": {
+  "closed": false
+ },
+ "witness": null
+}

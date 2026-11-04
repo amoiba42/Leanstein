@@ -1,0 +1,95 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nYou are given an array of integers and a threshold value k. The problem is to create a new array where every element greater than k is replaced with -1 while every other element remains unchanged.\n\n-----Input-----  \nThe input consists of:  \n• arr: An array of integers.  \n• k: An integer used as the threshold for replacement.\n\n-----Output-----  \nThe output is an array of integers that satisfies the following conditions:  \n• For every index i, if arr[i] is greater than k, then the returned array at index i is -1.  \n• For every index i, if arr[i] is less than or equal to k, then the returned array at index i remains unchanged.\n\n-----Note-----  \nIt is assumed that the input array may be empty or non-empty, and that k can be any integer. There are no additional preconditions.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_84",
+ "flags": [],
+ "header": "def replace (arr : Array Int) (k : Int) (h_precond : replace_precond (arr) (k)) : Array Int :=",
+ "locked_hash": "2a8a4c0006617f22013059731149103d05decb0934adb28a4b64a522c4807d20",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@replace_loop": false,
+    "fun_ind_simp@replace_loop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 64.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "replace",
+  "params": [
+   [
+    "arr",
+    "Array Int"
+   ],
+   [
+    "k",
+    "Int"
+   ]
+  ],
+  "ret": "Array Int"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef replace_precond (arr : Array Int) (k : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef replace_loop (oldArr : Array Int) (k : Int) : Nat → Array Int → Array Int\n| i, acc =>\n  if i < oldArr.size then\n    if (oldArr[i]!) > k then\n      replace_loop oldArr k (i+1) (acc.set! i (-1))\n    else\n      replace_loop oldArr k (i+1) acc\n  else\n    acc\n-- !benchmark @end code_aux\n\n\ndef replace (arr : Array Int) (k : Int) (h_precond : replace_precond (arr) (k)) : Array Int :=\n  -- !benchmark @start code\n  replace_loop arr k 0 arr\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef replace_postcond (arr : Array Int) (k : Int) (result: Array Int) (h_precond : replace_precond (arr) (k)) :=\n  -- !benchmark @start postcond\n  result.size = arr.size ∧\n  (∀ i : Nat, i < arr.size → (arr[i]! > k → result[i]! = -1)) ∧\n  (∀ i : Nat, i < arr.size → (arr[i]! ≤ k → result[i]! = arr[i]!))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem replace_spec_satisfied (arr: Array Int) (k: Int) (h_precond : replace_precond (arr) (k)) :\n    replace_postcond (arr) (k) (replace (arr) (k) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(arr: Array Int) (k: Int) (h_precond : replace_precond (arr) (k)) :\n    replace_postcond (arr) (k) (replace (arr) (k) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "#[1, -1, 3, -1]",
+   "input_lean": {
+    "arr": "#[1, 5, 3, 10]",
+    "k": "4"
+   }
+  },
+  {
+   "expected_lean": "#[-1, 0, 1, 2]",
+   "input_lean": {
+    "arr": "#[-1, 0, 1, 2]",
+    "k": "2"
+   }
+  },
+  {
+   "expected_lean": "#[100, 50, 100]",
+   "input_lean": {
+    "arr": "#[100, 50, 100]",
+    "k": "100"
+   }
+  },
+  {
+   "expected_lean": "#[-5, -1, -1, -1]",
+   "input_lean": {
+    "arr": "#[-5, -2, 0, 3]",
+    "k": "(-3)"
+   }
+  },
+  {
+   "expected_lean": "#[1, 2, 3]",
+   "input_lean": {
+    "arr": "#[1, 2, 3]",
+    "k": "5"
+   }
+  }
+ ]
+}

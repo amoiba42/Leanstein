@@ -1,0 +1,116 @@
+{
+ "aux_names": [],
+ "description": "-----Description----- \nThis task requires writing a Lean 4 method that returns true if the input n is divisible by 8 or has 8 as one of it's digits.\n\n-----Input-----\nThe input consists of one integer:\nn: The main integer.\n\n-----Output-----\nThe output is an boolean:\nReturns true if the input is divisible by 8 or has 8 as one of it's digits.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_advanced_20",
+ "flags": [],
+ "header": "def isItEight (n : Int) (h_precond : isItEight_precond (n)) : Bool :=",
+ "locked_hash": "592fd7ff25ac4eb8ca875081e469122eaaef645a106f0b6a90880f794feacb48",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@isItEight.hasDigitEight": false,
+    "fun_ind_simp@isItEight.hasDigitEight": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 49.1,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "isItEight",
+  "params": [
+   [
+    "n",
+    "Int"
+   ]
+  ],
+  "ret": "Bool"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible]\ndef isItEight_precond (n : Int) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef isItEight (n : Int) (h_precond : isItEight_precond (n)) : Bool :=\n  -- !benchmark @start code\n  let rec hasDigitEight (m : Nat) : Bool :=\n    if m <= 0 then false\n    else if m % 10 == 8 then true\n    else hasDigitEight (m / 10)\n    termination_by m\n\n  let absN := Int.natAbs n\n  n % 8 == 0 || hasDigitEight absN\n  -- !benchmark @end code\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible]\ndef isItEight_postcond (n : Int) (result: Bool) (h_precond : isItEight_precond (n)) : Prop :=\n  -- !benchmark @start postcond\n  let absN := Int.natAbs n;\n  (n % 8 == 0 ∨ ∃ i, absN / (10^i) % 10 == 8) ↔ result\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem isItEight_spec_satisfied (n: Int) (h_precond : isItEight_precond (n)) :\n    isItEight_postcond (n) (isItEight (n) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n\n\n",
+ "theorem_stmt": "(n: Int) (h_precond : isItEight_precond (n)) :\n    isItEight_postcond (n) (isItEight (n) h_precond) h_precond",
+ "tier": "advanced",
+ "visible_tests": [
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "8"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "98"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "1224"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "73"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "208"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "0"
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "n": "(-123456780)"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "1"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "(-9999)"
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "n": "(-123453)"
+   }
+  }
+ ]
+}

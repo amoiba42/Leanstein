@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_basic_18",
+ "flags": [],
+ "hashes": {
+  "locked": "4a9c50cccf5bd5d95357e373a649036d0d727173d18a74185a8172a6d55c2fb6"
+ },
+ "instance_id": "verina_basic_18__nat__qwen3.5-0.8b__2",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-0.8b",
+  "raw": "```lean4\nimport Mathlib.Data.Char\nimport Mathlib.Data.Nat.Basic\n\ndef sumOfDigits (n : Nat) : Nat :=\n  Nat.zero\n```",
+  "seed": 5002
+ },
+ "split": "pilot",
+ "start": {
+  "code": "Nat.zero",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "15",
+  "index": 0,
+  "input_lean": {
+   "n": "12345"
+  },
+  "source": "visible"
+ }
+}

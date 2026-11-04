@@ -1,0 +1,95 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----\nThis task requires creating a function that determines the correct insertion index for a given integer in a sorted array. The goal is to identify an index where every number before it is less than the specified value, and every number from that index onward is greater than or equal to the value. If the given integer is larger than all elements in the array, the function should return the array’s size.\n\n-----Input-----\nThe input consists of:\n• a: An array of integers that is assumed to be sorted in non-decreasing order.\n• key: An integer to search for in the array.\n\n-----Output-----\nThe output is a natural number (Nat) representing the index determined by the binary search. The index satisfies the following postconditions:\n• It is between 0 and the size of the array.\n• Every element before the returned index is less than the key.\n• If the returned index equals the size of the array, then all elements are less than the key.\n• Every element from the index onwards is greater than or equal to the key.\n\n-----Note-----\nIt is assumed that the input array is sorted in non-decreasing order. The function returns the first index where the key could be inserted while maintaining the sorted order.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_51",
+ "flags": [],
+ "header": "def BinarySearch (a : Array Int) (key : Int) (h_precond : BinarySearch_precond (a) (key)) : Nat :=",
+ "locked_hash": "efb6b6660199733f9e7bcab698d757c7884491aadc04186f20312ca1d885e78e",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@binarySearchLoop": false,
+    "fun_ind_simp@binarySearchLoop": false,
+    "grind": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 75.9,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "BinarySearch",
+  "params": [
+   [
+    "a",
+    "Array Int"
+   ],
+   [
+    "key",
+    "Int"
+   ]
+  ],
+  "ret": "Nat"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef BinarySearch_precond (a : Array Int) (key : Int) : Prop :=\n  -- !benchmark @start precond\n  List.Pairwise (· ≤ ·) a.toList\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\ndef binarySearchLoop (a : Array Int) (key : Int) (lo hi : Nat) : Nat :=\n  if lo < hi then\n    let mid := (lo + hi) / 2\n    if (a[mid]! < key) then binarySearchLoop a key (mid + 1) hi\n    else binarySearchLoop a key lo mid\n  else\n    lo\n-- !benchmark @end code_aux\n\n\ndef BinarySearch (a : Array Int) (key : Int) (h_precond : BinarySearch_precond (a) (key)) : Nat :=\n  -- !benchmark @start code\n  binarySearchLoop a key 0 a.size\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef BinarySearch_postcond (a : Array Int) (key : Int) (result: Nat) (h_precond : BinarySearch_precond (a) (key)) :=\n  -- !benchmark @start postcond\n  result ≤ a.size ∧\n  ((a.take result).all (fun x => x < key)) ∧\n  ((a.drop result).all (fun x => x ≥ key))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem BinarySearch_spec_satisfied (a: Array Int) (key: Int) (h_precond : BinarySearch_precond (a) (key)) :\n    BinarySearch_postcond (a) (key) (BinarySearch (a) (key) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(a: Array Int) (key: Int) (h_precond : BinarySearch_precond (a) (key)) :\n    BinarySearch_postcond (a) (key) (BinarySearch (a) (key) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "2",
+   "input_lean": {
+    "a": "#[1, 3, 5, 7, 9]",
+    "key": "5"
+   }
+  },
+  {
+   "expected_lean": "3",
+   "input_lean": {
+    "a": "#[1, 3, 5, 7, 9]",
+    "key": "6"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "#[2, 4, 6, 8]",
+    "key": "1"
+   }
+  },
+  {
+   "expected_lean": "4",
+   "input_lean": {
+    "a": "#[2, 4, 6, 8]",
+    "key": "10"
+   }
+  },
+  {
+   "expected_lean": "0",
+   "input_lean": {
+    "a": "#[1, 1, 1, 1]",
+    "key": "1"
+   }
+  }
+ ]
+}

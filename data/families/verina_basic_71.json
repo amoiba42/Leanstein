@@ -1,0 +1,99 @@
+{
+ "aux_names": [],
+ "description": "-----Description-----  \nThis problem involves determining the longest common prefix shared by two lists of characters. Given two sequences, the goal is to identify and return the maximal contiguous sequence of characters from the beginning of both lists that are identical. \n\n-----Input-----  \nThe input consists of:  \n• str1: A list of characters.  \n• str2: A list of characters.\n\n-----Output-----  \nThe output is a list of characters representing the longest common prefix of the two input lists. The output list satisfies the following conditions:  \n• Its length is less than or equal to the length of each input list.  \n• It is exactly the prefix of both str1 and str2.  \n• It is empty if the first characters of the inputs differ or if one of the lists is empty.\n\n-----Note-----  \nIt is assumed that both inputs are provided as valid lists of characters. The function always returns the correct longest common prefix based on the inputs.",
+ "eligible": true,
+ "exclusion_reason": null,
+ "family_id": "verina_basic_71",
+ "flags": [],
+ "header": "def LongestCommonPrefix (str1 : List Char) (str2 : List Char) (h_precond : LongestCommonPrefix_precond (str1) (str2)) : List Char :=",
+ "locked_hash": "48724ff6ed8e78b764d7358a335490a5339ce1f85ab9da3a84c8ed29b8f17b8c",
+ "ref": {
+  "T": {
+   "closed": false,
+   "entry": null,
+   "timeout": false,
+   "vector": {
+    "aesop": false,
+    "decide": false,
+    "fun_ind_grind@LongestCommonPrefix.aux": false,
+    "fun_ind_simp@LongestCommonPrefix.aux": false,
+    "grind": false,
+    "ind_grind@str1": false,
+    "ind_grind@str2": false,
+    "ind_simp_all@str1": false,
+    "ind_simp_all@str2": false,
+    "simp": false,
+    "simp_all": false,
+    "simp_all_omega": false,
+    "simp_grind": false,
+    "simp_omega": false,
+    "split_omega": false,
+    "split_simp_all": false,
+    "unfold_omega": false
+   }
+  },
+  "compiles": true,
+  "errors": [],
+  "hidden_pass": true,
+  "lean_s": 124.2,
+  "n_hidden": 30,
+  "n_hidden_fail": 0,
+  "n_visible_fail": 0,
+  "proof": "absent",
+  "visible_pass": true
+ },
+ "signature": {
+  "name": "LongestCommonPrefix",
+  "params": [
+   [
+    "str1",
+    "List Char"
+   ],
+   [
+    "str2",
+    "List Char"
+   ]
+  ],
+  "ret": "List Char"
+ },
+ "template": "-- !benchmark @start import type=solution\n\n-- !benchmark @end import\n\n-- !benchmark @start solution_aux\n\n-- !benchmark @end solution_aux\n\n-- !benchmark @start precond_aux\n\n-- !benchmark @end precond_aux\n@[reducible, simp]\ndef LongestCommonPrefix_precond (str1 : List Char) (str2 : List Char) : Prop :=\n  -- !benchmark @start precond\n  True\n  -- !benchmark @end precond\n\n\n-- !benchmark @start code_aux\n\n-- !benchmark @end code_aux\n\n\ndef LongestCommonPrefix (str1 : List Char) (str2 : List Char) (h_precond : LongestCommonPrefix_precond (str1) (str2)) : List Char :=\n  -- !benchmark @start code\n  let minLength := Nat.min str1.length str2.length\n  let rec aux (idx : Nat) (acc : List Char) : List Char :=\n    if idx < minLength then\n      match str1[idx]?, str2[idx]? with\n      | some c1, some c2 =>\n          if c1 ≠ c2 then acc\n          else aux (idx + 1) (acc ++ [c1])\n      | _, _ => acc\n    else acc\n  aux 0 []\n  -- !benchmark @end code\n\n\n-- !benchmark @start postcond_aux\n\n-- !benchmark @end postcond_aux\n\n\n@[reducible, simp]\ndef LongestCommonPrefix_postcond (str1 : List Char) (str2 : List Char) (result: List Char) (h_precond : LongestCommonPrefix_precond (str1) (str2)) :=\n  -- !benchmark @start postcond\n  (result.length ≤ str1.length) ∧ (result = str1.take result.length) ∧\n  (result.length ≤ str2.length) ∧ (result = str2.take result.length) ∧\n  (result.length = str1.length ∨ result.length = str2.length ∨\n    (str1[result.length]? ≠ str2[result.length]?))\n  -- !benchmark @end postcond\n\n\n-- !benchmark @start proof_aux\n\n-- !benchmark @end proof_aux\n\n\ntheorem LongestCommonPrefix_spec_satisfied (str1: List Char) (str2: List Char) (h_precond : LongestCommonPrefix_precond (str1) (str2)) :\n    LongestCommonPrefix_postcond (str1) (str2) (LongestCommonPrefix (str1) (str2) h_precond) h_precond := by\n  -- !benchmark @start proof\n  sorry\n  -- !benchmark @end proof\n",
+ "theorem_stmt": "(str1: List Char) (str2: List Char) (h_precond : LongestCommonPrefix_precond (str1) (str2)) :\n    LongestCommonPrefix_postcond (str1) (str2) (LongestCommonPrefix (str1) (str2) h_precond) h_precond",
+ "tier": "basic",
+ "visible_tests": [
+  {
+   "expected_lean": "['a', 'b']",
+   "input_lean": {
+    "str1": "['a', 'b', 'c']",
+    "str2": "['a', 'b', 'd']"
+   }
+  },
+  {
+   "expected_lean": "['x', 'y', 'z']",
+   "input_lean": {
+    "str1": "['x', 'y', 'z']",
+    "str2": "['x', 'y', 'z']"
+   }
+  },
+  {
+   "expected_lean": "['w', 'o']",
+   "input_lean": {
+    "str1": "['w', 'o']",
+    "str2": "['w', 'o', 'w']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "['a', 'x']",
+    "str2": "['b', 'y']"
+   }
+  },
+  {
+   "expected_lean": "[]",
+   "input_lean": {
+    "str1": "[]",
+    "str2": "['h', 'e', 'l', 'l', 'o']"
+   }
+  }
+ ]
+}

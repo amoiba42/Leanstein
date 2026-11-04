@@ -1,0 +1,94 @@
+{
+ "family_id": "verina_basic_73",
+ "n_admissible": 12,
+ "n_candidates": 120,
+ "seed": 7,
+ "sha256": "5a6af770860d91a2ffb76ad00d2020d2988becefd338a874e72f39b00f9866c3",
+ "status": "ok",
+ "tests": [
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"xzz0\"",
+    "s": "\"caBA\""
+   }
+  },
+  {
+   "expected_lean": "true",
+   "input_lean": {
+    "p": "\"\"",
+    "s": "\"\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"x xByA\"",
+    "s": "\"Axcb0c\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"Aaxcy0\"",
+    "s": "\"AAaab0\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"Az\"",
+    "s": "\"aA\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"z\"",
+    "s": "\"0\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"zyyz0a\"",
+    "s": "\"z Bzab\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"A0 \"",
+    "s": "\"aA \""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"ABcacB\"",
+    "s": "\"yczBya\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"BA\"",
+    "s": "\"zz\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"abc0\"",
+    "s": "\"xb A\""
+   }
+  },
+  {
+   "expected_lean": "false",
+   "input_lean": {
+    "p": "\"0y\"",
+    "s": "\"bc\""
+   }
+  }
+ ]
+}
