@@ -1,0 +1,27 @@
+{
+ "digest": "964f19836f224d10a7f8336c76dd104d2e855cdb696f7de9341d2c98260afbf9",
+ "files": {
+  "exclusions.yaml": "8d8532e3470aee4ebd5fdc37fb8c2e9f3ef795b1532e97cf79fb5bcf95ec272c",
+  "hints.yaml": "fa0ecfe5d724ac5e84b834b9c77230df1f86e7777421fc373123171193abd7f8",
+  "portfolio.yaml": "fc35a1a02d29ab66b4fc958f29d771da5fbb2bf65abda2d1758c120226cd78c9",
+  "power_note.json": "98f40d06921a71935d88cd4a5781a440fd7c78b8451d082d0999f7e593b71738",
+  "prompts/A.txt": "a1f917fbcbcb9d9ce883777b0f1a125405e12628449341d591f90a9ff9aff189",
+  "prompts/B.txt": "a1f917fbcbcb9d9ce883777b0f1a125405e12628449341d591f90a9ff9aff189",
+  "prompts/BP.txt": "a1f917fbcbcb9d9ce883777b0f1a125405e12628449341d591f90a9ff9aff189",
+  "prompts/Bhammer.txt": "87c134a2c8fd17bf05a52048e51ad82db10610a82806059f73acd9b5e8a8efab",
+  "prompts/C.txt": "ba59521c1c94fd0ea3bc5f64cf4420b9cdb03b33646736cc99160733b68cedfd",
+  "prompts/Cplain.txt": "ba59521c1c94fd0ea3bc5f64cf4420b9cdb03b33646736cc99160733b68cedfd",
+  "prompts/S.txt": "8376617c6d8c56d71502ad8769b056d8ca4caa5ed092fa786c8cca6c0003c20c",
+  "prompts/Splain.txt": "8376617c6d8c56d71502ad8769b056d8ca4caa5ed092fa786c8cca6c0003c20c",
+  "prompts/feedback_hint.txt": "85954265dac865712af5e539198a8be54207b1238f7aa50db3980603e874db3d",
+  "prompts/feedback_plain.txt": "3b9a0bbda457ecef8c71cf6d5f4737bb25318621c633868121f65e11fd23bd6b",
+  "prompts/feedback_proof.txt": "54f18323201b662ebd314a0ed4fb30aa5c3457f6ce81832fbc23247d1d653dd4",
+  "prompts/natural.txt": "fa339382038b3fee0799156ddfddf510fe6a9a5aaf2a426e9cb517b1d89b2bb6",
+  "prompts/system.txt": "7353f9953b096a73ffa4bfe2ce58efe56b50d9a09bb7e36c99346b1edef73d95",
+  "prompts/task.txt": "a68944359b0bfd4ebe8c89045aa3579ac1dcfcd4cd955c10fbbb09cd4921153e",
+  "study.yaml": "f5ee0a5cd8361731fdb60c7ddba1b5cfdfa42474c78aede3c0b63fbe02bbe2b6"
+ },
+ "frozen_at": "2026-11-05T16:05:56+0530",
+ "git_commit": "c26f2d3b57644976e71808f17bcee42ae9e7d0d7",
+ "note": "team decisions of 2026-11-05 (ADR-001 to ADR-007)"
+}
