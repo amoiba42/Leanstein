@@ -161,3 +161,33 @@ and hidden tests pass. The study is **pre-registered**: once `prl freeze` is run
 - The model client only speaks to LM Studio. On Ada this is bridged by `ada_scripts/lms` plus llama.cpp, so no repo
   code was changed. The models are 4-bit GGUF built by llama.cpp commit 162e2bb; hashes are in
   `results/ada_model_hashes.txt`. Record this as a deviation (4-bit, llama.cpp, not LM Studio).
+
+---
+
+## 9. Addendum, 2026-11-05 (added after handover; sections 1 to 8 are unchanged)
+
+This document is kept as the record of what was handed over. What happened since:
+
+- **The seven open decisions in section 5 step 9 are settled.** They are written
+  up as Nygard ADRs in `context/TEAM_DECISIONS.md` (ADR-001 to ADR-007), with the
+  evidence checked against the repository, and recorded in `prereg/deviations.md`.
+- **The pre-registration is frozen.** 2026-11-05, digest `964f19836f224d10`, 19
+  files. Steps 10 and 11 of this document are therefore complete. `prl freeze`
+  excludes `FREEZE.json` and `deviations.md` from the hash, so the deviation log
+  can still be added to after the freeze.
+- **One `prereg/` value changed before the freeze:** `max_infer_s` 240 -> 600.
+  The old cap stopped 11.9% of qwen3.5-4b condition-B runs and no condition-C
+  runs, so it was not condition-neutral. `max_total_tokens` stays at 48000; it
+  never bound.
+- **The "16 specs" question in step 9 is closed.** All 16 issues from
+  arXiv:2604.16584 §5.2 were fixed upstream by VERINA PR #17, verified as an
+  ancestor of the pin; a second audit, arXiv:2605.23772, names 6 entries that the
+  same PR also fixed. No exclusions added, no dataset rebuild.
+- **Section 3 is out of date in one row.** `Project/TEAM_DECISIONS.md` was never
+  received. Its contents were reconstructed from the team chat and checked
+  against the repository. `Project/ada_scripts/` and `Project/tools/` are still
+  outstanding and still block every Ada job.
+- **The run procedure has moved.** Parts D to G of section 5 are superseded by
+  `context/RUN_HANDOFF.md`, written for whoever runs the study on Ada: it assumes
+  a fresh `~/ada_jobs`, lists the six `.sbatch` files to create, and carries the
+  stop conditions. `context/CHECKLIST.md` tracks the remaining non-run work.

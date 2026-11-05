@@ -4,8 +4,9 @@ From `context/HANDOVER.md` (2026-11-05) and `docs/final_architecture.md`.
 Order matters. Each block is blocked by the one above it.
 
 Status today: Phase 0 and the pilot are done and committed (504 pilot runs,
-3455 attempts). All seven team decisions are settled. The freeze has not happened.
-Nothing else has been run.
+3455 attempts). All seven team decisions are settled and **the pre-registration
+is frozen** (2026-11-05, digest `964f1983`, 19 files). The main study, held-out
+run, analysis and write-up have not been started.
 
 Update 2026-11-05: Ada account `gracy.garg` is set up with SSH key login. The
 repo is copied to `~/Leanstein`, and elan, VERINA, uv and cmake are installed.
@@ -22,6 +23,8 @@ the job scripts and setup jobs can start.
       Update it at the end of every work session.
 - [ ] `README.md` — pipeline commands and repo map. Note its "nothing has been
       run yet" line is out of date; the pilot is done.
+- [ ] `context/TEAM_DECISIONS.md` — the seven decisions as ADR-001 to ADR-007.
+- [ ] `context/RUN_HANDOFF.md` — for whoever runs the study on Ada.
 
 ## A. Get access (about 2.5 hours, mostly waiting)
 
@@ -91,59 +94,50 @@ to ADR-007, with ready-to-paste `deviations.md` text in its Appendix A.
 - [x] **The "16 specs" claim (ADR-007).** Source arXiv:2604.16584 §5.2; all 16
       fixed upstream before our pin. No exclusions, no rebuild.
 
-Two checks still open before the freeze, both ADR-007:
+- [x] **arXiv:2605.23772 checked 2026-11-05.** "Isomorphism Is Not Enough" is
+      mostly about CLEVER. Its Appendix A names 6 erroneous VERINA entries
+      (`verina_basic_40`, `_104`, `verina_advanced_10`, `_12`, `_15`, `_44`, via
+      issue #16), all fixed by the same PR #17, two already excluded. Nothing to
+      add.
+- [x] **Ancestry confirmed 2026-11-05** on a full clone at
+      `third_party/verina` (gitignored, pinned detached at `66b3ce5`):
+      `merge-base --is-ancestor 75c46698 66b3ce5` exits **0**, and
+      `git diff --name-status 75c4669 66b3ce5 -- datasets/` is **empty**, so no
+      dataset file changed between the fix and the pin.
 
-- [ ] Skim arXiv:2605.23772 ("Isomorphism Is Not Enough") for tasks still broken
-      at our pin.
-- [ ] On the Ada checkout, confirm the ancestry ADR-007 rests on:
-      `git -C third_party/verina merge-base --is-ancestor 75c46698 66b3ce5`
+## D. Freeze — DONE 2026-11-05
 
-Then write Appendix A into `prereg/deviations.md` and change `max_infer_s` to 600
-in `prereg/study.yaml`. Nothing else in `prereg/` may be touched.
+- [x] `max_infer_s` 240 -> 600 in `prereg/study.yaml` (ADR-003).
+      `max_total_tokens` left at 48000.
+- [x] All seven decisions written into `prereg/deviations.md`; the Bhammer
+      `_pending_` line is gone.
+- [x] Committed before the freeze, so the decisions are timestamped ahead of it.
+- [x] `uv run prl freeze --note "team decisions of 2026-11-05 (ADR-001 to ADR-007)"`
+      → digest `964f19836f224d10`, 19 files, `2026-11-05T16:05:56+0530`.
+- [x] Verified: `freeze_status()` returns `True []`.
+- [x] `prereg/FREEZE.json` committed.
 
-## D. Freeze (once, 5 minutes, cannot be undone)
+The freeze hashes every file under `prereg/` **except** `FREEZE.json` and
+`deviations.md` (`prl/prereg.py:10`), so the log can still be added to. Nothing
+else under `prereg/` changes again, and `--allow-unfrozen` is never passed for
+`main` or `heldout`. A mismatch makes `prl run` exit 2 with `REFUSING TO RUN:`,
+so a mistake here fails loudly.
 
-- [ ] Run `uv run prl freeze --note "team decisions of <date>"` on the **Ada copy**, the
-      same checkout the main runs will use.
-- [ ] Copy `prereg/FREEZE.json` back and commit it with `deviations.md` and
-      `study.yaml`.
-- [ ] After this, never edit anything in `prereg/`, and never pass
-      `--allow-unfrozen` for a `main` or `heldout` run.
+## E to H — handed off, not tracked here
 
-## E. Main study (3 to 3.5 days of GPU, one job at a time)
+Blocks E (main study), F (held-out), G (analysis) and H (hand audit and
+write-up) are run by the teammate doing the GPU work.
+**`context/RUN_HANDOFF.md` is the document for them** and is the only place the
+run procedure lives: the freeze rule and how the tooling enforces it, making
+their own `~/ada_jobs`, the six `.sbatch` files to create and what to change in
+each, run order, the two stop conditions, analysis, and copying results back.
 
-- [ ] Make job scripts from `pilot.sbatch`: change `-J`, `-o`, `-t 2-00:00:00`,
-      and the `uv run prl run` line. Every one needs `--lean-workers 6`.
-- [ ] Run these one after another. You only have one GPU.
-      - [ ] `uv run prl run --study main --split main --run-workers 4` (about 44 h)
-      - [ ] `uv run prl run --study main --split main --models gemma-4-e4b-it --conditions B,BP,C --seeds 11 --run-workers 4`
-      - [ ] `uv run prl run --study main --split main --models goedel-code-prover-8b --conditions A,B --seeds 11 --run-workers 4`
-      - [ ] `uv run prl run --study main-shaping --split main --kinds shaping --conditions S,Splain --run-workers 4`
-      - [ ] Bhammer run. Decided: it runs, last, after the held-out run (ADR-005).
-- [ ] A stopped job restarts with the same command. It skips finished runs.
-- [ ] Watch the infrastructure failure rate. Stop and investigate above 5%.
+Deliberately not repeated here. Two copies of the same commands drift apart, and
+the handoff is the one the person running them will actually read.
 
-## F. Held-out run (about 12 hours)
-
-- [ ] `uv run prl run --study heldout --split heldout --conditions B,BP,C --lean-workers 6 --run-workers 4`
-- [ ] Run it exactly once. Never pool it with `main`.
-
-## G. Analysis (CPU, a couple of hours)
-
-- [ ] `uv run prl crosseval --study main,heldout`
-- [ ] `uv run prl analyze --study main,main-shaping`
-- [ ] `uv run prl analyze --study heldout --out results/heldout`
-- [ ] `uv run prl audit --study main`
-- [ ] `python3 -I Project/tools/budget_check.py runs/main/runs.jsonl` and note how
-      the runs ended.
-
-## H. Hand audit and write-up
-
-- [ ] A person fills in `results/audit/sample.csv`: is each success a real repair?
-- [ ] `uv run prl audit --merge`
-- [ ] Copy results back with rsync, excluding `raw/`, then commit by hand.
-- [ ] Update `memory.md` with where the study stands.
-- [ ] Write the paper.
+What stays yours after the handoff: chasing `Project/ada_scripts/`, which is
+still the one thing blocking every Ada job, and committing results when they come
+back. The `prereg/` writes and the freeze are done.
 
 ---
 

@@ -16,8 +16,9 @@ was never handed over. Every figure was checked against the repository.
 | 006 | Keep 4-bit models; record as a deviation | Accepted |
 | 007 | "16 of 189 specs" does not apply; no rebuild | Accepted |
 
-**Before the freeze**, two checks under ADR-007 must close: skim arXiv:2605.23772,
-and confirm the VERINA ancestry on the Ada checkout. Then write the appendix text
+**Before the freeze**, one check under ADR-007 must close: confirm the VERINA
+ancestry from a real clone's git history. The arXiv:2605.23772 check is done and
+changes nothing. Then write the appendix text
 into `prereg/deviations.md`, change `max_infer_s` in `prereg/study.yaml`, and run
 the freeze on that same checkout.
 
@@ -221,18 +222,44 @@ Studio, and the hashes in `results/ada_model_hashes.txt`.
 
 ## ADR-007 — The "16 of 189 specs" claim does not apply at our pin
 
-**Status:** Accepted 2026-11-05, with two checks still open
+**Status:** Accepted 2026-11-05. The arXiv:2605.23772 check is closed; the local ancestry check is outstanding
 
 **Context.** The claim threatened about 6 hours of dataset rebuilding, which would
 have had to happen before the freeze. `prereg/exclusions.yaml` excludes 4
 known-bad tasks plus `verina_basic_70`, leaving 184 eligible; if the claim named
 tasks outside that list, the list would have to grow.
 
-The source is arXiv:2604.16584 section 5.2, which lists 16 VERINA specification
-issues. All 16 were fixed upstream by VERINA PR #17, commit `75c46698`, an
-ancestor of our pinned `66b3ce5`. For the 15 tasks not already excluded, the specs
-in `data/families/` match the pinned `task.lean` exactly and differ from it just
-before the fix.
+The source is arXiv:2604.16584 section 5.2 ("Certified Program Synthesis with a
+Multi-Modal Verifier", submitted 17 Apr 2026), which lists 16 VERINA
+specification issues with task IDs in its Table 1. All 16 were fixed upstream by
+VERINA PR #17, squash-merged 16 Apr 2026 as commit
+`75c46698739ae00e81c46e973971e1bc61eaf461`, which touches 32 task directories and
+contains all 16. Exactly one of the 16, `verina_advanced_10`, is already
+excluded, so "15 not already excluded" is exact.
+
+Verified locally 2026-11-05 on a full clone:
+`git merge-base --is-ancestor 75c46698 66b3ce5...` exits **0**, and the chain is
+`75c4669 -> e4f2cf5 -> 671d6ec -> 00e587c -> d12090a -> 66b3ce5`. Stronger still,
+`git diff --name-status 75c4669 66b3ce5 -- datasets/` is **empty**: not one
+dataset file changed between the fix and the pin.
+
+**One clause of this ADR proves less than it appears to.** The specs in
+`data/families/` do match the pinned `task.lean` byte-for-byte for all 16 — but
+they match for all **189** families, so that check demonstrates the study's
+extraction is faithful to the pin and carries no information specific to the 16.
+It would read "match" even if PR #17 had never existed. The load-bearing evidence
+is the ancestry, and that holds.
+
+**The paper appears to contradict this, and does not.** Section 5.2 says the
+VERINA authors "acknowledged and addressed 15; the remaining one is under
+review". PR #17's first bullet does list exactly 15 tasks: the paper's 16 minus
+`verina_advanced_71`. The paper was submitted one day after PR #17 merged, so it
+was written against the 15-task state. A later commit inside the same squashed PR
+carries the bullet `verina_advanced_71: postcond, test (close #21)`, and the diff
+confirms its postcondition changed from `r.length >= result.length` to
+`r.length > result.length`. So all 16 are fixed at `75c46698` and the paper's
+sentence is stale by a day. Worth recording, or the next reader hits the same
+apparent contradiction.
 
 **Decision.** No new exclusions. `data/` is not rebuilt. Record the check and the
 reference in `deviations.md`.
@@ -240,9 +267,42 @@ reference in `deviations.md`.
 **Consequences.**
 - `exclusions.yaml` is unchanged and 184 tasks stay eligible. The pilot does not
   need re-examining.
-- **Two checks must close before the freeze.** Skim arXiv:2605.23772 ("Isomorphism
-  Is Not Enough"), which reportedly finds VERINA issues at an unknown task list
-  and is *not* the source of "16". And confirm the ancestry on the Ada checkout:
+- **A separate gap, found during this check and worth closing before the freeze.**
+  ADR-007 and the docs describe the exclusions as "4 known-bad tasks plus
+  `verina_basic_70`", and 189 - 5 = 184 is consistent. But `exclusions.yaml`
+  lists only the 4. `verina_basic_70` is ineligible through a different route:
+  `data/families/` marks it `exclusion_reason: unrenderable_tests`, with no
+  `known_defect:` prefix, and it appears nowhere in `exclusions.yaml` — although
+  that file's own closing comment says such families should be added "before
+  `prl freeze`". **Do not add it now.** `exclusions.yaml` is read only by
+  `prl/tasks/eligibility.py` at `prl tasks build` time, and rebuilding is
+  forbidden, so adding the entry would leave the frozen YAML disagreeing with the
+  committed `data/`. Record in `deviations.md` instead that `verina_basic_70` is
+  excluded by the hidden-test generator rather than by the known-defect list, so
+  the gap between 4 listed exclusions and 5 ineligible families is on the record
+  before the freeze rather than explained afterwards.
+- **arXiv:2605.23772 checked 2026-11-05: it changes nothing.** The paper is
+  "Isomorphism Is Not Enough: An Agentic Audit of Verified Code Generation in
+  Lean" (Sosso, Arora, Spitters; v1 22 May 2026, v2 30 Oct 2026). It is
+  overwhelmingly about CLEVER; VERINA appears only in §2.1 and Appendix A, which
+  reports a separate earlier experiment. Its isomorphism critique is aimed at
+  CLEVER's scoring and makes no claim that VERINA tasks are near-duplicates.
+  Appendix A reports **6 erroneous VERINA entries** (Table 3: 2 basic, 4
+  advanced; Table 4: 2 wrong specification logic, 2 implementation bugs, 2
+  missing preconditions). The paper prints no task IDs; they are in
+  sunblaze-ucb/verina issue #16, which v1 footnotes: `verina_basic_40`,
+  `verina_basic_104`, `verina_advanced_10`, `verina_advanced_12`,
+  `verina_advanced_15`, `verina_advanced_44`. **All six were fixed by the same
+  PR #17**, merged 2026-04-17, and issue #16 was closed as completed the same
+  day. Two of the six, `verina_basic_104` and `verina_advanced_10`, are already
+  in `prereg/exclusions.yaml` for unrelated reasons. The pin `66b3ce5` is dated
+  2026-08-17, four months after the fix. A GitHub compare of
+  `75c4669...66b3ce5` returns status "ahead", ahead_by 5, behind_by 0, so the pin
+  is a direct descendant of the fix. The same footnote also ties the "16 wrong
+  entries" to this audit, confirming it is the same set as arXiv:2604.16584 §5.2.
+  No new exclusions, no rebuild.
+- **One check remains.** Confirm the ancestry from the git history itself, on a
+  real clone rather than the compare API:
   ```
   git -C third_party/verina merge-base --is-ancestor 75c46698 66b3ce5
   ```
@@ -301,13 +361,21 @@ Write all seven before the freeze, so the git timestamp proves the order.
 > freeze).** The source is arXiv:2604.16584 section 5.2. All 16 issues were fixed
 > upstream by VERINA PR #17 (commit `75c46698`), an ancestor of our pinned
 > `66b3ce5`. For the 15 tasks not already excluded, the specs in `data/families/`
-> match the pinned `task.lean` exactly. No exclusions were added and the dataset
-> was not rebuilt.
+> match the pinned `task.lean` exactly. A second audit, arXiv:2605.23772
+> Appendix A, independently reports 6 erroneous VERINA entries
+> (`verina_basic_40`, `verina_basic_104`, `verina_advanced_10`,
+> `verina_advanced_12`, `verina_advanced_15`, `verina_advanced_44`, listed in
+> sunblaze-ucb/verina issue #16); all six were fixed by the same PR #17 and two
+> are already excluded for unrelated reasons. No exclusions were added and the
+> dataset was not rebuilt.
 
 ## Appendix B — where the chat and the repository disagreed
 
 | Chat | Repository | Impact |
-|---|---|---|
+|---|---|---|Two checks still open before the freeze, both ADR-007:
+
+[ ] Skim arXiv:2605.23772 ("Isomorphism Is Not Enough") for tasks still broken at our pin.
+[ ] On the Ada checkout, confirm the ancestry ADR-007 rests on: git -C third_party/verina merge-base --is-ancestor 75c46698 66b3ce5
 | "20-40% tier, so S co-primary" | R2 has one threshold, >=20%, no tiers | Material. A fifth test would have moved Holm to alpha/5 and invalidated the power note |
 | "we're at 35.6%" | that is the *basic* tier; overall is 22.3% | Minor. Both clear the gate |
 | "natural bugs are only 56" | the rule counts families; `main` has 32 of 60 | Minor. Same conclusion, different number to record |

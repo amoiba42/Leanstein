@@ -8,8 +8,15 @@ they only repair the **code**, shaping it so that a fixed, pre-registered portfo
 `omega`, `grind`, `aesop`, `decide`, induction templates) proves the unchanged specification, instead of writing
 proofs themselves.
 
+**Status (2026-11-05): pre-registration frozen, digest `964f1983`, 19 files. The main study has not been run.**
+Phase 0, the pilot (504 runs, 0 infrastructure failures) and the power note are done and committed. All seven
+pre-freeze team decisions are settled. Nothing under `prereg/` changes from here except `deviations.md`, which is
+the log and is not hashed. A `prl run` on split `main` or `heldout` re-hashes `prereg/` and exits 2 on any mismatch.
+
 **Start here:** [`docs/final_proposal.md`](docs/final_proposal.md) (living document) ·
-[`docs/final_architecture.md`](docs/final_architecture.md) (decisions + diagram) · [`memory.md`](memory.md) (state).
+[`docs/final_architecture.md`](docs/final_architecture.md) (decisions + diagram) · [`memory.md`](memory.md) (state) ·
+[`context/TEAM_DECISIONS.md`](context/TEAM_DECISIONS.md) (the seven decisions, ADR-001 to ADR-007) ·
+[`context/RUN_HANDOFF.md`](context/RUN_HANDOFF.md) (how to run the study on Ada).
 
 | Document | Content |
 |---|---|
@@ -43,7 +50,7 @@ proved, re-checked by C's pipeline).
 Success = compiles ∧ locked theorem proved by the allowed source ∧ axioms ⊆ {propext, Classical.choice,
 Quot.sound} ∧ static integrity ∧ visible **and hidden** tests pass.
 
-## Setup (Windows 11, tested)
+## Setup (Windows 11, tested; the study itself runs on Ada, Linux + llama.cpp)
 
 ```bash
 # 1. Lean 4.24.0 via elan; Mathlib v4.24.0 is pinned in lean_env/
@@ -63,27 +70,30 @@ uv run prl env
 candidate against a fresh copy of that environment (~0.6 s per check instead of ~30 s). `PRL_LEAN_BACKEND=cli`
 uses plain `lean` instead (verdict parity is checked).
 
-## Pipeline (nothing has been run yet; GPU steps only on an otherwise idle GPU)
+## Pipeline (everything up to and including `prl freeze` is done; GPU steps only on an otherwise idle GPU)
+
+Steps already run and committed are marked `[done]`. The dataset steps must **not** be re-run: their output is
+committed, and re-running changes the natural bugs and would break the freeze.
 
 ```bash
-uv run prl tasks build                         # parse the 189 VERINA tasks
-uv run prl tasks check --tests visible         # reference checks + condition T (coverage)
-uv run prl hidden                              # hidden tests (precondition proved in Lean)
+uv run prl tasks build                         # [done] parse the 189 VERINA tasks
+uv run prl tasks check --tests visible         # [done] reference checks + condition T: basic 35.6%, advanced 5.0%, overall 22.3%
+uv run prl hidden                              # [done] hidden tests (precondition proved in Lean)
 uv run prl probe compile --models qwen3.5-2b,qwen3.5-4b   # GPU: floor-effect probe
 uv run prl probe determinism --models qwen3.5-2b,qwen3.5-4b
-uv run prl bugs natural                        # GPU: natural bugs from Qwen3.5-0.8B and 9B
-uv run prl bugs mutants                        # controlled mutants
-uv run prl bugs shaping                        # study-S instances
-uv run prl splits                              # pilot / main / held-out
+uv run prl bugs natural                        # [done] 56 instances, 32 of 114 main families: below 60, so the natural+mutant fallback applies
+uv run prl bugs mutants                        # [done] controlled mutants
+uv run prl bugs shaping                        # [done] study-S instances
+uv run prl splits                              # [done] pilot 20 / main 114 / held-out 50
 # pilot (primary models, 1 seed; Bhammer included so its cost can be estimated)
 uv run prl run --study pilot --split pilot --allow-unfrozen --seeds 11 --conditions A,B,BP,Bhammer,C,Cplain
-uv run prl power --study pilot                 # power simulation -> prereg/power_note.json (required by freeze)
-uv run prl freeze                              # pre-registration hashes
+uv run prl power --study pilot                 # [done] -> prereg/power_note.json (required by freeze)
+uv run prl freeze                              # [done 2026-11-05] digest 964f1983, 19 files
 # confirmatory study `main` (refuses if prereg/ changed)
 uv run prl run --study main --split main                                   # primary x A,B,BP,C,Cplain x 3 seeds
 uv run prl run --study main --split main --models gemma-4-e4b-it --conditions B,BP,C --seeds 11
 uv run prl run --study main --split main --models goedel-code-prover-8b --conditions A,B --seeds 11
-uv run prl run --study main --split main --conditions Bhammer           # optional, only if the pilot cost allows
+uv run prl run --study main --split main --conditions Bhammer           # exploratory; ADR-005 commits to running it last
 uv run prl run --study main-shaping --split main --kinds shaping --conditions S,Splain
 # held-out replication, run once
 uv run prl run --study heldout --split heldout --conditions B,BP,C
