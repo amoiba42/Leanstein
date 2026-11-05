@@ -15,7 +15,7 @@ budget:                    # per (instance, condition, model, seed); first bindi
   n_gen: 8
   max_total_tokens: 48000
   max_completion_tokens: 1536
-  max_infer_s: 240
+  max_infer_s: 600
 
 decoding: {temperature: 0.7, top_p: 0.95, reasoning_effort: none}
 c_round_k: 2               # C/Cplain/S/Splain sample k candidates per feedback round
