@@ -173,7 +173,7 @@ run_lean(source, *, wall_s) -> LeanRun(returncode, messages: list[Msg], stdout, 
 ```
 - **Backend `repl` (default):** a pool of `_ReplWorker`s, each a `prlrepl` process (`lean_env/PrlRepl.lean`)
   that imports the whole of Mathlib once and answers one JSON line per request (`{"ok", "messages": [{line, col, severity,
-  text}]}`) for the file path it receives. Each worker is placed in a **Windows Job Object** with a
+  text}]}`) for the file path it receives. On Windows each worker is placed in a **Job Object** (not on Linux; R-10) with a
   per-process memory cap (`lean.mem_limit_gb`, default 4 GB). Pool size = `lean.workers` or, if 0,
   `auto_workers()` = ⌊(free RAM − 4 GB) / 3 GB⌋ capped at 6; `PRL_LEAN_WORKERS` (or the CLI's
   `--lean-workers`) overrides both. A reduced import set is not used (final architecture §2b, R3-7).
@@ -342,7 +342,7 @@ failing visible test (actual output via `eval_outputs`), else a hidden test (not
   `<think>` tags and stripped at extraction; its tokens still count against the budget.
 - Retries on connection errors / 5xx / 404 / 409 / 429 with exponential backoff → `InfraError` (never charged).
 - `ensure_loaded(key, ctx=8192, parallel)`: `lms unload --all`; `lms load <key> --context-length 8192 --gpu max
-  -y --identifier <key> --parallel <n>`. Engine: LM Studio's CUDA 12 llama.cpp runtime.
+  -y --identifier <key> --parallel <n>`. Engine: LM Studio's CUDA 12 llama.cpp runtime in development; in the study, `scripts/irel/bin/lms` starts llama.cpp `162e2bb` `llama-server` with the same flags.
 
 ### 8.2 Model registry (`registry.py`)
 `ModelSpec(key, lms_path, family, size_b, role, gguf_sha256)`; hashes recorded from the GGUF file on disk at study start.

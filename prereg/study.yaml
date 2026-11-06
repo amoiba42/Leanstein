@@ -51,7 +51,7 @@ bugs:
   fallback: natural+mutant
 
 energy:
-  cpu_watts_per_thread: 2.29     # i7-14650HX base power 55 W / 24 threads (estimate; no RAPL on Windows)
+  cpu_watts_per_thread: 5.47     # AMD Threadripper PRO 7975WX, 350 W TDP / 64 threads (estimate)
   grid_kg_co2_per_kwh: 0.716     # India CEA grid average (estimate)
 
 analysis:

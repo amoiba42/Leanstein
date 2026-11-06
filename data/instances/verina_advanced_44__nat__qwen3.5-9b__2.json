@@ -1,0 +1,34 @@
+{
+ "family_id": "verina_advanced_44",
+ "flags": [],
+ "hashes": {
+  "locked": "ed63c1103a1dc76875947f7cc56f396d175a3eeed599b386f9deefcaf2083189"
+ },
+ "instance_id": "verina_advanced_44__nat__qwen3.5-9b__2",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef maxSubarraySumDivisibleByK (arr : Array Int) (k : Int) : Int :=\n  if maxSubarraySumDivisibleByK_precond arr k then\n    let subarrays := List.range arr.size |>.flatMap (fun start =>\n      List.range (arr.size - start) |>.map (fun len => arr.extract start (start + len)))\n    let divisibleSubarrays := subarrays.filter (fun subarray => subarray.size % k.toNat = 0)\n    let subarraySums := divisibleSubarrays.map (fun subarray => subarray.toList.sum)\n    if subarraySums.length = 0 then 0 else subarraySums.foldl max 0\n  else 0\n```",
+  "seed": 5002
+ },
+ "split": "heldout",
+ "start": {
+  "code": "if maxSubarraySumDivisibleByK_precond arr k then\n  let subarrays := List.range arr.size |>.flatMap (fun start =>\n    List.range (arr.size - start) |>.map (fun len => arr.extract start (start + len)))\n  let divisibleSubarrays := subarrays.filter (fun subarray => subarray.size % k.toNat = 0)\n  let subarraySums := divisibleSubarrays.map (fun subarray => subarray.toList.sum)\n  if subarraySums.length = 0 then 0 else subarraySums.foldl max 0\nelse 0",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "10",
+  "expected": "14",
+  "index": 0,
+  "input_lean": {
+   "arr": "#[1, 2, 3, 4, 5]",
+   "k": "2"
+  },
+  "source": "visible"
+ }
+}

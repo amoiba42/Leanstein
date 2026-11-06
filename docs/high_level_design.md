@@ -12,7 +12,7 @@
 2. **Fair comparison.** Conditions differ only in what the design says they differ in: who writes the proof and what feedback is shown. Same instances, models, decoding, budgets and preflight. (FR-COND-8, FR-BUD)
 3. **Mechanism visibility.** Every artefact needed to tell *shaping* from *reverting* is logged by construction (reference automation status, patch distances, code features). (SR-MECH)
 4. **Reproducibility.** Pinned toolchain, frozen pre-registration with hashes, content-addressed caching, deterministic ordering, one-command regeneration. (SR-PRE, NFR-REP)
-5. **Laptop feasibility.** One 8 GB GPU, 24 GB RAM; Lean verification is the bottleneck and is parallelised. (NFR-ENV, NFR-PERF)
+5. **Small-hardware feasibility.** Designed for one 8 GB laptop GPU; the study ran on one 48 GB MIG slice of an RTX PRO 6000 Blackwell (deviation R-3). Lean verification is parallelised. (NFR-ENV, NFR-PERF)
 
 ---
 
@@ -107,7 +107,7 @@ Run: (instance, condition, model, seed) → attempts[≤ N_gen] → outcome labe
 and then elaborates one file per request against a fresh copy of the imported environment (environments are
 immutable values, so every request starts from the same state). A pool of such workers (count derived from
 free RAM unless `lean.workers` is set, max 6; `PRL_LEAN_WORKERS` overrides) serves all verifications: ~0.6 s per check instead of 25–40 s with a plain `lean` process.
-Each worker runs inside a Windows Job Object with a 4 GB per-process memory cap. The plain `lean` CLI remains
+On Windows each worker runs inside a Job Object with a 4 GB per-process memory cap (not applied on Linux; deviation R-10). The plain `lean` CLI remains
 available as a fallback backend (`PRL_LEAN_BACKEND=cli`); verdict parity between the two is tested. A reduced import
 set was considered and declined (D16).
 
@@ -183,7 +183,7 @@ A buggy program that the portfolio *proves* against the spec is direct evidence 
 
 ## 7. Agent layer (`prl.models`)
 
-- **Server:** LM Studio with the **CUDA** llama.cpp engine, OpenAI-compatible `POST /v1/chat/completions`,
+- **Server:** an OpenAI-compatible `POST /v1/chat/completions` server. Designed for LM Studio; the study used llama.cpp `162e2bb` `llama-server` through an `lms` stand-in (`scripts/irel/bin/lms`),
   models loaded via `lms load` with fixed context length and full GPU offload. One model resident at a time;
   the driver runs (model, condition) blocks sequentially.
 - **Models:** repairers Qwen3.5-2B, Qwen3.5-4B (primary), Gemma-4-E4B-it (secondary); proof specialist
@@ -214,7 +214,7 @@ All runs share the same start code, budgets, decoding and turn-0 information (ta
 | S-plain | as S | code | portfolio | as C-plain |
 | Bhammer *(exploratory)* | as B; the prompt also lists the frozen portfolio scripts expanded for the task | code + proof | model_proof | as B |
 
-**Stop rule:** first success, or the first budget cap reached (8 generations, 48k tokens, 240 s inference).
+**Stop rule:** first success, or the first budget cap reached (8 generations, 48k tokens, 600 s inference).
 **History:** last 2 turns verbatim for every iterative condition.
 **Proof logging:** every proof-writing attempt records `proof_tactic_used` and `automation_only_proof` (FR-ANA-8).
 
@@ -281,10 +281,10 @@ Everything is a pure function of the log files and manifests, so `prl analyze` i
 
 | Item | Choice |
 |---|---|
-| OS / HW | Windows 11, RTX 5060 Laptop 8 GB, 24 GB RAM, i7-14650HX (24 threads); shared with other projects, so model runs happen only on an idle GPU |
+| OS / HW | Study: Ubuntu 24.04, NVIDIA RTX PRO 6000 Blackwell, one MIG slice 2g.48gb (GPU 1, MIG device 0), AMD Threadripper PRO 7975WX (64 threads), 503 GB RAM. Development: Windows 11, RTX 5060 Laptop 8 GB |
 | Lean | elan; `leanprover/lean4:v4.24.0`; Mathlib `v4.24.0` (commit `f897ebcf`), prebuilt cache; manifest committed; verification server `PrlRepl` |
 | Benchmark | VERINA `66b3ce50` under `third_party/verina` (read-only, not committed) |
-| Models | LM Studio 0.4.x, CUDA 12 llama.cpp engine 2.67.0, GGUF 4-bit: Qwen3.5-0.8B/2B/4B/9B, Gemma-4-E4B-it, Goedel-Code-Prover-8B |
+| Models | llama.cpp `162e2bb` (CUDA 13.1, sm_120), GGUF 4-bit, SHA-256 verified: Qwen3.5-0.8B/2B/4B/9B, Gemma-4-E4B-it, Goedel-Code-Prover-8B (development used LM Studio 0.4.x) |
 | Python | 3.12 via `uv`, lockfile; numpy, scipy, pandas, statsmodels, matplotlib, pyyaml, httpx, nvidia-ml-py, psutil, pytest, ruff |
 | Parallelism | Lean workers from free RAM (max 6, 4 GB cap each); concurrent model requests per block |
 
@@ -316,7 +316,7 @@ Numbering follows `docs/implementation_plan.md`.
 | D5 | Hidden-test inputs must have a *Lean-proved* precondition | Python-side filter | Precondition semantics live in Lean; avoids invalid tests |
 | D6 | Add B+P and S | Only A/B/C | Pre-empts "strawman B" and "C just reverts" critiques (verdicts) |
 | D7 | Family-level mean-over-seeds + sign-flip permutation | Pooled McNemar | Respects the statistical unit; uses all seeds; exact |
-| D8 | LM Studio instead of raw llama.cpp | vLLM (no Windows), Ollama | Installed, OpenAI-compatible, GPU-offloaded, seedable |
+| D8 | LM Studio instead of raw llama.cpp (development); llama.cpp `llama-server` behind an `lms` stand-in for the study | vLLM, Ollama | OpenAI-compatible, GPU-offloaded, seedable; the stand-in keeps the client code unchanged |
 | D9 | Lean 4.24.0 | latest Lean | VERINA ships a 4.24 migration; grind and fun_induction available |
 | D10 | Current Qwen3.5 / Gemma-4 models | Qwen2.5-Coder | User requirement for latest small models; 2B/4B are the direct successors to the planned 1.5B/3B sizes |
 | D11 | Own Lean verification server (Mathlib once per worker) | `lean` per file; community REPL | ~40× faster; no third-party code; CLI parity tested |

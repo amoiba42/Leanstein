@@ -294,8 +294,8 @@ verina_basic_83__mut__relflip__0,verina_basic_83,mutant,relflip,4,<,≤,visible,
 verina_basic_83__mut__swap_branches__1,verina_basic_83,mutant,swap_branches,4,if i < a.size then a[i]! else b[i - a.size]!,if i < a.size then b[i - a.size]! else a[i]!,visible,False
 verina_basic_84__mut__negate_cond__0,verina_basic_84,mutant,negate_cond,4,(oldArr[i]!) > k,¬((oldArr[i]!) > k),visible,False
 verina_basic_84__mut__relflip__1,verina_basic_84,mutant,relflip,4,>,≥,visible,False
+verina_basic_85__mut__arith__1,verina_basic_85,mutant,arith,2,/,*,visible,False
 verina_basic_85__mut__const__0,verina_basic_85,mutant,const,3,1,2,visible,False
-verina_basic_85__mut__drop_succ__1,verina_basic_85,mutant,drop_succ,3, - 1,,visible,False
 verina_basic_86__mut__const__0,verina_basic_86,mutant,const,7,1,2,visible,False
 verina_basic_86__mut__swap_branches__1,verina_basic_86,mutant,swap_branches,4,if idx_int < 0 then idx_int + Int.ofNat len else idx_int,if idx_int < 0 then idx_int else idx_int + Int.ofNat len,visible,False
 verina_basic_87__mut__negate_cond__0,verina_basic_87,mutant,negate_cond,9,i < a.size && j < a.size && i ≠ j,¬(i < a.size && j < a.size && i ≠ j),visible,False

@@ -1,0 +1,34 @@
+{
+ "family_id": "verina_basic_102",
+ "flags": [],
+ "hashes": {
+  "locked": "6ddc30cdcea70d5268a1be01c3db1fd4f01a111432bb26f089f0925ecaad5cc5"
+ },
+ "instance_id": "verina_basic_102__nat__qwen3.5-9b__1",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef twoSum (nums : Array Int) (target : Int) (h_precond : twoSum_precond (nums) (target)) : (Nat × Nat) :=\n  let lst := nums.toList\n  -- We need the lexicographically first pair (i, j) such that lst[i] + lst[j] = target.\n  -- We iterate i from 0 to size-2, and for each i, iterate j from i+1 to size-1.\n  -- The first such pair we find is our answer.\n  let rec findPair (i : Nat) : Option (Nat × Nat) :=\n    if i >= lst.length then none\n    else\n      let val_i := lst.get? i\n      match val_i with\n      | none => none\n      | some val_i =>\n          let rec search (j : Nat) : Option (Nat × Nat) :=\n            if j >= lst.length then none\n            else\n              let val_j := lst.get? j\n              match val_j with\n              | none => none\n              | some val_j =>\n                  let sum := val_i + val_j\n                  if sum = target then\n                    some (i, j)\n                  else\n                    search (j + 1)\n          search (i + 1)\n  -- Since a solution is guaranteed by h_precond, we can pattern match on the result\n  let res := findPair 0\n  match res with\n  | some p => p\n  | none => -- This should not happen given the precondition\n    (0, 0)\n```",
+  "seed": 5001
+ },
+ "split": "main",
+ "start": {
+  "code": "let lst := nums.toList\n-- We need the lexicographically first pair (i, j) such that lst[i] + lst[j] = target.\n-- We iterate i from 0 to size-2, and for each i, iterate j from i+1 to size-1.\n-- The first such pair we find is our answer.\nlet rec findPair (i : Nat) : Option (Nat × Nat) :=\n  if i >= lst.length then none\n  else\n    let val_i := lst.get? i\n    match val_i with\n    | none => none\n    | some val_i =>\n        let rec search (j : Nat) : Option (Nat × Nat) :=\n          if j >= lst.length then none\n          else\n            let val_j := lst.get? j\n            match val_j with\n            | none => none\n            | some val_j =>\n                let sum := val_i + val_j\n                if sum = target then\n                  some (i, j)\n                else\n                  search (j + 1)\n        search (i + 1)\n-- Since a solution is guaranteed by h_precond, we can pattern match on the result\nlet res := findPair 0\nmatch res with\n| some p => p\n| none => -- This should not happen given the precondition\n  (0, 0)",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "(0, 0)",
+  "expected": "(1, 2)",
+  "index": 1,
+  "input_lean": {
+   "nums": "#[3, 2, 4]",
+   "target": "6"
+  },
+  "source": "visible"
+ }
+}

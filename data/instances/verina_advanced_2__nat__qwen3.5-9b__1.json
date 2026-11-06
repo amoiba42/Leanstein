@@ -1,0 +1,34 @@
+{
+ "family_id": "verina_advanced_2",
+ "flags": [],
+ "hashes": {
+  "locked": "5bc20962e038122caa9be1bca63783a110bda606aa38a45296f756064d33413a"
+ },
+ "instance_id": "verina_advanced_2__nat__qwen3.5-9b__1",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\nimport Mathlib.Data.Array.Basic\nimport Mathlib.List.Basic\n\ndef LongestCommonSubsequence (a : Array Int) (b : Array Int) (h_precond : LongestCommonSubsequence_precond (a) (b)) : Int :=\n  (a.toList ++ b.toList).length\n```",
+  "seed": 5001
+ },
+ "split": "main",
+ "start": {
+  "code": "(a.toList ++ b.toList).length",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "6",
+  "expected": "3",
+  "index": 0,
+  "input_lean": {
+   "a": "#[1, 2, 3]",
+   "b": "#[1, 2, 3]"
+  },
+  "source": "visible"
+ }
+}

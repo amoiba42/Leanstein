@@ -1,0 +1,4 @@
+model,condition,c_proves_tests_pass,c_proves_tests_fail,c_cannot_prove,c_rejected_integrity,eligible_attempts
+gemma-4-e4b-it,B,405,0,591,0,996
+qwen3.5-2b,B,729,0,1415,0,2144
+qwen3.5-4b,B,797,0,1791,0,2588

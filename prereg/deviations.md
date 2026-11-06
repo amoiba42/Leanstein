@@ -114,6 +114,144 @@ reported before continuing. The `main` study is 7,182 runs against the pilot's 5
 as many chances for a pathological run; the field is already logged, so this costs nothing and turns a hidden
 confound into a visible event. The truncation rate per condition is reported in the paper whatever the cap.
 
-## Post-freeze deviations
+## Restart on the IREL server: second freeze (2026-11-05)
 
-None yet.
+Everything above describes the **first freeze** (digest `964f19836f224d10`, 2026-11-05 16:05), whose dataset,
+probes and pilot were produced on a Windows laptop (RTX 5060, LM Studio) and on Ada (GTX 1080 Ti, llama.cpp).
+The study was then moved to one GPU for every step, so that every computation and every model run in the paper
+comes from the same hardware and software. The pre-freeze pipeline was rerun from scratch there, and the study
+was frozen a second time.
+
+**R-1. Why, and when.** The decision to restart was made on 2026-11-05 at about 19:10, before any confirmatory
+result was analysed. Mixing a laptop dataset, an Ada pilot and an IREL study would have meant three
+environments in one study. One environment for everything is the coherent design.
+
+**R-2. What was discarded.** Under the first freeze, the IREL server had started `main` (about 310 runs) and
+`heldout` (about 250 runs), plus a 55-run timing check on pilot families. All of it was deleted unanalysed.
+Disclosure: one stop-rule check printed raw success counts once: `main` 0 of 308 runs (all qwen3.5-2b, A and
+B), `heldout` 1 of 250. Nothing else was looked at. These counts played no part in any decision; the decision
+to restart was about hardware consistency. The laptop dataset, the Ada pilot and the first power note remain in
+git history and are not used.
+
+**R-3. Hardware and serving, for every step of the study.** Everything runs on the IREL server, on one fixed MIG
+slice: NVIDIA RTX PRO 6000 Blackwell Max-Q, GPU 1, MIG device 0 (2g.48gb, UUID
+`MIG-def14cbb-599b-58f4-9cef-4befe9ff8506`), driver 595.99, CUDA 13.1, AMD Threadripper PRO 7975WX, Ubuntu 24.04.
+That covers the dataset (task checks, hidden tests, natural bugs, mutants, shaping instances, splits), probes,
+pilot, power note, every study run and the analysis. Models are the same six 4-bit GGUF files, SHA-256 verified
+against `results/ada_model_hashes.txt`, served by llama.cpp at commit `162e2bb` (built for sm_120) through an
+`lms` stand-in (`scripts/irel/bin/lms`: all layers on GPU, `--jinja`, reasoning disabled, 8192 tokens of context
+per parallel slot). No repository code was changed. Every job log records the GPU, driver, slice, llama.cpp commit
+and repo commit. Details: `context/IREL_RUNS.md`.
+
+**R-4. The one `prereg/` change before the second freeze.** `study.yaml: energy.cpu_watts_per_thread` changed
+from 2.29 (i7-14650HX laptop) to 5.47 (Threadripper PRO 7975WX, 350 W TDP / 64 threads), because the CPU energy
+estimate must describe the machine that ran the study. Prompts, portfolio, hints, budgets, the 600 s cap, seeds,
+models and the analysis plan are unchanged.
+
+**R-5. The team decisions carry over as rules (ADR-001 to ADR-007).** They are applied again to the IREL numbers,
+recorded in the section below before the second freeze. The 600 s cap and the 1% `infer_time` guard (ADR-003)
+stay as decided; the cap was calibrated on the first pilot and is not re-tuned on the second.
+
+**R-6. Concurrency.** `--run-workers 12` instead of 4, with 6 Lean workers. On the slice, qwen3.5-4b gave 91
+tok/s aggregate at 4 parallel requests, 168 at 8 and 217 at 16. The 600 s cap is wall-clock, so per-request speed
+matters. With two jobs of 12 requests each, per-request decoding was 66–81 tok/s, about Ada's 67 tok/s at 4
+workers. That is where the slice saturates, so the study runs at most two jobs at a time. The `infer_time` guard
+is monitored per condition throughout.
+
+**R-7. Two lanes and extra study folders.** Two jobs run side by side, each with its own llama-server on the
+slice. Jobs that run beside main primary write to their own folders (`runs/main-gemma`, `runs/main-goedel`,
+`runs/main-bhammer`) instead of `runs/main`, so that two processes never append to one `runs.jsonl`. Run IDs
+include the study name; seeds, prompts and budgets do not. The analysis reads the folders together
+(`prl analyze --study main,main-shaping,main-gemma,main-goedel,main-bhammer`), and the cross-evaluation covers
+`main,main-gemma,heldout`.
+
+**R-8. Bhammer timing (ADR-005).** Bhammer starts only after held-out has finished, as ADR-005 requires. It may
+overlap the end of other jobs, so it is not strictly the last GPU job. What ADR-005 protects is unchanged: the
+commitment is unconditional, independent of any result, and the start time is set by scheduling alone.
+
+**R-9. Energy is not attributable per block.** NVML reads energy per physical GPU. GPU 1 also hosts other users'
+MIG slices, and two of our jobs run at once, so a block's joules include other work. Energy per verified repair
+(RQ5) is reported only as whole-GPU energy with this caveat, never as a per-condition comparison.
+
+**R-10. No per-worker memory cap on Linux.** The 4 GB cap per Lean worker (G3, FR-RES-1) uses a Windows Job
+Object and is not applied on Linux (`prl/lean/runner.py`). The study server has 503 GB of RAM and runs at most
+12 Lean workers, so the cap's purpose, protecting a shared 24 GB laptop, does not arise. Lean's heartbeat budgets
+and the per-request wall guards apply unchanged, and no repository code was changed.
+
+## Second freeze: gate and rules applied to the IREL numbers
+
+Written 2026-11-05 at about 21:15, after the IREL pipeline and pilot, before the second `prl freeze`. Computed by
+`scripts/irel/gate.py`. The same pre-registered rules as the first freeze, applied to the new numbers:
+
+**Dataset (IREL).** 189 tasks; 184 eligible (104 basic, 80 advanced), the same 5 exclusions. Reference checks,
+hidden tests, splits (pilot 20, main 114, held-out 50) and shaping instances (89/39/15) are byte-identical to the
+first build. Mutants are identical except one: for `verina_basic_85` a different mutant was kept, because a
+candidate crossed the 20 s wall guard on this machine. Natural bugs were re-sampled: 51 instances (first build
+56), 34 in `main`, 10 in held-out, 7 in pilot.
+
+**Gate (ADR-001).** Portfolio coverage of eligible references (condition T): overall 41/184 = 22.3%, basic
+37/104 = 35.6%, advanced 4/80 = 5.0%, identical to the first build; >=20% on the overall figure, so the gate
+passes. S stays a mechanism study, and the confirmatory family stays at four tests, Holm alpha/4.
+
+**Bug pool (ADR-002).** 33 of 114 `main` families carry a natural bug, below 60, so the pre-registered fallback
+pool `natural + mutant` applies again. Mutants are reported separately.
+
+**Gate criteria from the pilot** (492 runs: 41 instances x 6 conditions x 2 primary models, seed 11, 0
+infrastructure failures, 0 `infer_time` stops at 600 s):
+- compile rate in C: 233/506 attempts = 46.0% (> 10%, passes);
+- C repairs that neither B nor BP finds on the same instance, model and seed: 10 (>= 1). Checked by Claude,
+  **awaiting human confirmation**: `verina_basic_107__mut__arith__1` (qwen3.5-2b). The mutant changed
+  `(a + b) / 2` to `(a - b) / 2`; C returned `(a + b) / 2`, which `unfold_omega` proves against
+  `2 * result = a + b - ((a + b) % 2)` and which passes all visible and hidden tests. A real repair.
+- false successes: none found by Claude's check. 90 successes; the one carrying a flag
+  (`verina_basic_6__mut__boolop__1`, C, qwen3.5-2b, `mentions_postcond`) is `min a (min b c)`, a correct
+  minimum of three. Awaiting human confirmation.
+- cost: 7.17 h of inference for the pilot. Bhammer used 1.45 h, 25% of the five main conditions, so it fits and
+  runs unconditionally (ADR-005).
+
+**One harness change before the second freeze (H-1).** Reading the C-only repairs showed two that inline the
+postcondition's own expression (`verina_basic_18`, `verina_advanced_22`): correct and verified, but spec-copying.
+The `mentions_postcond` flag only catches code that names the postcondition. A new flag, `copies_postcond`,
+fires when at least 35% of the postcondition's token 4-grams appear in the code (`prl/lean/integrity.py`,
+unit test `test_copies_postcond_flag`; on the pilot examples the copies score 0.45 and 0.93, clean repairs 0.00
+and 0.14). Flags never change a verdict; they decide what enters the audit, where every flagged success is
+read by a person. The verification cache was cleared so that no study run reuses pre-change flags.
+
+**Power (ADR-004), from `prereg/power_note.json`, point estimate, at 114 `main` families:** C vs B: qwen3.5-2b
+1.000 (34 needed), qwen3.5-4b 0.996 (57 needed); C vs BP: qwen3.5-2b 0.706 (136 needed), qwen3.5-4b 0.082 (not
+reachable). C vs BP is underpowered by the fixed size of VERINA, as before; a tie is reported with these
+figures and cost per repair.
+
+**Unchanged:** the 600 s cap and the 1% `infer_time` guard (ADR-003), 4-bit models (ADR-006), no new exclusions
+(ADR-007).
+
+## Post-freeze deviations (second freeze)
+
+All found after the runs finished (2026-11-06). None changes a run, a verdict, a test or a pre-registered rule.
+
+**D-1. GPU energy was read from the wrong device; energy figures are withdrawn.** `prl/energy.py` reads the NVML
+counter of device index 0. NVML ignores `CUDA_VISIBLE_DEVICES`, so on the IREL server index 0 is physical GPU 0,
+which belongs to other users, not GPU 1 where our slice lives. The `gpu_j` values in `runs/*/energy.jsonl`
+therefore measure someone else's GPU (they fall to near zero once GPU 0 went idle on the morning of 6 Nov). The
+Lean CPU estimate is also unusable: it sums every Lean process on the machine, and two of our jobs ran at once,
+so a block's CPU seconds include the other job's (some blocks read 0 because the other job's workers exited).
+R-9 already ruled out per-condition energy comparisons; D-1 goes further: no energy or CO2 figure from this
+study is reported. RQ5 cost is reported with the per-run measures, which are recorded per run and are not
+affected: completion tokens, inference seconds, Lean seconds and attempts per verified repair. The meter code is
+left unchanged so that the run outputs stay reproducible from the frozen code.
+
+**D-2. Two bugs in the audit sampler (`prl/analysis/report.py: audit_sample`).** (a) `s.flags` resolved to the
+pandas `DataFrame.flags` property instead of the `flags` column, so `prl audit` crashed; it now reads
+`s["flags"]`. (b) pandas 3 drops the grouping column from `groupby(...).apply(...)`, so the stratified rows lost
+their `condition`; the sampled rows are now taken back from the success table by `run_id`. The sample is the
+same 333 runs (10% stratified by condition, seed from `study.yaml`, plus every flagged success); only the missing
+column is restored.
+
+**D-3. Audit done by Claude, pending human confirmation.** The 333 sampled successes of `main` (126 distinct
+programs, 41 families; 239 carry `copies_postcond`) were read by Claude against each family's postcondition and
+description. Verdicts are in `results/audit/sample.csv`, each note marked "checked by Claude, awaiting human
+confirmation". Result: 0 spec-gaming; 27 runs (11 families) judged not natural code, because they decide the
+postcondition proposition directly (for example `∀ c ∈ s.toList, isDigit c` as a `Bool`) or carry dead code.
+Every `copies_postcond` success restates an exact, executable postcondition (closed forms, folds, filters), so the
+flag fires on intended computations; the flag's 0.35 threshold is too low to separate copying from
+implementing on VERINA and is reported as such.

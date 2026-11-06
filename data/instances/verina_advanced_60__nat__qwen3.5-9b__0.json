@@ -8,12 +8,12 @@
  "kind": "natural",
  "provenance": {
   "generator": "qwen3.5-9b",
-  "raw": "```lean\ndef partitionEvensOdds (nums : List Nat) (h_precond : partitionEvensOdds_precond (nums)) : (List Nat × List Nat) :=\n  nums.foldl (fun (acc : List Nat × List Nat) n =>\n    if n % 2 == 0 then (n :: acc.fst, acc.snd) else (acc.fst, n :: acc.snd))\n    (List.nil, List.nil) |>.swap\n```",
+  "raw": "```lean\ndef partitionEvensOdds (nums : List Nat) (h_precond : partitionEvensOdds_precond (nums)) : (List Nat × List Nat) :=\n  nums.foldl (fun (acc : List Nat × List Nat) n =>\n    if n % 2 == 0 then\n      (n :: acc.fst, acc.snd)\n    else\n      (acc.fst, n :: acc.snd)\n  ) ([], [])\n  |>.swap\n```",
   "seed": 5000
  },
  "split": "main",
  "start": {
-  "code": "nums.foldl (fun (acc : List Nat × List Nat) n =>\n  if n % 2 == 0 then (n :: acc.fst, acc.snd) else (acc.fst, n :: acc.snd))\n  (List.nil, List.nil) |>.swap",
+  "code": "nums.foldl (fun (acc : List Nat × List Nat) n =>\n  if n % 2 == 0 then\n    (n :: acc.fst, acc.snd)\n  else\n    (acc.fst, n :: acc.snd)\n) ([], [])\n|>.swap",
   "code_aux": ""
  },
  "start_T": {

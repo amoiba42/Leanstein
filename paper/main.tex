@@ -1,0 +1,283 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+\usepackage{placeins}
+
+% Numbers that come from the analysis live in results.tex, which is regenerated from the run outputs
+% (paper/make_results.py). Anything still pending prints as a red "TBD".
+\newcommand{\tbd}[1]{\textcolor{red}{\textbf{TBD}\ifx&#1&\else~(#1)\fi}}
+\input{results}
+
+\title{Prove Less, Repair Better: Automation-Friendly Program Repair\\for Small Models in Lean~4}
+\author{Inesh Dheer \and Poojitha J \and Gracy Garg\\
+\small Agents of Ultron --- Agentic Software Engineering (CS6.403), IIIT Hyderabad}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Small, locally runnable language models rarely write valid Lean~4 proofs, yet they often write correct code.
+We test whether they produce more \emph{end-to-end verified} repairs when they change only the implementation,
+shaping it so that a fixed, pre-registered portfolio of Lean automation proves the unchanged specification
+(condition C), than when they write the proofs themselves (B), or write proofs after the same automation has
+already been tried (BP). On repair tasks derived from VERINA, with natural bugs from other models and
+controlled mutants, budget-matched agents, hidden tests whose preconditions are proved in Lean, and a
+pre-registered analysis with the task family as the unit, we find \resAbstractFinding.
+We also measure \emph{why}: how often successes re-shape code for automation rather than revert the bug,
+whether models can re-shape correct but unprovable code, and which code shapes automation proves.
+Every step, from building the dataset to the final analysis, ran on one 48\,GB MIG slice of an NVIDIA RTX PRO
+6000 Blackwell GPU, with 4-bit models.
+\end{abstract}
+
+\section{Introduction}
+Proof generation is the bottleneck of verified code generation. On VERINA~\cite{verina}, the best model in the
+published evaluation reached 72.6\% code correctness but only 4.9\% proof success. Small models, the ones
+developers can run privately and cheaply, are weaker still. Lean~4, however, ships strong automation
+(\texttt{simp}, \texttt{omega}, \texttt{decide}, \texttt{aesop}, \texttt{grind}) that closes many obligations
+without hand-written tactics, \emph{provided the code has a suitable shape}.
+
+We therefore move the proof burden from the model to the shape of the code. In condition C the model edits
+only the implementation, and a fixed, pre-registered tactic portfolio must prove the unchanged contract. The
+model never writes a tactic. We compare C against budget-matched proof-writing agents: B, which repairs code
+and proof from Lean feedback; BP, which gets the same portfolio first and writes a proof only if it fails;
+and A, a single-shot baseline.
+
+\paragraph{Research questions.}
+\textbf{RQ1} (confirmatory): at matched budget, does C reach a higher verified-repair rate than B and BP?
+\textbf{RQ2} (mechanism): do successes come from re-shaping code for automation or from reverting the bug, and
+can models re-shape correct but unprovable code (S vs S-plain)?
+\textbf{RQ3} (feedback): does C's structured hint beat a plain retry (C vs C-plain)?
+\textbf{RQ4} (code shapes): which implementation features predict that automation succeeds?
+\textbf{RQ5} (costs and scale): tokens, inference time, Lean time, patch size and integrity flags; 2B vs 4B;
+Qwen vs Gemma; a proof-specialist reference.
+
+\paragraph{Contributions.}
+(i)~A budget-matched comparison of code-only repair against proof-writing repair for small models, with a
+B+P control that separates ``do not write proofs'' from ``automation exists'';
+(ii)~a mechanism analysis (shaping vs reverting, study S, and a code-shape catalogue);
+(iii)~a buggy-VERINA dataset with natural and mutant bugs and hidden tests with Lean-proved preconditions;
+(iv)~a fully pre-registered protocol, with a frozen configuration hash and a public deviation log.
+We do not claim novelty for compiler feedback, structured repair messages, automated tactics or code
+restructuring in isolation.
+
+\section{Related Work}
+\textbf{Proof repair from compiler feedback.} APRIL trains models to repair Lean proofs from compiler errors and
+goal states~\cite{april}; APOLLO combines Lean diagnostics, decomposition and automated solvers~\cite{apollo}.
+Both repair the \emph{proof}; we leave the proof to fixed automation and repair the \emph{code}.
+\textbf{Proof optimisation and joint planning.} ImProver and Lean Refactor rewrite existing
+proofs~\cite{improver,leanrefactor}; P$^3$ plans programs and proofs jointly~\cite{p3}; Vero evaluates frontier
+agents building verified repositories~\cite{vero}.
+\textbf{Restructuring code for verification.} Dissect-and-Restore transiently refactors Dafny code for
+SMT-based verification~\cite{dissect}, and DafnyFix repairs Dafny implementations with single
+transformations~\cite{dafnyfix}. Neither uses small models or Lean automation.
+\textbf{Verifier scaffolds and feedback.} A Lean verifier-guided scaffold documents specification hacking under
+verifier rewards~\cite{mitthesis}; FeedbackEval and related work compare feedback types for LLM
+repair~\cite{feedbackeval,propfeedback,symbolicfeedback}.
+\textbf{Benchmarks and their defects.} VERINA~\cite{verina} and CLEVER~\cite{clever} pair specifications with
+implementations. Two audits report VERINA specification issues~\cite{multimodalverifier,isomorphism}; all of
+them were fixed upstream before our pinned commit (\cref{sec:prereg}).
+
+\section{Method}
+\input{fig_pipeline}
+\subsection{Tasks and bugs}
+VERINA has 189 Lean~4 tasks (pinned commit \texttt{66b3ce5}). A task is eligible if its reference compiles and
+passes its tests; a human proof is \emph{not} required (only 46 of 189 ship one). Five tasks are excluded
+(four known defects and one with unrenderable tests), leaving 184 eligible: 104 basic and 80 advanced.
+Families are the statistical unit and are split at family level into pilot (20), main (114) and held-out (50).
+
+\emph{Natural bugs} are zero-shot implementations by Qwen3.5-0.8B and Qwen3.5-9B, which never act as
+repairers: at most four samples per generator and family, kept if they compile and fail at least one test.
+\emph{Mutants} apply arithmetic, relational, boolean, constant, condition-negation, branch-swap, off-by-one and
+argument-swap operators, kept if they compile and fail a test, at most two per family. The pre-registered pool
+rule uses natural bugs if at least 60 \texttt{main} families carry one, and natural $\cup$ mutant otherwise.
+Natural bugs cover \resNaturalFamilies{} of 114 \texttt{main} families, so the fallback pool applies; mutants are also reported
+separately. \emph{Shaping instances} for study S are correct references that the portfolio alone cannot prove.
+
+\emph{Hidden tests} are generated inputs whose precondition is \emph{proved in Lean}, with expected outputs from
+the reference (30 per family). They are never shown to a model; failures are reported only as a count.
+
+\subsection{Conditions}
+\Cref{tab:conditions} lists the conditions. All share the same models, buggy starts, turn-0 information and
+budget per (instance, condition, model, seed): at most 8 generations, 48k tokens and 600\,s of inference,
+whichever binds first, with at most 1,536 completion tokens per generation. C and C-plain sample two
+candidates per feedback round. Decoding uses temperature 0.7, top-$p$ 0.95, hidden reasoning disabled, and
+seeds 11, 23 and 37.
+
+\begin{table*}[t]
+\centering\small
+\caption{Conditions. The proof source is the only allowed one; everything else is shared.}
+\label{tab:conditions}
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+ID & Model writes & Proof from & Feedback \\
+\midrule
+T & --- & portfolio & --- \\
+A & code + proof & model & none ($N$ samples) \\
+B & code + proof & model & Lean errors, witness, proof errors \\
+BP & code + proof & portfolio, else model & as B \\
+\textbf{C} & code only & portfolio & witness, best unsolved goal, structural hint \\
+C-plain & code only & portfolio & generic retry \\
+S / S-plain & code, from a correct ref. & portfolio & as C / as C-plain \\
+Bhammer$^\dagger$ & code + proof; prompt lists portfolio & model & as B \\
+\bottomrule
+\end{tabularx}\\[2pt]
+\footnotesize $^\dagger$Exploratory, pre-registered to run unconditionally; never pooled with B.
+\end{table*}
+
+\subsection{Verification and the portfolio}
+Verification uses Lean~4.24.0 with the whole of Mathlib v4.24.0, loaded once per worker in our own
+verification server. A candidate is a \emph{verified repair} only if it compiles, passes all visible and hidden
+tests, is proved by the allowed source, uses no axioms beyond \texttt{propext}, \texttt{Classical.choice} and
+\texttt{Quot.sound}, leaves the locked regions (specification, theorem statement, tests) unchanged, and passes
+static integrity checks. These reject \texttt{sorry}, \texttt{admit}, new axioms, \texttt{native\_decide},
+\texttt{implemented\_by}, \texttt{unsafe}, \texttt{set\_option}, macros, attributes, redefinitions of locked
+names, and any proof text in code-only conditions. Spec-copying, constant bodies, hard-coded tests and
+\texttt{choice} are flagged for audit.
+
+The portfolio is frozen. It runs in a fixed order and stops early: Tier~L (50k heartbeats) holds
+\texttt{decide}, \texttt{simp}, \texttt{simp\_all}, and combinations with \texttt{omega} and \texttt{split};
+Tier~H (200k heartbeats) holds \texttt{grind}, \texttt{aesop}, and functional or structural induction closed by
+\texttt{simp\_all} or \texttt{grind}. Heartbeats are the tactic budget; wall-clock guards only stop hangs.
+Infrastructure failures never charge the model's budget.
+
+\subsection{Analysis}
+\label{sec:analysis}
+The family score is the mean over seeds of ``any instance of the family solved''. RQ1 uses a one-sided paired
+sign-flip permutation test on family scores (100,000 permutations), Holm-corrected over the four primary tests
+(C vs B and C vs BP, for each primary model), plus exact McNemar on majority-solved families, 95\%
+family-cluster bootstrap intervals (10,000 resamples) and Cohen's $h$. Secondary analyses are never pooled with
+the primary ones: \textbf{B\_noauto} counts B's successes whose proof is a single call to automation as
+failures; \textbf{Bhammer} is compared with B and C; and the \textbf{B$\to$C cross-evaluation} re-checks every
+B attempt whose code compiled but whose proof failed through C's code-only pipeline. The held-out split is
+analysed once and separately, as a replication.
+
+\section{Pre-registration, Freeze and Deviations}
+\label{sec:prereg}
+\textbf{One environment for everything.} Every step of the study ran on one 48\,GB MIG slice (2g.48gb) of an
+NVIDIA RTX PRO 6000 Blackwell GPU, with an AMD Threadripper PRO 7975WX host: building the dataset (reference
+checks, hidden tests, natural bugs, mutants, shaping instances, splits), the probes, the pilot, the power
+simulation, every study run and the analysis. Models are the six SHA-256-verified 4-bit GGUF files, served by
+llama.cpp at a pinned commit (\texttt{162e2bb}) with hidden reasoning disabled.
+
+\textbf{Freeze.} A 492-run pilot (20 families, 41 buggy instances, primary models, seed 11, all six conditions) calibrated the
+protocol, and a simulation from it estimated the power of the primary tests (\cref{tab:power}). The full
+configuration (study parameters, portfolio, hints, prompts, power note) was then frozen under a SHA-256 digest
+(\resFreezeDigest). The driver re-hashes it before every confirmatory run and refuses to run on any mismatch.
+Seven team decisions were fixed beforehand as rules and applied to the pilot numbers: the screening gate
+(portfolio coverage of eligible references \resTCoverage); the bug-pool rule (\resNaturalFamilies{} of 114
+\texttt{main} families carry a natural bug, against a minimum of 60); a 600\,s inference cap, chosen because a
+240\,s cap was shown in an earlier calibration not to be condition-neutral; a C/BP tie to be reported with its
+power figures; Bhammer to run unconditionally; 4-bit models; and no new exclusions, because the reported VERINA
+specification issues~\cite{multimodalverifier,isomorphism} were fixed upstream by an ancestor of our pinned
+commit.
+
+An earlier freeze, prepared on other hardware, was superseded before any confirmatory result was analysed, so that
+every step would run in this one environment; the public deviation log records it.
+
+\begin{table}[t]
+\centering\small
+\caption{Pre-freeze power of the primary tests at the 114 available \texttt{main} families (500 simulated studies,
+sign-flip at $\alpha/4$), from the pilot's discordant-pair rates: point estimate and the pessimistic 80\% Jeffreys
+bound, and the families needed for 80\% power at the point estimate.}
+\label{tab:power}
+\resPowerTable
+\end{table}
+
+\textbf{Operational choices}, all fixed before the second freeze: two jobs ran side by side with 12 concurrent
+requests each, which is where the slice saturates while keeping per-request decoding speed at the level the time
+cap was calibrated on. Jobs that ran beside the main job wrote to their own study folders, which the analysis
+reads together.
+
+\textbf{Post-freeze deviations.} Three were logged after the runs finished; none changes a run, a verdict or a
+pre-registered rule. D-1: the energy meter read the NVML counter of a different physical GPU (NVML ignores the
+CUDA device mask), and its Lean CPU estimate mixed the two concurrent jobs, so no energy or CO$_2$ figure is
+reported; per-run tokens and times are unaffected. D-2: two bugs in the audit sampler that made it crash and drop
+a column were fixed, without changing which runs it samples. D-3: the audit was carried out by Claude and is
+awaiting human confirmation.
+
+\section{Results}
+\label{sec:results}
+\subsection{RQ1: verified-repair rate}
+\resRQOneText
+
+\IfFileExists{fig_rates.pdf}{%
+\begin{figure*}[t]\centering
+\includegraphics[width=0.9\textwidth]{fig_rates.pdf}
+\caption{Verified-repair rate per condition on the \texttt{main} split, primary bug pool, as the pre-registered
+family score (mean over seeds of ``any instance of the family solved''), with 95\% family-cluster bootstrap
+intervals. Bhammer is exploratory.}
+\label{fig:rates}
+\end{figure*}}{}
+
+\input{results_tables}
+
+\subsection{RQ2: shaping, reverting and study S}
+\resRQTwoText
+
+\subsection{RQ3: structured hint vs plain retry}
+\resRQThreeText
+
+\subsection{RQ4: which code shapes automation proves}
+\resRQFourText
+
+\subsection{RQ5: costs, scale and the proof specialist}
+\IfFileExists{fig_costs.pdf}{%
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{fig_costs.pdf}
+\caption{Model tokens spent per verified repair (log scale), \texttt{main} split, primary models. Missing points
+mean no verified repair in that cell.}
+\label{fig:costs}
+\end{figure}}{}
+\resRQFiveText
+
+\subsection{Secondary: B without automation, Bhammer and cross-evaluation}
+\resSecondaryText
+
+\subsection{Held-out replication}
+\resHeldoutText
+
+\section{Threats to Validity}
+\textbf{Construct.} A proof certifies only its specification. Every verified repair must also pass hidden tests,
+and ``verified but behaviourally wrong'' is reported separately as a weak-contract signal. Known-defective tasks
+are excluded.
+\textbf{Selection.} Portfolio coverage is reported over the full eligible pool; condition T is a screening and
+stratification variable only, never a filter on tasks.
+\textbf{Hand-tuning.} Prompts, portfolio and hints were tuned on pilot families only, then frozen; the held-out
+split was run once.
+\textbf{Specification gaming.} Static rejection, the axiom check, degeneracy flags and a 10\% stratified hand
+audit plus every flagged success guard against it.
+\textbf{Internal.} Budgets and turn-0 information are equal; BP gives B the same automation first, Bhammer tells
+B the automation, B\_noauto and the cross-evaluation test whether B is a strawman.
+\textbf{Statistical.} C vs BP is underpowered by the fixed size of VERINA (\cref{tab:power}); a tie there is
+reported as such, with cost per repair.
+\textbf{External.} VERINA functions are small; results are for 4-bit models and two model families, on one GPU
+model, and may not transfer to full precision or to repository-scale Lean.
+\textbf{Hardware.} Every step used one GPU slice, one host and one llama.cpp build, so no comparison mixes
+environments. The slice ran no job beyond our two study lanes. The physical GPU hosts other users' slices, which
+would have made per-condition energy unattributable even with a correct counter (deviation D-1); verdicts do not
+depend on it. The pilot is a calibration on its own
+split and is never pooled with the study.
+
+\section{Conclusion}
+\resConclusionText
+
+\paragraph{Artefacts.} The harness, buggy-VERINA dataset with hidden tests, frozen configuration, deviation log
+and all run logs are in the Leanstein repository.
+
+\FloatBarrier
+\bibliographystyle{plain}
+\bibliography{refs}
+\end{document}

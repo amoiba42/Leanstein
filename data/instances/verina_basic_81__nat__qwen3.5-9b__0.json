@@ -8,12 +8,12 @@
  "kind": "natural",
  "provenance": {
   "generator": "qwen3.5-9b",
-  "raw": "```lean\ndef DivisionFunction (x : Nat) (y : Nat) (h_precond : DivisionFunction_precond (x) (y)) : Int × Int :=\n  if y = 0 then (Int.ofNat x, 0) else (Int.ofNat x / Int.ofNat y, Int.ofNat x % Int.ofNat y)\n```",
+  "raw": "```lean\ndef DivisionFunction (x : Nat) (y : Nat) (h_precond : DivisionFunction_precond (x) (y)) : Int × Int :=\n  if y = 0 then (Int.ofNat x, 0) else (Int.ofNat (x / y), Int.ofNat (x % y))\n```",
   "seed": 5000
  },
  "split": "main",
  "start": {
-  "code": "if y = 0 then (Int.ofNat x, 0) else (Int.ofNat x / Int.ofNat y, Int.ofNat x % Int.ofNat y)",
+  "code": "if y = 0 then (Int.ofNat x, 0) else (Int.ofNat (x / y), Int.ofNat (x % y))",
   "code_aux": ""
  },
  "start_T": {

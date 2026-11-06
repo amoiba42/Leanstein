@@ -3,7 +3,7 @@
 **Project:** Prove Less, Repair Better (PRL)
 **Status:** v2.1 · 2026-11-03 · derived from requirements v2.1, HLD v2.1, LLD v2.1 and `docs/final_architecture.md`
 (v2.1 = Gracy's revision-3 notes reconciled, final architecture §2b).
-**State:** all code is implemented and tested; **no dataset has been generated and no experiment has been run**
+**State (2026-11-05):** all code is implemented and tested; the full pipeline is being run from scratch on the IREL server (see `context/IREL_RUNS.md`)
 (all earlier outputs were deleted; everything is produced from scratch by the phases below).
 
 Legend: ☐ todo · ◐ in progress · ☑ done · ⊘ dropped (with reason). Owner roles: A = Verification Engine,
@@ -11,7 +11,7 @@ B = Tasks & Models, C = Study Lead.
 
 ---
 
-## Phase 0 — Environment (done) and feasibility (to run)
+## Phase 0 — Environment and feasibility (done, on IREL)
 
 | ID | Feature | Owner | Satisfies | Acceptance | Status |
 |---|---|---|---|---|---|
@@ -20,10 +20,10 @@ B = Tasks & Models, C = Study Lead.
 | F-02 | Python env with lockfile (`uv`) | C | NFR-ENV-2 | `uv run pytest` runs | ☑ |
 | F-03 | LM Studio models + CUDA engine; `reasoning_effort: none` | B | R10 | `lms ls` | ☑ |
 | F-04 | Verification server `PrlRepl` + CLI parity | A | FR-RES-2 | parity check | ☑ (re-check in Phase 0) |
-| F-05 | T on all references | A | NFR-FEAS-1, SR-SEL-1 | `results/t_coverage.md` | ☐ |
-| F-06 | Compile-rate probe (10 tasks × models) | B | NFR-FEAS-2 | `results/phase0_compile_probe.json` | ☐ (idle GPU) |
-| F-07 | Determinism probe + throughput | B | FR-GEN-5 | `results/phase0_determinism.json` | ☐ (idle GPU) |
-| F-08 | Model registry with GGUF SHA-256 | B | NFR-ENV-2 | `results/model_registry.json` | ☐ (regenerate) |
+| F-05 | T on all references | A | NFR-FEAS-1, SR-SEL-1 | `results/t_coverage.md` | ☑ |
+| F-06 | Compile-rate probe (10 tasks × models) | B | NFR-FEAS-2 | `results/phase0_compile_probe.json` | ☑ |
+| F-07 | Determinism probe + throughput | B | FR-GEN-5 | `results/phase0_determinism.json` | ☑ |
+| F-08 | Model registry with GGUF SHA-256 | B | NFR-ENV-2 | `results/model_registry.json` | ☑ |
 
 ## Phase 1 — Components (all implemented)
 
@@ -68,47 +68,47 @@ B = Tasks & Models, C = Study Lead.
 
 | ID | Command | Needs | Acceptance | Status |
 |---|---|---|---|---|
-| D-1 | `prl tasks build` then `prl tasks check --tests visible` | CPU | eligibility table; T coverage (full vector) | ☐ |
-| D-2 | `prl hidden` | CPU | hidden tests for most families; reference passes all | ☐ |
-| D-3 | `prl bugs natural` | **idle GPU** | ≤1 bug per family per generator (0.8B, 9B) | ☐ |
-| D-4 | `prl bugs mutants` | CPU | ≤2 per family; provenance CSV; weak-spec flags | ☐ |
-| D-5 | `prl bugs shaping` | — | one per T-unprovable eligible reference | ☐ |
-| D-6 | `prl splits` | — | pilot 20 / main / held-out | ☐ |
+| D-1 | `prl tasks build` then `prl tasks check --tests visible` | CPU | eligibility table; T coverage (full vector) | ☑ |
+| D-2 | `prl hidden` | CPU | hidden tests for most families; reference passes all | ☑ |
+| D-3 | `prl bugs natural` | **idle GPU** | ≤1 bug per family per generator (0.8B, 9B) | ☑ |
+| D-4 | `prl bugs mutants` | CPU | ≤2 per family; provenance CSV; weak-spec flags | ☑ |
+| D-5 | `prl bugs shaping` | — | one per T-unprovable eligible reference | ☑ |
+| D-6 | `prl splits` | — | pilot 20 / main / held-out | ☑ |
 
 ## Phase 3 — Pilot and gate
 
 | ID | Step | Acceptance | Status |
 |---|---|---|---|
-| P-1 | `prl run --study pilot --split pilot --kinds natural,mutant --allow-unfrozen --seeds 11 --conditions A,B,BP,Bhammer,C,Cplain` (primary models; Bhammer included only to measure its cost) | logs complete | ☐ |
-| P-2 | Pilot-only tuning of prompts / portfolio; every change logged in `prereg/deviations.md` | — | ☐ |
-| P-3 | `prl power --study pilot`: power simulation (3 scenarios, 3 seeds, sign-flip at α/4, n_main → total eligible incl. pilot) | `prereg/power_note.json`, `results/power_note.md` | ☐ |
-| P-4 | Gate (requirements §11) recorded in `docs/feasibility.md`, incl. the Bhammer go/no-go from the cost estimate (logged in `prereg/deviations.md`) | decision | ☐ |
-| P-5 | `prl freeze` (refuses without the power note) | `prereg/FREEZE.json` | ☐ |
+| P-1 | `prl run --study pilot --split pilot --kinds natural,mutant --allow-unfrozen --seeds 11 --conditions A,B,BP,Bhammer,C,Cplain` (primary models; Bhammer included only to measure its cost) | logs complete | ☑ |
+| P-2 | Pilot-only tuning of prompts / portfolio; every change logged in `prereg/deviations.md` | — | ☑ |
+| P-3 | `prl power --study pilot`: power simulation (3 scenarios, 3 seeds, sign-flip at α/4, n_main → total eligible incl. pilot) | `prereg/power_note.json`, `results/power_note.md` | ☑ |
+| P-4 | Gate (requirements §11) recorded in `docs/feasibility.md`, incl. the Bhammer go/no-go from the cost estimate (logged in `prereg/deviations.md`) | decision | ☑ |
+| P-5 | `prl freeze` (refuses without the power note) | `prereg/FREEZE.json` | ☑ |
 
 ## Phase 4 — Confirmatory run
 
 | ID | Step | Status |
 |---|---|---|
-| M-1 | Study `main`: primary models × {A, B, BP, C, Cplain} × 3 seeds on `main` (natural + mutant instances) | ☐ |
-| M-2 | Study `main-shaping`: primary models × {S, Splain} × 3 seeds on shaping instances | ☐ |
-| M-3 | Study `main`: Gemma-4-E4B × {B, BP, C} × 1 seed | ☐ |
-| M-4 | Study `main`: Goedel-Code-Prover-8B × {A, B} × 1 seed | ☐ |
-| M-5 | Study `heldout` (run once): primary models × {B, BP, C} × 3 seeds; analysed separately as a replication | ☐ |
-| M-6 | *Optional (P-4 decision):* study `main`, primary models × Bhammer × 3 seeds (exploratory; cost reported) | ☐ |
+| M-1 | Study `main`: primary models × {A, B, BP, C, Cplain} × 3 seeds on `main` (natural + mutant instances) | ☑ |
+| M-2 | Study `main-shaping`: primary models × {S, Splain} × 3 seeds on shaping instances | ☑ |
+| M-3 | Study `main`: Gemma-4-E4B × {B, BP, C} × 1 seed | ☑ |
+| M-4 | Study `main`: Goedel-Code-Prover-8B × {A, B} × 1 seed | ☑ |
+| M-5 | Study `heldout` (run once): primary models × {B, BP, C} × 3 seeds; analysed separately as a replication | ☑ |
+| M-6 | *Optional (P-4 decision):* study `main`, primary models × Bhammer × 3 seeds (exploratory; cost reported) | ☑ |
 
 ## Phase 5 — Analysis and reporting
 
 | ID | Step | Status |
 |---|---|---|
-| R-0 | `prl crosseval --study main,heldout`: B→C cross-evaluation, Lean only | ☐ |
-| R-1 | `prl analyze --study main,main-shaping` → `results/` (confirmatory + secondary: `B_noauto`, Bhammer, proof-style table, `crosseval.md`); `prl analyze --study heldout --out results/heldout` (replication, never pooled) | ☐ |
-| R-2 | `prl audit --study main` → fill the CSV → `prl audit --merge` | ☐ |
-| R-3 | Code-shape catalogue with annotated before/after examples | ☐ |
-| R-4 | `docs/results.md` (claims locked to `results/`) and `docs/final_proposal.md` §Results | ☐ |
-| R-5 | Write up the cross-evaluation buckets (R-0) as a secondary result, separate from B and C | ☐ |
-| R-6 | Write up B overall vs `B_noauto` (from R-1) | ☐ |
-| R-7 | Report the pre-freeze power note (P-3) and, if underpowered, state it as a limitation | ☐ |
-| R-8 | If M-6 ran: Bhammer vs B and C with its compute cost, labelled exploratory | ☐ |
+| R-0 | `prl crosseval --study main,heldout`: B→C cross-evaluation, Lean only | ☑ |
+| R-1 | `prl analyze --study main,main-shaping` → `results/` (confirmatory + secondary: `B_noauto`, Bhammer, proof-style table, `crosseval.md`); `prl analyze --study heldout --out results/heldout` (replication, never pooled) | ☑ |
+| R-2 | `prl audit --study main` → fill the CSV → `prl audit --merge` | ☑ (audit by Claude; human confirmation pending) |
+| R-3 | Code-shape catalogue with annotated before/after examples | ◐ (feature tables in `results/rq4_shapes.md`; annotated examples not written) |
+| R-4 | `docs/results.md` (claims locked to `results/`) and `docs/final_proposal.md` §Results | ◐ (claims locked to `results/` in `paper/`; no separate `docs/results.md`) |
+| R-5 | Write up the cross-evaluation buckets (R-0) as a secondary result, separate from B and C | ☑ |
+| R-6 | Write up B overall vs `B_noauto` (from R-1) | ☑ |
+| R-7 | Report the pre-freeze power note (P-3) and, if underpowered, state it as a limitation | ☑ |
+| R-8 | If M-6 ran: Bhammer vs B and C with its compute cost, labelled exploratory | ☑ |
 
 ---
 
@@ -124,7 +124,7 @@ B = Tasks & Models, C = Study Lead.
 
 ## Testing strategy
 
-1. Unit tests (no Lean, no LLM): `uv run pytest -m "not lean and not llm"` (95 tests).
+1. Unit tests (no Lean, no LLM): `uv run pytest -m "not lean and not llm"` (96 tests).
 2. Lean integration: `uv run pytest -m lean` (24 tests: integrity, re-shaping mechanism, determinism).
 3. Static: `uv run ruff check prl tests`.
 4. End-to-end dry run before the pilot: 3 families × all conditions × 1 seed × Qwen3.5-2B.

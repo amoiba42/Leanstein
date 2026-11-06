@@ -1,0 +1,28 @@
+{
+ "family_id": "verina_advanced_55",
+ "flags": [],
+ "hashes": {
+  "locked": "d2c93fcd978e3b2c0fc691c03d9700c3766f9e6d17591384608b748980dad83a"
+ },
+ "instance_id": "verina_advanced_55__nat__qwen3.5-9b__3",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef mostFrequent (xs : List Int) (h_precond : mostFrequent_precond (xs)) : Int :=\n  let count := fun x => xs.countP (fun y => y = x)\n  let maxCount := xs.foldl (fun acc x => max acc (count x)) 0\n  xs.foldl (fun acc x => if count x = maxCount then x else acc) (xs.head!)\n```",
+  "seed": 5003
+ },
+ "split": "main",
+ "start": {
+  "code": "let count := fun x => xs.countP (fun y => y = x)\nlet maxCount := xs.foldl (fun acc x => max acc (count x)) 0\nxs.foldl (fun acc x => if count x = maxCount then x else acc) (xs.head!)",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "index": 1,
+  "source": "hidden"
+ }
+}

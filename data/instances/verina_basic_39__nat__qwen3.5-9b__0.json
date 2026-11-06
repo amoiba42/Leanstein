@@ -8,12 +8,12 @@
  "kind": "natural",
  "provenance": {
   "generator": "qwen3.5-9b",
-  "raw": "```lean\ndef rotateRight (l : List Int) (n : Nat) (h_precond : rotateRight_precond (l) (n)) : List Int :=\n  let len := l.length\n  let k := n % len\n  if len = 0 then l\n  else\n    let rotated := l.drop k ++ l.take k\n    rotated\n```",
+  "raw": "```lean\ndef rotateRight (l : List Int) (n : Nat) (h_precond : rotateRight_precond (l) (n)) : List Int :=\n  let len := l.length\n  let k := n % len\n  if len = 0 then l\n  else\n    let shift := k\n    let left_part := l.drop shift\n    let right_part := l.take shift\n    right_part ++ left_part\n```",
   "seed": 5000
  },
  "split": "heldout",
  "start": {
-  "code": "let len := l.length\nlet k := n % len\nif len = 0 then l\nelse\n  let rotated := l.drop k ++ l.take k\n  rotated",
+  "code": "let len := l.length\nlet k := n % len\nif len = 0 then l\nelse\n  let shift := k\n  let left_part := l.drop shift\n  let right_part := l.take shift\n  right_part ++ left_part",
   "code_aux": ""
  },
  "start_T": {
@@ -22,7 +22,7 @@
   "weak_spec": false
  },
  "witness": {
-  "actual": "[3, 4, 5, 1, 2]",
+  "actual": "[1, 2, 3, 4, 5]",
   "expected": "[4, 5, 1, 2, 3]",
   "index": 0,
   "input_lean": {

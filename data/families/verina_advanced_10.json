@@ -42,7 +42,7 @@
   "compiles": true,
   "errors": [],
   "hidden_pass": null,
-  "lean_s": 48.1,
+  "lean_s": 16.5,
   "n_hidden_fail": 0,
   "n_visible_fail": 2,
   "proof": "absent",

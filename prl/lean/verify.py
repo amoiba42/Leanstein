@@ -212,7 +212,8 @@ class Judge:
         if not locked_ok:
             vr.integrity_ok = False
             vr.integrity_reasons.append("locked_hash_mismatch")
-        vr.flags = I.degeneracy_flags(cand, fn=fam.fn, visible_inputs=[t["input_lean"] for t in fam.visible_tests])
+        vr.flags = I.degeneracy_flags(cand, fn=fam.fn, visible_inputs=[t["input_lean"] for t in fam.visible_tests],
+                                      postcond=R.region_text(fam.template, "postcond"))
         vr.failure_kind = classify_failure(vr)
         if vr.infra_error is None:
             self._cache_put(key, vr)

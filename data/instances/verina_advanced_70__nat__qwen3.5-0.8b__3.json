@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_70",
+ "flags": [],
+ "hashes": {
+  "locked": "5a1d30f983c3d0f6fe599f184c9ad9ab2dde71cd77d512af570206c87e82e70b"
+ },
+ "instance_id": "verina_advanced_70__nat__qwen3.5-0.8b__3",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-0.8b",
+  "raw": "```lean\nimport Mathlib.Data.List.Basic\nimport Mathlib.Data.Nat.Basic\n\ndef semiOrderedPermutation (nums : List Int) : Int :=\n  let n := nums.length\n  let idx1 := nums.idxOf 1\n  let idxn := nums.idxOf (Int.ofNat n)\n  if idx1 > idxn then\n    idx1 + n - 2\n  else\n    idx1 + n - 1\n```",
+  "seed": 5003
+ },
+ "split": "main",
+ "start": {
+  "code": "let n := nums.length\nlet idx1 := nums.idxOf 1\nlet idxn := nums.idxOf (Int.ofNat n)\nif idx1 > idxn then\n  idx1 + n - 2\nelse\n  idx1 + n - 1",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "4",
+  "expected": "2",
+  "index": 0,
+  "input_lean": {
+   "nums": "[2, 1, 4, 3]"
+  },
+  "source": "visible"
+ }
+}

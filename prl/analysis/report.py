@@ -412,8 +412,9 @@ def audit_sample(study_dirs: list[Path], frac: float, seed: int, out: Path) -> p
     n = max(1, int(round(frac * len(s))))
     samp = s.groupby(["condition"], group_keys=False).apply(
         lambda g: g.sample(n=max(1, int(round(n * len(g) / len(s)))), random_state=seed))
-    flagged = s[s.flags.apply(lambda f: bool(f) if isinstance(f, list) else False)]
-    samp = pd.concat([samp, flagged]).drop_duplicates(subset=["run_id"])
+    flagged = s[s["flags"].apply(lambda f: bool(f) if isinstance(f, list) else False)]
+    # pandas >= 3 drops the grouping column from apply() results, so take the sampled rows back from `s`
+    samp = s[s.run_id.isin(set(samp.run_id) | set(flagged.run_id))]
     cols = ["run_id", "family_id", "instance_id", "condition", "model", "seed", "final_code_aux", "final_code",
             "closing_entry", "proof_source", "flags"]
     samp = samp[cols].assign(audit_spec_gaming="", audit_natural_code="", audit_notes="")

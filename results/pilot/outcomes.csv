@@ -1,0 +1,13 @@
+model,condition,correct_unverified,integrity_violation,unresolved,verified_repair,n_runs
+qwen3.5-2b,A,1,39,1,0,41
+qwen3.5-2b,B,1,30,10,0,41
+qwen3.5-2b,BP,1,26,9,5,41
+qwen3.5-2b,Bhammer,4,23,13,1,41
+qwen3.5-2b,C,4,11,15,11,41
+qwen3.5-2b,Cplain,7,5,21,8,41
+qwen3.5-4b,A,12,17,3,9,41
+qwen3.5-4b,B,8,20,5,8,41
+qwen3.5-4b,BP,6,17,5,13,41
+qwen3.5-4b,Bhammer,11,15,6,9,41
+qwen3.5-4b,C,8,9,9,15,41
+qwen3.5-4b,Cplain,11,12,7,11,41

@@ -1,0 +1,160 @@
+07:29:14 study=main-bhammer splits=['main'] kinds=['mutant', 'natural'] conditions=['Bhammer'] models=['qwen3.5-2b', 'qwen3.5-4b'] seeds=[11, 23, 37] instances=231 prereg=3f2744e132b3778377e6a692270b0b8a380f552a035df7d4c8011f715a3e86cb
+07:29:14 1386 runs planned, 0 already complete, 1386 to run
+07:31:03 progress 10/1386  elapsed 1.8 min  eta 249.8 min
+07:31:56 progress 20/1386  elapsed 2.7 min  eta 184.8 min
+07:32:54 progress 30/1386  elapsed 3.7 min  eta 166.1 min
+07:33:50 progress 40/1386  elapsed 4.6 min  eta 154.8 min
+07:34:40 progress 50/1386  elapsed 5.4 min  eta 145.4 min
+07:35:18 progress 60/1386  elapsed 6.1 min  eta 134.2 min
+07:36:30 progress 70/1386  elapsed 7.3 min  eta 136.6 min
+07:37:40 progress 80/1386  elapsed 8.4 min  eta 137.9 min
+07:39:09 progress 90/1386  elapsed 9.9 min  eta 142.9 min
+07:40:15 progress 100/1386  elapsed 11.0 min  eta 141.8 min
+07:41:22 progress 110/1386  elapsed 12.1 min  eta 140.8 min
+07:42:28 progress 120/1386  elapsed 13.2 min  eta 139.7 min
+07:43:07 progress 130/1386  elapsed 13.9 min  eta 134.2 min
+07:43:48 progress 140/1386  elapsed 14.6 min  eta 129.7 min
+07:44:40 progress 150/1386  elapsed 15.4 min  eta 127.3 min
+07:45:24 progress 160/1386  elapsed 16.2 min  eta 123.9 min
+07:46:11 progress 170/1386  elapsed 17.0 min  eta 121.3 min
+07:47:09 progress 180/1386  elapsed 17.9 min  eta 120.1 min
+07:47:58 progress 190/1386  elapsed 18.7 min  eta 117.9 min
+07:49:47 progress 200/1386  elapsed 20.6 min  eta 121.9 min
+07:51:07 progress 210/1386  elapsed 21.9 min  eta 122.6 min
+07:51:50 progress 220/1386  elapsed 22.6 min  eta 119.8 min
+07:53:26 progress 230/1386  elapsed 24.2 min  eta 121.7 min
+07:54:29 progress 240/1386  elapsed 25.3 min  eta 120.6 min
+07:55:44 progress 250/1386  elapsed 26.5 min  eta 120.4 min
+07:56:52 progress 260/1386  elapsed 27.6 min  eta 119.7 min
+07:58:02 progress 270/1386  elapsed 28.8 min  eta 119.0 min
+07:59:19 progress 280/1386  elapsed 30.1 min  eta 118.9 min
+08:00:52 progress 290/1386  elapsed 31.6 min  eta 119.6 min
+08:02:14 progress 300/1386  elapsed 33.0 min  eta 119.5 min
+08:03:30 progress 310/1386  elapsed 34.3 min  eta 118.9 min
+08:04:28 progress 320/1386  elapsed 35.2 min  eta 117.4 min
+08:05:27 progress 330/1386  elapsed 36.2 min  eta 115.9 min
+08:07:00 progress 340/1386  elapsed 37.8 min  eta 116.2 min
+08:08:39 progress 350/1386  elapsed 39.4 min  eta 116.7 min
+08:10:08 progress 360/1386  elapsed 40.9 min  eta 116.6 min
+08:11:42 progress 370/1386  elapsed 42.5 min  eta 116.6 min
+08:13:20 progress 380/1386  elapsed 44.1 min  eta 116.8 min
+08:14:42 progress 390/1386  elapsed 45.5 min  eta 116.1 min
+08:15:38 progress 400/1386  elapsed 46.4 min  eta 114.4 min
+08:16:28 progress 410/1386  elapsed 47.2 min  eta 112.5 min
+08:17:21 progress 420/1386  elapsed 48.1 min  eta 110.7 min
+08:18:35 progress 430/1386  elapsed 49.4 min  eta 109.7 min
+08:19:30 progress 440/1386  elapsed 50.3 min  eta 108.1 min
+08:20:23 progress 450/1386  elapsed 51.2 min  eta 106.4 min
+08:21:15 progress 460/1386  elapsed 52.0 min  eta 104.7 min
+08:22:18 progress 470/1386  elapsed 53.1 min  eta 103.4 min
+08:23:13 progress 480/1386  elapsed 54.0 min  eta 101.9 min
+08:24:47 progress 490/1386  elapsed 55.6 min  eta 101.6 min
+08:25:59 progress 500/1386  elapsed 56.7 min  eta 100.6 min
+08:26:35 progress 510/1386  elapsed 57.4 min  eta 98.5 min
+08:27:21 progress 520/1386  elapsed 58.1 min  eta 96.8 min
+08:28:28 progress 530/1386  elapsed 59.2 min  eta 95.7 min
+08:29:10 progress 540/1386  elapsed 59.9 min  eta 93.9 min
+08:29:46 progress 550/1386  elapsed 60.5 min  eta 92.0 min
+08:30:34 progress 560/1386  elapsed 61.3 min  eta 90.5 min
+08:31:46 progress 570/1386  elapsed 62.5 min  eta 89.5 min
+08:32:28 progress 580/1386  elapsed 63.2 min  eta 87.9 min
+08:33:24 progress 590/1386  elapsed 64.2 min  eta 86.6 min
+08:34:22 progress 600/1386  elapsed 65.1 min  eta 85.3 min
+08:35:14 progress 610/1386  elapsed 66.0 min  eta 84.0 min
+08:36:22 progress 620/1386  elapsed 67.1 min  eta 83.0 min
+08:37:14 progress 630/1386  elapsed 68.0 min  eta 81.6 min
+08:37:58 progress 640/1386  elapsed 68.7 min  eta 80.1 min
+08:38:48 progress 650/1386  elapsed 69.6 min  eta 78.8 min
+08:39:07 progress 660/1386  elapsed 69.9 min  eta 76.9 min
+08:39:54 progress 670/1386  elapsed 70.7 min  eta 75.5 min
+08:40:35 progress 680/1386  elapsed 71.4 min  eta 74.1 min
+08:42:17 progress 690/1386  elapsed 73.1 min  eta 73.7 min
+08:42:49 energy block qwen3.5-2b/Bhammer: GPU 1322938.171 J (measured), Lean CPU 55251 J (estimate, 10101 CPU-s), CO2 274.1 g (estimate)
+08:44:41 progress 700/1386  elapsed 75.5 min  eta 73.9 min
+08:46:46 progress 710/1386  elapsed 77.5 min  eta 73.8 min
+08:48:00 progress 720/1386  elapsed 78.8 min  eta 72.9 min
+08:50:26 progress 730/1386  elapsed 81.2 min  eta 73.0 min
+08:51:30 progress 740/1386  elapsed 82.3 min  eta 71.8 min
+08:53:04 progress 750/1386  elapsed 83.8 min  eta 71.1 min
+08:55:05 progress 760/1386  elapsed 85.8 min  eta 70.7 min
+08:56:50 progress 770/1386  elapsed 87.6 min  eta 70.1 min
+08:59:24 progress 780/1386  elapsed 90.2 min  eta 70.1 min
+09:01:15 progress 790/1386  elapsed 92.0 min  eta 69.4 min
+09:03:15 progress 800/1386  elapsed 94.0 min  eta 68.9 min
+09:05:16 progress 810/1386  elapsed 96.0 min  eta 68.3 min
+09:06:40 progress 820/1386  elapsed 97.4 min  eta 67.3 min
+09:08:45 progress 830/1386  elapsed 99.5 min  eta 66.7 min
+09:10:46 progress 840/1386  elapsed 101.5 min  eta 66.0 min
+09:13:23 progress 850/1386  elapsed 104.2 min  eta 65.7 min
+09:15:01 progress 860/1386  elapsed 105.8 min  eta 64.7 min
+09:18:15 progress 870/1386  elapsed 109.0 min  eta 64.7 min
+09:20:28 progress 880/1386  elapsed 111.2 min  eta 64.0 min
+09:22:00 progress 890/1386  elapsed 112.8 min  eta 62.8 min
+09:25:15 progress 900/1386  elapsed 116.0 min  eta 62.6 min
+09:27:08 progress 910/1386  elapsed 117.9 min  eta 61.7 min
+09:29:17 progress 920/1386  elapsed 120.1 min  eta 60.8 min
+09:31:58 progress 930/1386  elapsed 122.7 min  eta 60.2 min
+09:33:54 progress 940/1386  elapsed 124.7 min  eta 59.2 min
+09:35:43 progress 950/1386  elapsed 126.5 min  eta 58.1 min
+09:37:41 progress 960/1386  elapsed 128.5 min  eta 57.0 min
+09:39:12 progress 970/1386  elapsed 130.0 min  eta 55.7 min
+09:41:25 progress 980/1386  elapsed 132.2 min  eta 54.8 min
+09:43:57 progress 990/1386  elapsed 134.7 min  eta 53.9 min
+09:45:23 progress 1000/1386  elapsed 136.2 min  eta 52.6 min
+09:47:20 progress 1010/1386  elapsed 138.1 min  eta 51.4 min
+09:49:06 progress 1020/1386  elapsed 139.9 min  eta 50.2 min
+09:50:48 progress 1030/1386  elapsed 141.6 min  eta 48.9 min
+09:52:16 progress 1040/1386  elapsed 143.0 min  eta 47.6 min
+09:54:37 progress 1050/1386  elapsed 145.4 min  eta 46.5 min
+09:55:37 progress 1060/1386  elapsed 146.4 min  eta 45.0 min
+09:58:54 progress 1070/1386  elapsed 149.7 min  eta 44.2 min
+10:00:42 progress 1080/1386  elapsed 151.5 min  eta 42.9 min
+10:01:15 progress 1090/1386  elapsed 152.0 min  eta 41.3 min
+10:01:32 progress 1100/1386  elapsed 152.3 min  eta 39.6 min
+10:02:06 progress 1110/1386  elapsed 152.9 min  eta 38.0 min
+10:02:39 progress 1120/1386  elapsed 153.4 min  eta 36.4 min
+10:03:46 progress 1130/1386  elapsed 154.5 min  eta 35.0 min
+10:04:13 progress 1140/1386  elapsed 155.0 min  eta 33.4 min
+10:05:14 progress 1150/1386  elapsed 156.0 min  eta 32.0 min
+10:07:11 progress 1160/1386  elapsed 158.0 min  eta 30.8 min
+10:08:38 progress 1170/1386  elapsed 159.4 min  eta 29.4 min
+10:10:21 progress 1180/1386  elapsed 161.1 min  eta 28.1 min
+10:11:49 progress 1190/1386  elapsed 162.6 min  eta 26.8 min
+10:12:45 progress 1200/1386  elapsed 163.5 min  eta 25.3 min
+10:14:26 progress 1210/1386  elapsed 165.2 min  eta 24.0 min
+10:16:08 progress 1220/1386  elapsed 166.9 min  eta 22.7 min
+10:17:39 progress 1230/1386  elapsed 168.4 min  eta 21.4 min
+10:18:40 progress 1240/1386  elapsed 169.4 min  eta 20.0 min
+10:19:43 progress 1250/1386  elapsed 170.5 min  eta 18.5 min
+10:21:59 progress 1260/1386  elapsed 172.8 min  eta 17.3 min
+10:22:40 progress 1270/1386  elapsed 173.4 min  eta 15.8 min
+10:24:43 progress 1280/1386  elapsed 175.5 min  eta 14.5 min
+10:26:45 progress 1290/1386  elapsed 177.5 min  eta 13.2 min
+10:27:50 progress 1300/1386  elapsed 178.6 min  eta 11.8 min
+10:30:28 progress 1310/1386  elapsed 181.2 min  eta 10.5 min
+10:32:19 progress 1320/1386  elapsed 183.1 min  eta 9.2 min
+10:33:11 progress 1330/1386  elapsed 184.0 min  eta 7.7 min
+10:34:48 progress 1340/1386  elapsed 185.6 min  eta 6.4 min
+10:35:36 progress 1350/1386  elapsed 186.4 min  eta 5.0 min
+10:36:14 progress 1360/1386  elapsed 187.0 min  eta 3.6 min
+10:36:23 [infra] run RunSpec(instance_id='verina_basic_98__mut__arith__1', condition='Bhammer', model='qwen3.5-4b', seed=37) failed: [Errno 2] No such file or directory: '/scratch/inesh/Leanstein/cache/verify/27/27dbb04e68e801e12fe918928635debf806294fed3fd530465b27dff18b77566.json.tmp' -> '/scratch/inesh/Leanstein/cache/verify/27/27dbb04e68e801e12fe918928635debf806294fed3fd530465b27dff18b77566.json'
+Traceback (most recent call last):
+  File "/scratch/inesh/Leanstein/prl/driver/runner.py", line 148, in run_all
+    f.result()
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+FileNotFoundError: [Errno 2] No such file or directory: '/scratch/inesh/Leanstein/cache/verify/27/27dbb04e68e801e12fe918928635debf806294fed3fd530465b27dff18b77566.json.tmp' -> '/scratch/inesh/Leanstein/cache/verify/27/27dbb04e68e801e12fe918928635debf806294fed3fd530465b27dff18b77566.json'
+
+10:36:25 progress 1370/1386  elapsed 187.2 min  eta 2.2 min
+10:36:36 progress 1380/1386  elapsed 187.4 min  eta 0.8 min
+10:37:07 progress 1386/1386  elapsed 187.9 min  eta 0.0 min
+10:37:07 energy block qwen3.5-4b/Bhammer: GPU 111948.418 J (measured), Lean CPU 0 J (estimate, 0 CPU-s), CO2 22.3 g (estimate)
+10:37:07 done: {'ok': 1385, 'infra_fail': 1}
+10:44:06 study=main-bhammer splits=['main'] kinds=['mutant', 'natural'] conditions=['Bhammer'] models=['qwen3.5-2b', 'qwen3.5-4b'] seeds=[11, 23, 37] instances=231 prereg=3f2744e132b3778377e6a692270b0b8a380f552a035df7d4c8011f715a3e86cb
+10:44:06 1386 runs planned, 1385 already complete, 1 to run
+10:44:15 progress 1/1  elapsed 0.1 min  eta 0.0 min
+10:44:15 energy block qwen3.5-4b/Bhammer: GPU 29.132 J (measured), Lean CPU 4 J (estimate, 1 CPU-s), CO2 0.0 g (estimate)
+10:44:15 done: {'ok': 1, 'infra_fail': 0}

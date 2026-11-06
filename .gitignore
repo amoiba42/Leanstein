@@ -9,3 +9,6 @@ third_party/
 runs/*/raw/
 .pytest_cache/
 .ruff_cache/
+
+# over GitHub's 100 MB limit: committed as attempts.jsonl.gz (prl reads either)
+runs/main/attempts.jsonl

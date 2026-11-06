@@ -150,6 +150,19 @@ def test_axiom_allow_list():
     assert not I.axioms_clean(["Lean.ofReduceBool"])
 
 
+def test_copies_postcond_flag():
+    """Inlining the postcondition's expression is flagged for audit; ordinary repairs are not (pilot examples)."""
+    post = ("result - List.sum (List.map (fun c => Char.toNat c - Char.toNat '0') (String.toList (Nat.repr n))) = 0 ∧ "
+            "List.sum (List.map (fun c => Char.toNat c - Char.toNat '0') (String.toList (Nat.repr n))) - result = 0")
+    copy = "List.sum (List.map (fun c => Char.toNat c - Char.toNat '0') (Nat.repr n).toList)"
+    loop = "let rec loop (n : Nat) (acc : Nat) : Nat :=\n  if n = 0 then acc else loop (n / 10) (acc + n % 10)\nloop n 0"
+    assert "copies_postcond" in I.degeneracy_flags({"code": copy, "code_aux": ""}, fn="f", visible_inputs=[], postcond=post)
+    assert "copies_postcond" not in I.degeneracy_flags({"code": loop, "code_aux": ""}, fn="f", visible_inputs=[], postcond=post)
+    short = "2 * result = a + b - ((a + b) % 2)"
+    assert "copies_postcond" not in I.degeneracy_flags({"code": "(a + b) / 2", "code_aux": ""}, fn="f",
+                                                       visible_inputs=[], postcond=short)
+
+
 def test_degeneracy_flags():
     fl = I.degeneracy_flags({"code": "Classical.choose h", "code_aux": ""}, fn="f", visible_inputs=[])
     assert "uses_choice" in fl

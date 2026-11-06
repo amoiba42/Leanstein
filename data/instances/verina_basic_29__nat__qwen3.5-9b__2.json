@@ -1,0 +1,34 @@
+{
+ "family_id": "verina_basic_29",
+ "flags": [],
+ "hashes": {
+  "locked": "dcfb3ec1e3797ece9bd031fabaaab72195214cd05625514d0f05f278e6480d34"
+ },
+ "instance_id": "verina_basic_29__nat__qwen3.5-9b__2",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef removeElement (s : Array Int) (k : Nat) (h_precond : removeElement_precond (s) (k)) : Array Int :=\n  s.drop k ++ s.drop (k + 1)\n```",
+  "seed": 5002
+ },
+ "split": "main",
+ "start": {
+  "code": "s.drop k ++ s.drop (k + 1)",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "#[3, 4, 5, 4, 5]",
+  "expected": "#[1, 2, 4, 5]",
+  "index": 0,
+  "input_lean": {
+   "k": "2",
+   "s": "#[1, 2, 3, 4, 5]"
+  },
+  "source": "visible"
+ }
+}

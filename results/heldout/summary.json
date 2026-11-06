@@ -1,0 +1,68 @@
+{
+ "T_coverage": 0.22282608695652173,
+ "primary_pool": {
+  "kinds": [
+   "mutant",
+   "natural"
+  ],
+  "rule": "natural + mutant (natural covers 33 < 60 families: pre-registered fallback)"
+ },
+ "primary": [
+  {
+   "model": "qwen3.5-2b",
+   "x": "C",
+   "y": "B",
+   "rate_x": 0.20289855072463767,
+   "rate_y": 0.014492753623188404,
+   "diff": 0.1884057971014493,
+   "p_holm": 0.0009765625
+  },
+  {
+   "model": "qwen3.5-2b",
+   "x": "C",
+   "y": "BP",
+   "rate_x": 0.20289855072463767,
+   "rate_y": 0.20289855072463767,
+   "diff": 2.413528314402514e-18,
+   "p_holm": 1.0
+  },
+  {
+   "model": "qwen3.5-4b",
+   "x": "C",
+   "y": "B",
+   "rate_x": 0.2971014492753623,
+   "rate_y": 0.10144927536231883,
+   "diff": 0.1956521739130435,
+   "p_holm": 0.0009765625
+  },
+  {
+   "model": "qwen3.5-4b",
+   "x": "C",
+   "y": "BP",
+   "rate_x": 0.2971014492753623,
+   "rate_y": 0.2971014492753623,
+   "diff": -2.413528314402514e-18,
+   "p_holm": 1.0
+  }
+ ],
+ "crosseval": [
+  {
+   "model": "qwen3.5-2b",
+   "condition": "B",
+   "c_proves_tests_pass": 248,
+   "c_proves_tests_fail": 0,
+   "c_cannot_prove": 581,
+   "c_rejected_integrity": 0,
+   "eligible_attempts": 829
+  },
+  {
+   "model": "qwen3.5-4b",
+   "condition": "B",
+   "c_proves_tests_pass": 361,
+   "c_proves_tests_fail": 0,
+   "c_cannot_prove": 700,
+   "c_rejected_integrity": 0,
+   "eligible_attempts": 1061
+  }
+ ]
+}

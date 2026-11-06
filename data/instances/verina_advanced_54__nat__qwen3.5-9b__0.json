@@ -8,12 +8,12 @@
  "kind": "natural",
  "provenance": {
   "generator": "qwen3.5-9b",
-  "raw": "```lean\ndef missingNumber (nums : List Nat) (h_precond : missingNumber_precond (nums)) : Nat :=\n  let n := nums.length\n  (List.sum nums + n + 1) / (n + 1)\n```",
+  "raw": "```lean\ndef missingNumber (nums : List Nat) (h_precond : missingNumber_precond (nums)) : Nat :=\n  let n := nums.length\n  (List.sum (nums.map (fun x => x)) : Nat) + n * (n + 1) / 2 - List.sum nums\n```",
   "seed": 5000
  },
  "split": "pilot",
  "start": {
-  "code": "let n := nums.length\n(List.sum nums + n + 1) / (n + 1)",
+  "code": "let n := nums.length\n(List.sum (nums.map (fun x => x)) : Nat) + n * (n + 1) / 2 - List.sum nums",
   "code_aux": ""
  },
  "start_T": {
@@ -22,11 +22,11 @@
   "weak_spec": false
  },
  "witness": {
-  "actual": "1",
+  "actual": "6",
   "expected": "2",
-  "index": 1,
+  "index": 0,
   "input_lean": {
-   "nums": "[0, 1]"
+   "nums": "[3, 0, 1]"
   },
   "source": "visible"
  }

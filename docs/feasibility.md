@@ -11,7 +11,7 @@ this file is a study result yet. Sections 3–6 are filled from `results/` after
 | Lean / Mathlib | `v4.24.0` / `v4.24.0` (commit `f897ebcf`), prebuilt cache |
 | Benchmark | VERINA `66b3ce50` (189 tasks: 108 basic, 81 advanced) |
 | Lean backend | own verification server `lean_env/PrlRepl.lean` (Mathlib imported once per worker; ~0.6 s per check vs 25–40 s for a plain `lean` process) |
-| Inference | LM Studio 0.4.x with the CUDA 12 llama.cpp engine 2.67.0 (the CPU-only engine had been selected and was switched) |
+| Inference | Development: LM Studio 0.4.x with the CUDA 12 llama.cpp engine 2.67.0. Study: llama.cpp `162e2bb` on an RTX PRO 6000 Blackwell MIG slice (see `context/IREL_RUNS.md`) |
 | Reasoning | disabled with `reasoning_effort: "none"`; otherwise hidden reasoning silently consumes the token budget |
 | Shared machine | other projects use the same GPU/RAM; model runs only on an idle GPU; Lean workers from free RAM, 4 GB cap each |
 

@@ -1,0 +1,34 @@
+{
+ "family_id": "verina_basic_81",
+ "flags": [],
+ "hashes": {
+  "locked": "2ac724985afb4a2b968e6d57f8092fc92a1fdc7b9ecb77934f1f4ffc8796eaf8"
+ },
+ "instance_id": "verina_basic_81__nat__qwen3.5-0.8b__3",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-0.8b",
+  "raw": "```lean\nimport Mathlib.Data.Nat.Basic\nimport Mathlib.Tuple.Basic\n\ndef DivisionFunction (x : Nat) (y : Nat) : (Int × Int) :=\n  if y = 0 then (Int.ofNat x, 0) else (x / y, x % y)\n\ntheorem DivisionFunction_spec_satisfied (x : Nat) (y : Nat) :\n  DivisionFunction_spec_satisfied (x) (y) (DivisionFunction (x) (y)) h_precond := by\n  apply h_precond\n```",
+  "seed": 5003
+ },
+ "split": "main",
+ "start": {
+  "code": "if y = 0 then (Int.ofNat x, 0) else (x / y, x % y)",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "(3, 1)",
+  "expected": "(1, 3)",
+  "index": 0,
+  "input_lean": {
+   "x": "10",
+   "y": "3"
+  },
+  "source": "visible"
+ }
+}

@@ -8,12 +8,12 @@
  "kind": "natural",
  "provenance": {
   "generator": "qwen3.5-9b",
-  "raw": "```lean\ndef mergeSortedLists (arr1 : List Int) (arr2 : List Int) (h_precond : mergeSortedLists_precond (arr1) (arr2)) : List Int :=\n  List.merge (by tauto) (by tauto)\n```",
+  "raw": "```lean\ndef mergeSortedLists (arr1 : List Int) (arr2 : List Int) (h_precond : mergeSortedLists_precond (arr1) (arr2)) : List Int :=\n  List.merge (by tauto) (by tauto) (by tauto)\n```",
   "seed": 5001
  },
  "split": "main",
  "start": {
-  "code": "List.merge (by tauto) (by tauto)",
+  "code": "List.merge (by tauto) (by tauto) (by tauto)",
   "code_aux": ""
  },
  "start_T": {
@@ -22,7 +22,7 @@
   "weak_spec": false
  },
  "witness": {
-  "actual": "[2, 2, 4, 4, 6, 6]",
+  "actual": "[2, 4, 6, 2, 4, 6]",
   "expected": "[1, 2, 3, 4, 5, 6]",
   "index": 0,
   "input_lean": {

@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_basic_43",
+ "flags": [],
+ "hashes": {
+  "locked": "ee25275ee39730860de3e00b3b42227e5b43f38d2267774e545dad2abd909081"
+ },
+ "instance_id": "verina_basic_43__nat__qwen3.5-0.8b__2",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-0.8b",
+  "raw": "```lean4\nimport Mathlib.Data.Nat.Basic\nimport Mathlib.Data.Nat.Ring\nimport Mathlib.Data.Nat.Ring.RingEq.Basic\n\ndef sumOfFourthPowerOfOddNumbers (n : Nat) : Nat :=\n  let f : Nat → Nat := fun n => if n = 0 then 0 else if n % 2 = 0 then 0 else 1 / 2 * n ^ 4\n  f n\n\ntheorem sumOfFourthPowerOfOddNumbers_spec_satisfied (n : Nat) (h_precond : sumOfFourthPowerOfOddNumbers precond n) :\n    sumOfFourthPowerOfOddNumbers postcond (n) (sumOfFourthPowerOfOddNumbers n h_precond) h_precond :=\n  by\n  have h : sumOfFourthPowerOfOddNumbers (n) h_precond = (n : Nat) ^ 4 + (n - 1) ^ 4 + (n - 2) ^ 4 + (n - 3) ^ 4 := by\n    induction' h_precond with n ih h\n    · -- n = 0 case\n      simp [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond]\n    · -- n > 0 case\n      simp [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond]\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourthPowerOfOddNumbers]\n      <;> ring_nf\n      <;> simp_all [sumOfFourthPowerOfOddNumbers precond, sumOfFourthPowerOfOddNumbers postcond, sumOfFourth",
+  "seed": 5002
+ },
+ "split": "main",
+ "start": {
+  "code": "let f : Nat → Nat := fun n => if n = 0 then 0 else if n % 2 = 0 then 0 else 1 / 2 * n ^ 4\nf n",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "0",
+  "expected": "1",
+  "index": 1,
+  "input_lean": {
+   "n": "1"
+  },
+  "source": "visible"
+ }
+}

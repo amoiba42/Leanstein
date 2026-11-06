@@ -1,0 +1,7 @@
+model,condition,correct_unverified,integrity_violation,unresolved,verified_repair,n_runs
+qwen3.5-2b,B,45,137,101,2,285
+qwen3.5-2b,BP,24,119,99,43,285
+qwen3.5-2b,C,27,73,142,43,285
+qwen3.5-4b,B,51,174,40,20,285
+qwen3.5-4b,BP,26,158,33,68,285
+qwen3.5-4b,C,35,112,69,69,285

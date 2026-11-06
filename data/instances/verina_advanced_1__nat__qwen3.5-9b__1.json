@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_1",
+ "flags": [],
+ "hashes": {
+  "locked": "7418eb7e77673f0e1ee3d203f88324c2b6e5843d6871bb4a49cac7df5cf4f973"
+ },
+ "instance_id": "verina_advanced_1__nat__qwen3.5-9b__1",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef FindSingleNumber (nums : List Int) (h_precond : FindSingleNumber_precond (nums)) : Int :=\n  match nums with\n  | [] => 0 -- This case is unreachable due to precondition\n  | x :: xs =>\n    let rec aux (acc : Int) (lst : List Int) : Int :=\n      match lst with\n      | [] => acc\n      | y :: ys =>\n        if y = acc then aux acc ys else aux y ys\n    aux x xs\n```",
+  "seed": 5001
+ },
+ "split": "main",
+ "start": {
+  "code": "match nums with\n| [] => 0 -- This case is unreachable due to precondition\n| x :: xs =>\n  let rec aux (acc : Int) (lst : List Int) : Int :=\n    match lst with\n    | [] => acc\n    | y :: ys =>\n      if y = acc then aux acc ys else aux y ys\n  aux x xs",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "2",
+  "expected": "1",
+  "index": 1,
+  "input_lean": {
+   "nums": "[1, 2, 2]"
+  },
+  "source": "visible"
+ }
+}

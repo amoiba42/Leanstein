@@ -8,12 +8,12 @@
  "kind": "natural",
  "provenance": {
   "generator": "qwen3.5-9b",
-  "raw": "```lean\ndef sumOfDigits (n : Nat) (h_precond : sumOfDigits_precond (n)) : Nat :=\n  Nat.recOn n 0 fun _ acc => acc + n % 10\n```",
+  "raw": "```lean\ndef sumOfDigits (n : Nat) (h_precond : sumOfDigits_precond (n)) : Nat :=\n  n.recOn 0 fun d acc => d + acc\n\ntheorem sumOfDigits_spec_satisfied (n: Nat) (h_precond : sumOfDigits_precond (n)) :\n    sumOfDigits_postcond (n) (sumOfDigits (n) h_precond) h_precond := by\n  simp [sumOfDigits, sumOfDigits_precond, sumOfDigits_postcond, Nat.zero, Nat.succ]\n  <;> induction n with\n  | zero => simp\n  | succ n ih =>\n      simp_all [Nat.succ_eq_add_one, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm,\n        List.sum_cons, List.sum_nil, List.map_append, List.sum_append,\n        Char.toNat, Nat.repr_zero, Nat.repr_succ, Nat.add_assoc]\n      <;> ring_nf at *\n      <;> omega\n```",
   "seed": 5001
  },
  "split": "pilot",
  "start": {
-  "code": "Nat.recOn n 0 fun _ acc => acc + n % 10",
+  "code": "n.recOn 0 fun d acc => d + acc",
   "code_aux": ""
  },
  "start_T": {
@@ -22,7 +22,7 @@
   "weak_spec": false
  },
  "witness": {
-  "actual": "61725",
+  "actual": "76193340",
   "expected": "15",
   "index": 0,
   "input_lean": {

@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_15",
+ "flags": [],
+ "hashes": {
+  "locked": "ed565fbe6b321ba9cd8538f899592e43e20f1431a7486b80ad32191819fb2aa4"
+ },
+ "instance_id": "verina_advanced_15__nat__qwen3.5-9b__3",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef increasingTriplet (nums : List Int) (h_precond : increasingTriplet_precond (nums)) : Bool :=\n  let nums' := nums.zipIdx\n  nums'.all (fun (x, i) =>\n    nums'.all (fun (y, j) =>\n      nums'.all (fun (z, k) =>\n        ¬(i < j ∧ j < k ∧ x < y ∧ y < z)\n      )\n    )\n  ) ∨\n  nums'.any (fun (x, i) =>\n    nums'.any (fun (y, j) =>\n      nums'.any (fun (z, k) =>\n        i < j ∧ j < k ∧ x < y ∧ y < z\n      )\n    )\n  )\n```",
+  "seed": 5003
+ },
+ "split": "heldout",
+ "start": {
+  "code": "let nums' := nums.zipIdx\nnums'.all (fun (x, i) =>\n  nums'.all (fun (y, j) =>\n    nums'.all (fun (z, k) =>\n      ¬(i < j ∧ j < k ∧ x < y ∧ y < z)\n    )\n  )\n) ∨\nnums'.any (fun (x, i) =>\n  nums'.any (fun (y, j) =>\n    nums'.any (fun (z, k) =>\n      i < j ∧ j < k ∧ x < y ∧ y < z\n    )\n  )\n)",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "true",
+  "expected": "false",
+  "index": 1,
+  "input_lean": {
+   "nums": "[5, 4, 3, 2, 1]"
+  },
+  "source": "visible"
+ }
+}

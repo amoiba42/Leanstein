@@ -11,7 +11,7 @@
   "T": {
    "closed": false,
    "entry": null,
-   "timeout": true,
+   "timeout": false,
    "vector": {
     "aesop": false,
     "decide": false,
@@ -33,7 +33,7 @@
   "compiles": true,
   "errors": [],
   "hidden_pass": true,
-  "lean_s": 97.9,
+  "lean_s": 29.5,
   "n_hidden": 30,
   "n_hidden_fail": 0,
   "n_visible_fail": 0,

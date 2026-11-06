@@ -1,0 +1,48 @@
+{
+ "T_coverage": 0.22282608695652173,
+ "primary_pool": {
+  "kinds": [
+   "mutant",
+   "natural"
+  ],
+  "rule": "natural + mutant (natural covers 33 < 60 families: pre-registered fallback)"
+ },
+ "primary": [
+  {
+   "model": "qwen3.5-2b",
+   "x": "C",
+   "y": "B",
+   "rate_x": 0.35294117647058826,
+   "rate_y": 0.0,
+   "diff": 0.35294117647058826,
+   "p_holm": 0.0625
+  },
+  {
+   "model": "qwen3.5-2b",
+   "x": "C",
+   "y": "BP",
+   "rate_x": 0.35294117647058826,
+   "rate_y": 0.23529411764705882,
+   "diff": 0.11764705882352941,
+   "p_holm": 0.5
+  },
+  {
+   "model": "qwen3.5-4b",
+   "x": "C",
+   "y": "B",
+   "rate_x": 0.47058823529411764,
+   "rate_y": 0.23529411764705882,
+   "diff": 0.23529411764705882,
+   "p_holm": 0.1875
+  },
+  {
+   "model": "qwen3.5-4b",
+   "x": "C",
+   "y": "BP",
+   "rate_x": 0.47058823529411764,
+   "rate_y": 0.4117647058823529,
+   "diff": 0.058823529411764705,
+   "p_holm": 0.5
+  }
+ ]
+}

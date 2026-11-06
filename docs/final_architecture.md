@@ -73,9 +73,9 @@ the proposal, not a second specification.
 
 | Item | `alternate` | Ours (authoritative) | Why ours |
 |---|---|---|---|
-| Attempts per run | N = 5 | 8 generations + 48k tokens + 240 s inference, first cap wins | settled in requirements R3 (proposal k = 4 rounds vs plan N = 5); C samples in rounds of 2 |
+| Attempts per run | N = 5 | 8 generations + 48k tokens + 600 s inference (ADR-003), first cap wins | settled in requirements R3 (proposal k = 4 rounds vs plan N = 5); C samples in rounds of 2 |
 | Completion length | 1,024 tokens | 1,536 | B must fit two Lean blocks (code + proof); truncation rate is checked in the pilot |
-| Generation timeout | 120 s, infra (no N charged) | inference seconds count against the run's 240 s budget | slow generation is model behaviour, not infrastructure; budgets stay matched |
+| Generation timeout | 120 s, infra (no N charged) | inference seconds count against the run's 600 s budget (ADR-003) | slow generation is model behaviour, not infrastructure; budgets stay matched |
 | Tactic budgets | 2 s light / 8 s heavy wall clock | 50k / 200k heartbeats | determinism (G7, R3-6) |
 | Wall guards | 40 s per command, 60 s per process, 120 s per candidate | 120 s per request (≥ 50 s), max(30 s, guard/4) per entry | backstops only; heartbeats decide |
 | Lean workers | 2, pause below 2 GB free RAM | from free RAM (⌊(free − 4 GB)/3 GB⌋, ≤ 6), 4 GB Job Object each | uses the machine without starving other jobs |
@@ -103,7 +103,7 @@ the proposal, not a second specification.
 | S / S-plain | code only | portfolio | goal + hint / plain | correct references T cannot prove | mechanism (GPT §4B) |
 | Bhammer *(exploratory, optional)* | code + proof; prompt lists the frozen portfolio | model | as B | natural, mutant | is knowing the tactics enough? (R3-4) |
 
-Budget per (instance, condition, model, seed): ≤ 8 generations, ≤ 48k tokens, ≤ 240 s inference — first cap wins.
+Budget per (instance, condition, model, seed): ≤ 8 generations, ≤ 48k tokens, ≤ 600 s inference (ADR-003) — first cap wins.
 
 Derived analyses (no extra model calls): **B_noauto** (B with single-call automation proofs counted as
 failures, R3-2) and the **B→C cross-evaluation** (R3-1).
@@ -117,7 +117,7 @@ failures, R3-2) and the **B→C cross-evaluation** (R3-1).
 | Proof specialist (A, B only) | Goedel-Code-Prover-8B |
 | Natural-bug generators (never repairers) | Qwen3.5-0.8B (weak errors), Qwen3.5-9B (subtle errors) |
 
-All GGUF 4-bit, LM Studio with the CUDA engine, `reasoning_effort: none`, fixed decoding and seeds.
+All GGUF 4-bit, served by llama.cpp `162e2bb` on the study GPU (IREL server: one MIG slice (2g.48gb, 48 GB) of an NVIDIA RTX PRO 6000 Blackwell, AMD Threadripper PRO 7975WX, Ubuntu 24.04; llama.cpp `162e2bb` (CUDA, sm_120) through the `lms` stand-in in `scripts/irel/bin/lms`), reasoning disabled, fixed decoding and seeds. The design originally used LM Studio on a laptop; see `prereg/deviations.md` R-3.
 
 ---
 
@@ -146,7 +146,7 @@ flowchart TB
 
   subgraph P2["③ Run loop per (instance, condition, model, seed)"]
     BUD{budget left?<br/>gens · tokens · seconds} -- no --> UNR[unresolved]
-    BUD -- yes --> GEN["generate() · LM Studio GPU<br/>TaskView only (no reference, no hidden tests)<br/>GPU energy measured per (model, condition) block"]
+    BUD -- yes --> GEN["generate() · llama.cpp on the study GPU<br/>TaskView only (no reference, no hidden tests)<br/>GPU energy measured per (model, condition) block"]
     GEN --> EXT[extract code / proof<br/>drop echoed locked defs]
     EXT --> PF{"pre-filter (static)<br/>reject: escapes · locked redefs · empty<br/>flag: spec-copy · trivial · hard-coded"}
     PF -- reject --> FB
@@ -208,7 +208,7 @@ flowchart TB
 | 1 | Natural bugs from two generators (0.8B, 9B), resample cap, primary-pool rule (G1, G13) | `prl/natural/collect.py`, `prl/cli.py`, `prl/analysis/report.py: primary_pool` | `test_primary_pool_rule` |
 | 2 | Two-tier portfolio with per-tier heartbeats, identical for every portfolio user (G7) | `prereg/portfolio.yaml`, `prl/lean/portfolio.py`, `prl/lean/builder.py` | `test_portfolio_tiers_light_before_heavy` |
 | 3 | Energy: NVML GPU energy counter per (model, condition) block; CPU and CO2 estimates (G2) | `prl/energy.py`, `prl/driver/runner.py`, `report.py: energy_table` | `test_energy_block_math` |
-| 4 | Windows Job Object 4 GB cap per Lean worker; workers from free RAM (G3) | `prl/lean/runner.py` | verified on the live worker |
+| 4 | Windows Job Object 4 GB cap per Lean worker; workers from free RAM (G3) | `prl/lean/runner.py` | verified on the live worker (Windows); not applied on Linux, R-10 |
 | 5 | Failure taxonomy: infra vs candidate timeout/resource (G4) | `prl/lean/verify.py: classify_failure`, `prl/conditions/protocols.py: verify_with_infra_retry` | `test_failure_classification` |
 | 6 | Feedback router with all failure paths (G8, G9) | `prl/conditions/feedback.py` | `test_feedback_router_paths` |
 | 7 | Pre-filter split into reject vs flag; flagged successes always audited (G11, G12) | `prl/lean/integrity.py`, `report.py: audit_sample / audit_merge` | `test_degeneracy_flags` |

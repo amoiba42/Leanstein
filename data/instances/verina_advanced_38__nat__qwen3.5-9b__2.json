@@ -1,0 +1,33 @@
+{
+ "family_id": "verina_advanced_38",
+ "flags": [],
+ "hashes": {
+  "locked": "dd122cb266023a96b0572f3bb52f4d2737ec796ae7a361d047cb305d101139ad"
+ },
+ "instance_id": "verina_advanced_38__nat__qwen3.5-9b__2",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef maxCoverageAfterRemovingOne (intervals : List (Prod Nat Nat)) (h_precond : maxCoverageAfterRemovingOne_precond (intervals)) : Nat :=\n  let sorted := List.mergeSort intervals (fun a b => a.1 ≤ b.1)\n  let total := sorted.foldl (fun acc (a, b) => if a ≤ b then acc + (b - a) else acc) 0\n  let max_single := sorted.foldl (fun acc (a, b) => max acc (b - a)) 0\n  let min_total := total - max_single\n  min_total\n```",
+  "seed": 5002
+ },
+ "split": "heldout",
+ "start": {
+  "code": "let sorted := List.mergeSort intervals (fun a b => a.1 ≤ b.1)\nlet total := sorted.foldl (fun acc (a, b) => if a ≤ b then acc + (b - a) else acc) 0\nlet max_single := sorted.foldl (fun acc (a, b) => max acc (b - a)) 0\nlet min_total := total - max_single\nmin_total",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "4",
+  "expected": "5",
+  "index": 0,
+  "input_lean": {
+   "intervals": "[(1, 3), (2, 5), (6, 8)]"
+  },
+  "source": "visible"
+ }
+}

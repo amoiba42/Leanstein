@@ -60,8 +60,24 @@ final_architecture, requirements, HLD, LLD, implementation_plan, feasibility —
 
 ## Status
 
-- [x] v2 design, docs, code, tests — on GitHub https://github.com/amoiba42/Leanstein.
-- [x] v2.1 reconciliation (2026-11-03) implemented: 95 unit + 24 Lean tests. The user commits and pushes
-  (Claude never commits or pushes).
-- [ ] Phase 0 → dataset → pilot → power note + gate (+ Bhammer decision) → freeze → main → crosseval → analysis
-  (GPU steps need an idle GPU + go-ahead).
+- [x] v2 design, docs, code, tests on GitHub https://github.com/amoiba42/Leanstein. Claude never commits or pushes;
+  the user does.
+- [x] First freeze `964f1983` (laptop dataset, Ada pilot), 2026-11-05 16:05: **superseded**.
+- [x] 2026-11-05: everything rerun from scratch on the IREL server (RTX PRO 6000 Blackwell, MIG 2g.48gb, GPU 1
+  device 0). Dataset: coverage 22.3% and hidden tests identical to before; 51 natural instances, 33 of 114 main
+  families. Probes; pilot 492 runs, 0 infrastructure failures; power note; gate passed. Harness change H-1:
+  `copies_postcond` audit flag. **Second freeze `3f2744e1`, 21:06.** Record: `context/IREL_RUNS.md`; deviations
+  R-1 to R-10 and H-1.
+- [x] Study 2026-11-05 21:06 to 2026-11-06 11:49: 12,249 runs, 1 infrastructure failure, no cap hits, no stop
+  rule. Cross-evaluation, analysis (`results/`, `results/heldout`), audit (333 runs, 0 spec-gaming; done by
+  Claude, **human confirmation pending**). Post-freeze deviations D-1 (energy meter read physical GPU 0: no
+  energy reported), D-2 (audit sampler bugs fixed), D-3 (audit by Claude).
+- [x] Results: C > B for 2B and 4B (Holm p < 0.001), C vs BP +5.0 pp for 2B (p = 0.012) and a tie for 4B;
+  held-out replicates C > B, with C/BP tied. Paper `paper/main.pdf` (8 pages) written.
+- [ ] Human confirmation of the audit (`results/audit/sample.csv`); commit and push (user).
+
+## Environment facts (study)
+
+- IREL `inesh@10.4.25.56`, scripts in `scripts/irel/` (copy of `/scratch/inesh/irel_jobs`), repo at
+  `/scratch/inesh/Leanstein`, llama.cpp `162e2bb`, Lean via `~/.elan` -> `/scratch/inesh/.elan`.
+- `reserve_vram.py` holds idle memory on the slice (pinned, no compute) and releases it while `lms` loads a model.

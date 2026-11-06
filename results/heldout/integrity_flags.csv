@@ -1,0 +1,7 @@
+condition,flags,n
+B,copies_postcond,41
+B,mentions_postcond,2
+BP,copies_postcond,40
+BP,mentions_postcond,3
+C,copies_postcond,50
+C,mentions_postcond,5

@@ -1,10 +1,10 @@
 {
- "digest": "964f19836f224d10a7f8336c76dd104d2e855cdb696f7de9341d2c98260afbf9",
+ "digest": "3f2744e132b3778377e6a692270b0b8a380f552a035df7d4c8011f715a3e86cb",
  "files": {
   "exclusions.yaml": "8d8532e3470aee4ebd5fdc37fb8c2e9f3ef795b1532e97cf79fb5bcf95ec272c",
   "hints.yaml": "fa0ecfe5d724ac5e84b834b9c77230df1f86e7777421fc373123171193abd7f8",
   "portfolio.yaml": "fc35a1a02d29ab66b4fc958f29d771da5fbb2bf65abda2d1758c120226cd78c9",
-  "power_note.json": "98f40d06921a71935d88cd4a5781a440fd7c78b8451d082d0999f7e593b71738",
+  "power_note.json": "023e7cd6de6de87ab91cb7b725418791681d08b442b354f5d5ca2998c0f9f6d7",
   "prompts/A.txt": "a1f917fbcbcb9d9ce883777b0f1a125405e12628449341d591f90a9ff9aff189",
   "prompts/B.txt": "a1f917fbcbcb9d9ce883777b0f1a125405e12628449341d591f90a9ff9aff189",
   "prompts/BP.txt": "a1f917fbcbcb9d9ce883777b0f1a125405e12628449341d591f90a9ff9aff189",
@@ -19,9 +19,9 @@
   "prompts/natural.txt": "fa339382038b3fee0799156ddfddf510fe6a9a5aaf2a426e9cb517b1d89b2bb6",
   "prompts/system.txt": "7353f9953b096a73ffa4bfe2ce58efe56b50d9a09bb7e36c99346b1edef73d95",
   "prompts/task.txt": "a68944359b0bfd4ebe8c89045aa3579ac1dcfcd4cd955c10fbbb09cd4921153e",
-  "study.yaml": "f5ee0a5cd8361731fdb60c7ddba1b5cfdfa42474c78aede3c0b63fbe02bbe2b6"
+  "study.yaml": "976a50c13d399d7cd999fc6d1e6912772ac1950d69827dcd49017eb88bd7c902"
  },
- "frozen_at": "2026-11-05T16:05:56+0530",
- "git_commit": "c26f2d3b57644976e71808f17bcee42ae9e7d0d7",
- "note": "team decisions of 2026-11-05 (ADR-001 to ADR-007)"
+ "frozen_at": "2026-11-05T21:06:42+0530",
+ "git_commit": "bd0091fd12bc5d98926b4877c18f2493b3449299",
+ "note": "second freeze on IREL (RTX PRO 6000 Blackwell MIG 2g.48gb); deviations R-1..R-10, H-1"
 }

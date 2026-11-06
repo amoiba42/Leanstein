@@ -1,22 +1,22 @@
 {
  "qwen3.5-2b": {
-  "compile": 0.15,
+  "compile": 0.1,
   "extract": 0.9,
-  "mean_gen_s": 2.26,
-  "mean_tok_per_s": 114.5,
+  "mean_gen_s": 0.62,
+  "mean_tok_per_s": 313.6,
   "model_proof": 0.05,
   "n": 20,
-  "portfolio": 0.15,
-  "tests": 0.15
+  "portfolio": 0.1,
+  "tests": 0.1
  },
  "qwen3.5-4b": {
-  "compile": 0.35,
-  "extract": 1.0,
-  "mean_gen_s": 7.88,
-  "mean_tok_per_s": 60.2,
-  "model_proof": 0.0,
+  "compile": 0.4,
+  "extract": 0.95,
+  "mean_gen_s": 2.42,
+  "mean_tok_per_s": 166.0,
+  "model_proof": 0.05,
   "n": 20,
-  "portfolio": 0.2,
+  "portfolio": 0.25,
   "tests": 0.3
  }
 }

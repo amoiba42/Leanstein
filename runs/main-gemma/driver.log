@@ -1,0 +1,76 @@
+04:40:15 study=main-gemma splits=['main'] kinds=['mutant', 'natural'] conditions=['B', 'BP', 'C'] models=['gemma-4-e4b-it'] seeds=[11] instances=231 prereg=3f2744e132b3778377e6a692270b0b8a380f552a035df7d4c8011f715a3e86cb
+04:40:15 693 runs planned, 0 already complete, 693 to run
+04:45:29 progress 10/693  elapsed 5.2 min  eta 356.7 min
+04:48:10 progress 20/693  elapsed 7.9 min  eta 266.3 min
+04:50:38 progress 30/693  elapsed 10.4 min  eta 229.4 min
+04:52:31 progress 40/693  elapsed 12.3 min  eta 200.2 min
+04:55:05 progress 50/693  elapsed 14.8 min  eta 190.8 min
+04:57:37 progress 60/693  elapsed 17.4 min  eta 183.2 min
+05:01:21 progress 70/693  elapsed 21.1 min  eta 187.8 min
+05:03:19 progress 80/693  elapsed 23.1 min  eta 176.7 min
+05:06:23 progress 90/693  elapsed 26.1 min  eta 175.1 min
+05:10:00 progress 100/693  elapsed 29.7 min  eta 176.4 min
+05:11:23 progress 110/693  elapsed 31.1 min  eta 165.0 min
+05:13:51 progress 120/693  elapsed 33.6 min  eta 160.5 min
+05:16:37 progress 130/693  elapsed 36.4 min  eta 157.5 min
+05:18:17 progress 140/693  elapsed 38.0 min  eta 150.2 min
+05:19:50 progress 150/693  elapsed 39.6 min  eta 143.3 min
+05:22:53 progress 160/693  elapsed 42.6 min  eta 142.0 min
+05:25:19 progress 170/693  elapsed 45.1 min  eta 138.6 min
+05:27:35 progress 180/693  elapsed 47.3 min  eta 134.9 min
+05:29:50 progress 190/693  elapsed 49.6 min  eta 131.2 min
+05:32:42 progress 200/693  elapsed 52.5 min  eta 129.3 min
+05:35:21 progress 210/693  elapsed 55.1 min  eta 126.7 min
+05:37:45 progress 220/693  elapsed 57.5 min  eta 123.6 min
+05:39:37 progress 230/693  elapsed 59.4 min  eta 119.5 min
+05:40:09 energy block gemma-4-e4b-it/B: GPU 1076249.36 J (measured), Lean CPU 6989 J (estimate, 1278 CPU-s), CO2 215.4 g (estimate)
+05:44:57 progress 240/693  elapsed 64.7 min  eta 122.1 min
+05:47:58 progress 250/693  elapsed 67.7 min  eta 120.0 min
+05:50:38 progress 260/693  elapsed 70.4 min  eta 117.2 min
+05:52:12 progress 270/693  elapsed 71.9 min  eta 112.7 min
+05:55:28 progress 280/693  elapsed 75.2 min  eta 110.9 min
+05:59:14 progress 290/693  elapsed 79.0 min  eta 109.8 min
+06:04:41 progress 300/693  elapsed 84.4 min  eta 110.6 min
+06:09:04 progress 310/693  elapsed 88.8 min  eta 109.7 min
+06:13:21 progress 320/693  elapsed 93.1 min  eta 108.5 min
+06:19:20 progress 330/693  elapsed 99.1 min  eta 109.0 min
+06:20:15 progress 340/693  elapsed 100.0 min  eta 103.8 min
+06:22:14 progress 350/693  elapsed 102.0 min  eta 99.9 min
+06:23:56 progress 360/693  elapsed 103.7 min  eta 95.9 min
+06:26:54 progress 370/693  elapsed 106.6 min  eta 93.1 min
+06:29:30 progress 380/693  elapsed 109.2 min  eta 90.0 min
+06:32:03 progress 390/693  elapsed 111.8 min  eta 86.9 min
+06:38:11 progress 400/693  elapsed 117.9 min  eta 86.4 min
+06:40:35 progress 410/693  elapsed 120.3 min  eta 83.1 min
+06:45:30 progress 420/693  elapsed 125.3 min  eta 81.4 min
+06:52:00 progress 430/693  elapsed 131.7 min  eta 80.6 min
+07:00:10 progress 440/693  elapsed 139.9 min  eta 80.5 min
+07:03:13 progress 450/693  elapsed 143.0 min  eta 77.2 min
+07:05:22 progress 460/693  elapsed 145.1 min  eta 73.5 min
+07:06:14 energy block gemma-4-e4b-it/BP: GPU 1549190.694 J (measured), Lean CPU 61785 J (estimate, 11295 CPU-s), CO2 320.4 g (estimate)
+07:07:27 progress 470/693  elapsed 147.2 min  eta 69.8 min
+07:08:20 progress 480/693  elapsed 148.1 min  eta 65.7 min
+07:10:20 progress 490/693  elapsed 150.1 min  eta 62.2 min
+07:11:49 progress 500/693  elapsed 151.6 min  eta 58.5 min
+07:13:04 progress 510/693  elapsed 152.8 min  eta 54.8 min
+07:14:29 progress 520/693  elapsed 154.2 min  eta 51.3 min
+07:15:43 progress 530/693  elapsed 155.5 min  eta 47.8 min
+07:16:41 progress 540/693  elapsed 156.4 min  eta 44.3 min
+07:17:25 progress 550/693  elapsed 157.2 min  eta 40.9 min
+07:18:45 progress 560/693  elapsed 158.5 min  eta 37.6 min
+07:20:26 progress 570/693  elapsed 160.2 min  eta 34.6 min
+07:21:03 progress 580/693  elapsed 160.8 min  eta 31.3 min
+07:21:45 progress 590/693  elapsed 161.5 min  eta 28.2 min
+07:22:46 progress 600/693  elapsed 162.5 min  eta 25.2 min
+07:23:14 progress 610/693  elapsed 163.0 min  eta 22.2 min
+07:23:51 progress 620/693  elapsed 163.6 min  eta 19.3 min
+07:24:32 progress 630/693  elapsed 164.3 min  eta 16.4 min
+07:24:52 progress 640/693  elapsed 164.6 min  eta 13.6 min
+07:25:58 progress 650/693  elapsed 165.7 min  eta 11.0 min
+07:26:36 progress 660/693  elapsed 166.3 min  eta 8.3 min
+07:27:24 progress 670/693  elapsed 167.1 min  eta 5.7 min
+07:27:43 progress 680/693  elapsed 167.5 min  eta 3.2 min
+07:28:00 progress 690/693  elapsed 167.7 min  eta 0.7 min
+07:29:12 progress 693/693  elapsed 168.9 min  eta 0.0 min
+07:29:12 energy block gemma-4-e4b-it/C: GPU 413430.083 J (measured), Lean CPU 22747 J (estimate, 4159 CPU-s), CO2 86.8 g (estimate)
+07:29:12 done: {'ok': 693, 'infra_fail': 0}

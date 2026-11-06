@@ -223,7 +223,7 @@ See IR-1..IR-9 (§7). Must reject before any proof is attempted when a static vi
 
 - **FR-BUD-1 (MUST)** Max model generations N_gen = 8 per (instance, condition, model, seed).
 - **FR-BUD-2 (MUST)** Max total tokens (prompt + completion) per (instance, condition, model, seed) = frozen cap (default 48,000); max completion tokens per generation = frozen cap (default 1,536).
-- **FR-BUD-3 (MUST)** Max model-inference wall time per (instance, condition, model, seed) = frozen cap (default 240 s). Whichever of FR-BUD-1..3 binds first ends the run.
+- **FR-BUD-3 (MUST)** Max model-inference wall time per (instance, condition, model, seed) = frozen cap (600 s; 240 s before ADR-003). Whichever of FR-BUD-1..3 binds first ends the run.
 - **FR-BUD-4 (MUST)** Lean time per verification is capped (heartbeats + wall guard) and reported separately; it is *not* charged to the model budget but is reported (RQ5), together with energy (FR-EN).
 
 ### 5.11 Experiment driver (Member C)
@@ -309,7 +309,7 @@ See IR-1..IR-9 (§7). Must reject before any proof is attempted when a static vi
 
 | ID | Requirement |
 |---|---|
-| **NFR-ENV-1** | Runs on one Windows 11 laptop: RTX 5060 Laptop (8 GB VRAM), 24 GB RAM, 24 logical CPUs. No paid API, no training. |
+| **NFR-ENV-1** | Runs on one machine with one small GPU, no paid API, no training. Developed on a Windows 11 laptop (RTX 5060, 8 GB); the study ran on one 48 GB MIG slice of an RTX PRO 6000 Blackwell (Linux), deviation R-3. |
 | **NFR-ENV-2** | Pinned: Lean `v4.24.0`, Mathlib `v4.24.0` (lake-manifest committed), VERINA commit `66b3ce5014edafb20cb26b87c681e7f31847249f`, Python ≥3.12 with a lockfile (`uv.lock`), model GGUF SHA-256 recorded. |
 | **NFR-REP-1** | Every number in the report regenerates from raw logs with one command. |
 | **NFR-REP-2** | A fresh clone + `scripts/setup` + one run command reproduces the pipeline (modulo model binaries). |

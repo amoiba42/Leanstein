@@ -121,12 +121,29 @@ def static_check(cand: dict[str, str], kind: str, *, fn: str, aux_names: list[st
 _CHOICE = re.compile(r"\b(Classical\.choose|Classical\.epsilon|Exists\.choose|Classical\.indefiniteDescription|Classical\.choice)\b")
 
 
-def degeneracy_flags(cand: dict[str, str], *, fn: str, visible_inputs: list[dict[str, str]]) -> list[str]:
+_TOK = re.compile(r"[A-Za-z_][A-Za-z0-9_'.!?]*|\d+|[^\sA-Za-z0-9_]")
+COPY_THRESHOLD = 0.35  # share of the postcondition's token 4-grams found in the code
+
+
+def postcond_overlap(code: str, postcond: str, n: int = 4) -> float:
+    """Share of the postcondition's token n-grams that also occur in the code (0 when the postcondition is too
+    short to judge). Catches an implementation that inlines the specification's own expression."""
+    def grams(s: str) -> set[tuple[str, ...]]:
+        t = _TOK.findall(s)
+        return {tuple(t[i:i + n]) for i in range(len(t) - n + 1)}
+    g = grams(postcond)
+    return len(g & grams(code)) / len(g) if len(g) >= 8 else 0.0
+
+
+def degeneracy_flags(cand: dict[str, str], *, fn: str, visible_inputs: list[dict[str, str]],
+                     postcond: str = "") -> list[str]:
     text = (cand.get("code_aux", "") or "") + "\n" + (cand.get("code", "") or "")
     clean = LT.strip_comments_and_strings(text, keep_strings=True)
     flags = []
     if re.search(re.escape(fn) + r"_postcond", clean):
         flags.append("mentions_postcond")
+    if postcond and postcond_overlap(clean, LT.strip_comments_and_strings(postcond, keep_strings=True)) >= COPY_THRESHOLD:
+        flags.append("copies_postcond")
     if _CHOICE.search(clean):
         flags.append("uses_choice")
     if re.search(r"\bdecide\b[^\n]*_postcond", clean):

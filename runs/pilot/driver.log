@@ -1,66 +1,65 @@
-17:43:12 study=pilot splits=['pilot'] kinds=['mutant', 'natural'] conditions=['A', 'B', 'BP', 'Bhammer', 'C', 'Cplain'] models=['qwen3.5-2b', 'qwen3.5-4b'] seeds=[11] instances=42 prereg=unfrozen
-17:43:12 504 runs planned, 0 already complete, 504 to run
-17:45:38 progress 10/504  elapsed 2.4 min  eta 120.1 min
-17:48:39 progress 20/504  elapsed 5.5 min  eta 132.0 min
-17:50:13 progress 30/504  elapsed 7.0 min  eta 110.9 min
-17:52:48 progress 40/504  elapsed 9.6 min  eta 111.5 min
-17:54:31 energy block qwen3.5-2b/A: GPU 109671.399 J (measured), Lean CPU 2203 J (estimate, 962 CPU-s), CO2 22.3 g (estimate)
-17:57:12 progress 50/504  elapsed 14.0 min  eta 127.1 min
-18:00:17 progress 60/504  elapsed 17.1 min  eta 126.5 min
-18:02:27 progress 70/504  elapsed 19.3 min  eta 119.4 min
-18:05:12 progress 80/504  elapsed 22.0 min  eta 116.6 min
-18:07:59 energy block qwen3.5-2b/B: GPU 139217.095 J (measured), Lean CPU 800 J (estimate, 350 CPU-s), CO2 27.8 g (estimate)
-18:09:50 progress 90/504  elapsed 26.6 min  eta 122.6 min
-18:12:21 progress 100/504  elapsed 29.2 min  eta 117.8 min
-18:15:00 progress 110/504  elapsed 31.8 min  eta 114.0 min
-18:18:44 progress 120/504  elapsed 35.5 min  eta 113.7 min
-18:29:35 energy block qwen3.5-2b/BP: GPU 157818.473 J (measured), Lean CPU 5678 J (estimate, 2479 CPU-s), CO2 32.5 g (estimate)
-18:31:06 progress 130/504  elapsed 47.9 min  eta 137.8 min
-18:34:03 progress 140/504  elapsed 50.9 min  eta 132.2 min
-18:36:16 progress 150/504  elapsed 53.1 min  eta 125.3 min
-18:38:29 progress 160/504  elapsed 55.3 min  eta 118.9 min
-18:41:56 energy block qwen3.5-2b/Bhammer: GPU 134171.446 J (measured), Lean CPU 1246 J (estimate, 544 CPU-s), CO2 26.9 g (estimate)
-18:42:24 progress 170/504  elapsed 59.2 min  eta 116.3 min
-18:44:42 progress 180/504  elapsed 61.5 min  eta 110.7 min
-18:45:39 progress 190/504  elapsed 62.5 min  eta 103.2 min
-18:47:13 progress 200/504  elapsed 64.0 min  eta 97.3 min
-18:51:43 progress 210/504  elapsed 68.5 min  eta 95.9 min
-18:51:43 energy block qwen3.5-2b/C: GPU 73515.81 J (measured), Lean CPU 1764 J (estimate, 770 CPU-s), CO2 15.0 g (estimate)
-18:53:58 progress 220/504  elapsed 70.8 min  eta 91.4 min
-18:56:23 progress 230/504  elapsed 73.2 min  eta 87.2 min
-18:58:00 progress 240/504  elapsed 74.8 min  eta 82.3 min
-18:59:48 progress 250/504  elapsed 76.6 min  eta 77.8 min
-19:00:19 energy block qwen3.5-2b/Cplain: GPU 97744.158 J (measured), Lean CPU 308 J (estimate, 134 CPU-s), CO2 19.5 g (estimate)
-19:06:54 progress 260/504  elapsed 83.7 min  eta 78.5 min
-19:11:49 progress 270/504  elapsed 88.6 min  eta 76.8 min
-19:14:58 progress 280/504  elapsed 91.8 min  eta 73.4 min
-19:18:09 progress 290/504  elapsed 94.9 min  eta 70.1 min
-19:19:24 energy block qwen3.5-4b/A: GPU 212520.848 J (measured), Lean CPU 998 J (estimate, 436 CPU-s), CO2 42.5 g (estimate)
-19:26:35 progress 300/504  elapsed 103.4 min  eta 70.3 min
-19:34:23 progress 310/504  elapsed 111.2 min  eta 69.6 min
-19:37:22 progress 320/504  elapsed 114.2 min  eta 65.6 min
-19:42:59 progress 330/504  elapsed 119.8 min  eta 63.2 min
-19:45:55 energy block qwen3.5-4b/B: GPU 295876.636 J (measured), Lean CPU 771 J (estimate, 337 CPU-s), CO2 59.0 g (estimate)
-19:51:30 progress 340/504  elapsed 128.3 min  eta 61.9 min
-20:02:43 progress 350/504  elapsed 139.5 min  eta 61.4 min
-20:07:09 progress 360/504  elapsed 144.0 min  eta 57.6 min
-20:13:32 progress 370/504  elapsed 150.3 min  eta 54.4 min
-20:14:03 energy block qwen3.5-4b/BP: GPU 315049.401 J (measured), Lean CPU 3658 J (estimate, 1597 CPU-s), CO2 63.4 g (estimate)
-20:16:55 progress 380/504  elapsed 153.7 min  eta 50.2 min
-20:24:10 progress 390/504  elapsed 161.0 min  eta 47.1 min
-20:27:40 progress 400/504  elapsed 164.5 min  eta 42.8 min
-20:31:56 progress 410/504  elapsed 168.7 min  eta 38.7 min
-20:35:02 progress 420/504  elapsed 171.8 min  eta 34.4 min
-20:35:03 energy block qwen3.5-4b/Bhammer: GPU 234954.607 J (measured), Lean CPU 2133 J (estimate, 931 CPU-s), CO2 47.2 g (estimate)
-20:40:52 progress 430/504  elapsed 177.7 min  eta 30.6 min
-20:43:09 progress 440/504  elapsed 180.0 min  eta 26.2 min
-20:45:17 progress 450/504  elapsed 182.1 min  eta 21.9 min
-20:46:19 progress 460/504  elapsed 183.1 min  eta 17.5 min
-20:47:24 energy block qwen3.5-4b/C: GPU 130812.84 J (measured), Lean CPU 1313 J (estimate, 573 CPU-s), CO2 26.3 g (estimate)
-20:50:56 progress 470/504  elapsed 187.7 min  eta 13.6 min
-20:53:46 progress 480/504  elapsed 190.6 min  eta 9.5 min
-20:55:12 progress 490/504  elapsed 192.0 min  eta 5.5 min
-20:56:26 progress 500/504  elapsed 193.2 min  eta 1.5 min
-20:58:19 progress 504/504  elapsed 195.1 min  eta 0.0 min
-20:58:20 energy block qwen3.5-4b/Cplain: GPU 114765.418 J (measured), Lean CPU 1055 J (estimate, 461 CPU-s), CO2 23.0 g (estimate)
-20:58:20 done: {'ok': 504, 'infra_fail': 0}
+19:50:58 study=pilot splits=['pilot'] kinds=['mutant', 'natural'] conditions=['A', 'B', 'BP', 'Bhammer', 'C', 'Cplain'] models=['qwen3.5-2b', 'qwen3.5-4b'] seeds=[11] instances=41 prereg=unfrozen
+19:50:58 492 runs planned, 0 already complete, 492 to run
+19:51:54 progress 10/492  elapsed 0.9 min  eta 45.0 min
+19:52:24 progress 20/492  elapsed 1.4 min  eta 34.0 min
+19:52:50 progress 30/492  elapsed 1.9 min  eta 28.9 min
+19:53:25 progress 40/492  elapsed 2.5 min  eta 27.8 min
+19:55:29 energy block qwen3.5-2b/A: GPU 79971.893 J (measured), Lean CPU 3413 J (estimate, 624 CPU-s), CO2 16.6 g (estimate)
+19:56:22 progress 50/492  elapsed 5.4 min  eta 47.8 min
+19:56:49 progress 60/492  elapsed 5.8 min  eta 42.1 min
+19:57:13 progress 70/492  elapsed 6.3 min  eta 37.7 min
+19:57:40 progress 80/492  elapsed 6.7 min  eta 34.5 min
+20:05:31 energy block qwen3.5-2b/B: GPU 180253.183 J (measured), Lean CPU 1591 J (estimate, 291 CPU-s), CO2 36.2 g (estimate)
+20:06:17 progress 90/492  elapsed 15.3 min  eta 68.4 min
+20:06:55 progress 100/492  elapsed 15.9 min  eta 62.5 min
+20:07:24 progress 110/492  elapsed 16.4 min  eta 57.1 min
+20:08:19 progress 120/492  elapsed 17.4 min  eta 53.8 min
+20:11:09 energy block qwen3.5-2b/BP: GPU 101417.736 J (measured), Lean CPU 4074 J (estimate, 745 CPU-s), CO2 21.0 g (estimate)
+20:12:12 progress 130/492  elapsed 21.2 min  eta 59.1 min
+20:13:00 progress 140/492  elapsed 22.0 min  eta 55.4 min
+20:13:38 progress 150/492  elapsed 22.7 min  eta 51.7 min
+20:14:32 progress 160/492  elapsed 23.6 min  eta 48.9 min
+20:19:51 energy block qwen3.5-2b/Bhammer: GPU 156574.722 J (measured), Lean CPU 4193 J (estimate, 767 CPU-s), CO2 32.0 g (estimate)
+20:20:16 progress 170/492  elapsed 29.3 min  eta 55.5 min
+20:20:39 progress 180/492  elapsed 29.7 min  eta 51.5 min
+20:21:16 progress 190/492  elapsed 30.3 min  eta 48.2 min
+20:21:46 progress 200/492  elapsed 30.8 min  eta 45.0 min
+20:25:43 energy block qwen3.5-2b/C: GPU 105356.355 J (measured), Lean CPU 4743 J (estimate, 867 CPU-s), CO2 21.9 g (estimate)
+20:26:05 progress 210/492  elapsed 35.1 min  eta 47.2 min
+20:26:23 progress 220/492  elapsed 35.4 min  eta 43.8 min
+20:26:42 progress 230/492  elapsed 35.7 min  eta 40.7 min
+20:27:05 progress 240/492  elapsed 36.1 min  eta 37.9 min
+20:27:47 energy block qwen3.5-2b/Cplain: GPU 37363.795 J (measured), Lean CPU 0 J (estimate, 0 CPU-s), CO2 7.4 g (estimate)
+20:29:13 progress 250/492  elapsed 38.2 min  eta 37.0 min
+20:30:17 progress 260/492  elapsed 39.3 min  eta 35.1 min
+20:30:52 progress 270/492  elapsed 39.9 min  eta 32.8 min
+20:31:34 progress 280/492  elapsed 40.6 min  eta 30.7 min
+20:32:35 energy block qwen3.5-4b/A: GPU 84536.845 J (measured), Lean CPU 785 J (estimate, 144 CPU-s), CO2 17.0 g (estimate)
+20:34:13 progress 290/492  elapsed 43.3 min  eta 30.1 min
+20:35:42 progress 300/492  elapsed 44.7 min  eta 28.6 min
+20:37:36 progress 310/492  elapsed 46.6 min  eta 27.4 min
+20:38:28 progress 320/492  elapsed 47.5 min  eta 25.5 min
+20:39:42 energy block qwen3.5-4b/B: GPU 127835.265 J (measured), Lean CPU 2431 J (estimate, 444 CPU-s), CO2 25.9 g (estimate)
+20:42:11 progress 330/492  elapsed 51.2 min  eta 25.1 min
+20:44:03 progress 340/492  elapsed 53.1 min  eta 23.7 min
+20:44:48 progress 350/492  elapsed 53.8 min  eta 21.8 min
+20:46:16 progress 360/492  elapsed 55.3 min  eta 20.3 min
+20:48:59 energy block qwen3.5-4b/BP: GPU 167050.922 J (measured), Lean CPU 4840 J (estimate, 885 CPU-s), CO2 34.2 g (estimate)
+20:50:01 progress 370/492  elapsed 59.1 min  eta 19.5 min
+20:51:28 progress 380/492  elapsed 60.5 min  eta 17.8 min
+20:52:40 progress 390/492  elapsed 61.7 min  eta 16.1 min
+20:53:44 progress 400/492  elapsed 62.8 min  eta 14.4 min
+20:55:36 progress 410/492  elapsed 64.6 min  eta 12.9 min
+20:55:36 energy block qwen3.5-4b/Bhammer: GPU 119144.045 J (measured), Lean CPU 1853 J (estimate, 339 CPU-s), CO2 24.1 g (estimate)
+20:57:30 progress 420/492  elapsed 66.5 min  eta 11.4 min
+20:58:02 progress 430/492  elapsed 67.1 min  eta 9.7 min
+20:58:28 progress 440/492  elapsed 67.5 min  eta 8.0 min
+20:58:52 progress 450/492  elapsed 67.9 min  eta 6.3 min
+20:59:07 energy block qwen3.5-4b/C: GPU 63230.661 J (measured), Lean CPU 2086 J (estimate, 381 CPU-s), CO2 13.0 g (estimate)
+21:00:13 progress 460/492  elapsed 69.3 min  eta 4.8 min
+21:00:30 progress 470/492  elapsed 69.5 min  eta 3.3 min
+21:01:00 progress 480/492  elapsed 70.0 min  eta 1.8 min
+21:01:33 progress 490/492  elapsed 70.6 min  eta 0.3 min
+21:02:25 progress 492/492  elapsed 71.4 min  eta 0.0 min
+21:02:25 energy block qwen3.5-4b/Cplain: GPU 59159.805 J (measured), Lean CPU 1647 J (estimate, 301 CPU-s), CO2 12.1 g (estimate)
+21:02:25 done: {'ok': 492, 'infra_fail': 0}

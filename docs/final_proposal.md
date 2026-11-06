@@ -3,7 +3,7 @@
 
 **Course:** Agentic Software Engineering (AutoSE, CS6.403) · **Team:** Agents of Ultron — Inesh Dheer, Poojitha J, Gracy Garg
 **Repository:** Leanstein (`https://github.com/amoiba42/Leanstein`) · **Version:** v2.1 · last updated 2026-11-03
-**Status:** design final; harness implemented and tested; **no experiment has been run yet** (clean state).
+**Status (2026-11-06):** complete. The whole study ran from scratch on the IREL server (RTX PRO 6000 Blackwell, one 48 GB MIG slice): dataset, probes, pilot, power note, second freeze, 12,249 study runs and the analysis. The paper is `paper/main.pdf`. Post-freeze deviations: D-1 to D-3. Run record: `context/IREL_RUNS.md`; deviations: `prereg/deviations.md` R-1 to R-10.
 
 This is the single document to follow. It supersedes the original proposal and plan where they differ, and it
 records *why* each part exists and *where* it lives in the repository. Update the "Status" lines and §12 as the
@@ -60,7 +60,7 @@ messages, automated tactics or code restructuring in isolation.
 **What makes it more than a prompting comparison:** (i) the B+P control isolates "do not write proofs" from
 "automation exists"; (ii) the shaping-vs-reverting classification and study S (re-shape *correct* code that
 automation cannot prove) test the mechanism directly; (iii) a code-shape catalogue (RQ4) and a released
-buggy-VERINA dataset with proved-precondition hidden tests; (iv) energy per verified repair on a laptop; (v) a
+buggy-VERINA dataset with proved-precondition hidden tests; (iv) energy per verified repair on one GPU slice; (v) a
 cross-evaluation that re-checks B's own unproved code through C's pipeline, and B reported without single-call
 automation proofs.
 
@@ -114,11 +114,11 @@ count. Code: `prl/testgen/`.
 Bhammer runs for the primary models only if the pilot cost estimate leaves room (decided before the freeze) and
 is never pooled with B.
 
-Budget per (instance, condition, model, seed): ≤8 generations, ≤48k tokens, ≤240 s inference; first cap wins.
+Budget per (instance, condition, model, seed): ≤8 generations, ≤48k tokens, ≤600 s inference (raised from 240 s before the freeze, ADR-003); first cap wins.
 
 ### 5.5 Models (`prereg/study.yaml: models`)
 Repairers: Qwen3.5-2B, Qwen3.5-4B (primary), Gemma-4-E4B-it (secondary family); proof specialist
-Goedel-Code-Prover-8B (A, B); generators Qwen3.5-0.8B, 9B. GGUF 4-bit, LM Studio CUDA engine, temperature 0.7,
+Goedel-Code-Prover-8B (A, B); generators Qwen3.5-0.8B, 9B. GGUF 4-bit (SHA-256 in `results/ada_model_hashes.txt`), served by llama.cpp `162e2bb` on the study GPU, temperature 0.7,
 top-p 0.95, `reasoning_effort: none`, seeds 11/23/37.
 
 ### 5.6 Verification (`prl/lean/`, `lean_env/PrlRepl.lean`)
@@ -194,7 +194,7 @@ As in the plan (assignment to people to be confirmed by the team): **A — Verif
 |---|---|---|
 | G1 | Real model errors first | Adopted: natural bugs primary (0.8B, 9B; never repairers) |
 | G2 | Energy tracking | Adopted: GPU measured via NVML per block; CPU/CO2 estimated and labelled |
-| G3 | 2 GB memory sandbox | Adapted: 4 GB Windows Job Object per Lean worker (Mathlib needs ~2.5 GB) |
+| G3 | 2 GB memory sandbox | Adapted: 4 GB Windows Job Object per Lean worker (Mathlib needs ~2.5 GB); not applied on Linux (study server, 503 GB RAM; deviation R-10) |
 | G4 | Infra failures don't burn budget | Adopted; candidate-caused timeouts still count after confirmation |
 | G5, G6 | model/Lean seconds; log every attempt | Adopted |
 | G7 | Adaptive light→heavy tactics | Adopted as deterministic two-tier portfolio, same for every condition |
@@ -228,11 +228,11 @@ As in the plan (assignment to people to be confirmed by the team): **A — Verif
 | `docs/final_proposal.md` | this document |
 | `docs/final_architecture.md` | deliberation and the architecture diagram |
 | `docs/requirements.md`, `high_level_design.md`, `low_level_design.md`, `implementation_plan.md` | v2.1 specification chain |
-| `docs/feasibility.md` | Phase-0 evidence (pending re-run) |
+| `docs/feasibility.md` | Phase-0 evidence from development; the study probes are in `results/phase0_*.json` |
 | `prereg/` | frozen study inputs and the deviation log |
 | `prl/` | harness (tasks, lean, testgen, mutate, natural, models, conditions, driver, analysis, energy, cli) |
 | `lean_env/` | pinned Lean project and the verification server |
-| `tests/` | 95 unit tests + 24 real-Lean integration tests |
+| `tests/` | 96 unit tests + 24 real-Lean integration tests |
 | `scripts/pdownload.py` | parallel downloader for throttled networks |
 
 ## 12. Status and next steps
@@ -242,11 +242,12 @@ As in the plan (assignment to people to be confirmed by the team): **A — Verif
 - [x] v2.1 (2026-11-03): Gracy's revision-3 notes reconciled (cross-evaluation, proof-tactic logging, power
   simulation, Bhammer, worker sizing adopted; reduced imports declined) and implemented; 95 unit tests and 24 Lean
   integration tests pass.
-- [ ] Phase 0 (T, hidden tests, compile/determinism probes) — CPU parts can run any time; GPU parts on an idle GPU.
-- [ ] Dataset (natural bugs need the GPU), splits, pilot, gate, power note, freeze, confirmatory run,
-  cross-evaluation, analysis, audit.
-- [ ] Related-work re-check before writing; venue choice (candidates named in the GPT verdict: LLM4Code / FormaliSE
-  workshops; ISSTA or ASE/ICSE/FSE only if results and scope justify it).
+- [x] Phase 0, dataset, splits, pilot (492 runs), gate, power note and second freeze (`3f2744e1`), all on IREL,
+  2026-11-05.
+- [x] Study runs (12,249; 1 infrastructure failure), cross-evaluation, analysis, held-out replication, audit
+  (by Claude; human confirmation pending), paper (`paper/main.pdf`), 2026-11-06.
+- [ ] Human confirmation of the audit; annotated code-shape examples (catalogue tables are in
+  `results/rq4_shapes.md`); venue choice.
 
 ## 13. Deliverables
 

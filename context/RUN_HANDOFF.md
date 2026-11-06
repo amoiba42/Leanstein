@@ -1,5 +1,10 @@
 # Run handoff: executing the Leanstein study
 
+> **Superseded for execution (2026-11-05).** The study was not run on Ada. Every step, from the dataset to the
+> analysis, was rerun from scratch on the IREL server (RTX PRO 6000 Blackwell, one 48 GB MIG slice) under a second
+> freeze. What was actually done is in `context/IREL_RUNS.md`; the reasons are in `prereg/deviations.md` R-1 to R-10.
+> This document is kept as the record of the Ada plan.
+
 For whoever runs the main study, the held-out run and the analysis on Ada.
 
 Written 2026-11-05. Everything before this point is done: Phase 0, the pilot, the

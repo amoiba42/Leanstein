@@ -1,0 +1,34 @@
+{
+ "family_id": "verina_basic_54",
+ "flags": [],
+ "hashes": {
+  "locked": "4e04fc7f211941d969d6d45b0d0c4ab036db338bdad233ed36d5642525cfbfb4"
+ },
+ "instance_id": "verina_basic_54__nat__qwen3.5-9b__3",
+ "kind": "natural",
+ "provenance": {
+  "generator": "qwen3.5-9b",
+  "raw": "```lean\ndef CanyonSearch (a : Array Int) (b : Array Int) (h_precond : CanyonSearch_precond (a) (b)) : Nat :=\n  let a_to_list : List Int := a.toList\n  let b_to_list : List Int := b.toList\n  let init_min : Nat := (a_to_list.head! - b_to_list.head!).natAbs\n  let rec search (i : Nat) (j : Nat) (current_min : Nat) : Nat :=\n    if i >= a_to_list.length ∨ j >= b_to_list.length then current_min\n    else\n      let diff := (a_to_list.get! i - b_to_list.get! j).natAbs\n      let new_min := min current_min diff\n      if i + 1 < a_to_list.length ∧ j + 1 < b_to_list.length then\n        search (i + 1) (j + 1) new_min\n      else if i + 1 < a_to_list.length then\n        search (i + 1) j new_min\n      else if j + 1 < b_to_list.length then\n        search i (j + 1) new_min\n      else\n        current_min\n  search 0 0 init_min\n```",
+  "seed": 5003
+ },
+ "split": "heldout",
+ "start": {
+  "code": "let a_to_list : List Int := a.toList\nlet b_to_list : List Int := b.toList\nlet init_min : Nat := (a_to_list.head! - b_to_list.head!).natAbs\nlet rec search (i : Nat) (j : Nat) (current_min : Nat) : Nat :=\n  if i >= a_to_list.length ∨ j >= b_to_list.length then current_min\n  else\n    let diff := (a_to_list.get! i - b_to_list.get! j).natAbs\n    let new_min := min current_min diff\n    if i + 1 < a_to_list.length ∧ j + 1 < b_to_list.length then\n      search (i + 1) (j + 1) new_min\n    else if i + 1 < a_to_list.length then\n      search (i + 1) j new_min\n    else if j + 1 < b_to_list.length then\n      search i (j + 1) new_min\n    else\n      current_min\nsearch 0 0 init_min",
+  "code_aux": ""
+ },
+ "start_T": {
+  "closed": false,
+  "entry": null,
+  "weak_spec": false
+ },
+ "witness": {
+  "actual": "5",
+  "expected": "1",
+  "index": 1,
+  "input_lean": {
+   "a": "#[-5, -2, 0]",
+   "b": "#[1, 3]"
+  },
+  "source": "visible"
+ }
+}

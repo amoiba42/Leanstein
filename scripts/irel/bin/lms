@@ -1,0 +1,124 @@
+#!/usr/bin/env python3
+"""IREL stand-in for LM Studio's `lms` CLI, backed by llama.cpp's llama-server (commit 162e2bb).
+
+prl/models/lmstudio.py only ever calls:
+  lms unload --all
+  lms load KEY --context-length N --gpu max -y --identifier ID [--parallel P]
+Each load starts one llama-server on 127.0.0.1:<port of PRL_LMSTUDIO_URL> serving that GGUF under the name ID.
+--context-length is per parallel slot, so the server gets N*P tokens in total.
+"""
+import argparse, json, os, signal, subprocess, sys, time, urllib.request
+
+J = os.environ.get("J", "/scratch/inesh/irel_jobs")
+BIN = os.environ.get("LLAMA_BIN", "/scratch/inesh/llama.cpp/build/bin")
+ROOT = "/scratch/inesh/lmstudio_models"
+# Port comes from PRL_LMSTUDIO_URL, so two jobs can each run their own server on the slice.
+PORT = int(os.environ.get("PRL_LMSTUDIO_URL", "http://127.0.0.1:1234").rsplit(":", 1)[1].split("/")[0])
+PIDF = f"{J}/serve/llama-server-{PORT}.pid"
+LOG = f"{J}/serve/llama-server-{PORT}.log"
+MODELS = {
+    "qwen3.5-0.8b": "lmstudio-community/Qwen3.5-0.8B-GGUF/Qwen3.5-0.8B-Q4_K_M.gguf",
+    "qwen3.5-2b": "lmstudio-community/Qwen3.5-2B-GGUF/Qwen3.5-2B-Q4_K_M.gguf",
+    "qwen3.5-4b": "lmstudio-community/Qwen3.5-4B-GGUF/Qwen3.5-4B-Q4_K_M.gguf",
+    "qwen3.5-9b": "lmstudio-community/Qwen3.5-9B-GGUF/Qwen3.5-9B-Q4_K_M.gguf",
+    "gemma-4-e4b-it": "unsloth/gemma-4-E4B-it-GGUF/gemma-4-E4B-it-Q4_K_M.gguf",
+    "goedel-code-prover-8b": "mradermacher/Goedel-Code-Prover-8B-GGUF/Goedel-Code-Prover-8B.Q4_K_M.gguf",
+}
+
+
+def alive(pid):
+    try:
+        os.kill(pid, 0)
+        return True
+    except OSError:
+        return False
+
+
+def unload():
+    if os.path.exists(PIDF):
+        pid = int(open(PIDF).read().strip() or 0)
+        if pid and alive(pid):
+            os.kill(pid, signal.SIGTERM)
+            for _ in range(60):
+                if not alive(pid):
+                    break
+                time.sleep(0.5)
+            if alive(pid):
+                os.kill(pid, signal.SIGKILL)
+        os.remove(PIDF)
+    print("unloaded")
+
+
+def healthy():
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{PORT}/health", timeout=5) as r:
+            return json.load(r).get("status") == "ok"
+    except Exception:
+        return False
+
+
+def load(a):
+    # While this flag exists, reserve_vram.py releases its placeholder memory so the model can load.
+    flag = f"{J}/serve/loading-{PORT}"
+    os.makedirs(os.path.dirname(flag), exist_ok=True)
+    open(flag, "w").close()
+    try:
+        time.sleep(3)  # give the placeholder time to release
+        return _load(a)
+    finally:
+        os.remove(flag)
+
+
+def _load(a):
+    if a.key not in MODELS:
+        print(f"unknown model key {a.key}", file=sys.stderr)
+        return 1
+    unload()
+    par = a.parallel or 1
+    cmd = [f"{BIN}/llama-server", "-m", f"{ROOT}/{MODELS[a.key]}", "--alias", a.identifier or a.key,
+           "--host", "127.0.0.1", "--port", str(PORT), "-c", str(a.context_length * par), "-np", str(par),
+           "-ngl", "999", "--jinja", "--reasoning-budget", "0",
+           "--chat-template-kwargs", '{"enable_thinking": false}', "--no-webui"]
+    os.makedirs(os.path.dirname(LOG), exist_ok=True)
+    with open(LOG, "a") as lf:
+        lf.write(f"\n==== {time.strftime('%F %T')} {' '.join(cmd)}\n")
+        lf.flush()
+        p = subprocess.Popen(cmd, stdout=lf, stderr=subprocess.STDOUT, start_new_session=True)
+    open(PIDF, "w").write(str(p.pid))
+    for _ in range(600):
+        if p.poll() is not None:
+            print(f"llama-server exited with {p.returncode}; see {LOG}", file=sys.stderr)
+            return 1
+        if healthy():
+            print(f"loaded {a.key} as {a.identifier or a.key} (ctx {a.context_length} x {par})")
+            return 0
+        time.sleep(1)
+    print("llama-server did not become healthy in 600 s", file=sys.stderr)
+    return 1
+
+
+def main():
+    ap = argparse.ArgumentParser(prog="lms")
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    u = sub.add_parser("unload")
+    u.add_argument("--all", action="store_true")
+    l = sub.add_parser("load")
+    l.add_argument("key")
+    l.add_argument("--context-length", type=int, default=8192)
+    l.add_argument("--gpu", default="max")
+    l.add_argument("-y", action="store_true")
+    l.add_argument("--identifier")
+    l.add_argument("--parallel", type=int)
+    sub.add_parser("ps")
+    a = ap.parse_args()
+    if a.cmd == "unload":
+        unload()
+        return 0
+    if a.cmd == "ps":
+        print("running" if healthy() else "none")
+        return 0
+    return load(a)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

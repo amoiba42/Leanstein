@@ -31,7 +31,7 @@
   "compiles": true,
   "errors": [],
   "hidden_pass": true,
-  "lean_s": 5.5,
+  "lean_s": 2.3,
   "n_hidden": 30,
   "n_hidden_fail": 0,
   "n_visible_fail": 0,

@@ -1,0 +1,5 @@
+model,condition,runs,failed_runs,failed_runs_rescued_by_C,rescue_rate_of_failed,runs_with_weak_spec_candidate
+gemma-4-e4b-it,B,231,229,53,0.2314410480349345,0
+goedel-code-prover-8b,B,231,183,0,0.0,0
+qwen3.5-2b,B,693,686,115,0.16763848396501457,0
+qwen3.5-4b,B,693,614,106,0.17263843648208468,0

@@ -65,10 +65,14 @@ class JsonlWriter:
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    """Read a JSONL log; falls back to `<path>.gz`, the form in which logs over GitHub's 100 MB limit are committed."""
     out = []
-    if not path.exists():
+    gz = path.with_name(path.name + ".gz")
+    if not path.exists() and not gz.exists():
         return out
-    with open(path, encoding="utf-8") as f:
+    import gzip
+    opener = (lambda: open(path, encoding="utf-8")) if path.exists() else (lambda: gzip.open(gz, "rt", encoding="utf-8"))
+    with opener() as f:
         for ln in f:
             ln = ln.strip()
             if not ln:
