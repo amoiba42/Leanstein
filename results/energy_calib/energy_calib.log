@@ -1,0 +1,61 @@
+unloaded
+loaded qwen3.5-2b as qwen3.5-2b (ctx 8192 x 12)
+qwen3.5-2b p12 cycle 0 prefill: 7s in=72630 out=48
+qwen3.5-2b p12 cycle 0 full: 21s in=68331 out=14654
+qwen3.5-2b p12 cycle 1 prefill: 5s in=73351 out=48
+qwen3.5-2b p12 cycle 1 full: 20s in=68876 out=14208
+qwen3.5-2b p12 cycle 2 prefill: 4s in=65565 out=48
+qwen3.5-2b p12 cycle 2 full: 18s in=67839 out=13444
+{"cycle": 0, "j_per_prompt_token": 0.008862640109378685, "j_per_completion_token": 0.1325839907875671, "j_per_completion_token_all_in": 0.17391011753207067}
+{"cycle": 1, "j_per_prompt_token": 0.008532788240946918, "j_per_completion_token": 0.1444094691116937, "j_per_completion_token_all_in": 0.18577379363896424}
+{"cycle": 2, "j_per_prompt_token": 0.006845879118580476, "j_per_completion_token": 0.1465882216403282, "j_per_completion_token_all_in": 0.18113282098021075}
+unloaded
+unloaded
+loaded qwen3.5-4b as qwen3.5-4b (ctx 8192 x 12)
+qwen3.5-4b p12 cycle 0 prefill: 19s in=83575 out=48
+qwen3.5-4b p12 cycle 0 full: 51s in=82703 out=19868
+qwen3.5-4b p12 cycle 1 prefill: 20s in=88318 out=48
+qwen3.5-4b p12 cycle 1 full: 58s in=86551 out=23156
+qwen3.5-4b p12 cycle 2 prefill: 20s in=77938 out=48
+qwen3.5-4b p12 cycle 2 full: 50s in=80688 out=23359
+{"cycle": 0, "j_per_prompt_token": 0.026232007003648014, "j_per_completion_token": 0.2625845491404118, "j_per_completion_token_all_in": 0.37177851306343884}
+{"cycle": 1, "j_per_prompt_token": 0.02290511309492321, "j_per_completion_token": 0.2898636249516274, "j_per_completion_token_all_in": 0.37547687609511926}
+{"cycle": 2, "j_per_prompt_token": 0.023824915994213318, "j_per_completion_token": 0.22147999634816737, "j_per_completion_token_all_in": 0.3037773901467497}
+unloaded
+unloaded
+loaded gemma-4-e4b-it as gemma-4-e4b-it (ctx 8192 x 12)
+gemma-4-e4b-it p12 cycle 0 prefill: 12s in=89093 out=48
+gemma-4-e4b-it p12 cycle 0 full: 61s in=99827 out=27749
+gemma-4-e4b-it p12 cycle 1 prefill: 11s in=92910 out=48
+gemma-4-e4b-it p12 cycle 1 full: 66s in=113924 out=32929
+gemma-4-e4b-it p12 cycle 2 prefill: 11s in=100054 out=48
+gemma-4-e4b-it p12 cycle 2 full: 47s in=79312 out=23287
+{"cycle": 0, "j_per_prompt_token": 0.021831724216276136, "j_per_completion_token": 0.26313276123632323, "j_per_completion_token_all_in": 0.34167236746855495}
+{"cycle": 1, "j_per_prompt_token": 0.019592842682480596, "j_per_completion_token": 0.2493324263268732, "j_per_completion_token_all_in": 0.31711750968072294}
+{"cycle": 2, "j_per_prompt_token": 0.020439708772301526, "j_per_completion_token": 0.2419233820634599, "j_per_completion_token_all_in": 0.3115379387753068}
+unloaded
+unloaded
+loaded goedel-code-prover-8b as goedel-code-prover-8b (ctx 8192 x 12)
+goedel-code-prover-8b p12 cycle 0 prefill: 12s in=62240 out=48
+goedel-code-prover-8b p12 cycle 0 full: 50s in=60486 out=21374
+goedel-code-prover-8b p12 cycle 1 prefill: 14s in=66968 out=48
+goedel-code-prover-8b p12 cycle 1 full: 86s in=78361 out=34261
+goedel-code-prover-8b p12 cycle 2 prefill: 17s in=71743 out=48
+goedel-code-prover-8b p12 cycle 2 full: 82s in=73716 out=28002
+{"cycle": 0, "j_per_prompt_token": 0.025589537826404187, "j_per_completion_token": 0.34064311324669433, "j_per_completion_token_all_in": 0.4130586080051805}
+{"cycle": 1, "j_per_prompt_token": 0.02758204880035735, "j_per_completion_token": 0.3962237301383268, "j_per_completion_token_all_in": 0.4593087809554308}
+{"cycle": 2, "j_per_prompt_token": 0.026237647421907727, "j_per_completion_token": 0.43870233759765176, "j_per_completion_token_all_in": 0.5077736331248766}
+unloaded
+unloaded
+loaded qwen3.5-4b as qwen3.5-4b (ctx 8192 x 24)
+qwen3.5-4b p24 cycle 0 prefill: 22s in=83575 out=48
+qwen3.5-4b p24 cycle 0 full: 74s in=82703 out=19263
+qwen3.5-4b p24 cycle 1 prefill: 24s in=88318 out=48
+qwen3.5-4b p24 cycle 1 full: 73s in=86551 out=20572
+qwen3.5-4b p24 cycle 2 prefill: 22s in=77938 out=48
+qwen3.5-4b p24 cycle 2 full: 73s in=80688 out=23246
+{"cycle": 0, "j_per_prompt_token": 0.02687236449964247, "j_per_completion_token": 0.4627247071151452, "j_per_completion_token_all_in": 0.5780974507798875}
+{"cycle": 1, "j_per_prompt_token": 0.0248606150889154, "j_per_completion_token": 0.4194597319971188, "j_per_completion_token_all_in": 0.5240538937976592}
+{"cycle": 2, "j_per_prompt_token": 0.025909323042684965, "j_per_completion_token": 0.3749035126526404, "j_per_completion_token_all_in": 0.4648360368575859}
+unloaded
+CALIB_DONE

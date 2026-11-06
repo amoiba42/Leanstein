@@ -37,8 +37,8 @@ prototype. The harness is complete and tested; we built a buggy-VERINA dataset w
 a power analysis; we froze the configuration; and we ran the \textbf{full pre-registered study (12,249 runs)} and
 its analysis, all on one 48\,GB MIG slice of an NVIDIA RTX PRO 6000 Blackwell. The main result supports the
 hypothesis: C beats B for both primary models ($p_\text{Holm}<0.001$). Against a proof-writing agent that gets the
-same automation first (BP), C is level or slightly better, and cheaper. The remaining work is an energy calibration
-study, human confirmation of the audit, and polishing the paper.
+same automation first (BP), C is level or slightly better, and cheaper in tokens and (estimated) energy. The
+remaining work is human confirmation of the audit, code-shape examples and polishing the paper.
 
 \section{What has been built}
 \textbf{Harness (\texttt{prl/}, 5.4k lines of Python; 96 unit and 24 Lean integration tests, all passing).}
@@ -151,7 +151,9 @@ so the repair must change the code's shape (81 of 191 for 4B; 56 are reverts). R
 references against 49\% of the rest. \texttt{match}, \texttt{a[i]!} indexing and \texttt{Nat}/\texttt{Int}
 casts also hurt.
 \item \textbf{RQ5, cost and scale}: for 4B, C uses 37k tokens per verified repair against 65k for BP and 165k
-for B, and 68\,s of inference per run against 162\,s and 150\,s. Gemma-4-E4B shows the same pattern (C 30.2\%,
+for B, and 68\,s of inference per run against 162\,s and 150\,s. Estimated energy per verified repair
+(calibrated on our slice, D-4) is 2.6\,kJ for C against 5.9\,kJ for BP and 13.4\,kJ for B (2B: 2.0, 3.6 and
+56\,kJ). The whole study used about 3.1\,kWh (2.3\,kg CO$_2$). Gemma-4-E4B shows the same pattern (C 30.2\%,
 B 1.9\%, BP 27.4\%). The 8B proof specialist Goedel-Code-Prover (A and B only) verifies 16.5--20.8\% of runs,
 below Qwen3.5-4B in C (27.6\%).
 \item \textbf{Is B a strawman?} B stays well below C even when single-call automation proofs are not counted
@@ -181,9 +183,12 @@ Natural bugs are harder for every condition, but only C and BP repair them at al
 
 \section{Known failures and limitations}
 \begin{itemize}
-\item \textbf{Energy (deviation D-1).} The energy meter read the NVML counter of physical GPU 0 instead of our
-slice, because NVML ignores the CUDA device mask. Its CPU estimate also mixed two concurrent jobs. No energy
-figure is reported yet; the calibration study below will fill this in.
+\item \textbf{Energy is an estimate (D-1, D-4).} The in-run meter read the NVML counter of physical GPU 0
+instead of our slice, because NVML ignores the CUDA device mask, and its CPU figure mixed two concurrent jobs.
+Its numbers were withdrawn. After the study we calibrated joules per prompt and completion token for each model
+on our slice, using study prompts and settings, three cycles, and marginal board power over idle. We then charged
+every logged model call accordingly. Two jobs ran side by side in the study, which may raise absolute figures by
+up to $\approx$1.6$\times$, but equally for every condition.
 \item \textbf{Audit pending human confirmation (D-3).} We read all 333 sampled successes (0 spec-gaming, 27
 correct but unnatural), but a team member still has to confirm them. The spec-copying flag fires on correct
 restatements of executable postconditions, so its threshold is too low for VERINA.
@@ -208,7 +213,8 @@ over-fitting the method to the benchmark.
 \textbf{Achieved} (dates in 2026): repository and v2 design (2 Nov); harness and tests (2--3 Nov); review
 revisions (cross-evaluation, power simulation, Bhammer; 3 Nov); the seven team decisions as ADRs and the first
 freeze (4--5 Nov); a from-scratch rerun on the GPU server, with dataset, probes, a 492-run pilot, power note and
-second freeze (5 Nov, 21:06); the full study, analysis and paper draft (6 Nov).
+second freeze (5 Nov, 21:06); the full study, analysis and paper draft (6 Nov); the post-hoc energy calibration
+on our slice (6 Nov, 14:45--15:30).
 \texttt{docs/implementation\_plan.md} tracks every task.
 
 \textbf{Repository and commits.} The repository (\url{https://github.com/amoiba42/Leanstein}) has team commits
@@ -221,9 +227,6 @@ number can be traced back to a run.
 
 \textbf{Remaining before the final submission:}
 \begin{enumerate}
-\item \textbf{Energy study (RQ5).} Calibrate joules per token for each model on our slice. We will alternate
-loaded and idle readings of GPU power under the study's concurrency, then multiply by the tokens each condition
-used. CPU energy will come from per-run Lean seconds. These are estimates, logged as a deviation.
 \item Human confirmation of the 333-run audit.
 \item Annotated before/after examples for the code-shape catalogue (RQ4).
 \item Paper polish and a venue choice (a workshop such as LLM4Code or FormaliSE). An optional CLEVER replication if

@@ -90,8 +90,26 @@ Final analysis (`scripts/irel/finalize.sh`, 11:50 to 11:55): cross-evaluation ca
 the two analyses and the audit sample. The audit crashed on a pandas name clash and lost a column; both bugs
 were fixed (deviation D-2) and the same 333-run sample was drawn again. The audit was filled in by Claude, with
 every row marked "checked by Claude, awaiting human confirmation" (D-3). The energy meter turned out to read
-physical GPU 0, not our slice, so no energy figures are reported (D-1). The freeze still checks
+physical GPU 0, not our slice, so its figures were withdrawn (D-1). The freeze still checks
 `True [] 3f2744e1...` on the server after the fixes, since `prl/` is not part of the freeze.
 
 Results are in `results/` (main), `results/heldout`, `results/pilot` and `results/audit`. The paper is
 `paper/main.pdf`, built from `paper/results.tex` (hand-written texts) and `paper/results_tables.tex` (generated).
+
+## Energy calibration (deviation D-4), 2026-11-06 14:45-15:30
+
+`scripts/irel/energy_calib.sh` served each model again on the slice with the study settings (llama-server
+`162e2bb`, 12 slots x 8192 tokens, temperature 0.7, top-p 0.95, reasoning off) on port 1290 and replayed prompts
+the model had received in the study (`runs/*/raw`). It sampled `power.draw.instant` of physical GPU 1 every 100 ms.
+Each of three cycles per model has an idle window (40 s), a prefill-only workload (48 prompts), another idle
+window and a full workload (48 prompts, up to 1,536 tokens). Marginal energy is power above the adjacent idle
+mean. A last run checked qwen3.5-4b at 24 slots. Raw data and the log are in `results/energy_calib/`.
+`scripts/irel/energy_estimate.py results/energy_calib results` writes `results/rq5_energy_estimate.{csv,md}` and
+`results/energy_coefficients.csv`.
+
+| Model | J per completion token | J per prompt token |
+|---|---|---|
+| qwen3.5-2b | 0.141 (0.133-0.147) | 0.008 |
+| qwen3.5-4b | 0.258 (0.221-0.290); 0.42 at 24 slots | 0.024 |
+| gemma-4-e4b-it | 0.252 (0.242-0.263) | 0.021 |
+| goedel-code-prover-8b | 0.392 (0.341-0.439) | 0.027 |

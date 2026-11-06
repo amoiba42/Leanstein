@@ -75,6 +75,34 @@ qwen3.5-4b & S-plain & 34 & 52 & 88 & 93 & 267 \\
 \end{table*}
 
 \begin{table*}[t]\centering\small
+\caption{RQ5 energy on \texttt{main} (estimate, deviation D-4). GPU: tokens used $\times$ joules per token calibrated on our slice for each model (marginal board power over idle; range over three calibration cycles). CPU: Lean seconds $\times$ 5.47\,W per thread. CO$_2$ at 0.716\,kg/kWh.}\label{tab:energy}
+\begin{tabular}{@{}llrrrrr@{}}\toprule
+Model & Cond. & Repairs & GPU kJ & CPU kJ & kJ per repair [range] & g CO$_2$ per repair \\\midrule
+gemma-4-e4b-it & B & 2 & 459 & 6 & 232.4 \scriptsize[223.1, 243.6] & 46.21 \\
+gemma-4-e4b-it & BP & 53 & 400 & 65 & 8.8 \scriptsize[8.5, 9.1] & 1.75 \\
+gemma-4-e4b-it & C & 58 & 118 & 33 & 2.6 \scriptsize[2.5, 2.7] & 0.52 \\
+goedel-code-prover-8b & A & 38 & 409 & 3 & 10.8 \scriptsize[9.5, 12.0] & 2.15 \\
+goedel-code-prover-8b & B & 48 & 404 & 5 & 8.5 \scriptsize[7.6, 9.4] & 1.69 \\
+qwen3.5-2b & A & 13 & 287 & 23 & 23.9 \scriptsize[22.2, 24.9] & 4.74 \\
+qwen3.5-2b & B & 7 & 355 & 35 & 55.7 \scriptsize[51.7, 58.2] & 11.08 \\
+qwen3.5-2b & BP & 110 & 339 & 57 & 3.6 \scriptsize[3.4, 3.7] & 0.71 \\
+qwen3.5-2b & Bhammer & 21 & 411 & 30 & 21.0 \scriptsize[19.4, 22.0] & 4.18 \\
+qwen3.5-2b & C & 150 & 226 & 68 & 2.0 \scriptsize[1.8, 2.0] & 0.39 \\
+qwen3.5-2b & C-plain & 153 & 247 & 63 & 2.0 \scriptsize[1.9, 2.1] & 0.40 \\
+qwen3.5-2b & S & 10 & 114 & 50 & 16.3 \scriptsize[15.4, 16.9] & 3.25 \\
+qwen3.5-2b & S-plain & 11 & 115 & 43 & 14.4 \scriptsize[13.6, 14.9] & 2.86 \\
+qwen3.5-4b & A & 100 & 877 & 17 & 8.9 \scriptsize[7.8, 10.0] & 1.78 \\
+qwen3.5-4b & B & 79 & 1039 & 23 & 13.4 \scriptsize[11.8, 14.9] & 2.67 \\
+qwen3.5-4b & BP & 182 & 985 & 94 & 5.9 \scriptsize[5.3, 6.5] & 1.18 \\
+qwen3.5-4b & Bhammer & 131 & 814 & 30 & 6.4 \scriptsize[5.7, 7.1] & 1.28 \\
+qwen3.5-4b & C & 191 & 430 & 69 & 2.6 \scriptsize[2.4, 2.9] & 0.52 \\
+qwen3.5-4b & C-plain & 188 & 373 & 65 & 2.3 \scriptsize[2.1, 2.5] & 0.46 \\
+qwen3.5-4b & S & 34 & 238 & 29 & 7.9 \scriptsize[7.0, 8.6] & 1.56 \\
+qwen3.5-4b & S-plain & 34 & 201 & 33 & 6.9 \scriptsize[6.2, 7.5] & 1.37 \\
+\bottomrule\end{tabular}
+\end{table*}
+
+\begin{table*}[t]\centering\small
 \caption{Held-out replication (analysed once and separately; not confirmatory).}\label{tab:heldout}
 \begin{tabular}{@{}llrrrlrrr@{}}\toprule
 Model & Comparison & Fam. & $x$ & $y$ & Diff. (pp) [95\% CI] & $p_\text{Holm}$ & $h$ & only $x$/$y$ \\\midrule

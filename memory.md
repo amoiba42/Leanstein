@@ -70,10 +70,11 @@ final_architecture, requirements, HLD, LLD, implementation_plan, feasibility —
   R-1 to R-10 and H-1.
 - [x] Study 2026-11-05 21:06 to 2026-11-06 11:49: 12,249 runs, 1 infrastructure failure, no cap hits, no stop
   rule. Cross-evaluation, analysis (`results/`, `results/heldout`), audit (333 runs, 0 spec-gaming; done by
-  Claude, **human confirmation pending**). Post-freeze deviations D-1 (energy meter read physical GPU 0: no
-  energy reported), D-2 (audit sampler bugs fixed), D-3 (audit by Claude).
+  Claude, **human confirmation pending**). Post-freeze deviations D-1 (in-run energy meter read physical GPU 0:
+  withdrawn), D-2 (audit sampler bugs fixed), D-3 (audit by Claude), D-4 (energy estimated by post-hoc
+  calibration on the slice, 2026-11-06 14:45-15:30, `results/rq5_energy_estimate.md`).
 - [x] Results: C > B for 2B and 4B (Holm p < 0.001), C vs BP +5.0 pp for 2B (p = 0.012) and a tie for 4B;
-  held-out replicates C > B, with C/BP tied. Paper `paper/main.pdf` (8 pages) written.
+  held-out replicates C > B, with C/BP tied. Paper `paper/main.pdf` (9 pages) and 4-page progress report `report/progress_report.pdf` written.
 - [ ] Human confirmation of the audit (`results/audit/sample.csv`); commit and push (user).
 
 ## Environment facts (study)

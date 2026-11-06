@@ -3,7 +3,7 @@
 
 **Course:** Agentic Software Engineering (AutoSE, CS6.403) · **Team:** Agents of Ultron — Inesh Dheer, Poojitha J, Gracy Garg
 **Repository:** Leanstein (`https://github.com/amoiba42/Leanstein`) · **Version:** v2.1 · last updated 2026-11-03
-**Status (2026-11-06):** complete. The whole study ran from scratch on the IREL server (RTX PRO 6000 Blackwell, one 48 GB MIG slice): dataset, probes, pilot, power note, second freeze, 12,249 study runs and the analysis. The paper is `paper/main.pdf`. Post-freeze deviations: D-1 to D-3. Run record: `context/IREL_RUNS.md`; deviations: `prereg/deviations.md` R-1 to R-10.
+**Status (2026-11-06):** complete. The whole study ran from scratch on the IREL server (RTX PRO 6000 Blackwell, one 48 GB MIG slice): dataset, probes, pilot, power note, second freeze, 12,249 study runs and the analysis. The paper is `paper/main.pdf`. Post-freeze deviations: D-1 to D-4 (D-4: energy estimated by a post-hoc calibration). Run record: `context/IREL_RUNS.md`; deviations: `prereg/deviations.md` R-1 to R-10.
 
 This is the single document to follow. It supersedes the original proposal and plan where they differ, and it
 records *why* each part exists and *where* it lives in the repository. Update the "Status" lines and §12 as the

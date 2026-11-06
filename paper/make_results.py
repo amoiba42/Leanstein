@@ -92,6 +92,27 @@ def comp_table(comp: pd.DataFrame, caption: str, label: str, primary: bool) -> s
             + "\n".join(rows) + "\n\\bottomrule\\end{tabular}\n\\end{table*}\n")
 
 
+def energy_table(en: pd.DataFrame, caption: str, label: str) -> str:
+    """Estimated energy per verified repair (deviation D-4), main split."""
+    if en.empty:
+        return ""
+    e = en[en.split == "main"].copy()
+    e["ci"] = e.condition.map({c: i for i, c in enumerate(COND_ORDER)})
+    e = e.sort_values(["model", "ci"])
+    rows = []
+    for _, r in e.iterrows():
+        per = "---" if pd.isna(r.kj_per_repair) else (f"{r.kj_per_repair:.1f} "
+                                                      f"\\scriptsize[{r.kj_per_repair_lo:.1f}, {r.kj_per_repair_hi:.1f}]")
+        co2 = "---" if pd.isna(r.co2_g_per_repair) else f"{r.co2_g_per_repair:.2f}"
+        rows.append(f"{tex(r.model)} & {ct(r.condition)} & {int(r.repairs)} & {r.gpu_kj_mean:.0f} & {r.cpu_kj:.0f} & "
+                    f"{per} & {co2} \\\\")
+    return ("\\begin{table*}[t]\\centering\\small\n"
+            f"\\caption{{{caption}}}\\label{{{label}}}\n"
+            "\\begin{tabular}{@{}llrrrrr@{}}\\toprule\n"
+            "Model & Cond. & Repairs & GPU kJ & CPU kJ & kJ per repair [range] & g CO$_2$ per repair \\\\\\midrule\n"
+            + "\n".join(rows) + "\n\\bottomrule\\end{tabular}\n\\end{table*}\n")
+
+
 def outcome_table(out: pd.DataFrame, caption: str, label: str) -> str:
     if out.empty:
         return ""
@@ -205,6 +226,11 @@ def main() -> None:
         comp_table(comp, "Secondary and exploratory comparisons on \\texttt{main} (uncorrected one-sided $p$). Never "
                    "pooled with the primary estimates.", "tab:secondary", False),
         outcome_table(outc, "Outcome labels per run on \\texttt{main}.", "tab:outcomes"),
+        energy_table(read(main_dir, "rq5_energy_estimate.csv"),
+                     "RQ5 energy on \\texttt{main} (estimate, deviation D-4). GPU: tokens used $\\times$ joules per "
+                     "token calibrated on our slice for each model (marginal board power over idle; range over three "
+                     "calibration cycles). CPU: Lean seconds $\\times$ 5.47\\,W per thread. CO$_2$ at 0.716\\,kg/kWh.",
+                     "tab:energy"),
         comp_table(hcomp, "Held-out replication (analysed once and separately; not confirmatory).", "tab:heldout", True),
         rate_table(pcosts, "Pilot (calibration split: 20 families, 41 buggy instances, seed 11; per-run rate, runs "
                    "in brackets). Never pooled with the study.", "tab:pilotirel"),

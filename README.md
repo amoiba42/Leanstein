@@ -15,8 +15,10 @@ scratch on one machine: the IREL server, one 48 GB MIG slice of an NVIDIA RTX PR
 beats B for both primary models (Qwen3.5-2B 27.7% vs 2.2% of families, 4B 33.0% vs 17.6%; Holm p < 0.001). C
 vs BP is +5.0 pp for 2B (p_Holm = 0.012) and a tie for 4B, and C uses about 43% fewer tokens per verified repair.
 Held-out replicates C > B; C/BP ties there for both models. The first freeze (`964f1983`) is superseded
-(`prereg/deviations.md`, R-1 to R-10). The post-freeze deviations are D-1 (energy meter read the wrong GPU, so
-energy is not reported), D-2 (audit sampler bugs) and D-3 (audit done by Claude, awaiting human confirmation).
+(`prereg/deviations.md`, R-1 to R-10). The post-freeze deviations are D-1 (in-run energy meter read the wrong GPU;
+withdrawn), D-2 (audit sampler bugs), D-3 (audit done by Claude, awaiting human confirmation) and D-4 (energy
+estimated by a post-hoc calibration on our slice: C 2.6 kJ per verified repair vs BP 5.9 and B 13.4 for 4B; the
+whole study about 3.1 kWh). Mid-submission report: `report/progress_report.pdf`.
 
 **Start here:** [`docs/final_proposal.md`](docs/final_proposal.md) (living document) ·
 [`docs/final_architecture.md`](docs/final_architecture.md) (decisions + diagram) · [`memory.md`](memory.md) (state) ·

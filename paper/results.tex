@@ -3,8 +3,8 @@
 % make_results.py only fills macros that still print TBD. Tables come from results_tables.tex (generated).
 \newcommand{\resAbstractFinding}{that C verifies far more repairs than B for both primary models (Qwen3.5-2B: 27.7\%
 of families vs 2.2\%; Qwen3.5-4B: 33.0\% vs 17.6\%; Holm $p<0.001$), and at least as many as BP (2B: +5.0
-percentage points, $p_\text{Holm}=0.012$; 4B: a tie), at about 43\% fewer model tokens per verified repair than
-BP. The held-out split replicates C over B and shows a C/BP tie for both models. The gain comes from the
+percentage points, $p_\text{Holm}=0.012$; 4B: a tie), at about 43\% fewer model tokens and roughly half the
+estimated energy per verified repair of BP. The held-out split replicates C over B and shows a C/BP tie for both models. The gain comes from the
 automation more than from forbidding proofs: proof-writing agents that are given the same portfolio first close most
 of the gap}
 
@@ -65,8 +65,14 @@ budget to 2 or 4 shows that C's lead is already present at $N=2$ (4B: 21.8\% vs 
 repeats the pattern: C 30.2\% vs B 1.9\% (+28.3\,pp, $p<0.001$) and C vs BP 30.2\% vs 27.4\% (+2.8\,pp, [$-$3.8,
 +9.4], $p=0.29$). \textbf{Proof specialist.} Goedel-Code-Prover-8B, run as a reference in A and B only, verifies
 16.5\% and 20.8\% of runs, below Qwen3.5-4B in C (27.6\%), which has half the parameters and no proof training.
-\textbf{Energy.} The GPU energy counter turned out to read a GPU other than ours, so no energy or CO$_2$ figure is
-reported (deviation D-1); tokens and inference seconds above are per-run measurements and are unaffected.}
+\textbf{Energy} (estimate, deviation D-4; \cref{tab:energy}). The study's energy counter read the wrong GPU, so
+we calibrated joules per prompt and completion token for each model on our slice after the study. Each model was
+replayed on prompts it had received, at the study's serving settings. C is also the most energy-efficient
+condition: for Qwen3.5-4B it uses 2.6\,kJ per verified repair [2.4, 2.9], against 5.9\,kJ for BP and 13.4\,kJ for
+B; for 2B, 2.0\,kJ against 3.6\,kJ and 56\,kJ; for Gemma, 2.6\,kJ against 8.8\,kJ and 232\,kJ. These are 0.4--0.5\,g of CO$_2$
+per repair in C. The held-out split gives the same ordering (4B: 3.2, 7.4 and 24\,kJ). C's extra Lean time costs
+less than the model tokens it saves. All study runs together used an estimated 3.1\,kWh (2.3\,kg CO$_2$). Running two
+jobs side by side may raise absolute figures by up to about 1.6 times, but equally for every condition.}
 
 \newcommand{\resSecondaryText}{\textbf{B without automation.} Many of B's own proofs are a single automation call.
 Counting those as failures (B\_noauto) lowers B from 17.6\% to 12.3\% for 4B (C vs B\_noauto +20.8\,pp); for 2B,
@@ -93,8 +99,8 @@ both models (20.3\% vs 20.3\% and 29.7\% vs 29.7\%; $p_\text{Holm}=1.00$), so th
 most effective and cheapest way for small models to produce end-to-end verified repairs. C beats proof writing
 (B) decisively, on \texttt{main} and on the held-out split, for two Qwen sizes and for Gemma. Against a
 proof-writing agent that gets the same automation first (BP), C ties or wins narrowly, and the narrow win does not
-replicate on held-out. It is clearly cheaper: about 43\% fewer tokens per verified repair and less than half the
-inference time with 4B. The structured hint adds nothing over a plain retry; recursion, \texttt{match} and array
+replicate on held-out. It is clearly cheaper: about 43\% fewer tokens per verified repair, less than half the
+inference time, and less than half the estimated energy (2.6 against 5.9\,kJ per repair) with 4B. The structured hint adds nothing over a plain retry; recursion, \texttt{match} and array
 indexing are what defeat the automation; and models rarely re-shape correct but unprovable code. The practical
 lesson is to give small models a fixed automation portfolio and ask them only for code. Further gains will come
 from widening what automation can prove, especially recursion, rather than from better feedback text.}

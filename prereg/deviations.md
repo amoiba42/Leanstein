@@ -255,3 +255,22 @@ postcondition proposition directly (for example `∀ c ∈ s.toList, isDigit c` 
 Every `copies_postcond` success restates an exact, executable postcondition (closed forms, folds, filters), so the
 flag fires on intended computations; the flag's 0.35 threshold is too low to separate copying from
 implementing on VERINA and is reported as such.
+
+**D-4. Energy is estimated after the fact by calibration (replaces the withdrawn D-1 figures).** On 2026-11-06,
+after the study, each model was served again on our slice with the study's settings (llama.cpp `162e2bb`,
+12 parallel slots, 8192 tokens per slot, temperature 0.7, top-p 0.95, reasoning off) and fed prompts that it
+actually received in the study (from `runs/*/raw`). Board power of physical GPU 1 was sampled every 100 ms
+(`power.draw.instant`). Each of three cycles has an idle window, a prefill-only workload (48 prompts, 1 output
+token), another idle window and a full workload (48 prompts, up to 1,536 tokens). The marginal energy of a
+workload is its power above the mean of the adjacent idle windows, integrated over the window. This gives
+joules per prompt token (from prefill) and per completion token (from the full workload, minus prefill) for each
+model: Qwen3.5-2B 0.141 / 0.008, Qwen3.5-4B 0.258 / 0.024, Gemma-4-E4B 0.252 / 0.021, Goedel-8B 0.392 / 0.027
+J per completion / prompt token, with cycle-to-cycle spread up to ±15%. Every model call in the study is then
+charged by its logged tokens. Lean CPU energy is each run's logged Lean seconds x the pre-registered 5.47 W per
+thread, and CO2 uses the pre-registered 0.716 kg/kWh. Script: `scripts/irel/energy_calib.py`,
+`scripts/irel/energy_estimate.py`. Data: `results/energy_calib/`. Output: `results/rq5_energy_estimate.{csv,md}`.
+Limits: these are estimates, not the pre-registered measurement. Static (idle) GPU power is shared with other
+tenants and is not attributed. The calibration uses one server at a time, whereas the study ran two jobs side by
+side; a 24-slot check with Qwen3.5-4B gave about 1.6 times the joules per completion token (0.42), so absolute
+figures could be up to that much higher. That factor applies equally to every condition of a model, so
+comparisons between conditions are unaffected.
