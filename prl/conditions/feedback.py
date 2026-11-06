@@ -1,4 +1,4 @@
-"""Feedback router (final architecture §5, G8/G9): failure type × condition → message for the next turn.
+"""Feedback router (final architecture §5): failure type × condition → message for the next turn.
 
 | failure \\ cond | A    | B / BP / Bhammer            | C / S                               | Cplain / Splain |
 |----------------|------|-----------------------------|-------------------------------------|-----------------|

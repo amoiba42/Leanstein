@@ -1,7 +1,7 @@
 [project]
 name = "prl"
 version = "1.0.0"
-description = "Prove Less, Repair Better: automation-friendly program repair for small models in Lean 4"
+description = "P.I.G. (Proof-Independent Generation): Automation for Structurally Verified Code Patches"
 requires-python = ">=3.12,<3.13"
 dependencies = [
   "numpy>=2.1",

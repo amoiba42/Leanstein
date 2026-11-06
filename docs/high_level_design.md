@@ -1,8 +1,8 @@
 # High-Level Design
 
-**Project:** Prove Less, Repair Better (PRL)
-**Status:** v2.1 · 2026-11-03 · derived from `docs/requirements.md` v2.1 and `docs/final_architecture.md` (the diagram there is the authoritative overview)
-**Scope:** architecture, components, data flow, condition protocols, trust boundaries, deployment and the experimental pipeline. Byte-level formats and algorithms are in `docs/low_level_design.md`.
+**Project:** P.I.G. (Proof-Independent Generation): Automation for Structurally Verified Code Patches (package `prl`)
+**Related:** [`docs/requirements.md`](requirements.md), [`docs/proposal.md`](proposal.md) (final design) and [`docs/adr/`](adr/) (design decisions)
+**Scope:** architecture, components, data flow, condition protocols, trust boundaries, deployment and the experimental pipeline. Byte-level formats and algorithms are in [`docs/low_level_design.md`](low_level_design.md).
 
 ---
 
@@ -12,7 +12,7 @@
 2. **Fair comparison.** Conditions differ only in what the design says they differ in: who writes the proof and what feedback is shown. Same instances, models, decoding, budgets and preflight. (FR-COND-8, FR-BUD)
 3. **Mechanism visibility.** Every artefact needed to tell *shaping* from *reverting* is logged by construction (reference automation status, patch distances, code features). (SR-MECH)
 4. **Reproducibility.** Pinned toolchain, frozen pre-registration with hashes, content-addressed caching, deterministic ordering, one-command regeneration. (SR-PRE, NFR-REP)
-5. **Small-hardware feasibility.** Designed for one 8 GB laptop GPU; the study ran on one 48 GB MIG slice of an RTX PRO 6000 Blackwell (deviation R-3). Lean verification is parallelised. (NFR-ENV, NFR-PERF)
+5. **Small-hardware feasibility.** Runs on a single GPU; the study used one 48 GB MIG slice of an RTX PRO 6000 Blackwell (deviation R-3). Lean verification is parallelised. (NFR-ENV, NFR-PERF)
 
 ---
 
@@ -74,6 +74,79 @@ generate(view: TaskView, condition: str, history: list[Turn], seed: int,
 
 `TaskView` is a deliberately *narrow* projection of a `TaskInstance` (description, signature, pre/postcondition text, faulty code, theorem statement). It is the only object a prompt can be built from, which makes leakage (IR-9) structurally impossible to introduce by accident.
 
+### 3.3 System diagram
+
+```mermaid
+flowchart TB
+  subgraph P1["1 Benchmark build (once, CPU)"]
+    V[VERINA 189 tasks<br/>regions · public tests] --> ELIG{reference compiles<br/>and passes tests?}
+    ELIG -- no --> EXC[excluded + reason]
+    ELIG -- yes --> TREF[T on reference<br/>full portfolio vector]
+    TREF --> HID[hidden tests<br/>precondition proved in Lean<br/>reference as oracle · round-trip]
+    HID --> NAT[natural bugs<br/>zero-shot 0.8B and 9B<br/>compile and fail · resample cap 4]
+    HID --> MUT[mutants<br/>operators · compile and fail · at most 2 per family]
+    TREF --> SHP[shaping instances<br/>correct references T cannot prove]
+    NAT & MUT --> TBUG[T on buggy start<br/>weak-spec flag]
+    TBUG & SHP --> SPL[family-level splits<br/>pilot 20 · main · held-out 30%]
+    SPL --> MAN[(task manifests + hashes)]
+  end
+  subgraph PRE["2 Pre-registration"]
+    PIL[pilot runs] --> PWR[power simulation<br/>3 scenarios · sign-flip at alpha/4<br/>power_note.json]
+    CFG[study.yaml · portfolio.yaml · hints.yaml · prompts] --> FRZ[(FREEZE.json hashes)]
+    PWR --> FRZ
+  end
+  subgraph P2["3 Run loop per (instance, condition, model, seed)"]
+    BUD{budget left?<br/>generations · tokens · seconds} -- no --> UNR[unresolved]
+    BUD -- yes --> GEN["generate() · llama.cpp<br/>TaskView only: no reference, no hidden tests"]
+    GEN --> EXT[extract code / proof<br/>drop echoed locked definitions]
+    EXT --> PF{"static pre-filter<br/>reject: escapes · locked redefinitions · empty<br/>flag: spec-copy · trivial · hard-coded"}
+    PF -- reject --> FB
+    PF -- pass --> S1
+  end
+  subgraph P3["4 verify() · persistent Lean server pool (Mathlib loaded once)"]
+    S1[stage 1: compile + visible + hidden tests<br/>+ model proof in A/B/BP/Bhammer] --> OK1{compiles and tests pass?}
+    OK1 -- no --> FB
+    OK1 -- yes, portfolio modes --> TL[Tier L: decide · simp · simp_all · omega · split<br/>50k heartbeats each · frozen order · early stop]
+    TL -- open --> TH[Tier H: grind · aesop · induction<br/>200k heartbeats]
+    TL -- closed --> AX
+    TH -- closed --> AX
+    TH -- open --> FB
+    OK1 -- yes, A/B/Bhammer --> MP{model proof ok?}
+    MP -- no --> FB
+    MP -- yes --> AX
+    AX{"axioms within propext, Classical.choice, Quot.sound<br/>and locked-region hashes unchanged"} -- yes --> SUCC[verified repair]
+    AX -- no --> FB
+    S1 -. crash / out of memory .-> INFRA[infrastructure: re-verify same candidate<br/>no budget charge]
+    S1 -. candidate loops .-> TO[confirm in isolation, then failed attempt]
+  end
+  subgraph FR["5 Feedback router (to next attempt)"]
+    FB --> R{failure type x condition}
+    R -- integrity --> F1[rule violated]
+    R -- compile --> F2[Lean errors · C-plain: generic]
+    R -- visible test --> F3[failing input / expected / actual]
+    R -- hidden test --> F4[count only, never inputs]
+    R -- proof stuck --> F5[C/S: goal + structural hint<br/>B/BP/Bhammer: proof errors · C-plain/S-plain: generic]
+    R -- A --> F6[none: independent samples]
+  end
+  F1 & F2 & F3 & F4 & F5 & F6 --> BUD
+  INFRA --> S1
+  subgraph P4["6 Logging and analysis"]
+    LOG[(attempts.jsonl: prompt hash, tokens, model s, Lean s,<br/>results, failure kind, closing entry, hint kinds, proof tactics)]
+    RUNS[(runs.jsonl: outcome label, distances, ref_auto, features)]
+    LOG --> XE["B to C cross-evaluation (Lean only)<br/>B code that compiles but whose proof failed, through C's pipeline"]
+    XE --> XEL[(crosseval.jsonl · secondary)]
+    LOG & RUNS & XEL --> AN[RQ1 sign-flip + Holm · McNemar · bootstrap<br/>secondary: B_noauto · Bhammer · cross-eval<br/>RQ2 shaping vs revert · S vs S-plain<br/>RQ3 C vs C-plain · RQ4 code shapes<br/>RQ5 cost and energy per repair]
+    AN --> AUD[audit sample: 10% + every flagged success] --> REP[results/]
+  end
+  MAN --> BUD
+  FRZ --> BUD
+  GEN --> LOG
+  SUCC --> RUNS
+  UNR --> RUNS
+```
+
+Energy is not measured inside this loop; it is estimated after the study from logged tokens ([`docs/adr/0014-energy-measurement.md`](adr/0014-energy-measurement.md)).
+
 ---
 
 ## 4. Core domain model
@@ -103,13 +176,13 @@ Run: (instance, condition, model, seed) → attempts[≤ N_gen] → outcome labe
 ## 5. The judge (`prl.lean`)
 
 ### 5.1 Verification server pool
-`lean_env/PrlRepl.lean` (our own ~60-line Lean program, built with `lake build prlrepl`) imports the whole of Mathlib once
+[`lean_env/PrlRepl.lean`](../lean_env/PrlRepl.lean) (our own ~60-line Lean program, built with `lake build prlrepl`) imports the whole of Mathlib once
 and then elaborates one file per request against a fresh copy of the imported environment (environments are
 immutable values, so every request starts from the same state). A pool of such workers (count derived from
 free RAM unless `lean.workers` is set, max 6; `PRL_LEAN_WORKERS` overrides) serves all verifications: ~0.6 s per check instead of 25–40 s with a plain `lean` process.
 On Windows each worker runs inside a Job Object with a 4 GB per-process memory cap (not applied on Linux; deviation R-10). The plain `lean` CLI remains
-available as a fallback backend (`PRL_LEAN_BACKEND=cli`); verdict parity between the two is tested. A reduced import
-set was considered and declined (D16).
+available as a fallback backend (`PRL_LEAN_BACKEND=cli`); result parity between the two is tested. A reduced import
+set is not used (D16).
 
 ### 5.2 One rendered file per request; staged verification
 A request is one self-contained `.lean` file: the locked VERINA template with the candidate's `code_aux` / `code`
@@ -146,11 +219,11 @@ Static rejection happens before Lean runs, so a malicious candidate never execut
 A frozen ordered list of tactic scripts parameterised only by mechanically derived names. Tier L (50k
 heartbeats): `decide`, `simp`, `simp_all`, `omega` combinations, `split` combinations. Tier H (200k): `grind`,
 `aesop`, `fun_induction` and structural `induction` templates. Identical for T, BP, C, C-plain, S and S-plain.
-Stored in `prereg/portfolio.yaml`, hashed in `prereg/FREEZE.json`.
+Stored in [`prereg/portfolio.yaml`](../prereg/portfolio.yaml), hashed in [`prereg/FREEZE.json`](../prereg/FREEZE.json).
 
 ### 5.6 Hint extractor and feedback router
 The hint extractor is deterministic and rule-based: the best portfolio entry's first unsolved goal plus
-structural pointers from a fixed catalogue (`prereg/hints.yaml`: partial def, well-founded recursion,
+structural pointers from a fixed catalogue ([`prereg/hints.yaml`](../prereg/hints.yaml): partial def, well-founded recursion,
 imperative loop, Nat/Int mixing, opaque helper, unchecked indexing, fold accumulator, spec/code shape mismatch).
 The **feedback router** (`prl.conditions.feedback`) maps failure type × condition to the next-turn message
 (see §8). Hidden-test failures are reported only as a count.
@@ -183,14 +256,14 @@ A buggy program that the portfolio *proves* against the spec is direct evidence 
 
 ## 7. Agent layer (`prl.models`)
 
-- **Server:** an OpenAI-compatible `POST /v1/chat/completions` server. Designed for LM Studio; the study used llama.cpp `162e2bb` `llama-server` through an `lms` stand-in (`scripts/irel/bin/lms`),
+- **Server:** an OpenAI-compatible `POST /v1/chat/completions` server. Designed for LM Studio; the study used llama.cpp `162e2bb` `llama-server` through an `lms` stand-in ([`scripts/irel/bin/lms`](../scripts/irel/bin/lms)),
   models loaded via `lms load` with fixed context length and full GPU offload. One model resident at a time;
   the driver runs (model, condition) blocks sequentially.
 - **Models:** repairers Qwen3.5-2B, Qwen3.5-4B (primary), Gemma-4-E4B-it (secondary); proof specialist
   Goedel-Code-Prover-8B (A/B only); natural-bug generators Qwen3.5-0.8B and Qwen3.5-9B (never repairers).
 - **Decoding:** `temperature=0.7`, `top_p=0.95`, `max_tokens=1536`, seed from the seed list,
   `reasoning_effort: "none"` (hidden reasoning would otherwise consume the token budget invisibly).
-- **Prompts:** one template per condition under `prereg/prompts/`, built only from a narrow `TaskView`
+- **Prompts:** one template per condition under [`prereg/prompts/`](../prereg/prompts/), built only from a narrow `TaskView`
   (description, locked spec incl. `solution_aux` helpers, locked header, theorem statement, start code).
 - **Output contract:** the full function definition (helpers allowed before it) in a ```lean block; proof
   conditions add a second block with the theorem. The harness always re-emits the locked header; echoed copies
@@ -234,7 +307,7 @@ after a study:  prl crosseval ─► B attempts that compiled but whose proof fa
 before freeze:  prl power ─► pilot runs ─► simulated power (3 scenarios) ─► prereg/power_note.json
 ```
 - **Resume:** a run is complete iff its run record exists; incomplete runs restart from scratch.
-- **Freeze guard:** `main`/`heldout` refuse to run if `prereg/` differs from `FREEZE.json`.
+- **Freeze guard:** `main`/`heldout` refuse to run if [`prereg/`](../prereg/) differs from `FREEZE.json`.
 - **Failure policy:** infrastructure failures are retried and never charged; model behaviour (bad output,
   extraction failure, non-terminating code) is recorded as an attempt and never retried.
 
@@ -283,7 +356,7 @@ Everything is a pure function of the log files and manifests, so `prl analyze` i
 |---|---|
 | OS / HW | Study: Ubuntu 24.04, NVIDIA RTX PRO 6000 Blackwell, one MIG slice 2g.48gb (GPU 1, MIG device 0), AMD Threadripper PRO 7975WX (64 threads), 503 GB RAM. Development: Windows 11, RTX 5060 Laptop 8 GB |
 | Lean | elan; `leanprover/lean4:v4.24.0`; Mathlib `v4.24.0` (commit `f897ebcf`), prebuilt cache; manifest committed; verification server `PrlRepl` |
-| Benchmark | VERINA `66b3ce50` under `third_party/verina` (read-only, not committed) |
+| Benchmark | VERINA `66b3ce50` under [`third_party/verina`](../third_party/verina/) (read-only, not committed) |
 | Models | llama.cpp `162e2bb` (CUDA 13.1, sm_120), GGUF 4-bit, SHA-256 verified: Qwen3.5-0.8B/2B/4B/9B, Gemma-4-E4B-it, Goedel-Code-Prover-8B (development used LM Studio 0.4.x) |
 | Python | 3.12 via `uv`, lockfile; numpy, scipy, pandas, statsmodels, matplotlib, pyyaml, httpx, nvidia-ml-py, psutil, pytest, ruff |
 | Parallelism | Lean workers from free RAM (max 6, 4 GB cap each); concurrent model requests per block |
@@ -292,20 +365,22 @@ Everything is a pure function of the log files and manifests, so `prl analyze` i
 
 ## 13. Experimental pipeline and phases
 
-Numbering follows `docs/implementation_plan.md`.
+Numbering follows [`docs/implementation_plan.md`](implementation_plan.md).
 
 | Phase | Purpose | Exit |
 |---|---|---|
-| **0 Environment & feasibility** | T on all references; compile-rate probe of each model on 10 tasks; determinism probe; throughput (idle GPU only) | `docs/feasibility.md`; model set confirmed |
+| **0 Environment & feasibility** | T on all references; compile-rate probe of each model on 10 tasks; determinism probe; throughput (idle GPU only) | [`docs/feasibility.md`](feasibility.md); model set confirmed |
 | **1 Components** | All components + unit/integration tests | Test suite green; integrity suite zero false successes |
 | **2 Dataset** | Eligibility, hidden tests, natural bugs (0.8B, 9B), mutants, shaping instances, splits | Manifests + provenance tables |
-| **3 Pilot, gate, freeze** | A, B, BP, Bhammer, C, C-plain on the 20 pilot families, 1 seed, primary models (Bhammer only to measure its cost); portfolio/prompt tuning *only here*; power simulation (`prl power`); gate incl. Bhammer go/no-go; `prl freeze` (refused without the power note) | Go/no-go (requirements §11); `prereg/power_note.json`; `prereg/FREEZE.json` |
+| **3 Pilot, gate, freeze** | A, B, BP, Bhammer, C, C-plain on the 20 pilot families, 1 seed, primary models (Bhammer only to measure its cost); portfolio/prompt tuning *only here*; power simulation (`prl power`); gate incl. Bhammer go/no-go; `prl freeze` (refused without the power note) | Go/no-go (requirements §10); [`prereg/power_note.json`](../prereg/power_note.json); [`prereg/FREEZE.json`](../prereg/FREEZE.json) |
 | **4 Confirmatory run** | Study `main`: primary models × {A, B, BP, C, C-plain} × 3 seeds, Gemma-4-E4B × {B, BP, C} × 1 seed, Goedel-Code-Prover-8B × {A, B} × 1 seed, optionally primary models × Bhammer × 3 seeds; study `main-shaping`: S/S-plain; study `heldout`: primary models × {B, BP, C} × 3 seeds, run once | Logs complete |
-| **5 Analysis** | `prl crosseval`; `prl analyze` (main + main-shaping → `results/`; heldout separately → `results/heldout/`, never pooled); audit; catalogue | `results/` + report |
+| **5 Analysis** | `prl crosseval`; `prl analyze` (main + main-shaping → [`results/`](../results/); heldout separately → [`results/heldout/`](../results/heldout/), never pooled); audit; catalogue | [`results/`](../results/) + report |
 
 ---
 
-## 14. Key design decisions (ADR summary)
+## 14. Key design decisions (summary)
+
+Full decision records are in [`docs/adr/`](adr/).
 
 | # | Decision | Alternatives | Why |
 |---|---|---|---|
@@ -314,17 +389,17 @@ Numbering follows `docs/implementation_plan.md`.
 | D3 | Model returns whole function definition; harness re-emits locked signature | Ask for body only | Small models follow "write the function" far better than "fill a region"; locked signature keeps integrity |
 | D4 | VERINA tests visible, generated tests hidden | Hide VERINA tests | VERINA tests are public; only fresh tests are truly withheld |
 | D5 | Hidden-test inputs must have a *Lean-proved* precondition | Python-side filter | Precondition semantics live in Lean; avoids invalid tests |
-| D6 | Add B+P and S | Only A/B/C | Pre-empts "strawman B" and "C just reverts" critiques (verdicts) |
+| D6 | Add B+P and S | Only A/B/C | Pre-empts "strawman B" and "C just reverts" critiques |
 | D7 | Family-level mean-over-seeds + sign-flip permutation | Pooled McNemar | Respects the statistical unit; uses all seeds; exact |
 | D8 | LM Studio instead of raw llama.cpp (development); llama.cpp `llama-server` behind an `lms` stand-in for the study | vLLM, Ollama | OpenAI-compatible, GPU-offloaded, seedable; the stand-in keeps the client code unchanged |
 | D9 | Lean 4.24.0 | latest Lean | VERINA ships a 4.24 migration; grind and fun_induction available |
-| D10 | Current Qwen3.5 / Gemma-4 models | Qwen2.5-Coder | User requirement for latest small models; 2B/4B are the direct successors to the planned 1.5B/3B sizes |
+| D10 | Current Qwen3.5 / Gemma-4 models | Qwen2.5-Coder | Current small open models; two sizes and a second family |
 | D11 | Own Lean verification server (Mathlib once per worker) | `lean` per file; community REPL | ~40× faster; no third-party code; CLI parity tested |
-| D12 | Two heartbeat tiers, early stop, same for all portfolio users | goal-classifier router (Gracy G7) | deterministic; no unregistered degree of freedom; no confound |
-| D13 | Natural bugs primary, mutants secondary | mutants only | realism; weakens the "C reverts mutants" objection (Gracy G1, all verdicts) |
+| D12 | Two heartbeat tiers, early stop, same for all portfolio users | goal-classifier router | deterministic; no unregistered degree of freedom; no confound |
+| D13 | Natural bugs primary, mutants secondary | mutants only | realism; weakens the "C reverts mutants" objection |
 | D14 | Energy per (model, condition) block | per attempt | concurrent requests make per-attempt GPU energy ill-defined |
-| D15 | Job Object 4 GB cap per Lean worker | 2 GB `setrlimit` (Gracy G3) | Linux-only API; Mathlib alone needs ~2.5 GB |
-| D16 | Full `import Mathlib` in every worker | five tactic modules (Gracy rev-3) | three of those modules do not exist in Mathlib v4.24; a reduced environment changes what the portfolio proves, breaks specs using Mathlib definitions and breaks server/CLI parity |
+| D15 | Job Object 4 GB cap per Lean worker | 2 GB `setrlimit` | Linux-only API; Mathlib alone needs ~2.5 GB |
+| D16 | Full `import Mathlib` in every worker | five tactic modules | three of those modules do not exist in Mathlib v4.24; a reduced environment changes what the portfolio proves, breaks specs using Mathlib definitions and breaks server/CLI parity |
 | D17 | B→C cross-evaluation as a separate Lean-only step | inside the run loop | no extra model calls; cannot affect budgets or primary records; resumable |
 | D18 | Power simulated by resampling pilot family pairs at α/4 | analytic McNemar power | keeps the confirmatory unit (families, three seeds, sign-flip) and Holm's worst case |
 | D19 | Bhammer exploratory and optional | add to the confirmatory set | would change the Holm family and the pre-registered primary comparisons |

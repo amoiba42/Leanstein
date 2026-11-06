@@ -1,8 +1,8 @@
 # Low-Level Design
 
-**Project:** Prove Less, Repair Better (PRL)
-**Status:** v2.1 · 2026-11-03 · derived from `docs/high_level_design.md` v2.1 and `docs/final_architecture.md`; every module named here exists under `prl/`
-**Scope:** module-by-module specification: data schemas, algorithms, file formats, Lean rendering, integrity rules, prompts, statistics, error handling and tests. Code under `prl/` must conform to this document; deviations are recorded in `prereg/deviations.md`.
+**Project:** P.I.G. (Proof-Independent Generation): Automation for Structurally Verified Code Patches (package `prl`)
+**Related:** [`docs/high_level_design.md`](high_level_design.md) and [`docs/adr/`](adr/); every module named here exists under [`prl/`](../prl/)
+**Scope:** module-by-module specification: data schemas, algorithms, file formats, Lean rendering, integrity rules, prompts, statistics, error handling and tests. Code under [`prl/`](../prl/) must conform to this document; deviations are recorded in [`prereg/deviations.md`](../prereg/deviations.md).
 
 ---
 
@@ -10,9 +10,8 @@
 
 ```
 AutoSEGroupProject/  (GitHub: Leanstein)
-├── README.md, memory.md        entry point; living project memory
-├── context/                    original inputs (read-only): InitialProposal/ (2 PDFs), InitialVerdicts/, GracyAdditions/
-├── docs/                       final_proposal.md (living), final_architecture.md, requirements, HLD, LLD,
+├── README.md                   entry point
+├── docs/                       proposal.md, adr/ (decision records), requirements, HLD, LLD,
 │                               implementation_plan, feasibility
 ├── prereg/                     frozen study inputs (hashed by FREEZE.json)
 │   ├── study.yaml              conditions, budgets, decoding, models, seeds, splits, bug pool, energy, analysis
@@ -34,21 +33,21 @@ AutoSEGroupProject/  (GitHub: Leanstein)
 │   └── analysis/   stats, power, crosseval, mechanism, features, report
 ├── lean_env/                   pinned Lean project + PrlRepl.lean (verification server)
 ├── tests/                      unit + `lean`-marked integration tests
-├── scripts/pdownload.py        parallel downloader (throttled networks)
+├── scripts/irel/               setup and job scripts used for the study runs
 └── (generated, git-ignored) data/, cache/, runs/, results/, third_party/verina/
 ```
 
 ---
 
-## 2. Configuration (`prl/config.py`)
+## 2. Configuration ([`prl/config.py`](../prl/config.py))
 
 - `ROOT` = repo root; `PATHS` = all directories above (generated ones created lazily).
 - `load_yaml`, `read_json`, `write_json` (atomic), `sha256_file`, `sha256_text`.
 - `lean_env()` → `LeanEnv(lean_exe, lean_path, toolchain_id)`, cached in `cache/lean_env.json` keyed by the
   `lake-manifest.json` hash.
-- `study_config()` → parsed `prereg/study.yaml`; unknown keys raise.
+- `study_config()` → parsed [`prereg/study.yaml`](../prereg/study.yaml); unknown keys raise.
 
-`prereg/study.yaml` (v2.1) keys: `study_id`, `lean{wall_guard_s (≥ 50), workers (0 = from free RAM), mem_limit_gb,
+[`prereg/study.yaml`](../prereg/study.yaml) keys: `study_id`, `lean{wall_guard_s (≥ 50), workers (0 = from free RAM), mem_limit_gb,
 test_heartbeats, batch_wall_s}`, `budget{n_gen, max_total_tokens, max_completion_tokens, max_infer_s}`,
 `decoding{temperature, top_p, reasoning_effort}`, `c_round_k`, `history_turns`, `seeds`,
 `models{primary, secondary, specialist, natural_generators}`, `conditions`, `specialist_conditions`,
@@ -131,7 +130,7 @@ analysis_kind="b_to_c_cross_eval", run_id, attempt_idx, family_id, instance_id, 
 code_key (sha of family + code), b_failure_kind, bucket, closing_entry, c_failure_kind, visible_pass, hidden_pass, axioms[]
 ```
 
-### 3.7 Power note (`prereg/power_note.json`)
+### 3.7 Power note ([`prereg/power_note.json`](../prereg/power_note.json))
 `{unit, test, alpha, alpha_per_test, primary_tests, target_power, seeds, sims, permutations, simulation_seed,
 bug_pool, pilot_dir, rows: [{model, x, y, scenario, pilot_families, pilot_<category>, p10, p01, p_both,
 required_main_families, required_total_eligible, main_families_available, power_at_available,
@@ -171,12 +170,12 @@ Eligible families sorted by id, shuffled with `random.Random(seed)`. Pilot: firs
 ```python
 run_lean(source, *, wall_s) -> LeanRun(returncode, messages: list[Msg], stdout, elapsed_s, timeout, infra_error, extra)
 ```
-- **Backend `repl` (default):** a pool of `_ReplWorker`s, each a `prlrepl` process (`lean_env/PrlRepl.lean`)
+- **Backend `repl` (default):** a pool of `_ReplWorker`s, each a `prlrepl` process ([`lean_env/PrlRepl.lean`](../lean_env/PrlRepl.lean))
   that imports the whole of Mathlib once and answers one JSON line per request (`{"ok", "messages": [{line, col, severity,
   text}]}`) for the file path it receives. On Windows each worker is placed in a **Job Object** (not on Linux; R-10) with a
   per-process memory cap (`lean.mem_limit_gb`, default 4 GB). Pool size = `lean.workers` or, if 0,
   `auto_workers()` = ⌊(free RAM − 4 GB) / 3 GB⌋ capped at 6; `PRL_LEAN_WORKERS` (or the CLI's
-  `--lean-workers`) overrides both. A reduced import set is not used (final architecture §2b, R3-7).
+  `--lean-workers`) overrides both. A reduced import set is not used (final architecture §2b).
 - `lean.wall_guard_s` is the normal per-request wall-clock guard (`120` seconds in the
   frozen study config), and must be at least 50 seconds to clear startup and tactic work (`Judge` raises otherwise).
   A request that exceeds it kills the worker (which restarts lazily); a worker that dies returns
@@ -214,7 +213,7 @@ only on proof declarations). `build_batch` (dataset building) and `build_eval` (
 
 ### 5.3a Cross-evaluation and B proof logging
 
-**Cross-evaluation** (`prl/analysis/crosseval.py`, command `prl crosseval --study S`; Lean only, after the run):
+**Cross-evaluation** ([`prl/analysis/crosseval.py`](../prl/analysis/crosseval.py), command `prl crosseval --study S`; Lean only, after the run):
 every attempt of a `crosseval_conditions` condition (B) with `extract_ok ∧ compile_ok ∧ ¬proof_ok` yields a
 secondary candidate `{code_aux, code}` only — proof text and proof declarations are dropped. It is verified by
 `Judge.verify(fam, cand, "portfolio", force_portfolio=True)` through `verify_with_infra_retry`, i.e. the complete
@@ -230,7 +229,7 @@ and `[...]` lemma lists (segments split at newlines, `;`, `<;>`, `|`, parenthese
 the head is kept only if it is in the fixed vocabulary `TACTIC_VOCAB`; `simp?`/`simp only` normalise to `simp`).
 `automation_only_proof` ⇔ `proof_aux` declares nothing ∧ the tactics minus glue (`intro`, `intros`, `unfold`,
 `first`, `try`, `repeat`, `all_goals`, `any_goals`) are non-empty and all in `portfolio.yaml:
-single_call_automation`. The report derives `B_noauto` (§11.5); raw records are unchanged and automation is never
+single_call_automation[`. The report derives `](./)B_noauto` (§11.5); raw records are unchanged and automation is never
 rejected by the integrity checker.
 
 **Bhammer** (exploratory, §9): a separate condition whose prompt lists the frozen portfolio expanded for the task
@@ -252,7 +251,7 @@ modes `portfolio | model_proof | portfolio_then_model | tests`:
 Helpers: `eval_outputs` (actual outputs for witnesses), `witness_line` (first failing *visible* test only),
 `batch_tests` / `batch_tests_with` (dataset building; one request per candidate with `lean.batch_wall_s`).
 
-### 5.5 Portfolio (`portfolio.py` + `prereg/portfolio.yaml`)
+### 5.5 Portfolio (`portfolio.py` + [`prereg/portfolio.yaml`](../prereg/portfolio.yaml))
 Two tiers: `L` (50k heartbeats): decide, simp, simp_all, unfold_omega, simp_omega, simp_all_omega,
 split_simp_all, split_omega; `H` (200k): grind, simp_grind, aesop, fun_ind_simp@R, fun_ind_grind@R,
 ind_simp_all@x, ind_grind@x. Template variables `{F}{P}{Q}{H}{R}{U}{x}` are derived mechanically (locked aux
@@ -274,7 +273,7 @@ Post-Lean checks: locked hash (§4.1) and axioms (§5.3).
 
 `degeneracy_flags(cand, family)` (IR-7, recorded, not rejecting): `mentions_postcond`, `uses_choice` (`Classical.choose|Classical.epsilon|Exists.choose|Classical.indefiniteDescription`), `hardcoded_tests` (≥3 visible test input literals appear in the code), `uses_decide_on_spec` (`decide` applied to an expression mentioning `_postcond`).
 
-### 5.7 Hints (`hints.py` + `prereg/hints.yaml`) and the feedback router (`prl/conditions/feedback.py`)
+### 5.7 Hints (`hints.py` + [`prereg/hints.yaml`](../prereg/hints.yaml)) and the feedback router ([`prl/conditions/feedback.py`](../prl/conditions/feedback.py))
 `hints.extract(fam, cand, vr, witness_line) -> Hint(kinds, text)`: compile error text, or the failing visible
 witness (+ hidden-failure count only), or the closest entry's first unsolved goal (≤600 chars); plus structural
 pointers (`partial_def`, `well_founded`, `imperative_loop`, `nat_int_mix`, `opaque_helper`, `array_index`,
@@ -295,9 +294,9 @@ Hidden-test failures appear only as a count. Infrastructure failures never reach
 
 ### 5.8 Test literal rendering and hidden tests (`prl.testgen`)
 - `literals.py`: a recursive type parser for `Int, Nat, Bool, Char, String, UInt8, Float, List T, Array T, Option T, T × U, Prod T U, (T)`; `render(type, json_value)` → Lean literal (negative numbers parenthesised; strings escaped; arrays `#[...]`; `Prod` `(a, b)`); `random_value(type, rng, size)` generator with boundary bias (0, ±1, empty collections, singleton, duplicates). `Map`, `HashMap`, `Float` returns → unsupported (family flagged `hidden_unavailable`).
-- `hidden.py`: candidates = random values by type (60%: perturbations of a visible input, because restrictive preconditions make purely random inputs rarely admissible), deduplicated against visible inputs, `per_family·candidates_factor` of them. Request 1 (admissibility): `example : Q args := by first | decide | trivial | (simp_all [Q]; done) | omega | grind [Q]` per input; admissible ⇔ no error (the precondition is *proved*). Request 2 (oracle): `#eval! IO.println ("<<PRL:k>>" ++ reprStr (F args …) ++ "<</PRL>>")` on the reference; outputs parsed by marker. Request 3 (round-trip): the reference must pass every rendered guard; failing ones are dropped. At most `per_family` tests, stored with sha256 in `data/hidden/`, never readable by prompt code. Timeouts bisect the batch.
+- `hidden.py`: candidates = random values by type (60%: perturbations of a visible input, because restrictive preconditions make purely random inputs rarely admissible), deduplicated against visible inputs, `per_family·candidates_factor` of them. Request 1 (admissibility): `example : Q args := by first | decide | trivial | (simp_all [Q]; done) | omega | grind [Q]` per input; admissible ⇔ no error (the precondition is *proved*). Request 2 (oracle): `#eval! IO.println ("<<PRL:k>>" ++ reprStr (F args …) ++ "<</PRL>>")` on the reference; outputs parsed by marker. Request 3 (round-trip): the reference must pass every rendered guard; failing ones are dropped. At most `per_family` tests, stored with sha256 in [`data/hidden/`](../data/hidden/), never readable by prompt code. Timeouts bisect the batch.
 
-### 5.9 Code features (`prl/analysis/features.py`, shared by hints)
+### 5.9 Code features ([`prl/analysis/features.py`](../prl/analysis/features.py), shared by hints)
 Returns a dict of booleans/ints: `loc`, `n_helpers`, `uses_match`, `uses_if`, `self_recursive`, `let_rec`, `where_helpers`, `partial`, `well_founded`, `imperative_loop`, `fold`, `list_ops` (map/filter/foldl/zip/…), `array_index_bang`, `array_ops`, `nat_int_cast`, `uses_bool_ops`, `max_nesting` (indent levels), `tail_recursive_accumulator`. Pure function of code text.
 
 ---
@@ -342,15 +341,15 @@ failing visible test (actual output via `eval_outputs`), else a hidden test (not
   `<think>` tags and stripped at extraction; its tokens still count against the budget.
 - Retries on connection errors / 5xx / 404 / 409 / 429 with exponential backoff → `InfraError` (never charged).
 - `ensure_loaded(key, ctx=8192, parallel)`: `lms unload --all`; `lms load <key> --context-length 8192 --gpu max
-  -y --identifier <key> --parallel <n>`. Engine: LM Studio's CUDA 12 llama.cpp runtime in development; in the study, `scripts/irel/bin/lms` starts llama.cpp `162e2bb` `llama-server` with the same flags.
+  -y --identifier <key> --parallel <n>[`. Engine: LM Studio's CUDA 12 llama.cpp runtime in development; in the study, `](./)scripts/irel/bin/lms` starts llama.cpp `162e2bb` `llama-server` with the same flags.
 
 ### 8.2 Model registry (`registry.py`)
 `ModelSpec(key, lms_path, family, size_b, role, gguf_sha256)`; hashes recorded from the GGUF file on disk at study start.
 
-### 8.3 Prompts (`prompts.py` + `prereg/prompts/`)
+### 8.3 Prompts (`prompts.py` + [`prereg/prompts/`](../prereg/prompts/))
 - `system.txt` (shared): Lean 4 expert; Lean 4 (not Lean 3) syntax; output format rules.
 - `task_block` (shared, generated from `TaskView`): description, Lean signature line, precondition and postcondition definitions (with their aux), the start implementation as a complete `def` (signature line + body).
-- Condition instructions (the files in `prereg/prompts/` are the reference; summaries here):
+- Condition instructions (the files in [`prereg/prompts/`](../prereg/prompts/) are the reference; summaries here):
   - `A.txt`, `B.txt`, `BP.txt` (identical text): "The current implementation is incorrect. Write a correct
     implementation and a proof of the theorem." + exactly two ```lean blocks: (1) the complete `def` (helpers before
     it allowed); (2) `theorem <F>_spec_satisfied … := by` with the proof (helper lemmas before it allowed).
@@ -373,7 +372,7 @@ failing visible test (actual output via `eval_outputs`), else a hidden test (not
     "Output the complete definition again in one ```lean block. Do NOT write any proof."
   - Cplain/Splain: "The candidate was rejected. Try again." + the same output-format reminder as C.
 - History: messages = system, user(task + instruction), then for the last `history_turns` turns: assistant(raw output truncated to 4,000 chars), user(feedback). Same rule for all conditions.
-- `TaskView` construction is the only prompt input; a unit test asserts that rendered prompts never contain the reference `code`/`proof` text (when it differs from start), hidden test literals, or paths under `data/hidden`.
+- `TaskView` construction is the only prompt input; a unit test asserts that rendered prompts never contain the reference `code`/`proof` text (when it differs from start), hidden test literals, or paths under [`data/hidden`](../data/hidden/).
 
 ### 8.4 Extraction (`extract.py`)
 1. Strip `<think>…</think>`.
@@ -411,7 +410,7 @@ seed-determinism checks (idle GPU only).
 
 - `plan(instances, conditions, models, seeds)` sorted by (model, condition, instance, seed).
 - `Runner.run_all`: skips completed run ids; prunes orphan attempts of incomplete runs; executes
-  **(model, condition) blocks sequentially**, each inside an `EnergyMeter` (`prl/energy.py`: NVML GPU energy
+  **(model, condition) blocks sequentially**, each inside an `EnergyMeter` ([`prl/energy.py`](../prl/energy.py): NVML GPU energy
   counter delta, Lean-worker CPU-seconds × `energy.cpu_watts_per_thread`, CO2 via `grid_kg_co2_per_kwh`),
   written to `energy.jsonl` with the block's run ids; runs inside a block in a thread pool.
 - Records: `attempts.jsonl` (one per generation), `runs.jsonl` (one per run, with outcome label, distances,
@@ -449,7 +448,7 @@ Computed by `prl.driver.runner.outcome_label` at run time (priority order in §1
   category → scenarios `point` (add-½ smoothed), `pessimistic` (p10 at the lower and p01 at the upper 80% Jeffreys
   bound), `optimistic` (reverse); α per test = α / (#primary tests) = 0.0125 (Holm's smallest step);
   `required_total_eligible = ⌈n_main / (1 − heldout_frac)⌉ + pilot_n`; also the power at the actual `main` size
-  from `data/splits.json`. Writes `prereg/power_note.json` (§3.7) and `results/power_note.md`. `prl freeze`
+  from [`data/splits.json`](../data/splits.json). Writes [`prereg/power_note.json`](../prereg/power_note.json) (§3.7) and [`results/power_note.md`](../results/power_note.md). `prl freeze`
   refuses without the note unless `--no-power-note` (to be justified in `deviations.md`).
 - Unit-tested against scipy/statsmodels and hand-computed cases.
 
@@ -465,7 +464,7 @@ portfolio closed. Per binary feature: P(closed | feature) vs P(closed | ¬featur
 entry distribution.
 
 ### 11.5 Reports (`report.py`)
-`analyze(study_dirs, cfg, out)` writes `results/`: `t_coverage.*`, `comparisons.csv` and `rq1_main.md` (primary
+`analyze(study_dirs, cfg, out)` writes [`results/`](../results/): `t_coverage.*`, `comparisons.csv` and `rq1_main.md` (primary
 bug pool chosen by `primary_pool` from `study.yaml: bugs`, counting natural-bug families of the `main` split from the
 instance manifests via `natural_main_families()`; Holm over the primary tests of the primary models),
 `rq2_mechanism.md`, `rq4_shapes*.{md,csv}`, `rq5_costs.md` (+ `rq5_energy.csv`: GPU J measured, CPU J and CO2
@@ -478,19 +477,19 @@ Secondary comparisons: C vs C-plain, C vs A, BP vs B, C vs B_noauto, C vs Bhamme
 If `crosseval.jsonl` exists: `crosseval.md`, `crosseval_attempts.csv` (bucket counts per model × condition) and
 `crosseval_runs.csv` (failed B runs with a `c_proves_tests_pass` attempt; runs with a weak-spec candidate).
 `audit_sample`: stratified `audit_frac` of successes **plus every flagged success**; `prl audit --merge`
-summarises the filled-in CSV into `results/audit/summary.md`.
+summarises the filled-in CSV into [`results/audit/summary.md`](../results/audit/summary.md).
 
 ### 11.6 Sensitivity to N
 Post-hoc truncation: a run counts as success at budget n if `success_attempt_idx < n`. Reported for n ∈ {2, 4, 8} (exploratory; valid because conditions do not adapt to N except via stopping).
 
 ---
 
-## 12. CLI (`prl/cli.py`)
+## 12. CLI ([`prl/cli.py`](../prl/cli.py))
 
 | Command | Action |
 |---|---|
 | `prl env` | toolchain, backend, Mathlib smoke test, LM Studio models |
-| `prl tasks build` | parse 189 VERINA tasks → `data/families/` |
+| `prl tasks build` | parse 189 VERINA tasks → [`data/families/`](../data/families/) |
 | `prl tasks check [--tests visible] [--ids]` | reference checks + condition T (full vector) |
 | `prl hidden [--ids] [--force]` | hidden differential tests |
 | `prl bugs natural` | natural bugs from every generator (GPU) |
@@ -499,8 +498,8 @@ Post-hoc truncation: a run counts as success at budget n if `success_attempt_idx
 | `prl splits` | family-level splits, stamps instances |
 | `prl probe compile|determinism --models …` | Phase-0 probes (GPU) |
 | `prl run --study S --split … --kinds … --conditions … --models … [--seeds] [--families] [--limit-families]` | driver (conditions incl. `Bhammer`) |
-| `prl power [--study pilot]` | pre-freeze power simulation → `prereg/power_note.json`, `results/power_note.md` |
-| `prl freeze [--note] [--no-power-note]` | write `prereg/FREEZE.json` (refuses without the power note) |
+| `prl power [--study pilot]` | pre-freeze power simulation → [`prereg/power_note.json`](../prereg/power_note.json), [`results/power_note.md`](../results/power_note.md) |
+| `prl freeze [--note] [--no-power-note]` | write [`prereg/FREEZE.json`](../prereg/FREEZE.json) (refuses without the power note) |
 | `prl crosseval --study S [--conditions B]` | B→C cross-evaluation (Lean only) → `runs/S/crosseval.jsonl` |
 | `prl analyze --study S1,S2` | all tables and figures |
 | `prl audit --study S [--merge]` | audit sample / merge filled audit |
@@ -524,7 +523,7 @@ Global option `--lean-workers N` (default from `study.yaml`, 0 = from free RAM).
 
 ---
 
-## 14. Test plan (`tests/`)
+## 14. Test plan ([`tests/`](../tests/))
 
 | File | Covers | Marker |
 |---|---|---|

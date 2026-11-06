@@ -1,4 +1,4 @@
-"""Energy accounting (final architecture G2).
+"""Energy accounting.
 
 * GPU: **measured** — NVML cumulative energy counter (mJ) of the GPU, read at block boundaries.
 * CPU (Lean verification): **estimated** — CPU-seconds consumed by the Lean worker processes × a per-thread

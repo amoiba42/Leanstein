@@ -1,4 +1,4 @@
-"""v2.1 additions (adopted from the team's revision-3 notes): proof-tactic logging, Bhammer, B→C
+"""v2.1 additions: proof-tactic logging, Bhammer, B→C
 cross-evaluation, the pre-freeze power simulation and the configuration guards. No Lean, no LLM."""
 from __future__ import annotations
 

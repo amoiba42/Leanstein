@@ -160,7 +160,7 @@ def cmd_bugs_natural(a) -> int:
         fams = [f for f in fams if f.family_id in a.ids.split(",")]
     cl = LMStudio()
     ins = []
-    for gm in cfg["models"]["natural_generators"]:   # zero-shot bug sources, never repairers (G1)
+    for gm in cfg["models"]["natural_generators"]:   # zero-shot bug sources, never repairers
         cl.ensure_loaded(gm, parallel=a.run_workers)
         got = collect_natural(fams, Judge(), cl, gm, int(cfg["natural"]["samples"]), cfg, workers=a.run_workers,
                               log=_log(PATHS.runs / "phase0" / "natural.log"),
@@ -290,7 +290,7 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
     except Exception:  # noqa: BLE001
         pass
-    ap = argparse.ArgumentParser(prog="prl", description="Prove Less, Repair Better research harness")
+    ap = argparse.ArgumentParser(prog="prl", description="P.I.G. (Proof-Independent Generation) research harness")
     ap.add_argument("--lean-workers", type=int, default=0)
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("env").set_defaults(fn=cmd_env)

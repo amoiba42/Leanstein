@@ -404,7 +404,7 @@ def energy_table(study_dirs: list[Path], df: pd.DataFrame) -> pd.DataFrame:
 
 
 def audit_sample(study_dirs: list[Path], frac: float, seed: int, out: Path) -> pd.DataFrame:
-    """Stratified `frac` of successes plus EVERY success that carries a degeneracy flag (G11)."""
+    """Stratified `frac` of successes plus EVERY success that carries a degeneracy flag."""
     df = load_runs(study_dirs)
     s = df[df.success]
     if s.empty:

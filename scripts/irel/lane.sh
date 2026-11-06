@@ -1,7 +1,7 @@
 #!/bin/bash
 # Two lanes on our slice, each with its own llama-server port.
 #   lane A (port 1234): waits for main_primary (run by queue.sh), then gemma, goedel, and Bhammer last,
-#                       which also waits for held-out to finish (ADR-005).
+#                       which also waits for held-out to finish (team decision 5).
 #   lane B (port 1235): held-out, then shaping. These write to their own study folders, so they can run
 #                       beside lane A; everything with --study main stays in lane A, one at a time.
 # A file /scratch/inesh/irel_jobs/STOP_LANES stops a lane before its next job.

@@ -1,6 +1,6 @@
 #!/bin/bash
-# Runs the study jobs one after another on our slice (RUN_HANDOFF.md blocks E, F and Bhammer, in that order;
-# Bhammer last, after held-out, as ADR-005 requires). Re-running skips jobs already marked done and resumes
+# Runs the study jobs one after another on our slice (main, held-out, shaping, Gemma, Goedel and Bhammer, in that order;
+# Bhammer last, after held-out, as team decision 5 requires). Re-running skips jobs already marked done and resumes
 # a partly finished one (the driver skips completed runs).
 # A file /scratch/inesh/irel_jobs/STOP makes the queue stop before the next job.
 set -uo pipefail

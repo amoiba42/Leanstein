@@ -4,7 +4,7 @@
 #   worker.sh 2 : starts after main_shaping (lane B) is done, port 1237
 # Each job is claimed with mkdir (atomic), so two workers never run the same job.
 # Jobs that write to runs/main while main primary runs get their own study folder (main-gemma, main-goedel,
-# main-bhammer); the analysis reads several study folders together. Bhammer starts only after held-out (ADR-005).
+# main-bhammer); the analysis reads several study folders together. Bhammer starts only after held-out (team decision 5).
 # The file /scratch/inesh/irel_jobs/STOP_LANES stops a worker before its next job.
 set -uo pipefail
 J=/scratch/inesh/irel_jobs

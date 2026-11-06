@@ -81,7 +81,7 @@ def verify_with_infra_retry(judge, fam: Family, cand: dict[str, str], mode: str,
                             **kw: Any) -> VerifyResult:
     """Infrastructure failures (verifier crash, spawn failure) never charge the model's budget: the same
     candidate is re-verified; if infrastructure keeps failing, the whole run is abandoned (InfraError) and
-    re-executed later by the resumable driver (final architecture G4)."""
+    re-executed later by the resumable driver."""
     vr = judge.verify(fam, cand, mode, **kw)
     while vr.failure_kind == "infra" and retries > 0:
         retries -= 1

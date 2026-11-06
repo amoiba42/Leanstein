@@ -1,6 +1,6 @@
 """Stop-rule check across all study folders (read only).
 Rule 1: infrastructure failures > 5% of attempted runs (driver.log "[infra] run" lines vs runs.jsonl rows).
-Rule 2 (ADR-003): stop_reason == "infer_time" > 1% of runs in any (study, model, condition), once >= 50 runs.
+Rule 2 (team decision 3): stop_reason == "infer_time" > 1% of runs in any (study, model, condition), once >= 50 runs.
 Also counts attempt-level infra errors in attempts.jsonl (retried, never charged)."""
 import collections, json, os, sys
 R = "/scratch/inesh/Leanstein/runs"

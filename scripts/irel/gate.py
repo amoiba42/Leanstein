@@ -1,4 +1,4 @@
-"""Pre-registered pilot gate (docs/final_proposal.md section 8) computed from the IREL pilot. Read only.
+"""Pre-registered pilot gate (docs/proposal.md section 6, docs/adr/0011-pre-registration.md) computed from the IREL pilot. Read only.
 Run from the repo root with `uv run python /scratch/inesh/irel_jobs/gate.py` after `prl analyze --study pilot --out results/pilot`."""
 import collections
 import json

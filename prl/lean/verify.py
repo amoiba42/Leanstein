@@ -189,7 +189,7 @@ class Judge:
             return cached
         run = run_lean_retry(src1, wall_s=self.wall)
         if run.timeout or (run.extra or {}).get("died"):
-            # Failure taxonomy (final architecture G4): confirm once in a fresh worker. A repeat means the
+            # Failure taxonomy: confirm once in a fresh worker. A repeat means the
             # candidate itself does not terminate / exhausts memory -> failed attempt, not infrastructure.
             again = run_lean_retry(src1, wall_s=self.wall, retries=0)
             if not (again.timeout or (again.extra or {}).get("died")):

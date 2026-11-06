@@ -1,6 +1,6 @@
 # Audit summary
 
-333/333 sampled successes audited.
+333/333 sampled successes pre-screened automatically; human audit pending.
 
 | condition | audited | spec_gaming |
 |---|---|---|

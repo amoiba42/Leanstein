@@ -58,7 +58,7 @@ def healthy():
 
 
 def load(a):
-    # While this flag exists, reserve_vram.py releases its placeholder memory so the model can load.
+    # Loading flag: while it exists, any memory placeholder on the slice steps aside so the model can load.
     flag = f"{J}/serve/loading-{PORT}"
     os.makedirs(os.path.dirname(flag), exist_ok=True)
     open(flag, "w").close()

@@ -121,7 +121,7 @@ def _record_cpu(pid: int) -> None:
 
 
 def _limit_memory(pid: int, limit: int) -> bool:
-    """Windows: put the process in a Job Object with a per-process memory cap (final architecture G3).
+    """Windows: put the process in a Job Object with a per-process memory cap.
     Exceeding the cap makes the allocation fail and the worker die; the harness treats that as described
     in the failure taxonomy (re-run once in a fresh worker, then a candidate resource failure)."""
     if os.name != "nt" or limit <= 0:
