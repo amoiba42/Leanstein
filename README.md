@@ -1,5 +1,7 @@
 # P.I.G. (Proof-Independent Generation): Automation for Structurally Verified Code Patches
 
+[![verify](https://github.com/amoiba42/Leanstein/actions/workflows/ci.yml/badge.svg)](https://github.com/amoiba42/Leanstein/actions/workflows/ci.yml)
+
 AutoSE (CS6.403) group project, team
 
 *Agents of Ultron* (Inesh Dheer, Poojitha J, Gracy Garg).
@@ -38,6 +40,41 @@ whole study about 3.1 kWh).
 | [`docs/feasibility.md`](docs/feasibility.md) | Phase-0 evidence from development; study probes are in `results/phase0_*.json` |
 | [`prereg/`](prereg) | Frozen study inputs: config, portfolio, hints, prompts, deviation log |
 
+## Verify this project
+
+Nothing here needs a GPU or a model. The quickest check needs no installation at all: open the
+[Actions tab](https://github.com/amoiba42/Leanstein/actions/workflows/ci.yml). On every push a clean machine
+runs checks 1 to 4 below, and the badge at the top of this page shows the latest result.
+
+To run the checks yourself (Linux, macOS or WSL; about 2 minutes without Lean):
+
+```bash
+git clone https://github.com/amoiba42/Leanstein.git && cd Leanstein
+bash scripts/setup.sh --no-lean    # Python env from uv.lock, VERINA at the pinned commit, checks 1 and 3
+uv run ruff check prl tests        # check 2
+# check 4: regenerate every table from the committed logs
+uv run prl analyze --study main,main-shaping,main-gemma,main-goedel,main-bhammer
+uv run prl analyze --study heldout --out results/heldout
+uv run prl analyze --study pilot --out results/pilot
+git status --short results         # prints nothing: the regenerated files equal the committed ones
+# check 5 (optional; downloads about 5 GB of Lean and Mathlib)
+bash scripts/setup.sh
+uv run pytest -m lean
+```
+
+| # | Check | What it shows | Expected |
+|---|---|---|---|
+| 1 | Pre-registration freeze | No frozen input (config, prompts, portfolio, hints) changed after the freeze | `pre-registration freeze: OK 3f2744e132b37783 []` |
+| 2 | Static checks | NFR-QA-2 | `All checks passed!` |
+| 3 | Unit tests | Parsing, integrity, protocols, statistics; a modified `prereg/` file is refused; a hung Lean process is killed | `103 passed` |
+| 4 | Regeneration | Every number in [`results/`](results/) follows from the logs in [`runs/`](runs/) (NFR-REP-1) | no difference |
+| 5 | Lean integration tests | The verifier accepts no false success (`sorry`, extra axioms, edited specification, ...) | `24 passed` |
+
+Requirement-by-requirement status, with the open items, is in
+[`docs/requirements_check.md`](docs/requirements_check.md). Changes made after the freeze are listed in
+[`prereg/deviations.md`](prereg/deviations.md) (D-1 to D-6). On Windows, clone inside WSL; a checkout that converts
+line endings would change the bytes that the freeze hashes (the committed `.gitattributes` prevents this).
+
 ## Conditions
 
 | ID | Model writes | Proof from | Purpose |
@@ -72,6 +109,9 @@ Quot.sound} ∧ static integrity ∧ visible **and hidden** tests pass.
 | 6 Nov | Analysis, audit, paper draft, energy calibration |
 
 ## Setup (developed on Windows 11; the study ran on Linux with llama.cpp, see [`scripts/irel/`](scripts/irel/))
+
+On Linux, macOS or WSL, `bash scripts/setup.sh` performs steps 1 to 3 below and runs the checks
+(`--no-lean` skips step 1). The individual steps:
 
 ```bash
 # 1. Lean 4.24.0 via elan; Mathlib v4.24.0 is pinned in lean_env/
@@ -130,7 +170,7 @@ uv run prl audit --merge                       # after filling the CSV
 ## Tests
 
 ```bash
-uv run pytest -m "not lean and not llm"   # 96 unit tests (fast)
+uv run pytest -m "not lean and not llm"   # 103 unit tests (fast)
 uv run pytest -m lean                     # 24 integration tests on real Lean: zero false successes
 uv run ruff check prl tests
 ```
@@ -143,4 +183,4 @@ portfolio, integrity, hints, verify) · [`prl/testgen`](prl/testgen/) literals a
 [`prl/conditions`](prl/conditions/) protocols, feedback router, probes · [`prl/driver`](prl/driver/) resumable runner with energy blocks ·
 [`prl/energy.py`](prl/energy.py) energy meter · [`prl/analysis`](prl/analysis/) statistics, power simulation, B→C cross-evaluation, mechanism, code
 shapes, reports · [`prl/cli.py`](prl/cli.py) entry point.
-Generated outputs [`data/`](data/), [`runs/`](runs/) (except raw prompts/outputs) and [`results/`](results/) are created by the pipeline and committed as research artifacts; `cache/`, `runs/*/raw/`, [`third_party/`](third_party/) and `lean_env/.lake/` are git-ignored.
+Generated outputs [`data/`](data/), [`runs/`](runs/) (except raw prompts/outputs) and [`results/`](results/) are created by the pipeline and committed as research artifacts; `cache/`, `runs/*/raw/`, `third_party/` and `lean_env/.lake/` are git-ignored.
