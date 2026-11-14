@@ -1,9 +1,9 @@
 # scripts/irel — how the study was run
 
 Every step of the study (dataset, probes, pilot, power note, freeze, all study runs, analysis) ran on the IREL
-GPU server (inesh@10.4.25.56) with these scripts. On the server they live in `/scratch/inesh/irel_jobs`; the
+GPU server at IIIT Hyderabad with these scripts. On the server they live in `/scratch/inesh/irel_jobs`; the
 repository at `/scratch/inesh/Leanstein` is the frozen checkout. Differences from the original plan are recorded
-in [`prereg/deviations.md`](../../prereg/deviations.md) (R-1 to R-10, D-1 to D-4).
+in [`prereg/deviations.md`](../../prereg/deviations.md) (R-1 to R-10, D-1 to D-7).
 
 | File | What |
 |---|---|
