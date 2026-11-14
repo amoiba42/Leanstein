@@ -297,6 +297,8 @@ See IR-1..IR-9 (§6). Must reject before any proof is attempted when a static vi
 | FR-COND-10 | Bhammer prompt differs from B's only by the tactic list; feedback identical to B. |
 | NFR-REP-1 | `prl analyze` regenerates [`results/`](../results/) byte-identically from logs. |
 
+The delivered project is checked against these requirements in [`docs/requirements_check.md`](requirements_check.md).
+
 ---
 
 ## 10. Go / no-go gate (end of pilot)
