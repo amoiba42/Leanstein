@@ -57,7 +57,7 @@ def with_derived(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty or "B" not in set(df.condition):
         return df
     b = df[df.condition == "B"].copy()
-    auto = b["automation_only_proof"].fillna(False).astype(bool) if "automation_only_proof" in b else False
+    auto = b["automation_only_proof"].fillna(False).astype(bool) if "automation_only_proof" in b else pd.Series(False, index=b.index)
     b["success"] = b.success & ~auto
     b["condition"] = "B_noauto"
     b["run_id"] = b.run_id + ":noauto"
