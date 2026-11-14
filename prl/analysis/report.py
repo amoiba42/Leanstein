@@ -340,8 +340,13 @@ def analyze(study_dirs: list[Path], cfg: dict, out_dir: Path | None = None) -> d
     if not en.empty:
         en.to_csv(out / "rq5_energy.csv", index=False)
         with open(out / "rq5_costs.md", "a", encoding="utf-8") as fh:
-            fh.write("\n## Energy per (model, condition) block\n\nGPU energy is measured (NVML counter); Lean CPU "
-                     "energy and CO2 are estimates (see prereg/study.yaml `energy`).\n\n" + _md_table(en))
+            fh.write("\n## Energy per (model, condition) block (in-run meter: WITHDRAWN, see D-1)\n\n"
+                     "**Do not use these figures.** They are the raw readings of the in-run meter (NVML counter of "
+                     "GPU index 0; Lean CPU energy and CO2 estimated as in prereg/study.yaml `energy`). In this "
+                     "study the meter read a GPU that belongs to other users, so every energy and CO2 figure below "
+                     "is withdrawn (prereg/deviations.md, D-1). They are kept only so that this file regenerates "
+                     "from the logs. The reported energy is the post-hoc estimate in "
+                     "results/rq5_energy_estimate.md (D-4).\n\n" + _md_table(en))
     # ---- B→C cross-evaluation (secondary; FR-ANA-7)
     from prl.analysis.crosseval import crosseval_tables, load_crosseval
     ce = load_crosseval(study_dirs)
