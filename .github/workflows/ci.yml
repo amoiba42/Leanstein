@@ -1,0 +1,53 @@
+# Independent verification on every push: anyone can open the "Actions" tab and see these checks pass
+# on a clean machine. Lean and the models are not needed for any step here.
+name: verify
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VERINA_COMMIT: 66b3ce5014edafb20cb26b87c681e7f31847249f
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Python 3.12 environment from uv.lock
+        run: uv sync --extra dev --frozen
+
+      - name: VERINA benchmark at the pinned commit (needed by the unit tests)
+        run: |
+          git clone --quiet https://github.com/sunblaze-ucb/verina.git third_party/verina
+          git -C third_party/verina checkout --quiet "$VERINA_COMMIT"
+
+      - name: Static checks (NFR-QA-2)
+        run: uv run ruff check prl tests
+
+      - name: Pre-registration freeze is intact (SR-PRE-1/2)
+        run: |
+          uv run python -c "
+          import sys
+          from prl.prereg import freeze_status
+          ok, diffs, digest = freeze_status()
+          print('digest', digest, '| mismatching files:', diffs)
+          sys.exit(0 if ok else 1)"
+
+      - name: Unit tests (NFR-QA-1)
+        run: uv run pytest -q -m "not lean and not llm"
+
+      - name: Every reported number regenerates from the committed logs (NFR-REP-1)
+        run: |
+          uv run prl analyze --study main,main-shaping,main-gemma,main-goedel,main-bhammer > /dev/null
+          uv run prl analyze --study heldout --out results/heldout > /dev/null
+          uv run prl analyze --study pilot --out results/pilot > /dev/null
+          # figures are compared by eye, not byte for byte: font rendering can differ between machines
+          git diff --exit-code --stat -- results ':(exclude)*.png'
