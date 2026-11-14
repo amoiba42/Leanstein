@@ -31,12 +31,12 @@ whole study about 3.1 kWh).
 | [`docs/proposal.md`](docs/proposal.md) | Final design: RQs, method, threats, repository map |
 | [`docs/adr/`](docs/adr/README.md) | Architecture decision records (Nygard): each design decision with context and consequences |
 | [`docs/requirements.md`](docs/requirements.md) | All requirements (v2) with reconciliation and adoption tables |
+| [`docs/requirements_check.md`](docs/requirements_check.md) | Check of the delivered project against the requirements and NFRs, with a verification log |
 | [`docs/high_level_design.md`](docs/high_level_design.md) | Architecture, components, protocols, threat model |
 | [`docs/low_level_design.md`](docs/low_level_design.md) | Module-level specification matching `prl/` |
 | [`docs/implementation_plan.md`](docs/implementation_plan.md) | Features, phases, statuses |
 | [`docs/feasibility.md`](docs/feasibility.md) | Phase-0 evidence from development; study probes are in `results/phase0_*.json` |
 | [`prereg/`](prereg) | Frozen study inputs: config, portfolio, hints, prompts, deviation log |
-| [`context/`](context) | Original proposal and project plan PDFs |
 
 ## Conditions
 
