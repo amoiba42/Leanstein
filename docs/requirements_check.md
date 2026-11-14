@@ -213,5 +213,5 @@ touched, and no run, verdict or confirmatory number changed.
 | Server address in the repository | removed from `scripts/irel/README.md` (it remains in older commits) | |
 
 Also affected: SR-STAT-7 now also has the `ref_auto` stratum (exploratory); SR-MECH-1..4 has the case catalogue.
-Still open: the human audit, a `v1.0` release tag (to be created by the team when they push), measured energy and
+Still open: the human audit, measured energy and
 raw outputs.
