@@ -21,7 +21,46 @@ Held-out replicates C > B; C/BP ties there for both models. The first freeze (`9
 ([`prereg/deviations.md`](prereg/deviations.md), R-1 to R-10). The post-freeze deviations are D-1 (in-run energy meter read the wrong GPU;
 withdrawn), D-2 (audit sampler bugs), D-3 (automated pre-screen of the audit sample; human audit pending) and D-4 (energy
 estimated by a post-hoc calibration on our slice: C 2.6 kJ per verified repair vs BP 5.9 and B 13.4 for 4B; the
-whole study about 3.1 kWh).
+whole study about 3.1 kWh). D-5 discloses five families without hidden tests, D-6 the post-review maintenance and
+D-7 the post-study re-verification of every logged success (all 1,858 re-verify, [`results/reverify/summary.md`](results/reverify/summary.md)) and the exploratory tables below.
+
+**Paper:** [`paper/main.pdf`](paper/main.pdf) (source in [`paper/`](paper), numbers from [`results/`](results)) ·
+mid-submission report: [`report/progress_report.pdf`](report/progress_report.pdf).
+
+## C against BP
+
+C beats B clearly. Against BP (B with the same portfolio tried first), C is ahead for Qwen3.5-2B (+5.0 pp,
+p_Holm = 0.012) and **tied for Qwen3.5-4B** (33.0% vs 32.7%, p_Holm = 0.50); on held-out the two tie for both
+models. The tie is the result, and it should be read with these facts beside it:
+
+- **Power.** The pre-freeze simulation gave C vs BP a power of **0.08** for 4B at the 106 available families
+  ([`results/power_note.md`](results/power_note.md)). A tie means "no large difference", not "equal".
+- **BP's successes are the portfolio's.** 180 of BP's 182 verified runs for 4B, and all 110 for 2B, were closed by
+  the portfolio, not by the model's proof. The proof-writing half of BP added 2 repairs in 693 runs.
+- **Cost.** For the same success rate, C uses **37k model tokens per verified repair against BP's 65k (43% fewer)**
+  and 68 s of inference per run against 162 s with 4B (2B: 50k against 89k), because the model never writes a
+  proof ([`results/rq5_costs.md`](results/rq5_costs.md)).
+- **Integrity.** BP's submissions are rejected by the static checks 3.4 times as often as C's (5,764 against 1,690
+  attempts); proof text is where most malformed submissions come from.
+
+## Robustness (exploratory, not pre-registered)
+
+| Subset (C vs B / C vs BP, family-level) | Qwen3.5-2B | Qwen3.5-4B | Gemma-4-E4B |
+|---|---|---|---|
+| Primary pool, 106 families (confirmatory) | +25.5 / +5.0 pp | +15.4 / +0.3 pp | +28.3 / +2.8 pp |
+| Reference **not** provable by the portfolio, 85 families (no success can be a plain revert) | +10.6 / +4.3 pp | +7.8 / +1.2 pp | +15.3 / +7.1 pp |
+| Natural bugs only, 33 families | +14.1 / +7.1 pp | +18.2 / +5.1 pp | +18.2 / +9.1 pp |
+| Mutants only, 105 families | +24.8 / +5.1 pp | +14.6 / -0.3 pp | +26.7 / +1.0 pp |
+
+C beats B in every subset (one-sided p <= 0.031). Sources: [`results/exploratory_shaping.md`](results/exploratory_shaping.md)
+(`scripts/exploratory_shaping.py`) and [`results/rq1_main.md`](results/rq1_main.md). Fifteen real before/after
+cases (bug, reference, C's verified code, closing tactic, what B did) are in
+[`docs/code_shapes.md`](docs/code_shapes.md) (`scripts/code_shapes_catalogue.py`).
+
+**Limitations.** One benchmark of small functions, two sizes of one primary model family plus Gemma as a second
+family, 4-bit weights only; natural bugs cover only 33 families; C vs BP is underpowered; energy is a post-hoc
+estimate (lead with tokens); the audit is an automated pre-screen until the human pass is done. Details: paper,
+section "Limitations".
 
 **Start here:** [`docs/proposal.md`](docs/proposal.md) (final design) ·
 [`docs/adr/`](docs/adr/README.md) (design decisions) ·
@@ -33,6 +72,7 @@ whole study about 3.1 kWh).
 | [`docs/proposal.md`](docs/proposal.md) | Final design: RQs, method, threats, repository map |
 | [`docs/adr/`](docs/adr/README.md) | Architecture decision records (Nygard): each design decision with context and consequences |
 | [`docs/requirements.md`](docs/requirements.md) | All requirements (v2) with reconciliation and adoption tables |
+| [`docs/code_shapes.md`](docs/code_shapes.md) | 15 real before/after code-shape cases from the study logs |
 | [`docs/requirements_check.md`](docs/requirements_check.md) | Check of the delivered project against the requirements and NFRs, with a verification log |
 | [`docs/high_level_design.md`](docs/high_level_design.md) | Architecture, components, protocols, threat model |
 | [`docs/low_level_design.md`](docs/low_level_design.md) | Module-level specification matching `prl/` |
@@ -72,7 +112,7 @@ uv run pytest -m lean
 
 Requirement-by-requirement status, with the open items, is in
 [`docs/requirements_check.md`](docs/requirements_check.md). Changes made after the freeze are listed in
-[`prereg/deviations.md`](prereg/deviations.md) (D-1 to D-6). On Windows, clone inside WSL; a checkout that converts
+[`prereg/deviations.md`](prereg/deviations.md) (D-1 to D-7). On Windows, clone inside WSL; a checkout that converts
 line endings would change the bytes that the freeze hashes (the committed `.gitattributes` prevents this).
 
 ## Conditions

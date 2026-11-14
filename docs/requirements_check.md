@@ -195,3 +195,23 @@ file under `prereg/` was touched; the changes are disclosed as D-5 and D-6 in
 
 Still open after the follow-up: the human audit (item 1), measured energy (item 2), raw outputs
 (item 6), the 1,000-call reliability test (NFR-REL-1) and the limits of the study itself (item 8).
+
+## 8. Second follow-up: weak points from the review (2026-11-14)
+
+Disclosed as D-7 in [`prereg/deviations.md`](../prereg/deviations.md). Nothing under `prereg/` that is hashed was
+touched, and no run, verdict or confirmatory number changed.
+
+| Weak point | What was done | Evidence |
+|---|---|---|
+| Claims rest on logs, not re-checked | Every logged success of the six study folders was re-verified in Lean from the logged code and proof, cache disabled ([`scripts/reverify.py`](../scripts/reverify.py)) | [`results/reverify/summary.md`](../results/reverify/summary.md): all 1,858 re-verify, with the same proof source and closing portfolio entry as logged |
+| BP ties C at 4B | "C against BP" section in the README and the paper: power 0.08; 180 of BP's 182 4B successes were the portfolio's proofs; C 37k vs BP 65k tokens per verified repair; 3.4 times fewer integrity rejections | `results/power_note.md`, `results/rq5_costs.md`, `results/runs_flat.csv` |
+| Many successes are easy (reverts) | Exploratory paired test of C against B and BP on the 85 families whose reference the portfolio cannot prove: C beats B for all three models | [`results/exploratory_shaping.md`](../results/exploratory_shaping.md) ([`scripts/exploratory_shaping.py`](../scripts/exploratory_shaping.py)) |
+| Code-shape catalogue and case studies missing | 15 real before/after cases, chosen deterministically from `runs/main/` | [`docs/code_shapes.md`](code_shapes.md) ([`scripts/code_shapes_catalogue.py`](../scripts/code_shapes_catalogue.py)) |
+| Thin pool of real bugs | Natural-only and mutant-only results shown side by side in the paper (table "Exploratory robustness checks") and the README; stated as a limitation | `results/rq1_main.md` |
+| Small scale; energy estimated | "Limitations" section in the paper; energy removed from the abstract's headline, tokens lead | `paper/main.tex` |
+| Paper not in the repository | `paper/` and `report/` (removed by the 2026-11-07 clean-up) restored and rebuilt | `paper/main.pdf`, `report/progress_report.pdf` |
+| Server address in the repository | removed from `scripts/irel/README.md` (it remains in older commits) | |
+
+Also affected: SR-STAT-7 now also has the `ref_auto` stratum (exploratory); SR-MECH-1..4 has the case catalogue.
+Still open: the human audit, a `v1.0` release tag (to be created by the team when they push), measured energy and
+raw outputs.
