@@ -1,0 +1,9 @@
+# Check out every text file with LF line endings on every operating system.
+# The pre-registration freeze (prl/prereg.py) hashes the raw bytes of prereg/, so a CRLF checkout on
+# Windows would make the freeze check report mismatches although nothing was changed.
+* text=auto eol=lf
+
+# Compressed logs and figures are never converted.
+*.gz binary
+*.png binary
+*.pdf binary
