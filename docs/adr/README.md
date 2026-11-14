@@ -19,3 +19,4 @@ Format: Nygard (Status, Context, Decision, Consequences). All records are accept
 | [0013](0013-shaping-vs-reverting.md) | Shaping versus reverting |
 | [0014](0014-energy-measurement.md) | Energy measurement |
 | [0015](0015-audit.md) | Audit of verified repairs |
+| [0016](0016-independent-rechecking.md) | Independent re-checking of reported results (CI regeneration, Lean re-verification) |
