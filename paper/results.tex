@@ -1,0 +1,154 @@
+% Numbers for the paper. Pre-freeze values are filled in by hand from results/ and prereg/. The results texts were
+% written by hand from results/ (main), results/heldout and results/audit after the runs finished on 2026-11-06;
+% make_results.py only fills macros that still print TBD. Tables come from results_tables.tex (generated).
+\newcommand{\resAbstractFinding}{that C verifies far more repairs than B for both primary models (Qwen3.5-2B: 27.7\%
+of families vs 2.2\%; Qwen3.5-4B: 33.0\% vs 17.6\%; Holm $p<0.001$), and at least as many as BP (2B: +5.0
+percentage points, $p_\text{Holm}=0.012$; 4B: a tie), while spending about 43\% fewer model tokens per verified
+repair than BP and never asking the model for a proof. The held-out split replicates C over B and shows a C/BP tie
+for both models. The gain comes from the automation more than from forbidding proofs: proof-writing agents that are
+given the same portfolio first close most of the gap, and almost all of their successes are the portfolio's proofs,
+not their own}
+
+\newcommand{\resRQOneText}{\Cref{tab:rq1} gives the four confirmatory tests on the 106 \texttt{main} families that
+carry a bug in the primary pool, and \cref{fig:rates} shows the rates for every condition.
+\textbf{C vs B} is large and significant for both primary models: Qwen3.5-2B 27.7\% vs 2.2\% (+25.5\,pp, 95\% CI
+[+18.2, +33.0]); Qwen3.5-4B 33.0\% vs 17.6\% (+15.4\,pp, [+9.4, +21.7]); $p_\text{Holm}<0.001$ for both. C
+repairs 28 families that B never repairs for 2B (B: 0 that C misses), and 19 against 1 for 4B.
+\textbf{C vs BP} is small. For 2B, C is ahead by +5.0\,pp ([+1.6, +8.8], $p_\text{Holm}=0.012$; 10 families only
+by C, 2 only by BP). For 4B the two are tied: 33.0\% vs 32.7\% (+0.3\,pp, [$-$2.8, +3.5], $p_\text{Holm}=0.50$; 3
+vs 2 families). The pre-freeze power analysis predicted exactly this: C vs BP had 0.71 power for 2B and 0.08 for
+4B at the available families (\cref{tab:power}), so the 4B tie is reported as a tie, not as evidence of no
+difference. Per-run rates (\cref{tab:rates}) and outcome labels (\cref{tab:outcomes}) tell the same story.
+No run in any condition was \emph{verified but behaviourally wrong}, the outcome that would expose a weak
+specification. Most failures in the proof-writing conditions are submissions rejected by the static checks;
+they are mostly malformed rather than adversarial (lemmas placed in the helper region, a second definition of
+the function, or proof text in the code region), and they are far rarer in C and C-plain (1,690 and 1,586
+rejected attempts) than in A, B and BP (7,187, 5,662 and 5,764).}
+
+\newcommand{\resCvsBPText}{The 4B tie stands as the result; four further facts say what it means. (i)~\emph{Power.} With 106 families, the pre-freeze simulation gave C vs BP a power of 0.08 for
+4B (\cref{tab:power}): a difference of a few points could not have been detected, so the tie says ``no large
+difference'', not ``equal''. (ii)~\emph{Where BP's successes come from.} BP is B with the portfolio run first. 180
+of its 182 verified runs for 4B, and all 110 for 2B, were closed by the portfolio, not by the model's proof; the
+proof-writing half of BP added two repairs out of 693 runs. BP is, in effect, C plus an expensive and almost
+always failing proof attempt. (iii)~\emph{Cost.} For the same success rate, C spends 37k model tokens per verified
+repair against BP's 65k (43\% fewer) and 68\,s of inference per run against 162\,s, because the model writes no
+proof text; for 2B, 50k against 89k. (iv)~\emph{Integrity.} BP's submissions are rejected by the static checks
+3.4 times as often as C's (5,764 against 1,690 rejected attempts), because proof text is where most malformed
+submissions arise. The practical reading is that once automation is available, asking the model for a proof adds
+cost and failure modes but no verified repairs.}
+
+\newcommand{\resRQTwoText}{We classify each success as a \emph{revert} (identical to the reference, or within the
+pre-registered distance of a reference that the portfolio proves), \emph{shaping} (the reference itself is
+\emph{not} provable by the portfolio, so the verified code must have a different, automation-friendly shape) or
+other. Shaping is common: 42 of 150 C successes for 2B and 81 of 191 for 4B are shaping, against 72 and 56
+reverts. Where the reference is provable by the portfolio, C and BP both succeed on most runs (4B: 89.4\% and
+91.1\%; B: 36.6\%). Where it is not, the rates fall for every condition, but C stays ahead of B (4B: 14.2\% vs
+6.0\%; 2B: 7.4\% vs 0.0\%) and level with BP (12.3\%). Restricting the paired family-level test to the 85
+\texttt{main} families whose reference the portfolio cannot prove, so that no success can be a plain revert
+(\cref{tab:robust}, exploratory), C still beats B for every model (2B +10.6\,pp, 4B +7.8\,pp, Gemma +15.3\,pp;
+$p\le0.002$), and is ahead of BP by +4.3 (2B, $p=0.035$), +1.2 (4B, $p=0.34$) and +7.1\,pp (Gemma, $p=0.055$). The
+headline is therefore not carried by easy cases alone, although rates on these families are about half the
+overall ones. Fifteen real before/after cases, each with the bug, the reference, C's verified code, the closing
+tactic and what B did on the same run, are in \texttt{docs/code\_shapes.md}; \cref{fig:shape} shows one.
+\textbf{Study S} asks the harder question directly:
+starting from a \emph{correct} reference that the portfolio cannot prove, can a model re-shape it so that the
+portfolio can? Rarely, and the structured hint does not help: 3.7\% (S) vs 4.1\% (S-plain) of runs for 2B and
+12.7\% vs 12.7\% for 4B (family-level differences $-$0.4 and 0.0\,pp, $p=0.81$ and $0.60$). This suggests that
+shaping in the repair setting happens mostly when fixing the bug and re-shaping the code coincide, not as a skill
+of its own.}
+
+\newcommand{\resRQThreeText}{The structured hint (witness, best unsolved goal, structural hint) does not beat a plain
+retry. C vs C-plain: 2B 27.7\% vs 28.9\% ($-$1.3\,pp, [$-$3.8, +1.3], $p=0.89$), 4B 33.0\% vs 32.7\% (+0.3\,pp,
+[$-$2.2, +2.8], $p=0.50$); 3 vs 3 and 2 vs 1 discordant families. C-plain is slightly cheaper (4B: 9.1k vs 10.3k
+tokens and 58 vs 68\,s of inference per run). The benefit of C comes from the code-only contract and the
+portfolio, not from the feedback text.}
+
+\newcommand{\resRQFourText}{Recursion is the dominant blocker. Among the 184 eligible references (condition T), the
+portfolio closes none of the 101 that use any recursion and 49.4\% of the rest; \texttt{let rec} (0 of 77) and
+\texttt{match} (1.5\% vs 33.9\%) follow. The same holds for code the models write: among test-passing candidates
+from the code-only conditions, 0.7\% of those with recursion are closed against 67.2\% without, 10.3\% with
+\texttt{match} against 62.6\%, 29.7\% with \texttt{a[i]!} indexing against 58.7\%, and 23.7\% with
+\texttt{Nat}/\texttt{Int} casts against 58.1\%. Folds and list combinators cost little ($-$4 and $-$10\,pp).
+Verified repairs are closed mostly by the cheapest entries: for C, \texttt{simp} closes 146 of 399, \texttt{unfold}
++ \texttt{omega} 90, \texttt{simp\_all} 58, \texttt{simp}+\texttt{omega} 38 and \texttt{simp}+\texttt{grind} 36; the
+induction entries never close a repair. Automation-friendly code, in practice, means non-recursive code built from
+library combinators.}
+
+\newcommand{\resRQFiveText}{\textbf{Cost.} C is the cheapest route to a verified repair (\cref{fig:costs}). For
+Qwen3.5-4B, C spends 37k model tokens per verified repair, against 65k for BP and 165k for B, and 68\,s of
+inference per run against 162\,s and 150\,s; for 2B, 50k against 89k (BP) and 1.5M (B). C spends more Lean time
+per run (18\,s vs 6\,s for B with 4B) because the portfolio runs on every candidate. Truncating the generation
+budget to 2 or 4 shows that C's lead is already present at $N=2$ (4B: 21.8\% vs 6.8\% of runs for B). Patch sizes
+(normalised edit distance from the buggy start, successes only) are similar across conditions (4B: C 0.67, BP
+0.52, B 0.77). \textbf{Scale.} Going from 2B to 4B helps B most (2.2\% $\to$ 17.6\%) and C least (27.7\% $\to$
+33.0\%): the smaller model gains most from not writing proofs. \textbf{Second family.} Gemma-4-E4B (secondary)
+repeats the pattern: C 30.2\% vs B 1.9\% (+28.3\,pp, $p<0.001$) and C vs BP 30.2\% vs 27.4\% (+2.8\,pp, [$-$3.8,
++9.4], $p=0.29$). \textbf{Proof specialist.} Goedel-Code-Prover-8B, run as a reference in A and B only, verifies
+16.5\% and 20.8\% of runs, below Qwen3.5-4B in C (27.6\%), which has half the parameters and no proof training.
+\textbf{Energy} (estimate, deviation D-4; \cref{tab:energy}). The study's energy counter read the wrong GPU, so
+we calibrated joules per prompt and completion token for each model on our slice after the study. Each model was
+replayed on prompts it had received, at the study's serving settings. C is also the most energy-efficient
+condition: for Qwen3.5-4B it uses 2.6\,kJ per verified repair [2.4, 2.9], against 5.9\,kJ for BP and 13.4\,kJ for
+B; for 2B, 2.0\,kJ against 3.6\,kJ and 56\,kJ; for Gemma, 2.6\,kJ against 8.8\,kJ and 232\,kJ. These are 0.4--0.5\,g of CO$_2$
+per repair in C. The held-out split gives the same ordering (4B: 3.2, 7.4 and 24\,kJ). C's extra Lean time costs
+less than the model tokens it saves. All study runs together used an estimated 3.1\,kWh (2.3\,kg CO$_2$). Running two
+jobs side by side may raise absolute figures by up to about 1.6 times, but equally for every condition.}
+
+\newcommand{\resSecondaryText}{\textbf{B without automation.} Many of B's own proofs are a single automation call.
+Counting those as failures (B\_noauto) lowers B from 17.6\% to 12.3\% for 4B (C vs B\_noauto +20.8\,pp); for 2B,
+B falls to 0.9\%. \textbf{Bhammer}, which tells B the portfolio's tactics in the prompt, helps B a little (4B:
+24.2\% vs 17.6\%, +6.6\,pp, [+1.3, +11.9], $p=0.011$; 2B: 5.3\% vs 2.2\%, $p=0.057$) but stays below C (4B:
+$-$8.8\,pp, $p=0.001$; 2B: $-$22.3\,pp, $p<0.001$); 95 of its 131 successes for 4B are automation-only proofs. Knowing
+the tactics is not the same as having them run. \textbf{B$\to$C cross-evaluation.} We re-verified every B attempt
+whose code compiled but whose proof failed through C's code-only pipeline. C's pipeline would have verified
+30.8\% of these attempts for 4B (797 of 2,588), 34.0\% for 2B and 40.7\% for Gemma, and would have rescued 17.3\%,
+16.8\% and 23.1\% of B's failed runs. None of these candidates passed the proof but failed the tests, so the
+cross-evaluation found no weak specification. In B, the code was often right and the proof was the bottleneck.
+\textbf{Natural bugs only.} Natural bugs cover only 33 \texttt{main} families, which is why the pre-registered
+fallback pool applies. On those families alone (\cref{tab:robust}, exploratory), C beats B for every model (2B
+14.1\% vs 0.0\%, $p=0.031$; 4B 18.2\% vs 0.0\%, $p=0.008$; Gemma 18.2\% vs 0.0\%, $p=0.016$), and C is ahead of BP
+by 5--9\,pp without significance ($p$ from 0.06 to 0.13). Mutants alone reproduce the pooled results. Natural bugs
+are harder for every condition, and the small pool limits what can be said about them beyond the direction.
+\textbf{Re-verification.} \resReverifyText
+\textbf{Audit.} The 10\% stratified audit plus every flagged success (333 runs, 126 distinct programs) found no
+specification gaming in an automated pre-screen; the human audit is pending (deviation D-3). 27 runs decide the
+postcondition proposition directly or carry dead code, and are reported as unnatural but correct. The spec-copying
+flag fired on 239 of the audited runs, all of which restate an exact, executable postcondition.}
+
+\newcommand{\resHeldoutText}{The held-out split (46 families with a bug in the primary pool) was run once and
+analysed separately (\cref{tab:heldout}). C vs B replicates for both models: 2B 20.3\% vs 1.4\% (+18.8\,pp,
+[+9.4, +29.0]), 4B 29.7\% vs 10.1\% (+19.6\,pp, [+10.1, +30.4]); $p_\text{Holm}=0.001$ for both. C vs BP is a tie for
+both models (20.3\% vs 20.3\% and 29.7\% vs 29.7\%; $p_\text{Holm}=1.00$), so the 2B advantage of C over BP on
+\texttt{main} does not replicate. No condition repaired any of the 10 held-out families with natural bugs.}
+
+\newcommand{\resConclusionText}{Across 12,249 study runs on one GPU slice, letting automation carry the proof is the
+most effective and cheapest way for small models to produce end-to-end verified repairs. C beats proof writing
+(B) decisively, on \texttt{main} and on the held-out split, for two Qwen sizes and for Gemma. Against a
+proof-writing agent that gets the same automation first (BP), C ties or wins narrowly, and the narrow win does not
+replicate on held-out. It is clearly cheaper: about 43\% fewer tokens per verified repair and less than half the
+inference time with 4B (and, by a post-hoc estimate, less than half the energy). The structured hint adds nothing
+over a plain retry; recursion, \texttt{match} and array
+indexing are what defeat the automation; and models rarely re-shape correct but unprovable code. The practical
+lesson is to give small models a fixed automation portfolio and ask them only for code. Further gains will come
+from widening what automation can prove, especially recursion, rather than from better feedback text.}
+
+% from results/reverify/summary.md (scripts/reverify.py, 2026-11-14)
+\newcommand{\resReverifyText}{After the study, every one of the 1,858 logged successes (all study folders) was given
+again to the trusted judge from its logged code and proof, with the cache disabled and on a different machine and
+operating system (a Windows laptop, same Lean and Mathlib). All 1,858 re-verify, each with the same proof source and
+the same closing portfolio entry as logged (D-7). The verdicts therefore do not rest on the logs alone.}
+
+\newcommand{\resFreezeDigest}{\texttt{3f2744e1\ldots}, 19 files, 2026-11-05}
+\newcommand{\resTCoverage}{22.3\%: basic 35.6\%, advanced 5.0\%}
+\newcommand{\resNaturalFamilies}{33}
+\newcommand{\resPowerTable}{%
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Comparison & Model & Point & Pessimistic & Families needed \\
+\midrule
+C vs B  & Qwen3.5-2B & 1.000 & 0.662 & 34 \\
+C vs B  & Qwen3.5-4B & 0.996 & 0.128 & 57 \\
+C vs BP & Qwen3.5-2B & 0.706 & 0.000 & 136 \\
+C vs BP & Qwen3.5-4B & 0.082 & 0.000 & not reachable \\
+\bottomrule
+\end{tabular}}

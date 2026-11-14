@@ -1,0 +1,43 @@
+% Method overview: from a VERINA task to a verdict. Fixed coordinates so no edge crosses a box.
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners=2pt, align=center, font=\footnotesize, minimum height=9mm, inner sep=3pt},
+  data/.style={box, fill=gray!8, minimum width=31mm},
+  model/.style={box, fill=blue!8, minimum width=33mm},
+  lean/.style={box, fill=green!8, minimum width=37mm},
+  verdict/.style={box, fill=orange!15, font=\footnotesize\bfseries, minimum width=17mm},
+  arr/.style={-{Stealth[length=2mm]}, thick},
+  fb/.style={-{Stealth[length=2mm]}, thick, dashed, gray!70!black},
+  lab/.style={font=\scriptsize, fill=white, inner sep=1pt}]
+\node[data]    (in)     at (0, 0)      {VERINA task: spec,\\reference, visible tests\\+ buggy start};
+\node[model]   (B)      at (4.6, 1.3)  {\textbf{B}: model writes\\code + proof};
+\node[model]   (BP)     at (4.6, 0)    {\textbf{BP}: as B, portfolio\\tried first};
+\node[model]   (C)      at (4.6, -1.3) {\textbf{C}: model writes\\code only};
+\node[lean]    (gate)   at (9.4, 0)    {integrity checks, compile,\\visible + hidden tests};
+\node[lean]    (mp)     at (9.4, 1.6)  {model's proof\\checked by Lean};
+\node[lean]    (port)   at (9.4, -1.6) {frozen portfolio\\Tier L $\to$ Tier H};
+\node[verdict] (ok)     at (13.4, 0)   {verified\\repair};
+\node[box, font=\scriptsize, minimum width=33mm] (fbk) at (4.6, -2.9)
+  {feedback for the next attempt:\\Lean errors, failing witness;\\C: best unsolved goal + hint};
+\draw[arr] (in.east) -- ++(0.5,0) |- (B.west);
+\draw[arr] (in.east) -- (BP.west);
+\draw[arr] (in.east) -- ++(0.5,0) |- (C.west);
+\draw[arr] (B.east) -- (gate.170);
+\draw[arr] (BP.east) -- (gate.west);
+\draw[arr] (C.east) -- (gate.190);
+\draw[arr] (gate.north) -- node[lab, right]{B, BP fallback} (mp.south);
+\draw[arr] (gate.south) -- node[lab, right]{C, BP first} (port.north);
+\draw[arr] (mp.east) -| (ok.north);
+\draw[arr] (port.east) -| (ok.south);
+\draw[fb] (port.west) -- ++(-0.6,0) |- (fbk.east);
+\draw[fb] (fbk.west) -- ++(-0.5,0) |- (C.200);
+\end{tikzpicture}
+\caption{Method. Every condition gets the same buggy start, the same visible information and the same budget
+(8 generations, 48k tokens, 600\,s of inference). A candidate must pass integrity checks, compile and pass every
+visible and hidden test before any proof is tried; hidden tests are never shown to the model. In B the model's own proof must check; in C the model writes
+no proof and a frozen two-tier portfolio of Lean automation must prove the unchanged specification; BP tries the
+portfolio first and falls back to the model's proof. A failed attempt returns feedback for the next one (dashed),
+in every condition except the single-shot baseline A.}
+\label{fig:pipeline}
+\end{figure*}
