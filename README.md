@@ -62,13 +62,15 @@ family, 4-bit weights only; natural bugs cover only 33 families; C vs BP is unde
 estimate (lead with tokens); the audit is an automated pre-screen until the human pass is done. Details: paper,
 section "Limitations".
 
-**Start here:** [`docs/proposal.md`](docs/proposal.md) (final design) ·
+**Start here:** [`docs/architecture.md`](docs/architecture.md) (how and why it was designed: drivers, architecture views, decisions with alternatives, design evolution, lessons) ·
+[`docs/proposal.md`](docs/proposal.md) (final design) ·
 [`docs/adr/`](docs/adr/README.md) (design decisions) ·
 [`prereg/deviations.md`](prereg/deviations.md) (pre-freeze decisions and deviations) ·
 [`scripts/irel/`](scripts/irel) (how the study was run).
 
 | Document | Content |
 |---|---|
+| [`docs/architecture.md`](docs/architecture.md) | **Design and architecture:** quality drivers and scenarios, C4 context/container/component views, runtime and data-lineage views, deployment as designed vs as built, decisions with alternatives and trade-offs, patterns, design evolution, lessons, traceability |
 | [`docs/proposal.md`](docs/proposal.md) | Final design: RQs, method, threats, repository map |
 | [`docs/adr/`](docs/adr/README.md) | Architecture decision records (Nygard): each design decision with context and consequences |
 | [`docs/requirements.md`](docs/requirements.md) | All requirements (v2) with reconciliation and adoption tables |

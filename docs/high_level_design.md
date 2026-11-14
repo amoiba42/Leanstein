@@ -2,6 +2,7 @@
 
 **Project:** P.I.G. (Proof-Independent Generation): Automation for Structurally Verified Code Patches (package `prl`)
 **Related:** [`docs/requirements.md`](requirements.md), [`docs/proposal.md`](proposal.md) (final design) and [`docs/adr/`](adr/) (design decisions)
+**Start with** [`docs/architecture.md`](architecture.md) for the design story (drivers, views, decisions, evolution, lessons); this document is the component reference.
 **Scope:** architecture, components, data flow, condition protocols, trust boundaries, deployment and the experimental pipeline. Byte-level formats and algorithms are in [`docs/low_level_design.md`](low_level_design.md).
 
 ---
@@ -26,7 +27,7 @@
                          └───────────────┬──────────────────────┘
                                          │ read-only
 ┌────────────────────┐ OpenAI-compatible ▼
-│ LM Studio (CUDA)   │◄──────────────┐  ┌──────────────────────────────────────────────┐
+│ llama.cpp server   │◄──────────────┐  ┌──────────────────────────────────────────────┐
 │ repairers: Qwen3.5 │               └──┤                PRL harness (Python)           │
 │ 2B/4B, Gemma-4-E4B │                  │ tasks · mutate · natural · testgen · models · │
 │ specialist: Goedel │                  │ lean · conditions · driver · energy · analysis│
@@ -34,14 +35,16 @@
 └────────────────────┘                          │ JSON lines over stdin/out  │ NVML / psutil
                                                 ▼                           ▼
                         ┌──────────────────────────────────────────┐  ┌──────────────┐
-                        │ Lean verification server pool             │  │ GPU energy    │
+                        │ Lean verification server pool             │  │ GPU energy*   │
                         │ lean_env/PrlRepl.lean: Mathlib loaded once │  │ counter, Lean │
                         │ per worker · Job-Object memory cap 4 GB   │  │ CPU seconds   │
                         └──────────────────────────────────────────┘  └──────────────┘
 ```
 
 The harness is the only component that talks to the model server and to Lean. The model never touches
-the filesystem.
+the filesystem. Development used LM Studio; the study used llama.cpp `162e2bb` behind an `lms` stand-in.
+\*The in-run GPU energy counter read the wrong physical GPU and its figures were withdrawn (D-1); energy is
+estimated after the study instead (D-4, [ADR 0014](adr/0014-energy-measurement.md)).
 
 ---
 
@@ -298,7 +301,7 @@ All runs share the same start code, budgets, decoding and turn-0 information (ta
 ```
 plan ─► expand (split × condition × model × seed × instance) ─► sort deterministically
      ─► for each (model, condition) block, sequentially:
-           lms load model · EnergyMeter.start (NVML counter, Lean CPU seconds)
+           lms load model · EnergyMeter.start (NVML counter, Lean CPU seconds; readings withdrawn, D-1)
            thread pool of run-workers: each run = loop{generate → extract → pre-filter → verify → route feedback}
            EnergyMeter.finish → energy.jsonl
      ─► attempts.jsonl / runs.jsonl / energy.jsonl (atomic line writes, fsync)
@@ -326,7 +329,7 @@ runs.jsonl + attempts.jsonl + energy.jsonl + crosseval.jsonl + manifests
    ─► RQ3: C vs C-plain (same tests as RQ1, exploratory)
    ─► RQ4: code-feature extraction → feature-by-provability tables, L2 logistic regression with family-clustered bootstrap CIs
    ─► primary bug pool chosen by the pre-registered rule (natural if ≥60 `main`-split families have a natural bug, counted from the dataset; else natural ∪ mutant)
-   ─► RQ5: cost tables, energy per verified repair (GPU measured, CPU estimated, per block), model/family gaps,
+   ─► RQ5: cost tables; energy per verified repair estimated after the study (D-4), model/family gaps,
            sensitivity to N (post-hoc truncation of logs at N∈{2,4,8})
    ─► overlap (Venn) per model; per-stratum tables; closing-tactic distribution
    ─► audit sample CSV (10% of successes, stratified, plus every flagged success) ─► audit results merged
@@ -359,7 +362,7 @@ Everything is a pure function of the log files and manifests, so `prl analyze` i
 | Benchmark | VERINA `66b3ce50` under [`third_party/verina`](../third_party/verina/) (read-only, not committed) |
 | Models | llama.cpp `162e2bb` (CUDA 13.1, sm_120), GGUF 4-bit, SHA-256 verified: Qwen3.5-0.8B/2B/4B/9B, Gemma-4-E4B-it, Goedel-Code-Prover-8B (development used LM Studio 0.4.x) |
 | Python | 3.12 via `uv`, lockfile; numpy, scipy, pandas, statsmodels, matplotlib, pyyaml, httpx, nvidia-ml-py, psutil, pytest, ruff |
-| Parallelism | Lean workers from free RAM (max 6, 4 GB cap each); concurrent model requests per block |
+| Parallelism | Lean workers from free RAM (max 6; 4 GB cap each on Windows only, R-10); study: 2 lanes × 12 concurrent model requests, 6 Lean workers |
 
 ---
 
@@ -397,9 +400,10 @@ Full decision records are in [`docs/adr/`](adr/).
 | D11 | Own Lean verification server (Mathlib once per worker) | `lean` per file; community REPL | ~40× faster; no third-party code; CLI parity tested |
 | D12 | Two heartbeat tiers, early stop, same for all portfolio users | goal-classifier router | deterministic; no unregistered degree of freedom; no confound |
 | D13 | Natural bugs primary, mutants secondary | mutants only | realism; weakens the "C reverts mutants" objection |
-| D14 | Energy per (model, condition) block | per attempt | concurrent requests make per-attempt GPU energy ill-defined |
-| D15 | Job Object 4 GB cap per Lean worker | 2 GB `setrlimit` | Linux-only API; Mathlib alone needs ~2.5 GB |
+| D14 | Energy per (model, condition) block (superseded: the meter read the wrong GPU, D-1; replaced by a post-hoc estimate, D-4) | per attempt | concurrent requests make per-attempt GPU energy ill-defined |
+| D15 | Job Object 4 GB cap per Lean worker (Windows only; no cap on the Linux study host, R-10) | 2 GB `setrlimit` | Linux-only API; Mathlib alone needs ~2.5 GB |
 | D16 | Full `import Mathlib` in every worker | five tactic modules | three of those modules do not exist in Mathlib v4.24; a reduced environment changes what the portfolio proves, breaks specs using Mathlib definitions and breaks server/CLI parity |
 | D17 | B→C cross-evaluation as a separate Lean-only step | inside the run loop | no extra model calls; cannot affect budgets or primary records; resumable |
 | D18 | Power simulated by resampling pilot family pairs at α/4 | analytic McNemar power | keeps the confirmatory unit (families, three seeds, sign-flip) and Holm's worst case |
 | D19 | Bhammer exploratory and optional | add to the confirmatory set | would change the Holm family and the pre-registered primary comparisons |
+| D20 | Results re-checked by machines: CI regenerates `results/`; every success re-verified in Lean | trust the logs | claims become checkable without a GPU ([ADR 0016](adr/0016-independent-rechecking.md)) |
