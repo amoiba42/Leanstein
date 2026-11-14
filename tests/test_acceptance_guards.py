@@ -1,11 +1,17 @@
-"""Acceptance guards: a modified prereg/ file is refused (SR-PRE-1/2)."""
+"""Acceptance guards: a modified prereg/ file is refused (SR-PRE-1/2), and a hung Lean process is killed
+with its whole process tree within the wall guard (NFR-REL-2)."""
 from __future__ import annotations
 
 import dataclasses
+import os
 import shutil
+import sys
+import time
 
+import psutil
 import pytest
 
+import prl.lean.runner as lean_runner
 import prl.prereg as prereg
 from prl.cli import main
 from prl.config import PATHS
@@ -60,3 +66,49 @@ def test_cli_refuses_confirmatory_run_on_modified_prereg(prereg_copy, split, cap
     assert main(["run", "--study", "guard-test", "--split", split]) == 2
     assert "REFUSING TO RUN" in capsys.readouterr().out
     assert not (PATHS.runs / "guard-test").exists()
+
+
+# --------------------------------------------------------------------------- NFR-REL-2
+
+# Stands in for a hung Lean: the "lean" binary is the Python interpreter and Main.lean is this script.
+# It starts a grandchild, records both process ids, and then both sleep far beyond the wall guard.
+_HANG = """
+import os, subprocess, sys, time
+child = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(600)"])
+with open({pidfile!r}, "w") as fh:
+    fh.write(str(os.getpid()) + " " + str(child.pid))
+time.sleep(600)
+"""
+
+
+class _FakeLeanEnv:
+    lean_exe = sys.executable
+
+    def env(self) -> dict[str, str]:
+        return dict(os.environ)
+
+
+def _alive(pid: int) -> bool:
+    try:
+        return psutil.Process(pid).status() != psutil.STATUS_ZOMBIE
+    except psutil.NoSuchProcess:
+        return False
+
+
+def test_hung_lean_process_tree_is_killed_within_wall_guard(tmp_path, monkeypatch):
+    monkeypatch.setattr(lean_runner, "lean_env", lambda: _FakeLeanEnv())
+    monkeypatch.setattr(lean_runner, "PATHS", dataclasses.replace(PATHS, cache=tmp_path / "cache"))
+    pidfile = tmp_path / "pids.txt"
+    wall_s = 3.0
+    t0 = time.perf_counter()
+    r = lean_runner.run_lean_cli(_HANG.format(pidfile=str(pidfile)), wall_s=wall_s)
+    took = time.perf_counter() - t0
+    assert r.timeout and r.infra_error is None
+    assert wall_s <= took < wall_s + 10, f"returned after {took:.1f} s"
+    parent, child = (int(x) for x in pidfile.read_text().split())
+    deadline = time.time() + 5
+    while time.time() < deadline and (_alive(parent) or _alive(child)):
+        time.sleep(0.1)
+    assert not _alive(parent), "the hung process survived the wall guard"
+    assert not _alive(child), "a child of the hung process survived the wall guard"
+    assert not any((tmp_path / "cache" / "tmp").iterdir()), "the work directory was not removed"
