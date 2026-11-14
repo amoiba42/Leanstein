@@ -33,9 +33,9 @@
 | qwen3.5-4b | BP | 0.218 | 0.228 | 0.239 |
 | qwen3.5-4b | C | 0.225 | 0.232 | 0.242 |
 
-## Energy per (model, condition) block
+## Energy per (model, condition) block (in-run meter: WITHDRAWN, see D-1)
 
-GPU energy is measured (NVML counter); Lean CPU energy and CO2 are estimates (see prereg/study.yaml `energy`).
+**Do not use these figures.** They are the raw readings of the in-run meter (NVML counter of GPU index 0; Lean CPU energy and CO2 estimated as in prereg/study.yaml `energy`). In this study the meter read a GPU that belongs to other users, so every energy and CO2 figure below is withdrawn (prereg/deviations.md, D-1). They are kept only so that this file regenerates from the logs. The reported energy is the post-hoc estimate in results/rq5_energy_estimate.md (D-4).
 
 | model | condition | gpu_j | cpu_j_est | co2_g_est | lean_cpu_s | verified_repairs | J_per_repair |
 |---|---|---|---|---|---|---|---|
