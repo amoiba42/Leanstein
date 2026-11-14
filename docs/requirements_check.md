@@ -111,7 +111,7 @@ Run on a scratch copy of the delivered repository on the Ada cluster (CPU only);
 | IR-7 | **Partly** | flags are recorded, but flagged successes must enter a *mandatory* audit, which is a pending human audit (D-3). 239 of the 333 audited successes carry `copies_postcond`; the flag's 0.35 threshold is too low to separate copying from implementing on VERINA (reported in D-3) |
 | DR-1, DR-BUG-1, 2, DR-TEST-1, 2, DR-LOG-1, 3 | Met | `data/` and `runs/`; provenance CSVs in `data/provenance/`; hidden tests carry seed and hash |
 | DR-LOG-2 | **Partly** | prompt hashes and every attempt's code are committed; full raw outputs, rendered Lean file hashes and Lean logs live in `runs/*/raw/`, which is excluded from git |
-| DR-REL | **Partly** | manifests, provenance, prompts, portfolio, logs and analysis scripts are present; there is no `LICENSE` file |
+| DR-REL | **Partly**, now Met (section 7) | manifests, provenance, prompts, portfolio, logs and analysis scripts are present; there was no `LICENSE` file |
 
 ## 4. Non-functional requirements
 
@@ -156,7 +156,7 @@ Run on a scratch copy of the delivered repository on the Ada cluster (CPU only);
 4. **No test for two stated acceptance checks:** a modified `prereg/` file is refused (verified here by hand), and
    a hung Lean process is killed within its wall guard. *Closed in the follow-up (section 7).*
 5. **`scripts/setup` (NFR-REP-2) and `LICENSE` (DR-REL) are absent.** Setup is documented in the README.
-   *Follow-up:* `scripts/setup.sh` was added (section 7); the `LICENSE` is still open.
+   *Follow-up:* `scripts/setup.sh`, `LICENSE` and `NOTICE` were added (section 7).
 6. **Raw outputs are not in the repository (DR-LOG-2).** Logs of each attempt's code, verdict and prompt hash are.
 7. **Known code issue:** `prl/analysis/report.py:61` applies `~` to a bool, which is deprecated and fails on
    Python 3.16. The project pins Python 3.12, so it has no effect on the results. *Fixed in the follow-up (section 7).*
@@ -179,7 +179,8 @@ file under `prereg/` was touched; the changes are disclosed as D-5 and D-6 in
 | FR-TEST-2: five families without hidden tests were not disclosed | D-5 | 260 of 12,249 confirmatory runs, recounted from the logs |
 | Known code issue (`~` on a `bool` in `with_derived`) | uses a boolean series when the column is absent | no result depends on it; regeneration is unchanged |
 | The checks could not be seen by a reader | [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs ruff, the freeze check, the unit tests and the regeneration of `results/` (all files except figures must equal the committed ones) on every push; the README has a "Verify this project" section | the workflow passes on GitHub |
-| Internal server address in `scripts/irel/README.md` | removed from the file (it remains in the git history) | |
+| DR-REL: no `LICENSE` | [`LICENSE`](../LICENSE) (Apache-2.0, the licence of VERINA) and [`NOTICE`](../NOTICE), which credits VERINA and states which folders are derived from it and how | the licence text equals the official Apache-2.0 text |
+| Access: the repository was private | made public | |
 
 ### Verification log of the follow-up
 
@@ -192,5 +193,5 @@ file under `prereg/` was touched; the changes are disclosed as D-5 and D-6 in
 | Regenerating `results/` with the changed `report.py` | every file equal to the committed one, except the three `rq5_costs.md` files (heading and one sentence), which were then committed |
 | `scripts/setup.sh` on the Ada copy | exit code 0; `prl env`: Lean smoke test OK |
 
-Still open after the follow-up: the human audit (item 1), measured energy (item 2), the `LICENSE` (item 5), raw
-outputs (item 6), the 1,000-call reliability test (NFR-REL-1) and the limits of the study itself (item 8).
+Still open after the follow-up: the human audit (item 1), measured energy (item 2), raw outputs
+(item 6), the 1,000-call reliability test (NFR-REL-1) and the limits of the study itself (item 8).
